@@ -296,7 +296,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # =========================== ENCRYPTION CONFIG ===========================
 
 ENCRYPTION_KEY = os.environ.get('ENCRYPTION_KEY')
-DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.environ.get('DATA_UPLOAD_MAX_MEMORY_SIZE'))
+if not ENCRYPTION_KEY:
+    raise ValueError("A variável de ambiente ENCRYPTION_KEY não está definida.")
+DATA_UPLOAD_MAX_MEMORY_SIZE = int(os.environ.get('DATA_UPLOAD_MAX_MEMORY_SIZE', 2621440))  # Valor padrão: 2.5 MB
 SERVE_DECRYPTED_FILE_URL_BASE = os.environ.get('SERVE_DECRYPTED_FILE_URL_BASE')
 
 # =========================== AUDITOR CONFIGS ===========================
