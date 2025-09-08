@@ -1,0 +1,99 @@
+body {
+    background: url(../images/bg/5.jpg) top fixed no-repeat;
+    background-position-y: 0;
+    background-color: #181818;
+    min-height: 100vh;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+.downloads-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: rgba(30, 30, 30, 0.97);
+    border-bottom: 1px solid #e6c77d33;
+    z-index: 1000;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
+    transition: height 0.2s;
+}
+.downloads-logo {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+.downloads-logo img {
+    height: 44px;
+    width: auto;
+}
+.downloads-logo h1 {
+    color: #e6c77d;
+    font-size: 26px;
+    margin: 0;
+    text-shadow: 0px 0px 10px rgba(230, 199, 125, 0.3);
+}
+.back-to-site {
+    background: linear-gradient(135deg, #9b7530, #d1a44f);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(155, 117, 48, 0.3);
+}
+.back-to-site:hover {
+    background: linear-gradient(135deg, #d1a44f, #e6c77d);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(155, 117, 48, 0.4);
+    color: white;
+    text-decoration: none;
+}
+.downloads-main-content {
+    padding-top: 70px; /* igual à altura do header */
+    min-height: calc(100vh - 70px);
+}
+@media (max-width: 768px) {
+    .downloads-header {
+        height: 56px;
+        padding: 0 12px;
+    }
+    .downloads-main-content {
+        padding-top: 56px;
+        min-height: calc(100vh - 56px);
+    }
+    .downloads-logo h1 {
+        font-size: 18px;
+    }
+    .back-to-site {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+@media (max-width: 480px) {
+    .downloads-header {
+        height: 44px;
+    }
+    .downloads-main-content {
+        padding-top: 44px;
+        min-height: calc(100vh - 44px);
+    }
+    .downloads-logo h1 {
+        display: none;
+    }
+    .back-to-site span {
+        display: none;
+    }
+}

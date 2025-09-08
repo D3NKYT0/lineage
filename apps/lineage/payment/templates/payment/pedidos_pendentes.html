@@ -1,0 +1,308 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .pending-orders-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .pending-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .pending-header h1 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .pending-header p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .orders-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .orders-card h2 {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .order-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .order-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .order-info h5 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .order-info p {
+    color: #a0aec0;
+    margin: 0.25rem 0;
+    font-size: 0.95rem;
+  }
+
+  .order-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .btn-details {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-details:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .btn-cancel {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-cancel:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 101, 101, 0.4);
+    color: white;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #a0aec0;
+  }
+
+  .empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .empty-state h3 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .empty-state p {
+    color: #a0aec0;
+    font-size: 1.1rem;
+  }
+
+  .action-buttons {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .btn-primary-action {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+    text-decoration: none;
+    display: inline-block;
+    margin: 0 0.5rem;
+  }
+
+  .btn-primary-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(72, 187, 120, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .btn-secondary-action {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    text-decoration: none;
+    display: inline-block;
+    margin: 0 0.5rem;
+  }
+
+  .btn-secondary-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .order-id {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+
+  .order-value {
+    color: #48bb78;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 768px) {
+    .order-actions {
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    
+    .order-item {
+      text-align: center;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pending-orders-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="pending-header">
+      <h1>
+        <i class="fas fa-clock me-3"></i>{% trans "Meus Pedidos Pendentes" %}
+      </h1>
+      <p>{% trans "Gerencie seus pedidos em andamento" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" style="color: #a0aec0;">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'wallet:dashboard' %}" style="color: #a0aec0;">{% trans "Carteira" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: white;">{% trans "Pedidos Pendentes" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Orders Card -->
+    <div class="orders-card">
+      <h2>
+        <i class="fas fa-list me-2"></i>{% trans "Pedidos em Andamento" %}
+      </h2>
+
+      {% if pedidos %}
+        <div class="orders-list">
+          {% for pedido in pedidos %}
+            <div class="order-item">
+              <div class="row align-items-center">
+                <div class="col-md-8">
+                  <div class="order-info">
+                    <div class="order-id">#{{ pedido.id }}</div>
+                    <h5>{% trans "Pedido" %} #{{ pedido.id }}</h5>
+                    <p>
+                      <i class="fas fa-dollar-sign me-2"></i>
+                      <span class="order-value">R$ {{ pedido.valor_pago }}</span>
+                    </p>
+                    <p>
+                      <i class="fas fa-calendar me-2"></i>
+                      {% trans "Criado em:" %} {{ pedido.data_criacao|date:"d/m/Y H:i" }}
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="order-actions">
+                    <a href="{% url 'payment:detalhes_pedido' pedido.id %}" class="btn-details">
+                      <i class="fas fa-eye me-1"></i>{% trans "Detalhes" %}
+                    </a>
+                    <form method="post" action="{% url 'payment:cancelar_pedido' pedido.id %}" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn-cancel" onclick="return confirm('{% trans 'Tem certeza que deseja cancelar este pedido?' %}')">
+                        <i class="fas fa-times me-1"></i>{% trans "Cancelar" %}
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <h3>{% trans "Nenhum Pedido Pendente" %}</h3>
+          <p>{% trans "Você não possui pedidos pendentes no momento." %}</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <a href="{% url 'payment:novo_pedido' %}" class="btn-primary-action">
+        <i class="fas fa-plus me-2"></i>{% trans "Criar Novo Pedido" %}
+      </a>
+      <a href="{% url 'wallet:dashboard' %}" class="btn-secondary-action">
+        <i class="fas fa-wallet me-2"></i>{% trans "Voltar para a Carteira" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

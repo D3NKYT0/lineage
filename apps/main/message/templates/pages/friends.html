@@ -1,0 +1,501 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Amigos" %}{% endblock title %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/friends.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="{% static 'js/friends.js' %}" defer></script>
+{% endblock extrahead %}
+
+{% block content %}
+<!-- [ Main Content ] start -->
+<div class="friends-dashboard">
+  <!-- Header Section with Stats -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-title">
+        <div class="title-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="title-text">
+          <h2>{% trans "Amigos e Conexões" %}</h2>
+          <p>{% trans "Gerencie suas conexões e descubra novos amigos" %}</p>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-card friends-stat">
+          <div class="stat-icon">
+            <i class="fas fa-user-friends"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number" id="total-friends">{{ stats.total_friends }}</span>
+            <span class="stat-label">{% trans "Amigos" %}</span>
+          </div>
+        </div>
+        <div class="stat-card pending-stat">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number" id="pending-requests">{{ stats.total_pending_requests }}</span>
+            <span class="stat-label">{% trans "Pendentes" %}</span>
+          </div>
+        </div>
+        <div class="stat-card sent-stat">
+          <div class="stat-icon">
+            <i class="fas fa-paper-plane"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number" id="sent-requests">{{ stats.total_sent_requests }}</span>
+            <span class="stat-label">{% trans "Enviados" %}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="dashboard-grid">
+    <!-- Left Column - Friends & Search -->
+    <div class="dashboard-column">
+      
+      <!-- Friends Section -->
+      <div class="content-card friends-section">
+        <div class="card-header-section">
+          <div class="section-title">
+            <i class="fas fa-user-friends"></i>
+            <h3>{% trans "Meus Amigos" %}</h3>
+            <span class="section-count">{{ stats.total_friends }}</span>
+          </div>
+          <div class="section-actions">
+            <button class="btn-refresh" onclick="updateStats()" title="{% trans 'Atualizar' %}">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+        
+        {% if accepted_friendships %}
+          <div class="friends-grid" id="friends-list">
+            {% for friendship in accepted_friendships %}
+              <div class="friend-card">
+                <div class="friend-avatar">
+                  <div class="avatar-container" style="width: 60px; height: 60px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.3); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); position: relative;">
+                    {% if friendship.friend.avatar %}
+                      <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' friendship.friend.uuid timestamp %}" 
+                           alt="{{ friendship.friend.username }}"
+                           style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                    {% else %}
+                      <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                           alt="{% trans 'default profile image' %}"
+                           style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                    {% endif %}
+                  </div>
+                  <div class="online-indicator"></div>
+                </div>
+                <div class="friend-info">
+                  <div class="friend-name">{{ friendship.friend.username }}</div>
+                  {% if friendship.friend.first_name or friendship.friend.last_name %}
+                    <div class="friend-fullname">{{ friendship.friend.first_name }} {{ friendship.friend.last_name }}</div>
+                  {% endif %}
+                  {% if friendship.friend.bio %}
+                    <div class="friend-bio">{{ friendship.friend.bio|truncatechars:50 }}</div>
+                  {% endif %}
+                  <div class="friend-status">
+                    {% if friendship.friend.is_email_verified %}
+                      <span class="verified-badge" title="{% trans 'E-mail verificado' %}">
+                        <i class="fas fa-check-circle"></i> {% trans 'Verificado' %}
+                      </span>
+                    {% endif %}
+                    <span class="fichas-badge" title="{% trans 'Fichas do jogo' %}">
+                      <i class="fas fa-coins"></i> {{ friendship.friend.fichas }}
+                    </span>
+                  </div>
+                </div>
+                <div class="friend-actions">
+                  <button class="btn-action btn-message" onclick="sendMessage({{ friendship.friend.id }})" title="{% trans 'Enviar mensagem' %}">
+                    <i class="fas fa-comment"></i>
+                  </button>
+                  <button class="btn-action btn-remove" onclick="removeFriend({{ friendship.id }})" title="{% trans 'Remover amigo' %}">
+                    <i class="fas fa-user-minus"></i>
+                  </button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          
+          <!-- Friends Pagination -->
+          {% if accepted_friendships.has_other_pages %}
+            <div class="pagination-section">
+              <nav class="pagination-nav">
+                {% if accepted_friendships.has_previous %}
+                  <a href="?friends_page={{ accepted_friendships.previous_page_number }}{% if stats.search_query %}&search={{ stats.search_query }}{% endif %}" class="page-btn">
+                    <i class="fas fa-chevron-left"></i>
+                  </a>
+                {% endif %}
+                
+                <div class="page-numbers">
+                  {% for num in accepted_friendships.paginator.page_range %}
+                    {% if accepted_friendships.number == num %}
+                      <span class="page-btn active">{{ num }}</span>
+                    {% elif num > accepted_friendships.number|add:'-3' and num < accepted_friendships.number|add:'3' %}
+                      <a href="?friends_page={{ num }}{% if stats.search_query %}&search={{ stats.search_query }}{% endif %}" class="page-btn">{{ num }}</a>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                
+                {% if accepted_friendships.has_next %}
+                  <a href="?friends_page={{ accepted_friendships.next_page_number }}{% if stats.search_query %}&search={{ stats.search_query }}{% endif %}" class="page-btn">
+                    <i class="fas fa-chevron-right"></i>
+                  </a>
+                {% endif %}
+              </nav>
+            </div>
+          {% endif %}
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-user-friends"></i>
+            </div>
+            <h4>{% trans 'Nenhum amigo ainda' %}</h4>
+            <p>{% trans 'Comece a adicionar amigos para expandir sua rede de conexões!' %}</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Search Section -->
+      <div class="content-card search-section">
+        <div class="card-header-section">
+          <div class="section-title">
+            <i class="fas fa-search"></i>
+            <h3>{% trans "Buscar Usuários" %}</h3>
+          </div>
+        </div>
+        
+        <div class="search-container">
+          <form method="GET" action="{% url 'message:friends_list' %}" class="search-form">
+            <div class="search-input-group">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" 
+                     name="search" 
+                     class="search-input" 
+                     placeholder="{% trans 'Buscar por nome ou usuário...' %}" 
+                     value="{{ stats.search_query }}"
+                     id="search-input">
+              <button type="submit" class="search-btn">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+            {% if stats.search_query %}
+              <a href="{% url 'message:friends_list' %}" class="clear-search">
+                <i class="fas fa-times"></i>
+                {% trans 'Limpar busca' %}
+              </a>
+            {% endif %}
+          </form>
+        </div>
+        
+        <!-- Search Results -->
+        {% if stats.search_query %}
+          <div class="search-results-header">
+            <i class="fas fa-search"></i>
+            <span>{% trans 'Resultados para' %}: <strong>{{ stats.search_query }}</strong></span>
+            <span class="results-count">({{ stats.total_available_users }} {% trans 'encontrados' %})</span>
+          </div>
+        {% endif %}
+        
+        <div class="users-grid" id="users-list">
+          {% for user in users %}
+            <div class="user-card">
+              <div class="user-avatar">
+                <div class="avatar-container" style="width: 60px; height: 60px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.3); box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15); position: relative;">
+                  {% if user.avatar %}
+                    <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                         alt="{{ user.username }}"
+                         style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                  {% else %}
+                    <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                         alt="{% trans 'default profile image' %}"
+                         style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                  {% endif %}
+                </div>
+              </div>
+              <div class="user-info">
+                <div class="user-name">{{ user.username }}</div>
+                {% if user.first_name or user.last_name %}
+                  <div class="user-fullname">{{ user.first_name }} {{ user.last_name }}</div>
+                {% endif %}
+                {% if user.bio %}
+                  <div class="user-bio">{{ user.bio|truncatechars:50 }}</div>
+                {% endif %}
+                <div class="user-status">
+                  {% if user.is_email_verified %}
+                    <span class="verified-badge" title="{% trans 'E-mail verificado' %}">
+                      <i class="fas fa-check-circle"></i> {% trans 'Verificado' %}
+                    </span>
+                  {% endif %}
+                  <span class="fichas-badge" title="{% trans 'Fichas do jogo' %}">
+                    <i class="fas fa-coins"></i> {{ user.fichas }}
+                  </span>
+                </div>
+              </div>
+              <div class="user-actions">
+                <button class="btn-primary" onclick="sendFriendRequest({{ user.id }})">
+                  <i class="fas fa-user-plus"></i>
+                  {% trans 'Adicionar' %}
+                </button>
+              </div>
+            </div>
+          {% empty %}
+            <div class="empty-state">
+              <div class="empty-icon">
+                <i class="fas fa-search"></i>
+              </div>
+              <h4>
+                {% if stats.search_query %}
+                  {% trans 'Nenhum usuário encontrado' %}
+                {% else %}
+                  {% trans 'Nenhum usuário disponível' %}
+                {% endif %}
+              </h4>
+              <p>
+                {% if stats.search_query %}
+                  {% trans 'Tente ajustar os termos de busca.' %}
+                {% else %}
+                  {% trans 'Todos os usuários já são seus amigos ou têm solicitações pendentes.' %}
+                {% endif %}
+              </p>
+            </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Users Pagination -->
+        {% if users.has_other_pages %}
+          <div class="pagination-section">
+            <nav class="pagination-nav">
+              {% if users.has_previous %}
+                <a href="?page={{ users.previous_page_number }}{% if stats.search_query %}&search={{ stats.search_query }}{% endif %}{% if request.GET.friends_page %}&friends_page={{ request.GET.friends_page }}{% endif %}" class="page-btn">
+                  <i class="fas fa-chevron-left"></i>
+                </a>
+              {% endif %}
+              
+              <div class="page-numbers">
+                {% for num in users.paginator.page_range %}
+                  {% if users.number == num %}
+                    <span class="page-btn active">{{ num }}</span>
+                  {% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
+                    <a href="?page={{ num }}{% if stats.search_query %}&search={{ stats.search_query }}{% endif %}{% if request.GET.friends_page %}&friends_page={{ request.GET.friends_page }}{% endif %}" class="page-btn">{{ num }}</a>
+                  {% endif %}
+                {% endfor %}
+              </div>
+              
+              {% if users.has_next %}
+                <a href="?page={{ users.next_page_number }}{% if stats.search_query %}&search={{ stats.search_query }}{% endif %}{% if request.GET.friends_page %}&friends_page={{ request.GET.friends_page }}{% endif %}" class="page-btn">
+                  <i class="fas fa-chevron-right"></i>
+                </a>
+              {% endif %}
+            </nav>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right Column - Pending Requests & Sent Requests -->
+    <div class="dashboard-column">
+      <!-- Received Requests Section -->
+      <div class="content-card pending-section">
+        <div class="card-header-section">
+          <div class="section-title">
+            <i class="fas fa-clock"></i>
+            <h3>{% trans "Solicitações Recebidas" %}</h3>
+            <span class="section-count">{{ stats.total_pending_requests }}</span>
+          </div>
+        </div>
+        
+        {% if pending_friend_requests %}
+          <div class="requests-list">
+            {% for request in pending_friend_requests %}
+              <div class="request-card">
+                <div class="request-avatar">
+                  <div class="avatar-container" style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.3); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); position: relative;">
+                    {% if request.user.avatar %}
+                      <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' request.user.uuid timestamp %}" 
+                           alt="{{ request.user.username }}"
+                           style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                    {% else %}
+                      <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                           alt="{% trans 'default profile image' %}"
+                           style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="request-info">
+                  <div class="request-name">{{ request.user.username }}</div>
+                  {% if request.user.first_name or request.user.last_name %}
+                    <div class="request-fullname">{{ request.user.first_name }} {{ request.user.last_name }}</div>
+                  {% endif %}
+                  {% if request.user.bio %}
+                    <div class="request-bio">{{ request.user.bio|truncatechars:50 }}</div>
+                  {% endif %}
+                  <div class="request-status">
+                    {% if request.user.is_email_verified %}
+                      <span class="verified-badge" title="{% trans 'E-mail verificado' %}">
+                        <i class="fas fa-check-circle"></i> {% trans 'Verificado' %}
+                      </span>
+                    {% endif %}
+                    <span class="fichas-badge" title="{% trans 'Fichas do jogo' %}">
+                      <i class="fas fa-coins"></i> {{ request.user.fichas }}
+                    </span>
+                  </div>
+                  <div class="request-date">{{ request.created_at|date:"d/m/Y H:i" }}</div>
+                </div>
+                <div class="request-actions">
+                  <button class="btn-success" onclick="acceptRequest({{ request.id }})" title="{% trans 'Aceitar' %}">
+                    <i class="fas fa-check"></i>
+                  </button>
+                  <button class="btn-danger" onclick="rejectRequest({{ request.id }})" title="{% trans 'Recusar' %}">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <h4>{% trans 'Nenhuma solicitação recebida' %}</h4>
+            <p>{% trans 'Quando receber solicitações de amizade, elas aparecerão aqui.' %}</p>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Sent Requests Section -->
+      <div class="content-card sent-section">
+        <div class="card-header-section">
+          <div class="section-title">
+            <i class="fas fa-paper-plane"></i>
+            <h3>{% trans "Solicitações Enviadas" %}</h3>
+            <span class="section-count">{{ stats.total_sent_requests }}</span>
+          </div>
+        </div>
+        
+        {% if sent_friend_requests %}
+          <div class="requests-list">
+            {% for request in sent_friend_requests %}
+              <div class="request-card">
+                <div class="request-avatar">
+                  <div class="avatar-container" style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.3); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); position: relative;">
+                    {% if request.friend.avatar %}
+                      <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' request.friend.uuid timestamp %}" 
+                           alt="{{ request.friend.username }}"
+                           style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                    {% else %}
+                      <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                           alt="{% trans 'default profile image' %}"
+                           style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="request-info">
+                  <div class="request-name">{{ request.friend.username }}</div>
+                  {% if request.friend.first_name or request.friend.last_name %}
+                    <div class="request-fullname">{{ request.friend.first_name }} {{ request.friend.last_name }}</div>
+                  {% endif %}
+                  {% if request.friend.bio %}
+                    <div class="request-bio">{{ request.friend.bio|truncatechars:50 }}</div>
+                  {% endif %}
+                  <div class="request-status">
+                    {% if request.friend.is_email_verified %}
+                      <span class="verified-badge" title="{% trans 'E-mail verificado' %}">
+                        <i class="fas fa-check-circle"></i> {% trans 'Verificado' %}
+                      </span>
+                    {% endif %}
+                    <span class="fichas-badge" title="{% trans 'Fichas do jogo' %}">
+                      <i class="fas fa-coins"></i> {{ request.friend.fichas }}
+                    </span>
+                  </div>
+                  <div class="request-date">{{ request.created_at|date:"d/m/Y H:i" }}</div>
+                </div>
+                <div class="request-actions">
+                  <button class="btn-warning" onclick="cancelRequest({{ request.id }})" title="{% trans 'Cancelar' %}">
+                    <i class="fas fa-ban"></i>
+                  </button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-paper-plane"></i>
+            </div>
+            <h4>{% trans 'Nenhuma solicitação enviada' %}</h4>
+            <p>{% trans 'Quando você enviar solicitações de amizade, elas aparecerão aqui.' %}</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Real-time Search Results -->
+<div id="search-results" class="realtime-search-results"></div>
+
+{% endblock content %}
+
+{% block extrajs %}
+<!-- JavaScript functions are loaded from static/js/friends.js -->
+<script>
+// Fallback functions in case the external JS doesn't load
+if (typeof window.sendFriendRequest === 'undefined') {
+    window.sendFriendRequest = function(userId) {
+        console.log('Fallback: Enviando solicitação de amizade para usuário:', userId);
+        window.location.href = `/app/message/send-friend-request/${userId}/`;
+    };
+}
+
+if (typeof window.removeFriend === 'undefined') {
+    window.removeFriend = function(friendshipId) {
+        console.log('Fallback: Removendo amigo com friendship ID:', friendshipId);
+        if (confirm('Tem certeza que deseja remover este amigo?')) {
+            window.location.href = `/app/message/remove-friend/${friendshipId}/`;
+        }
+    };
+}
+
+if (typeof window.sendMessage === 'undefined') {
+    window.sendMessage = function(friendId) {
+        console.log('Fallback: Enviando mensagem para o usuário:', friendId);
+        window.location.href = `/app/message/index/`;
+    };
+}
+
+if (typeof window.acceptRequest === 'undefined') {
+    window.acceptRequest = function(requestId) {
+        console.log('Fallback: Aceitando solicitação com ID:', requestId);
+        window.location.href = `/app/message/accept-friend-request/${requestId}/`;
+    };
+}
+
+if (typeof window.rejectRequest === 'undefined') {
+    window.rejectRequest = function(requestId) {
+        console.log('Fallback: Recusando solicitação com ID:', requestId);
+        if (confirm('Tem certeza que deseja recusar esta solicitação?')) {
+            window.location.href = `/app/message/reject-friend-request/${requestId}/`;
+        }
+    };
+}
+
+if (typeof window.cancelRequest === 'undefined') {
+    window.cancelRequest = function(requestId) {
+        console.log('Fallback: Cancelando solicitação com ID:', requestId);
+        if (confirm('Tem certeza que deseja cancelar esta solicitação?')) {
+            window.location.href = `/app/message/cancel-friend-request/${requestId}/`;
+        }
+    };
+}
+</script>
+{% endblock extrajs %}

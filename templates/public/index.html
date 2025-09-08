@@ -1,0 +1,763 @@
+{% extends 'layouts/base-default.html' %}
+{% load static i18n %}
+{% load custom_split %}
+{% load apoiador_extras %}
+
+{% block extrahead %}
+<link type="text/css" href="{% static 'public/css/index-carousel.css' %}" rel="stylesheet">
+<style>
+/* Tops Section Styles */
+.tops-section {
+    padding: 80px 0;
+    background: rgba(0, 0, 0, 0.8);
+    position: relative;
+}
+
+.tops-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url({% static 'default/images/bg/3.jpg' %}) center / cover no-repeat;
+    opacity: 0.1;
+    z-index: -1;
+}
+
+.tops-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.tops-title span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #e6c77d;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.tops-title span img {
+    width: 24px;
+    height: 24px;
+}
+
+.tops-title h1 {
+    color: #fff;
+    font-size: 48px;
+    font-weight: bold;
+    text-shadow: 0 0 20px rgba(230, 199, 125, 0.5);
+    margin: 0;
+}
+
+.tops-content {
+    position: relative;
+}
+
+.tops-content .line {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+.tops-content .line img {
+    width: 100px;
+    height: auto;
+}
+
+/* Grid Layout */
+.tops-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Coluna dos Rankings */
+.tops-column {
+    display: flex;
+    justify-content: center;
+}
+
+.tops {
+    background: rgba(53, 47, 35, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(230, 199, 125, 0.2);
+    border-radius: 15px;
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.tops > div > span {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #e6c77d;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(230, 199, 125, 0.3);
+}
+
+.tops > div > span a {
+    transition: transform 0.3s ease;
+}
+
+.tops > div > span a:hover {
+    transform: scale(1.1);
+}
+
+.tops > div > span a img {
+    width: 20px;
+    height: 20px;
+}
+
+.tops ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tops ul li {
+    margin-bottom: 12px;
+}
+
+.tops ul li a {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.tops ul li a:hover {
+    background: rgba(230, 199, 125, 0.1);
+    color: #e6c77d;
+    transform: translateX(5px);
+}
+
+.tops ul li a span {
+    width: 8px;
+    height: 8px;
+    background: #e6c77d;
+    border-radius: 50%;
+    margin-right: 15px;
+    transition: all 0.3s ease;
+}
+
+.tops ul li a:hover span {
+    transform: scale(1.5);
+    box-shadow: 0 0 10px rgba(230, 199, 125, 0.5);
+}
+
+/* Coluna de Informações */
+.tops-info-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Cards de Informação */
+.stats-card,
+.cta-card {
+    background: rgba(53, 47, 35, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(230, 199, 125, 0.2);
+    border-radius: 15px;
+    padding: 25px;
+    transition: all 0.3s ease;
+}
+
+.stats-card:hover,
+.cta-card:hover {
+    border-color: rgba(230, 199, 125, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(230, 199, 125, 0.1);
+}
+
+.stats-card h3,
+.cta-card h3 {
+    color: #e6c77d;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stats-card h3 i,
+.cta-card h3 i {
+    font-size: 20px;
+}
+
+/* Estatísticas */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 15px;
+    background: rgba(230, 199, 125, 0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(230, 199, 125, 0.1);
+}
+
+.stat-number {
+    color: #e6c77d;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+/* Status do servidor */
+.stat-number.online {
+    color: #4CAF50;
+}
+
+.stat-number.online i {
+    color: #4CAF50;
+    font-size: 12px;
+    margin-right: 5px;
+    animation: pulse 2s infinite;
+}
+
+.stat-number.offline {
+    color: #f44336;
+}
+
+.stat-number.offline i {
+    color: #f44336;
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+
+
+/* Call to Action */
+.cta-card p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    text-align: center;
+    flex: 1;
+    min-width: 120px;
+}
+
+.cta-btn.primary {
+    background: linear-gradient(135deg, #e6c77d, #d4af37);
+    color: #000;
+    border: 1px solid #e6c77d;
+}
+
+.cta-btn.primary:hover {
+    background: linear-gradient(135deg, #d4af37, #e6c77d);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(230, 199, 125, 0.3);
+}
+
+.cta-btn.secondary {
+    background: transparent;
+    color: #e6c77d;
+    border: 1px solid #e6c77d;
+}
+
+.cta-btn.secondary:hover {
+    background: rgba(230, 199, 125, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .tops-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .tops-info-column {
+        order: -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .tops-title h1 {
+        font-size: 36px;
+    }
+    
+    .tops-grid {
+        gap: 20px;
+    }
+    
+    .tops,
+    .stats-card,
+    .cta-card {
+        margin: 0 20px;
+        padding: 20px;
+    }
+    
+    .tops > div > span {
+        font-size: 18px;
+    }
+    
+    .tops ul li a {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .tops-title h1 {
+        font-size: 28px;
+    }
+    
+    .tops,
+    .stats-card,
+    .cta-card {
+        margin: 0 10px;
+        padding: 15px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block video_background %}
+<!-- Background Video -->
+<div class="video">
+  <video autoplay muted loop src="{% static 'default/images/video.mp4' %}"></video>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="h">
+    <div class="h-logo" data-aos="fade-up" data-aos-duration="2000">
+        {% if site_logo %}
+            <img class="letters" src="{{ site_logo.image.url }}" alt="{{ site_logo.name }}">
+        {% else %}
+            <img class="letters" src="{% static 'default/images/logo.png' %}">
+        {% endif %}
+        <img class="circle" src="{% static 'default/images/logo-circle.png' %}">
+    </div>
+
+    <h1 data-aos="fade-up" data-aos-duration="2000">
+        {% if nome_servidor %}
+            {{ nome_servidor }}
+        {% else %}
+            {% trans "Inicie sua Jornada em Lineage Agora!" %}
+        {% endif %}
+    </h1>
+
+    <p class="hero-description" data-aos="fade-up" data-aos-duration="2000">
+        {% if descricao_servidor %}
+            "{{ descricao_servidor }}"
+        {% else %}
+            {% trans "Onde Lendas Nascem, Heróis Lutam e a Glória é Eterna." %}
+        {% endif %}
+    </p>
+
+    <div class="h-link" data-aos="fade-up" data-aos-duration="2000">
+        <a href="{% url 'downloads:download_list' %}">{% trans "Baixe o Jogo" %}</a>
+        <a href="{% url 'register' %}">{% trans "Crie sua conta mestra" %}</a>
+    </div>
+
+    <div class="h-scroll">
+        <a href="#features"><img src="{% static 'default/images/icons/scroll.png' %}"></a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="f" id="features">
+    <div class="f-title title container" data-aos="fade-up" data-aos-duration="2000">
+        <span><img src="{% static 'default/images/icons/text.png' %}">{% trans "Aproveite o melhor do Lineage" %}</span>
+        <h1>{% trans "O servidor mais atualizado, moderno e estável para jogar Lineage" %}</h1>
+    </div>
+
+    <div class="f-list container" data-aos="fade-up" data-aos-duration="2000">
+        <a class="f1" href="{% url 'features' %}">
+            <div style="background: url({% static 'default/images/features/1.jpg' %}) top / cover no-repeat;">
+                <span>
+                    <p>{% trans "PvP e Castelos" %}</p>
+                    <img src="{% static 'default/images/features/icon.png' %}">
+                </span>
+            </div>
+        </a>
+
+        <a class="f2" href="{% url 'features' %}">
+            <div style="background: url({% static 'default/images/features/2.jpg' %}) top / cover no-repeat;">
+                <span>
+                    <p>{% trans "Missões Personalizadas" %}</p>
+                    <img src="{% static 'default/images/features/icon.png' %}">
+                </span>
+            </div>
+        </a>
+
+        <a class="f3" href="{% url 'features' %}">
+            <div style="background: url({% static 'default/images/features/3.jpg' %}) top / cover no-repeat;">
+                <span>
+                    <p>{% trans "Eventos e Recompensas" %}</p>
+                    <img src="{% static 'default/images/features/icon.png' %}">
+                </span>
+            </div>
+        </a>
+    </div>
+
+    <div class="character"><img src="{% static 'default/images/features/character.png' %}"></div>
+</section>
+
+<!-- Wiki Section -->
+<section class="w">
+    <div class="w-title title container" data-aos="fade-up" data-aos-duration="2000">
+        <span><img src="{% static 'default/images/icons/text.png' %}">{% trans "Wiki" %}</span>
+        <h1>{% trans "Wiki e Atualizações do Lineage" %}</h1>
+    </div>
+
+    <div class="w-list container" data-aos="fade-up" data-aos-duration="2000">
+        <span class="line"><img src="{% static 'default/images/icons/line.png' %}"></span>
+
+        <div class="wiki">
+            <div>
+                <span>{% trans "Wiki" %}<a href="{% url 'wiki' %}"><img src="{% static 'default/images/icons/more.png' %}"></a></span>
+
+                <ul>
+                    <li><a href="{% url 'wiki_general' %}"><span></span>{% trans "Informações Gerais" %}</a></li>
+                    <li><a href="{% url 'wiki_rates' %}"><span></span>{% trans "Taxas de Experiência" %}</a></li>
+                    <li><a href="{% url 'wiki_raids' %}"><span></span>{% trans "Chefes de Raide e Instâncias" %}</a></li>
+                    <li><a href="{% url 'wiki_assistance' %}"><span></span>{% trans "Ajuda no Jogo" %}</a></li>
+                    <li><a href="{% url 'wiki_events' %}"><span></span>{% trans "Guia de Eventos" %}</a></li>
+                </ul>
+            </div>
+        </div>
+
+        {% for update in latest_updates %}
+        <a href="{% url 'updates' %}" class="update">
+            <div style="background: url({{ update.image.url }}) top / cover no-repeat;">
+                <div>
+                    <span>{% trans "Atualização" %}</span>
+                    <p>{{ update.title }}</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Top Clans Section -->
+<section class="clans" id="top-clans">
+    <div class="clans-title title container" data-aos="fade-up" data-aos-duration="2000">
+        <span><img src="{% static 'default/images/icons/text.png' %}">{% trans "Melhores Clãs" %}</span>
+    </div>
+
+    <div class="clans-table container" data-aos="fade-up" data-aos-duration="2000">
+        <div class="table-header">
+            <div class="col-rank">#</div>
+            <div class="col-crest">{% trans "Cresta" %}</div>
+            <div class="col-name">{% trans "Nome do Clã" %}</div>
+            <div class="col-level">{% trans "Nível" %}</div>
+            <div class="col-reputation">{% trans "Reputação" %}</div>
+            <div class="col-alliance">{% trans "Aliança" %}</div>
+            <div class="col-leader">{% trans "Líder" %}</div>
+            <div class="col-members">{% trans "Membros" %}</div>
+        </div>
+
+        <div class="table-body">
+            {% for clan in clanes %}
+            <div class="table-row {% if forloop.first %}first-place{% endif %}">
+                <div class="col-rank">
+                    {% if forloop.first %}
+                        <span class="rank-icon">👑</span>
+                    {% else %}
+                        {{ forloop.counter }}
+                    {% endif %}
+                </div>
+                <div class="col-crest">
+                    <div class="crest-container">
+                        {% if clan.ally_crest_image_base64 %}
+                            <img src="data:image/png;base64,{{ clan.ally_crest_image_base64 }}" alt="Alliance Crest" class="alliance-crest">
+                        {% endif %}
+                        <img src="data:image/png;base64,{{ clan.clan_crest_image_base64 }}" alt="Clan Crest" class="clan-crest">
+                    </div>
+                </div>
+                <div class="col-name">{{ clan.clan_name }}</div>
+                <div class="col-level">{{ clan.clan_level }}</div>
+                <div class="col-reputation">{{ clan.reputation_score }}</div>
+                <div class="col-alliance">{{ clan.ally_name|default:"-" }}</div>
+                <div class="col-leader">{{ clan.char_name }}</div>
+                <div class="col-members">{{ clan.membros }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Tops Section -->
+<section class="tops-section">
+    <div class="tops-title title container" data-aos="fade-up" data-aos-duration="2000">
+        <h1>{% trans "Rankings do Servidor" %}</h1>
+    </div>
+
+    <div class="tops-content container" data-aos="fade-up" data-aos-duration="2000">
+        <span class="line"><img src="{% static 'default/images/icons/line.png' %}"></span>
+        
+        <div class="tops-grid">
+            <!-- Coluna dos Rankings -->
+            <div class="tops-column">
+                <div class="tops">
+                    <div>
+                        <span>{% trans "Rankings" %}<a href="{% url 'tops:home' %}"><img src="{% static 'default/images/icons/more.png' %}"></a></span>
+
+                        <ul>
+                            <li><a href="{% url 'tops:pvp' %}"><span></span>{% trans "Ranking PvP" %}</a></li>
+                            <li><a href="{% url 'tops:pk' %}"><span></span>{% trans "Ranking PK" %}</a></li>
+                            <li><a href="{% url 'tops:adena' %}"><span></span>{% trans "Ranking Adena" %}</a></li>
+                            <li><a href="{% url 'tops:clans' %}"><span></span>{% trans "Ranking Clãs" %}</a></li>
+                            <li><a href="{% url 'tops:level' %}"><span></span>{% trans "Ranking Nível" %}</a></li>
+                            <li><a href="{% url 'tops:olympiad' %}"><span></span>{% trans "Ranking Olimpíada" %}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna de Informações Adicionais -->
+            <div class="tops-info-column">
+                <!-- Estatísticas Rápidas -->
+                <div class="stats-card">
+                    <h3><i class="fas fa-chart-line"></i> {% trans "Estatísticas" %}</h3>
+                    <div class="stats-grid">
+                        {% if show_players_online %}
+                        <div class="stat-item">
+                            <div class="stat-number">{{ online|default:"0" }}</div>
+                            <div class="stat-label">{% trans "Online" %}</div>
+                        </div>
+                        {% endif %}
+                        <div class="stat-item">
+                            <div class="stat-number">{{ clanes|length|default:"0" }}</div>
+                            <div class="stat-label">{% trans "Clãs" %}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">{% trans "Uptime" %}</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number {% if server_status.overall_status == 'online' %}online{% else %}offline{% endif %}">
+                                {% if server_status.overall_status == 'online' %}
+                                    <i class="fas fa-circle"></i> {% trans "Online" %}
+                                {% else %}
+                                    <i class="fas fa-circle"></i> {% trans "Offline" %}
+                                {% endif %}
+                            </div>
+                            <div class="stat-label">{% trans "Servidor" %}</div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Call to Action -->
+                <div class="cta-card">
+                    <h3><i class="fas fa-star"></i> {% trans "Seja o Melhor!" %}</h3>
+                    <p>{% trans "Entre para a competição e mostre suas habilidades no nosso servidor!" %}</p>
+                    <div class="cta-buttons">
+                        <a href="{% url 'register' %}" class="cta-btn primary">{% trans "Criar Conta" %}</a>
+                        <a href="{% url 'downloads:download_list' %}" class="cta-btn secondary">{% trans "Baixar Jogo" %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Faixa com o título apoiadores -->
+<div class="apoiadores-banner">
+  <div class="banner-track" id="bannerTrack">
+    {% with fixos="APOIADORES"|split:"," %}
+      {% for _ in "1234567890"|make_list %}
+        <span>{{ fixos.0 }}</span>
+      {% endfor %}
+    {% endwith %}
+  </div>
+</div>
+
+<!-- Carrossel de imagens dos apoiadores -->
+<section class="apoiadores-carousel">
+  <div class="carousel-track" id="carouselTrack">
+    {% with fixas="1,2,3,4,5"|split:"," %}
+      {% with total=apoiadores|length %}
+        {% for apoiador in apoiadores %}
+          <div class="apoiador-card">
+            <img src="{% apoiador_image_url apoiador %}" alt="{{ apoiador.nome_publico }}">
+          </div>
+        {% endfor %}
+
+        {% if total < 10 %}
+          {% with restante=10|sub:total %}
+            {% imagens_default_apoiadores as imagens_default %}
+            {% for _ in restante|to_range %}
+              {% with random=imagens_default|random_item %}
+                <div class="apoiador-card">
+                  <img src="{{ random }}" alt="Apoio Default">
+                </div>
+              {% endwith %}
+            {% endfor %}
+          {% endwith %}
+        {% endif %}
+      {% endwith %}
+    {% endwith %}
+  </div>
+</section>
+
+<!-- Faixa com o título apoiadores -->
+<div class="apoiadores-banner">
+  <div class="banner-track" id="bannerTrack2">
+    {% with fixos="APOIADORES"|split:"," %}
+      {% for _ in "1234567890"|make_list %}
+        <span>{{ fixos.0 }}</span>
+      {% endfor %}
+    {% endwith %}
+  </div>
+</div>
+
+<!-- Trailer / Gameplay -->
+<section class="trailer-section">
+<div class="container text-center">
+    <h2 class="trailer-title">🎬 {% trans "Trailer Oficial" %}</h2>
+
+    <div class="video-wrapper">
+    <div class="video-overlay"></div>
+    <iframe src="https://www.youtube.com/embed/{% if configuracao and configuracao.trailer_video_id %}{{ configuracao.trailer_video_id }}{% else %}CsNutvmrHIA?si=2lF1z1jPFkf8uGJB{% endif %}" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <p class="trailer-description">{% trans "Assista ao trailer e mergulhe no mundo épico do nosso servidor!" %}</p>
+</section>
+
+
+
+
+
+<!-- Community Section -->
+<section class="c">
+    <div class="c-title title container" data-aos="fade-up" data-aos-duration="2000">
+        <span><img src="{% static 'default/images/icons/text.png' %}">{% trans "Faça parte da nossa comunidade" %}</span>
+        <h1>{% trans "Junte-se à nossa" %} <strong>{% trans "comunidade" %}</strong> {% trans "e fique por dentro" %}</h1>
+    </div>
+
+    <div class="c-link" data-aos="fade-up" data-aos-duration="2000">
+        <a href="{% if configuracao %}{{ configuracao.link_discord }}{% else %}{{ PROJECT_DISCORD_URL }}{% endif %}" target="_blank"><i class="fa-brands fa-discord"></i></a>
+    </div>
+</section>
+{% endblock %}
+
+
+
+{% block extrascripts %}
+<script>
+      document.addEventListener("DOMContentLoaded", function () {
+    function initInfiniteScroll(trackId, speed, padding = 0) {
+      const track = document.getElementById(trackId);
+      if (!track) return;
+
+      let offset = 0;
+
+      // Clonar os elementos filhos
+      const originalItems = Array.from(track.children);
+      originalItems.forEach(item => {
+        const clone = item.cloneNode(true);
+        track.appendChild(clone);
+      });
+
+      // Calcular o comprimento total dos itens originais
+      const totalWidth = originalItems.reduce((acc, item) => {
+        return acc + item.offsetWidth + padding;
+      }, 0);
+
+      function animate() {
+        offset -= speed;
+        track.style.transform = `translateX(${offset}px)`;
+
+        const firstItem = track.children[0];
+        const firstItemRect = firstItem.getBoundingClientRect();
+        const trackRect = track.getBoundingClientRect();
+
+        if (firstItemRect.right < trackRect.left) {
+          const itemWidth = firstItem.offsetWidth + padding;
+          track.appendChild(firstItem);
+          offset += itemWidth;
+        }
+
+        // Reinicia o offset para evitar números grandes
+        if (Math.abs(offset) > totalWidth) {
+          offset = 0;
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    }
+
+    // Inicializa com velocidades diferentes
+    initInfiniteScroll("carouselTrack", 0.5, 20); // carrossel
+    initInfiniteScroll("bannerTrack", 0.7, 80);   // faixa de texto
+    initInfiniteScroll("bannerTrack2", 0.7, 80);   // faixa de texto
+    
+  });
+    // Initialize AOS
+    AOS.init();
+</script>
+{% endblock %}

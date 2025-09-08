@@ -1,0 +1,1080 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load api_filters %}
+
+{% block extrahead %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+    /* Variáveis CSS baseadas no perfil */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #6f42c1, #e83e8c);
+        --secondary-gradient: linear-gradient(135deg, #f0bc74, #fd7e14);
+        --success-gradient: linear-gradient(135deg, #10B981, #059669);
+        --danger-gradient: linear-gradient(135deg, #E11D48, #DC2626);
+        --warning-gradient: linear-gradient(135deg, #FBA918, #EA580C);
+        --info-gradient: linear-gradient(135deg, #2361ce, #1D4ED8);
+        --dark-bg: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --card-border: #6f42c1;
+        --card-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+        --border-radius: 20px;
+        --transition: all 0.3s ease;
+    }
+
+    /* Layout Principal - Baseado no perfil */
+    .config-container {
+        background: var(--dark-bg);
+        min-height: 100vh;
+        padding: 2rem 0;
+        color: #f8f9fa;
+    }
+
+    /* Header Card - Estilo do perfil */
+    .config-header-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 2px solid var(--card-border);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        margin-bottom: 2rem;
+        overflow: hidden;
+        position: relative;
+        transition: var(--transition);
+    }
+
+    .config-header-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px rgba(111, 66, 193, 0.7), 0 0 30px rgba(13, 202, 240, 0.5);
+    }
+
+    .config-header-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .config-header-content {
+        position: relative;
+        z-index: 1;
+        background: var(--primary-gradient);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+    }
+
+    .config-header-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .config-header-subtitle {
+        font-size: 1.1rem;
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .config-stats {
+        display: flex;
+        gap: 2rem;
+        margin-top: 2rem;
+        justify-content: center;
+    }
+
+    .config-stat {
+        text-align: center;
+        padding: 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: var(--transition);
+    }
+
+    .config-stat:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .config-stat-number {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 0.25rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .config-stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        font-weight: 500;
+    }
+
+    /* Cards de Endpoint - Estilo do perfil */
+    .endpoint-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 2px solid var(--card-border);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+    }
+
+    .endpoint-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: var(--success-gradient);
+        transition: var(--transition);
+    }
+
+    .endpoint-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 20px rgba(111, 66, 193, 0.7), 0 0 30px rgba(13, 202, 240, 0.5);
+        border-color: rgba(111, 66, 193, 0.8);
+    }
+
+    .endpoint-card.disabled {
+        border-color: #E11D48;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 245, 245, 0.95) 100%);
+        opacity: 0.9;
+    }
+
+    .endpoint-card.disabled::before {
+        background: var(--danger-gradient);
+    }
+
+    .endpoint-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .endpoint-info {
+        flex: 1;
+    }
+
+    .endpoint-name {
+        font-weight: 600;
+        color: #6f42c1;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .endpoint-url {
+        font-family: 'Courier New', monospace;
+        font-size: 0.8rem;
+        color: #6c757d;
+        background: #f8f9fa;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        word-break: break-all;
+    }
+
+    .endpoint-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: 1rem;
+    }
+
+    .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 8px currentColor;
+    }
+
+    .status-indicator.enabled {
+        background: var(--success-gradient);
+        color: #10B981;
+    }
+
+    .status-indicator.disabled {
+        background: var(--danger-gradient);
+        color: #E11D48;
+    }
+
+    .status-badge {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .status-badge.enabled {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-badge.disabled {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    /* Switch Customizado - Design Limpo e Moderno */
+    .form-switch {
+        padding-left: 0 !important;
+        margin-top: 1rem;
+        position: relative;
+    }
+
+    .form-check-input {
+        width: 3rem !important;
+        height: 1.5rem !important;
+        margin-left: 0 !important;
+        margin-right: 0.75rem !important;
+        cursor: pointer;
+        border: none !important;
+        background: #E11D48 !important;
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+        position: relative;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        background-image: none !important;
+        background-position: unset !important;
+        background-size: unset !important;
+        background-repeat: unset !important;
+        appearance: none !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+    }
+
+    .form-check-input::before {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 1.1rem;
+        height: 1.1rem;
+        background: #ffffff;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        z-index: 2;
+    }
+
+    .form-check-input:checked {
+        background: #10B981 !important;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+        background-image: none !important;
+    }
+
+    .form-check-input:checked::before {
+        transform: translateX(1.5rem);
+        background: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25) !important;
+        border-color: transparent !important;
+        outline: none !important;
+    }
+
+    .form-check-input:hover {
+        transform: scale(1.02);
+    }
+
+    .form-check-input:checked:hover {
+        background: #059669 !important;
+    }
+
+    .form-check-input:not(:checked):hover {
+        background: #DC2626 !important;
+    }
+
+    .form-check-label {
+        font-weight: 600;
+        color: #374151;
+        cursor: pointer;
+        font-family: 'Orbitron', sans-serif;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+
+    .form-check-label:hover {
+        color: #6f42c1;
+    }
+
+    /* Remover estilos do Bootstrap que conflitam */
+    .form-check-input:not(:checked) {
+        background-image: none !important;
+    }
+
+    .form-check-input:checked {
+        background-image: none !important;
+    }
+
+    /* Seções de Categoria - Estilo do perfil */
+    .category-section {
+        margin-bottom: 2rem;
+    }
+
+    .category-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #6f42c1;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e9ecef;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .category-title::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 60px;
+        height: 2px;
+        background: var(--primary-gradient);
+        border-radius: 1px;
+    }
+
+    .category-icon {
+        font-size: 1.2rem;
+        color: #6f42c1;
+    }
+
+    /* Grid Responsivo */
+    .endpoints-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 1rem;
+    }
+
+    /* Botões de Ação - Estilo do perfil */
+    .action-buttons {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 2px solid var(--card-border);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-top: 2rem;
+        box-shadow: var(--card-shadow);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .btn-custom {
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        transition: var(--transition);
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .btn-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-save {
+        background: var(--success-gradient);
+        color: white;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-save:hover {
+        background: linear-gradient(135deg, #059669, #047857);
+        color: white;
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-reset {
+        background: var(--warning-gradient);
+        color: white;
+        box-shadow: 0 4px 15px rgba(251, 169, 24, 0.3);
+    }
+
+    .btn-reset:hover {
+        background: linear-gradient(135deg, #EA580C, #DC2626);
+        color: white;
+        box-shadow: 0 8px 25px rgba(251, 169, 24, 0.4);
+    }
+
+    .last-updated {
+        color: #6c757d;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Alertas - Estilo do perfil */
+    .alert-custom {
+        border-radius: var(--border-radius);
+        border: none;
+        box-shadow: var(--card-shadow);
+        margin-bottom: 1.5rem;
+        backdrop-filter: blur(10px);
+    }
+
+    .alert-info {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        color: #1e40af;
+        border-left: 4px solid #2361ce;
+    }
+
+    .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+        border-left: 4px solid #10B981;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+        border-left: 4px solid #E11D48;
+    }
+
+    .alert-warning {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+        border-left: 4px solid #FBA918;
+    }
+
+    /* Estados de Loading */
+    .loading {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .config-stats {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .endpoints-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .endpoint-header {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .endpoint-status {
+            margin-left: 0;
+        }
+
+        .config-header-title {
+            font-size: 1.5rem;
+        }
+
+        .config-header-content {
+            padding: 2rem 1rem;
+        }
+    }
+
+    /* Animações - Estilo do perfil */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .endpoint-card {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .endpoint-card:nth-child(1) { animation-delay: 0.1s; }
+    .endpoint-card:nth-child(2) { animation-delay: 0.2s; }
+    .endpoint-card:nth-child(3) { animation-delay: 0.3s; }
+    .endpoint-card:nth-child(4) { animation-delay: 0.4s; }
+    .endpoint-card:nth-child(5) { animation-delay: 0.5s; }
+    .endpoint-card:nth-child(6) { animation-delay: 0.6s; }
+
+    /* Efeitos especiais do perfil */
+    .config-container::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            radial-gradient(circle at 20% 80%, rgba(111, 66, 193, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(13, 202, 240, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(232, 62, 140, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    /* Efeito de destaque nos elementos */
+    .endpoint-card:hover .endpoint-name {
+        color: #e83e8c;
+        text-shadow: 0 0 8px rgba(232, 62, 140, 0.3);
+    }
+
+    .config-stat:hover .config-stat-number {
+        color: #e83e8c;
+        text-shadow: 0 0 10px rgba(232, 62, 140, 0.5);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="config-container">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <!-- Header Card -->
+                <div class="config-header-card">
+                    <div class="config-header-content">
+                        <h1 class="config-header-title">
+                            <i class="bi bi-gear-fill me-3"></i>{% trans "Configuração de Endpoints da API" %}
+                        </h1>
+                        <p class="config-header-subtitle">
+                            {% trans "Gerencie quais endpoints estarão disponíveis para os usuários" %}
+                        </p>
+                        <div class="config-stats">
+                            <div class="config-stat">
+                                <span class="config-stat-number" id="enabled-count">-</span>
+                                <span class="config-stat-label">{% trans "Ativos" %}</span>
+                            </div>
+                            <div class="config-stat">
+                                <span class="config-stat-number" id="total-count">-</span>
+                                <span class="config-stat-label">{% trans "Total" %}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mensagens do Django -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-custom alert-dismissible fade show" role="alert">
+                            {% if message.tags == 'success' %}
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                            {% elif message.tags == 'error' %}
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            {% elif message.tags == 'warning' %}
+                                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                            {% elif message.tags == 'info' %}
+                                <i class="bi bi-info-circle-fill me-2"></i>
+                            {% endif %}
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Informação -->
+                <div class="alert alert-info alert-custom" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <strong>{% trans "Informação:" %}</strong> 
+                    {% trans "As alterações são aplicadas imediatamente. Endpoints desativados retornarão erro 403 para todos os usuários." %}
+                </div>
+
+                {% if form %}
+                    <form id="api-config-form" method="post">
+                        {% csrf_token %}
+                        
+                        <!-- Server Endpoints -->
+                        <div class="category-section">
+                            <h4 class="category-title">
+                                <i class="bi bi-server category-icon"></i>{% trans "Endpoints do Servidor" %}
+                            </h4>
+                            <div class="endpoints-grid">
+                                {% for field in form %}
+                                    {% if field.name in 'players_online,top_pvp,top_pk,top_clan,top_rich,top_online,top_level,olympiad_ranking,olympiad_all_heroes,olympiad_current_heroes,grandboss_status,raidboss_status,siege,siege_participants,boss_jewel_locations' %}
+                                        <div class="endpoint-card{% if not field.value %} disabled{% endif %}" data-endpoint="{{ field.name }}">
+                                            <div class="endpoint-header">
+                                                <div class="endpoint-info">
+                                                    <div class="endpoint-name">{{ field.label }}</div>
+                                                    <div class="endpoint-url">/api/v1/server/{{ field.name|format_endpoint_url }}/</div>
+                                                </div>
+                                                <div class="endpoint-status">
+                                                    <span class="status-indicator {% if field.value %}enabled{% else %}disabled{% endif %}"></span>
+                                                    <span class="status-badge {% if field.value %}enabled{% else %}disabled{% endif %}">
+                                                        {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-check form-switch d-flex align-items-center justify-content-center">
+                                                {{ field }}
+                                                <label class="form-check-label" for="{{ field.id_for_label }}">
+                                                    {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Authentication Endpoints -->
+                        <div class="category-section">
+                            <h4 class="category-title">
+                                <i class="bi bi-shield-lock category-icon"></i>{% trans "Autenticação" %}
+                            </h4>
+                            <div class="endpoints-grid">
+                                {% for field in form %}
+                                    {% if field.name in 'auth_login,auth_refresh,auth_logout' %}
+                                        <div class="endpoint-card{% if not field.value %} disabled{% endif %}" data-endpoint="{{ field.name }}">
+                                            <div class="endpoint-header">
+                                                <div class="endpoint-info">
+                                                    <div class="endpoint-name">{{ field.label }}</div>
+                                                    <div class="endpoint-url">/api/v1/auth/{{ field.name|auth_endpoint_url }}/</div>
+                                                </div>
+                                                <div class="endpoint-status">
+                                                    <span class="status-indicator {% if field.value %}enabled{% else %}disabled{% endif %}"></span>
+                                                    <span class="status-badge {% if field.value %}enabled{% else %}disabled{% endif %}">
+                                                        {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-check form-switch d-flex align-items-center justify-content-center">
+                                                {{ field }}
+                                                <label class="form-check-label" for="{{ field.id_for_label }}">
+                                                    {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- User Endpoints -->
+                        <div class="category-section">
+                            <h4 class="category-title">
+                                <i class="bi bi-person category-icon"></i>{% trans "Usuário" %}
+                            </h4>
+                            <div class="endpoints-grid">
+                                {% for field in form %}
+                                    {% if field.name in 'user_profile,user_change_password,user_dashboard,user_stats' %}
+                                        <div class="endpoint-card{% if not field.value %} disabled{% endif %}" data-endpoint="{{ field.name }}">
+                                            <div class="endpoint-header">
+                                                <div class="endpoint-info">
+                                                    <div class="endpoint-name">{{ field.label }}</div>
+                                                    <div class="endpoint-url">/api/v1/user/{{ field.name|user_endpoint_url }}/</div>
+                                                </div>
+                                                <div class="endpoint-status">
+                                                    <span class="status-indicator {% if field.value %}enabled{% else %}disabled{% endif %}"></span>
+                                                    <span class="status-badge {% if field.value %}enabled{% else %}disabled{% endif %}">
+                                                        {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-check form-switch d-flex align-items-center justify-content-center">
+                                                {{ field }}
+                                                <label class="form-check-label" for="{{ field.id_for_label }}">
+                                                    {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Search Endpoints -->
+                        <div class="category-section">
+                            <h4 class="category-title">
+                                <i class="bi bi-search category-icon"></i>{% trans "Busca" %}
+                            </h4>
+                            <div class="endpoints-grid">
+                                {% for field in form %}
+                                    {% if field.name in 'search_character,search_item' %}
+                                        <div class="endpoint-card{% if not field.value %} disabled{% endif %}" data-endpoint="{{ field.name }}">
+                                            <div class="endpoint-header">
+                                                <div class="endpoint-info">
+                                                    <div class="endpoint-name">{{ field.label }}</div>
+                                                    <div class="endpoint-url">/api/v1/search/{{ field.name|search_endpoint_url }}/</div>
+                                                </div>
+                                                <div class="endpoint-status">
+                                                    <span class="status-indicator {% if field.value %}enabled{% else %}disabled{% endif %}"></span>
+                                                    <span class="status-badge {% if field.value %}enabled{% else %}disabled{% endif %}">
+                                                        {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-check form-switch d-flex align-items-center justify-content-center">
+                                                {{ field }}
+                                                <label class="form-check-label" for="{{ field.id_for_label }}">
+                                                    {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Game Data Endpoints -->
+                        <div class="category-section">
+                            <h4 class="category-title">
+                                <i class="bi bi-controller category-icon"></i>{% trans "Dados do Jogo" %}
+                            </h4>
+                            <div class="endpoints-grid">
+                                {% for field in form %}
+                                    {% if field.name in 'clan_detail,auction_items,server_status,api_info' %}
+                                        <div class="endpoint-card{% if not field.value %} disabled{% endif %}" data-endpoint="{{ field.name }}">
+                                            <div class="endpoint-header">
+                                                <div class="endpoint-info">
+                                                    <div class="endpoint-name">{{ field.label }}</div>
+                                                    <div class="endpoint-url">
+                                                        {% if field.name == 'server_status' %}
+                                                            /api/v1/server/status/
+                                                        {% elif field.name == 'api_info' %}
+                                                            /api/v1/info/
+                                                        {% else %}
+                                                            /api/v1/game/{{ field.name|format_endpoint_url }}/
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="endpoint-status">
+                                                    <span class="status-indicator {% if field.value %}enabled{% else %}disabled{% endif %}"></span>
+                                                    <span class="status-badge {% if field.value %}enabled{% else %}disabled{% endif %}">
+                                                        {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-check form-switch d-flex align-items-center justify-content-center">
+                                                {{ field }}
+                                                <label class="form-check-label" for="{{ field.id_for_label }}">
+                                                    {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Monitoring Endpoints -->
+                        <div class="category-section">
+                            <h4 class="category-title">
+                                <i class="bi bi-graph-up category-icon"></i>{% trans "Monitoramento" %}
+                            </h4>
+                            <div class="endpoints-grid">
+                                {% for field in form %}
+                                    {% if field.name in 'health_check,hourly_metrics,daily_metrics,performance_metrics,slow_queries,cache_stats' %}
+                                        <div class="endpoint-card{% if not field.value %} disabled{% endif %}" data-endpoint="{{ field.name }}">
+                                            <div class="endpoint-header">
+                                                <div class="endpoint-info">
+                                                    <div class="endpoint-name">{{ field.label }}</div>
+                                                    <div class="endpoint-url">/api/v1/monitoring/{{ field.name|format_endpoint_url }}/</div>
+                                                </div>
+                                                <div class="endpoint-status">
+                                                    <span class="status-indicator {% if field.value %}enabled{% else %}disabled{% endif %}"></span>
+                                                    <span class="status-badge {% if field.value %}enabled{% else %}disabled{% endif %}">
+                                                        {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-check form-switch d-flex align-items-center justify-content-center">
+                                                {{ field }}
+                                                <label class="form-check-label" for="{{ field.id_for_label }}">
+                                                    {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Administration Endpoints -->
+                        <div class="category-section">
+                            <h4 class="category-title">
+                                <i class="bi bi-gear category-icon"></i>{% trans "Administração" %}
+                            </h4>
+                            <div class="endpoints-grid">
+                                {% for field in form %}
+                                    {% if field.name in 'api_config,api_config_panel' %}
+                                        <div class="endpoint-card{% if not field.value %} disabled{% endif %}" data-endpoint="{{ field.name }}">
+                                            <div class="endpoint-header">
+                                                <div class="endpoint-info">
+                                                    <div class="endpoint-name">{{ field.label }}</div>
+                                                    <div class="endpoint-url">/api/v1/admin/{{ field.name|admin_endpoint_url }}/</div>
+                                                </div>
+                                                <div class="endpoint-status">
+                                                    <span class="status-indicator {% if field.value %}enabled{% else %}disabled{% endif %}"></span>
+                                                    <span class="status-badge {% if field.value %}enabled{% else %}disabled{% endif %}">
+                                                        {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="form-check form-switch d-flex align-items-center justify-content-center">
+                                                {{ field }}
+                                                <label class="form-check-label" for="{{ field.id_for_label }}">
+                                                    {% if field.value %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-custom btn-reset" id="reset-btn">
+                                <i class="bi bi-arrow-clockwise"></i>{% trans "Resetar Padrões" %}
+                            </button>
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="last-updated">
+                                    <i class="bi bi-clock"></i>
+                                    {% trans "Última atualização:" %} 
+                                    <span id="last-updated">
+                                        {% if last_updated %}
+                                            {{ last_updated|date:"d/m/Y H:i" }}
+                                        {% else %}
+                                            {% trans "Nunca" %}
+                                        {% endif %}
+                                    </span>
+                                </span>
+                                <button type="submit" class="btn btn-custom btn-save" id="save-btn">
+                                    <i class="bi bi-check-circle"></i>{% trans "Salvar Alterações" %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="alert alert-danger alert-custom">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        {% trans "Erro ao carregar formulário de configuração." %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('api-config-form');
+    const saveBtn = document.getElementById('save-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const enabledCount = document.getElementById('enabled-count');
+    const totalCount = document.getElementById('total-count');
+    const lastUpdated = document.getElementById('last-updated');
+    
+    // Inicializa contadores
+    updateCounters();
+    
+    // Adiciona listeners para os checkboxes
+    const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateEndpointCard(this);
+            updateCounters();
+        });
+    });
+    
+    // Manipula o envio do formulário
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveConfig();
+    });
+    
+    // Manipula o botão de reset
+    resetBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (confirm('{% trans "Tem certeza que deseja resetar todas as configurações para os padrões?" %}')) {
+            resetConfig();
+        }
+    });
+    
+    function updateEndpointCard(checkbox) {
+        const card = checkbox.closest('.endpoint-card');
+        const statusIndicator = card.querySelector('.status-indicator');
+        const statusBadge = card.querySelector('.status-badge');
+        const label = card.querySelector('.form-check-label');
+        
+        if (checkbox.checked) {
+            card.classList.remove('disabled');
+            statusIndicator.classList.remove('disabled');
+            statusIndicator.classList.add('enabled');
+            statusBadge.classList.remove('disabled');
+            statusBadge.classList.add('enabled');
+            statusBadge.textContent = '{% trans "Ativo" %}';
+            label.textContent = '{% trans "Ativo" %}';
+        } else {
+            card.classList.add('disabled');
+            statusIndicator.classList.remove('enabled');
+            statusIndicator.classList.add('disabled');
+            statusBadge.classList.remove('enabled');
+            statusBadge.classList.add('disabled');
+            statusBadge.textContent = '{% trans "Inativo" %}';
+            label.textContent = '{% trans "Inativo" %}';
+        }
+    }
+    
+    function updateCounters() {
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        const enabled = Array.from(checkboxes).filter(cb => cb.checked).length;
+        const total = checkboxes.length;
+        
+        enabledCount.textContent = enabled;
+        totalCount.textContent = total;
+    }
+    
+    function saveConfig() {
+        const formData = new FormData(form);
+        
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>{% trans "Salvando..." %}';
+        form.classList.add('loading');
+        
+        fetch('/api/v1/admin/config/panel/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: formData,
+        })
+        .then(response => {
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                window.location.reload();
+                return null;
+            }
+        })
+        .then(data => {
+            if (data) {
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    if (data.data.last_updated) {
+                        updateLastUpdated(data.data.last_updated);
+                    }
+                } else {
+                    showAlert('Erro ao salvar: ' + data.error, 'danger');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            showAlert('Erro ao salvar configuração', 'danger');
+        })
+        .finally(() => {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = '<i class="bi bi-check-circle me-2"></i>{% trans "Salvar Alterações" %}';
+            form.classList.remove('loading');
+        });
+    }
+    
+    function resetConfig() {
+        resetBtn.disabled = true;
+        resetBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>{% trans "Resetando..." %}';
+        
+        fetch('/api/v1/admin/config/panel/', {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => {
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                return response.json();
+            } else {
+                window.location.reload();
+                return null;
+            }
+        })
+        .then(data => {
+            if (data) {
+                if (data.success) {
+                    showAlert(data.message, 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showAlert('Erro ao resetar: ' + data.error, 'danger');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            showAlert('Erro ao resetar configuração', 'danger');
+        })
+        .finally(() => {
+            resetBtn.disabled = false;
+            resetBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i>{% trans "Resetar Padrões" %}';
+        });
+    }
+    
+    function updateLastUpdated(timestamp) {
+        if (timestamp) {
+            const date = new Date(timestamp);
+            lastUpdated.textContent = date.toLocaleString('pt-BR');
+        } else {
+            lastUpdated.textContent = '{% trans "Nunca" %}';
+        }
+    }
+    
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-custom alert-dismissible fade show`;
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        const container = document.querySelector('.config-container .container-fluid');
+        container.insertBefore(alertDiv, container.firstChild);
+        
+        setTimeout(() => {
+            if (alertDiv.parentNode) {
+                alertDiv.remove();
+            }
+        }, 5000);
+    }
+});
+</script>
+{% endblock content %} 

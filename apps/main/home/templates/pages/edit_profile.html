@@ -1,0 +1,526 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block extrahead %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .profile-edit-container {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .profile-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    border: 2px solid #6f42c1;
+    overflow: hidden;
+  }
+
+  .profile-header {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .profile-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .profile-header p {
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  .profile-body {
+    padding: 3rem;
+  }
+
+  .form-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .form-section h4 {
+    color: #6f42c1;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-left: 4px solid #6f42c1;
+    padding-left: 1rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.95rem;
+  }
+
+  .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+  }
+
+  .form-control.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+  }
+
+  .text-danger {
+    color: #dc3545 !important;
+  }
+
+  .alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+    border-radius: 12px;
+    border: 2px solid #f5c6cb;
+  }
+
+  .alert-danger h5 {
+    color: #721c24;
+    margin-bottom: 0.5rem;
+  }
+
+  .alert-danger ul {
+    margin-bottom: 0;
+  }
+
+  .alert-danger li {
+    margin-bottom: 0.25rem;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+    background: white;
+  }
+  }
+
+  .form-control:hover {
+    border-color: #6f42c1;
+    background: white;
+  }
+
+  .bio-field {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .progress-indicator {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 2px solid #e9ecef;
+  }
+
+  .progress-title {
+    font-weight: 600;
+    color: #6f42c1;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .progress-bar-container {
+    background: #e9ecef;
+    border-radius: 10px;
+    height: 12px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6f42c1, #e83e8c);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-align: center;
+  }
+
+  .btn-save {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.3);
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(111, 66, 193, 0.4);
+    color: white;
+  }
+
+  .btn-save:active {
+    transform: translateY(0);
+  }
+
+  .field-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6f42c1;
+    opacity: 0.6;
+  }
+
+  .form-group:focus-within .field-icon {
+    opacity: 1;
+  }
+
+  .reward-badge {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #856404;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .tips-section {
+    background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid #6f42c1;
+  }
+
+  .tips-title {
+    color: #6f42c1;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tips-list li {
+    padding: 0.5rem 0;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tips-list li::before {
+    content: "💡";
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 768px) {
+    .profile-body {
+      padding: 2rem 1.5rem;
+    }
+    
+    .profile-header h2 {
+      font-size: 2rem;
+    }
+  }
+</style>
+{% endblock extrahead %}
+
+{% block content %}
+<div class="profile-edit-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-6">
+        <div class="profile-card">
+          <!-- Header -->
+          <div class="profile-header">
+            <h2>📝 {% trans "Editar Perfil" %}</h2>
+            <p>{% trans "Complete suas informações para se conectar melhor com outros jogadores" %}</p>
+          </div>
+
+          <!-- Body -->
+          <div class="profile-body">
+            <!-- Progress Indicator -->
+            {% if not request.user.first_name or not request.user.last_name or not request.user.bio %}
+              <div class="progress-indicator">
+                <div class="progress-title">
+                  <i class="fas fa-chart-line"></i>
+                  {% trans "Progresso do Perfil" %}
+                </div>
+                <div class="progress-bar-container">
+                  {% if not request.user.first_name and not request.user.last_name and not request.user.bio %}
+                    <div class="progress-bar-fill" style="width: 0%;"></div>
+                  {% elif not request.user.first_name or not request.user.last_name %}
+                    <div class="progress-bar-fill" style="width: 33%;"></div>
+                  {% elif not request.user.bio %}
+                    <div class="progress-bar-fill" style="width: 66%;"></div>
+                  {% endif %}
+                </div>
+                <div class="progress-text">
+                  {% if not request.user.first_name and not request.user.last_name and not request.user.bio %}
+                    {% trans "0/3 campos preenchidos" %}
+                  {% elif not request.user.first_name or not request.user.last_name %}
+                    {% trans "1/3 campos preenchidos" %}
+                  {% elif not request.user.bio %}
+                    {% trans "2/3 campos preenchidos" %}
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Reward Badge -->
+              <div class="reward-badge">
+                <i class="fas fa-gift"></i>
+                {% trans "Ganhe 50 XP ao completar seu perfil!" %}
+              </div>
+
+              <!-- Tips Section -->
+              <div class="tips-section">
+                <div class="tips-title">
+                  <i class="fas fa-lightbulb"></i>
+                  {% trans "Dicas para um perfil incrível" %}
+                </div>
+                <ul class="tips-list">
+                  <li>{% trans "Use seu nome real para ser mais reconhecível" %}</li>
+                  <li>{% trans "Conte sobre seus interesses no jogo" %}</li>
+                  <li>{% trans "Mencione suas classes favoritas" %}</li>
+                  <li>{% trans "Perfis completos têm mais chances de fazer amigos!" %}</li>
+                </ul>
+              </div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              
+              <!-- Mensagens de erro do formulário -->
+              {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                  <h5><i class="fas fa-exclamation-triangle"></i> {% trans "Erro ao salvar o perfil" %}</h5>
+                  <ul class="mb-0">
+                    {% for field, errors in form.errors.items %}
+                      {% for error in errors %}
+                        <li>{{ error }}</li>
+                      {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+              
+              <!-- Personal Information -->
+              <div class="form-section">
+                <h4><i class="fas fa-user"></i> {% trans "Informações Pessoais" %}</h4>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="{{ form.first_name.id_for_label }}">
+                        <i class="fas fa-user-circle me-2"></i>{% trans "Nome" %}
+                      </label>
+                      {{ form.first_name }}
+                      <i class="fas fa-user field-icon"></i>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="{{ form.last_name.id_for_label }}">
+                        <i class="fas fa-user-circle me-2"></i>{% trans "Sobrenome" %}
+                      </label>
+                      {{ form.last_name }}
+                      <i class="fas fa-user field-icon"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="{{ form.email.id_for_label }}">
+                    <i class="fas fa-envelope me-2"></i>{% trans "E-mail" %}
+                  </label>
+                  {{ form.email }}
+                  <i class="fas fa-envelope field-icon"></i>
+                  {% if form.email.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.email.errors %}
+                        <small><i class="fas fa-exclamation-circle"></i> {{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Bio Section -->
+              <div class="form-section">
+                <h4><i class="fas fa-quote-left"></i> {% trans "Sobre Você" %}</h4>
+                <div class="form-group">
+                  <label for="{{ form.bio.id_for_label }}">
+                    <i class="fas fa-heart me-2"></i>{% trans "Biografia" %}
+                  </label>
+                  {{ form.bio }}
+                  <i class="fas fa-heart field-icon"></i>
+                  <small class="form-text text-muted">
+                    {% trans "Conte um pouco sobre você, seus interesses no jogo e o que você gosta de fazer!" %}
+                  </small>
+                </div>
+              </div>
+
+              <!-- Website Section -->
+              <div class="form-section">
+                <h4><i class="fas fa-link"></i> {% trans "Links" %}</h4>
+                <div class="form-group">
+                  <label for="{{ form.website.id_for_label }}">
+                    <i class="fas fa-globe me-2"></i>{% trans "Website" %}
+                  </label>
+                  {{ form.website }}
+                  <i class="fas fa-globe field-icon"></i>
+                  <small class="form-text text-muted">
+                    {% trans "Link para seu site pessoal, blog, ou portfólio" %}
+                  </small>
+                  {% if form.website.errors %}
+                    <div class="text-danger mt-1">
+                      {% for error in form.website.errors %}
+                        <small><i class="fas fa-exclamation-circle"></i> {{ error }}</small>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Additional Information -->
+              <div class="form-section">
+                <h4><i class="fas fa-info-circle"></i> {% trans "Informações Adicionais" %}</h4>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="{{ form.cpf.id_for_label }}">
+                        <i class="fas fa-id-card me-2"></i>{% trans "CPF" %}
+                      </label>
+                      {{ form.cpf }}
+                      <i class="fas fa-id-card field-icon"></i>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="{{ form.gender.id_for_label }}">
+                        <i class="fas fa-venus-mars me-2"></i>{% trans "Gênero" %}
+                      </label>
+                      {{ form.gender }}
+                      <i class="fas fa-venus-mars field-icon"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Save Button -->
+              <button type="submit" class="btn btn-save">
+                <i class="fas fa-save me-2"></i>{% trans "Salvar Alterações" %}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Incluir o JavaScript para a máscara CPF -->
+<script src="{% static 'js/mask-cpf.js' %}"></script>
+
+<script>
+// Adicionar classes CSS aos campos do formulário
+document.addEventListener('DOMContentLoaded', function() {
+  const formControls = document.querySelectorAll('input, select, textarea');
+  formControls.forEach(function(control) {
+    control.classList.add('form-control');
+  });
+  
+  // Adicionar classe específica para o campo bio
+  const bioField = document.querySelector('#{{ form.bio.id_for_label }}');
+  if (bioField) {
+    bioField.classList.add('bio-field');
+  }
+
+  // Destacar campos com erro
+  const errorFields = document.querySelectorAll('.text-danger');
+  errorFields.forEach(function(errorField) {
+    const inputField = errorField.previousElementSibling;
+    if (inputField && inputField.classList.contains('form-control')) {
+      inputField.classList.add('is-invalid');
+    }
+  });
+
+  // Remover classe de erro quando o usuário começar a digitar
+  const inputs = document.querySelectorAll('.form-control');
+  inputs.forEach(function(input) {
+    input.addEventListener('input', function() {
+      if (this.classList.contains('is-invalid')) {
+        this.classList.remove('is-invalid');
+        const errorDiv = this.parentElement.querySelector('.text-danger');
+        if (errorDiv) {
+          errorDiv.style.display = 'none';
+        }
+      }
+    });
+  });
+});
+</script>
+{% endblock content %}

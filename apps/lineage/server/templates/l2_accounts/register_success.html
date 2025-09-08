@@ -1,0 +1,22 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4 text-center">
+    <h2 class="mb-4 text-success">{% trans "Conta criada com sucesso!" %}</h2>
+    
+    <div class="alert alert-success">
+      {% trans "Seu registro foi concluído com sucesso." %}<br>
+      {% trans "Pode levar até 5 minutos para a conta estar disponível no jogo e no painel." %}
+    </div>
+    
+    <div class="d-grid gap-2 col-6 mx-auto mt-4">
+      <a href="{% url 'server:account_dashboard' %}" class="btn btn-primary btn-lg">
+        {% trans "Ir para o painel" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

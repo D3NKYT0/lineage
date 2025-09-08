@@ -1,0 +1,75 @@
+{% extends 'tops/base-tops.html' %}
+{% load static i18n %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'default/css/tops-tables.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="tops-container">
+    <div class="tops-nav-container">
+        <div class="tops-nav-header">
+            <h2>{% trans "Rankings" %}</h2>
+        </div>
+        <div class="tops-nav-menu">
+            <ul class="tops-nav-list">
+                <li class="tops-nav-item">
+                    <a href="{% url 'tops:home' %}" {% if request.resolver_match.url_name == 'home' %}class="tops-nav-link active"{% else %}class="tops-nav-link"{% endif %}>
+                        <i class="fas fa-home"></i>{% trans "Início" %}
+                    </a>
+                </li>
+                <li class="tops-nav-item">
+                    <a href="{% url 'tops:pvp' %}" {% if request.resolver_match.url_name == 'pvp' %}class="tops-nav-link active"{% else %}class="tops-nav-link"{% endif %}>
+                        <i class="fas fa-khanda"></i>{% trans "Ranking PvP" %}
+                    </a>
+                </li>
+                <li class="tops-nav-item">
+                    <a href="{% url 'tops:pk' %}" {% if request.resolver_match.url_name == 'pk' %}class="tops-nav-link active"{% else %}class="tops-nav-link"{% endif %}>
+                        <i class="fas fa-skull"></i>{% trans "Ranking PK" %}
+                    </a>
+                </li>
+                <li class="tops-nav-item">
+                    <a href="{% url 'tops:adena' %}" {% if request.resolver_match.url_name == 'adena' %}class="tops-nav-link active"{% else %}class="tops-nav-link"{% endif %}>
+                        <i class="fas fa-coins"></i>{% trans "Ranking Adena" %}
+                    </a>
+                </li>
+                <li class="tops-nav-item">
+                    <a href="{% url 'tops:clans' %}" {% if request.resolver_match.url_name == 'clans' %}class="tops-nav-link active"{% else %}class="tops-nav-link"{% endif %}>
+                        <i class="fas fa-shield-alt"></i>{% trans "Ranking Clans" %}
+                    </a>
+                </li>
+                <li class="tops-nav-item">
+                    <a href="{% url 'tops:level' %}" {% if request.resolver_match.url_name == 'level' %}class="tops-nav-link active"{% else %}class="tops-nav-link"{% endif %}>
+                        <i class="fas fa-level-up-alt"></i>{% trans "Ranking Nível" %}
+                    </a>
+                </li>
+                <li class="tops-nav-item">
+                    <a href="{% url 'tops:online' %}" {% if request.resolver_match.url_name == 'online' %}class="tops-nav-link active"{% else %}class="tops-nav-link"{% endif %}>
+                        <i class="fas fa-users"></i>{% trans "Top Online" %}
+                    </a>
+                </li>
+                <li class="tops-nav-item">
+                    <a href="{% url 'tops:olympiad' %}" {% if request.resolver_match.url_name == 'olympiad' %}class="tops-nav-link active"{% else %}class="tops-nav-link"{% endif %}>
+                        <i class="fas fa-medal"></i>{% trans "Ranking Olimpíada" %}
+                    </a>
+                </li>
+                <li class="tops-nav-item">
+                    <a href="{% url 'tops:siege' %}" {% if request.resolver_match.url_name == 'siege' %}class="tops-nav-link active"{% else %}class="tops-nav-link"{% endif %}>
+                        <i class="fas fa-chess-rook"></i>{% trans "Castle & Siege" %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="tops-content">
+        <div class="content-wrapper">
+            {% block tops_content %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+<script src="{% static 'default/js/tops.js' %}"></script>
+{% endblock %} 

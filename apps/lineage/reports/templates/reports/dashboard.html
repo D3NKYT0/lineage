@@ -1,0 +1,120 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{% trans "Relatórios" %}</li>
+{% endblock breadcrumbs %}
+
+{% block page_header %}
+<h5 class="display-5">{% trans "Dashboard de Relatórios" %}</h5>
+{% endblock page_header %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <!-- Header dos Relatórios -->
+        <div class="reports-header">
+          <h1 class="reports-title">
+            <i class="fas fa-chart-bar me-3"></i>
+            {% trans "Dashboard de Relatórios" %}
+          </h1>
+          <p class="reports-subtitle">
+            {% trans "Acesse todos os relatórios do sistema. Visualize estatísticas de inventário, leilões, compras e muito mais de forma organizada e intuitiva." %}
+          </p>
+        </div>
+
+        <!-- Cards dos Relatórios -->
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="reports-card">
+              <div class="reports-card-header">
+                <i class="fas fa-boxes reports-icon"></i>
+                <h2 class="reports-card-title">{% trans "Relatório de Inventário" %}</h2>
+                <p class="reports-card-description">
+                  {% trans "Acompanhe todas as movimentações de itens no inventário. Visualize tendências e itens mais movimentados." %}
+                </p>
+              </div>
+              <div class="reports-card-body">
+                <a href="{% url 'reports:relatorio_movimentacoes_inventario' %}" class="reports-button">
+                  <i class="fas fa-chart-line me-2"></i>
+                  {% trans "Ver Relatório" %}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="reports-card">
+              <div class="reports-card-header">
+                <i class="fas fa-gavel reports-icon"></i>
+                <h2 class="reports-card-title">{% trans "Relatório de Leilões" %}</h2>
+                <p class="reports-card-description">
+                  {% trans "Analise leilões ativos, histórico de lances e estatísticas detalhadas do sistema de leilões." %}
+                </p>
+              </div>
+              <div class="reports-card-body">
+                <a href="{% url 'reports:relatorio_leiloes' %}" class="reports-button">
+                  <i class="fas fa-chart-pie me-2"></i>
+                  {% trans "Ver Relatório" %}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="reports-card">
+              <div class="reports-card-header">
+                <i class="fas fa-shopping-cart reports-icon"></i>
+                <h2 class="reports-card-title">{% trans "Relatório de Compras" %}</h2>
+                <p class="reports-card-description">
+                  {% trans "Analise todas as compras realizadas, itens mais vendidos e estatísticas de receita." %}
+                </p>
+              </div>
+              <div class="reports-card-body">
+                <a href="{% url 'reports:relatorio_compras' %}" class="reports-button">
+                  <i class="fas fa-chart-bar me-2"></i>
+                  {% trans "Ver Relatório" %}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="reports-card">
+              <div class="reports-card-header">
+                <i class="fas fa-users reports-icon"></i>
+                <h2 class="reports-card-title">{% trans "Relatório da Rede Social" %}</h2>
+                <p class="reports-card-description">
+                  {% trans "Analise engajamento, usuários mais ativos, posts populares e estatísticas completas da rede social." %}
+                </p>
+              </div>
+              <div class="reports-card-body">
+                <a href="{% url 'reports:relatorio_rede_social' %}" class="reports-button">
+                  <i class="fas fa-chart-line me-2"></i>
+                  {% trans "Ver Relatório" %}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botão de Volta -->
+        <div class="text-center mt-5">
+          <a href="{% url 'dashboard' %}" class="report-back-button">
+            <i class="fas fa-arrow-left me-2"></i>
+            {% trans "Voltar ao Dashboard Principal" %}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

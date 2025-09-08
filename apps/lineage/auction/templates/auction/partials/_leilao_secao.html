@@ -1,0 +1,60 @@
+{% load i18n l10n static %}
+{% load itens_extras %}
+
+<div class="mt-5">
+  <h3>{{ titulo }}</h3>
+
+  {% if lista %}
+    <div class="row g-4">
+      {% for leilao in lista %}
+        {% include "auction/partials/_leilao_card.html" %}
+      {% endfor %}
+    </div>
+
+    {% if page.has_other_pages %}
+      <nav>
+        <ul class="pagination">
+          {% if page.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?{{ page_param }}={{ page.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">&laquo;</span>
+            </li>
+          {% endif %}
+
+          {% for num in page.paginator.page_range %}
+            {% if page.number == num %}
+              <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?{{ page_param }}={{ num }}">{{ num }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if page.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?{{ page_param }}={{ page.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">&raquo;</span>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="alert alert-secondary text-center" role="alert">
+      {{ msg_vazio }}
+    </div>
+  {% endif %}
+</div>

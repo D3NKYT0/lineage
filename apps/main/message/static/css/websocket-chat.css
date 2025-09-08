@@ -1,0 +1,280 @@
+/* Estilos adicionais para o chat WebSocket */
+
+/* Animações de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.message {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.message.own {
+    animation: slideInRight 0.3s ease-out;
+}
+
+/* Indicador de digitação */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.5rem 1rem;
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 2px;
+}
+
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #6c757d;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing {
+    0%, 80%, 100% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Status de conexão */
+.connection-status {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 9999;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.connection-status.connected {
+    background: #28a745;
+    color: white;
+}
+
+.connection-status.disconnected {
+    background: #dc3545;
+    color: white;
+}
+
+/* Melhorias no scroll */
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+/* Estilos para o cabeçalho da mensagem */
+.message-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 5px;
+}
+
+.message-sender {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+.message-time {
+    font-size: 12px;
+    color: #666;
+}
+
+/* Estilos específicos para mensagens do usuário atual */
+.message.own .message-header .message-sender {
+    color: white;
+}
+
+.message.own .message-header .message-time {
+    color: white;
+    opacity: 0.9;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Efeitos hover melhorados */
+.friend-item:hover {
+    transform: translateX(5px);
+}
+
+.message-content:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+/* Responsividade melhorada */
+@media (max-width: 576px) {
+    .chat-card {
+        height: 90vh;
+        margin: 0;
+        border-radius: 0;
+    }
+    
+    .friends-sidebar {
+        height: 150px;
+    }
+    
+    .chat-main {
+        height: calc(100% - 150px);
+    }
+    
+    .message-content {
+        max-width: 85%;
+    }
+}
+
+/* Animações de loading */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #6f42c1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Notificações de erro/sucesso */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 10000;
+    max-width: 300px;
+    animation: slideInRight 0.3s ease-out;
+}
+
+.notification.error {
+    background: #dc3545;
+    color: white;
+}
+
+.notification.success {
+    background: #28a745;
+    color: white;
+}
+
+.notification.info {
+    background: #17a2b8;
+    color: white;
+}
+
+/* Melhorias na busca */
+.search-container {
+    position: relative;
+}
+
+.search-container::after {
+    content: '🔍';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Efeitos de foco */
+.message-input:focus {
+    transform: scale(1.02);
+}
+
+.send-btn:active {
+    transform: scale(0.95);
+}
+
+/* Melhorias na lista de amigos */
+.friends-list {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.friends-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.friends-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.friends-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+/* Estados de carregamento */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #6f42c1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+} 

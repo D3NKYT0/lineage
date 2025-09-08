@@ -1,0 +1,265 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Editar Licença" %} - {{ settings.PROJECT_TITLE }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">{% trans "Editar Licença PDL" %}</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{% url 'licence:detail' license.id %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> {% trans "Voltar" %}
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-edit"></i> {% trans "Informações da Licença" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="license_type" class="form-label">{% trans "Tipo de Licença" %} *</label>
+                                    <select class="form-select" id="license_type" name="license_type" required>
+                                        {% for value, label in license_types %}
+                                        <option value="{{ value }}" {% if license.license_type == value %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="domain" class="form-label">{% trans "Domínio" %} *</label>
+                                    <input type="text" class="form-control" id="domain" name="domain" 
+                                           value="{{ license.domain }}" placeholder="exemplo.com" required>
+                                    <div class="form-text">{% trans "Domínio onde a licença será ativada" %}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="contact_email" class="form-label">{% trans "E-mail de Contato" %} *</label>
+                                    <input type="email" class="form-control" id="contact_email" name="contact_email" 
+                                           value="{{ license.contact_email }}" placeholder="contato@exemplo.com" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="contact_phone" class="form-label">{% trans "Telefone de Contato" %}</label>
+                                    <input type="text" class="form-control" id="contact_phone" name="contact_phone" 
+                                           value="{{ license.contact_phone }}" placeholder="(11) 99999-9999">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="company_name" class="form-label">{% trans "Nome da Empresa/Cliente" %}</label>
+                            <input type="text" class="form-control" id="company_name" name="company_name" 
+                                   value="{{ license.company_name }}" placeholder="Nome da empresa ou cliente">
+                        </div>
+
+                        <!-- Campos específicos do PDL PRO -->
+                        <div id="pro-fields" style="display: none;">
+                            <hr>
+                            <h6 class="text-primary">{% trans "Campos Específicos - PDL PRO" %}</h6>
+                            <div class="mb-3">
+                                <label for="contract_number" class="form-label">{% trans "Número do Contrato" %} *</label>
+                                <input type="text" class="form-control" id="contract_number" name="contract_number" 
+                                       value="{{ license.contract_number }}" placeholder="CONTRATO-2024-001">
+                                <div class="form-text">
+                                    {% trans "Número do contrato comercial (obrigatório para PDL PRO)" %}<br>
+                                    <small class="text-warning">
+                                        <i class="fas fa-info-circle"></i> 
+                                        {% trans "O contrato será validado via registro DNS TXT em pdl-contract.{domain}" %}
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Funcionalidades PRO -->
+                            <div class="mb-3">
+                                <label class="form-label">{% trans "Funcionalidades Habilitadas" %}</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="feature_support" name="feature_support" 
+                                                   {% if license.features_enabled.support %}checked{% endif %}>
+                                            <label class="form-check-label" for="feature_support">
+                                                {% trans "Suporte Técnico" %}
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="feature_updates" name="feature_updates" 
+                                                   {% if license.features_enabled.updates %}checked{% endif %}>
+                                            <label class="form-check-label" for="feature_updates">
+                                                {% trans "Atualizações" %}
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="feature_customization" name="feature_customization" 
+                                                   {% if license.features_enabled.customization %}checked{% endif %}>
+                                            <label class="form-check-label" for="feature_customization">
+                                                {% trans "Personalização" %}
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="feature_priority_support" name="feature_priority_support" 
+                                                   {% if license.features_enabled.priority_support %}checked{% endif %}>
+                                            <label class="form-check-label" for="feature_priority_support">
+                                                {% trans "Suporte Prioritário" %}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="feature_source_code" name="feature_source_code" 
+                                                   {% if license.features_enabled.source_code %}checked{% endif %}>
+                                            <label class="form-check-label" for="feature_source_code">
+                                                {% trans "Código Fonte" %}
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="feature_installation_service" name="feature_installation_service" 
+                                                   {% if license.features_enabled.installation_service %}checked{% endif %}>
+                                            <label class="form-check-label" for="feature_installation_service">
+                                                {% trans "Serviço de Instalação" %}
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="feature_database_integration" name="feature_database_integration" 
+                                                   {% if license.features_enabled.database_integration %}checked{% endif %}>
+                                            <label class="form-check-label" for="feature_database_integration">
+                                                {% trans "Integração com Banco de Dados" %}
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">{% trans "Observações" %}</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3" 
+                                      placeholder="Observações adicionais sobre a licença">{{ license.notes }}</textarea>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'licence:detail' license.id %}" class="btn btn-secondary me-md-2">
+                                {% trans "Cancelar" %}
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> {% trans "Salvar Alterações" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Informações sobre os tipos de licença -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> {% trans "Tipos de Licença" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="text-info">PDL FREE</h6>
+                        <ul class="list-unstyled small">
+                            <li><i class="fas fa-check text-success"></i> {% trans "Uso gratuito" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Sem contrato" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Funcionalidades básicas" %}</li>
+                            <li><i class="fas fa-times text-danger"></i> {% trans "Sem suporte oficial" %}</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6 class="text-success">PDL PRO</h6>
+                        <ul class="list-unstyled small">
+                            <li><i class="fas fa-check text-success"></i> {% trans "Suporte profissional" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Atualizações garantidas" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Personalização" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Código fonte" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "SLA garantido" %}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status atual da licença -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line"></i> {% trans "Status Atual" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>{% trans "Status:" %}</strong>
+                        <span class="badge {% if license.status == 'active' %}bg-success{% elif license.status == 'expired' %}bg-danger{% else %}bg-warning{% endif %}">
+                            {{ license.get_status_display }}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>{% trans "Chave:" %}</strong><br>
+                        <code class="small">{{ license.license_key }}</code>
+                    </div>
+                    {% if license.activated_at %}
+                    <div class="mb-3">
+                        <strong>{% trans "Ativada em:" %}</strong><br>
+                        {{ license.activated_at|date:"d/m/Y H:i" }}
+                    </div>
+                    {% endif %}
+                    {% if license.expires_at %}
+                    <div class="mb-3">
+                        <strong>{% trans "Expira em:" %}</strong><br>
+                        {{ license.expires_at|date:"d/m/Y H:i" }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const licenseTypeSelect = document.getElementById('license_type');
+    const proFields = document.getElementById('pro-fields');
+    const contractField = document.getElementById('contract_number');
+    
+    function toggleFields() {
+        const selectedType = licenseTypeSelect.value;
+        
+        if (selectedType === 'pro') {
+            proFields.style.display = 'block';
+            if (contractField) {
+                contractField.required = true;
+            }
+        } else {
+            proFields.style.display = 'none';
+            if (contractField) {
+                contractField.required = false;
+            }
+        }
+    }
+    
+    licenseTypeSelect.addEventListener('change', toggleFields);
+    toggleFields(); // Executa na carga inicial
+});
+</script>
+{% endblock %}

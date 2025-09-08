@@ -1,0 +1,592 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+{% load solicitation_filters %}
+
+{% block title %}{% trans "Detalhe da Solicitação" %}{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .solicitation-detail-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .header-card {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border: 2px solid #6f42c1;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .header-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .detail-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+    margin-bottom: 2rem;
+  }
+
+  .card-header-custom {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border: none;
+    color: white;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-footer-custom {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border-top: 1px solid #6f42c1;
+    color: #f8f9fa;
+  }
+
+  .action-btn {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    color: white;
+  }
+
+  .action-btn-warning {
+    background: linear-gradient(45deg, #ffc107, #fd7e14);
+  }
+
+  .action-btn-warning:hover {
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+  }
+
+  .protocol-badge {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 0.9em;
+    padding: 0.5em 1em;
+    letter-spacing: 1px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color: #00d9ff !important;
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .protocol-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .description-box {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border: 1px solid #6f42c1;
+    border-radius: 8px;
+    padding: 1rem;
+    color: #f8f9fa;
+  }
+
+     .form-control, .form-select {
+     background: linear-gradient(to bottom right, #2a2a3e, #222230);
+     border: 1px solid #6f42c1;
+     border-radius: 8px;
+     color: #f8f9fa;
+     transition: all 0.3s ease;
+   }
+
+   .form-control:focus, .form-select:focus {
+     background: linear-gradient(to bottom right, #2a2a3e, #222230);
+     border-color: #00d9ff;
+     box-shadow: 0 0 10px rgba(13, 202, 240, 0.3);
+     color: #f8f9fa;
+   }
+
+                                                               /* Estilização das opções do select */
+       .form-select option,
+       select option {
+         background: #2a2a3e !important;
+         color: #ffffff !important;
+         border: none;
+         padding: 8px 12px;
+       }
+
+      .form-select option:hover,
+      select option:hover {
+        background: #6f42c1 !important;
+        color: white !important;
+      }
+
+      .form-select option:checked,
+      select option:checked {
+        background: #6f42c1 !important;
+        color: white !important;
+      }
+
+      /* Estilização específica para selects do Django */
+      select[id*="status"],
+      select[id*="assigned_to"] {
+        background: linear-gradient(to bottom right, #2a2a3e, #222230) !important;
+        border: 1px solid #6f42c1 !important;
+        border-radius: 8px !important;
+        color: #f8f9fa !important;
+      }
+
+             select[id*="status"] option,
+       select[id*="assigned_to"] option {
+         background: #2a2a3e !important;
+         color: #ffffff !important;
+         border: none !important;
+         padding: 8px 12px !important;
+       }
+
+      select[id*="status"] option:hover,
+      select[id*="assigned_to"] option:hover {
+        background: #6f42c1 !important;
+        color: white !important;
+      }
+
+      select[id*="status"] option:checked,
+      select[id*="assigned_to"] option:checked {
+        background: #6f42c1 !important;
+        color: white !important;
+      }
+
+    /* Estilização do dropdown do select */
+    .form-select:focus {
+      background: linear-gradient(to bottom right, #2a2a3e, #222230);
+      border-color: #00d9ff;
+      box-shadow: 0 0 10px rgba(13, 202, 240, 0.3);
+      color: #f8f9fa;
+    }
+
+    /* Forçar estilo do dropdown */
+    select.form-select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23f8f9fa' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e");
+    }
+
+                                       /* Estilização específica para o dropdown aberto */
+       .form-select:focus option,
+       select:focus option {
+         background-color: #2a2a3e !important;
+         color: #ffffff !important;
+       }
+
+             /* Estilização para diferentes navegadores */
+       .form-select option:first-child,
+       select option:first-child {
+         background-color: #2a2a3e !important;
+         color: #ffffff !important;
+       }
+
+             /* Estilização específica para selects do Django quando focados */
+       select[id*="status"]:focus option,
+       select[id*="assigned_to"]:focus option {
+         background-color: #2a2a3e !important;
+         color: #ffffff !important;
+       }
+
+       select[id*="status"] option:first-child,
+       select[id*="assigned_to"] option:first-child {
+         background-color: #2a2a3e !important;
+         color: #ffffff !important;
+       }
+
+    /* Estilização para Firefox */
+    .form-select:-moz-focusring {
+      color: transparent;
+      text-shadow: 0 0 0 #f8f9fa;
+    }
+
+         /* Estilização para Chrome/Safari */
+     .form-select::-ms-expand {
+       display: none;
+     }
+
+     /* Forçar estilo para todos os selects do Django */
+     select {
+       background: linear-gradient(to bottom right, #2a2a3e, #222230) !important;
+       border: 1px solid #6f42c1 !important;
+       border-radius: 8px !important;
+       color: #f8f9fa !important;
+       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23f8f9fa' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+     }
+
+           /* Forçar estilo para todas as opções */
+      select option {
+        background-color: #2a2a3e !important;
+        color: #ffffff !important;
+        border: none !important;
+        padding: 8px 12px !important;
+      }
+
+      /* Forçar estilo para opções quando o select está aberto */
+      select:focus option {
+        background-color: #2a2a3e !important;
+        color: #ffffff !important;
+      }
+
+     /* Forçar estilo para opções selecionadas */
+     select option:checked,
+     select option:selected {
+       background-color: #6f42c1 !important;
+       color: white !important;
+     }
+
+     /* Forçar estilo para opções no hover */
+     select option:hover {
+       background-color: #6f42c1 !important;
+       color: white !important;
+     }
+
+  .form-label {
+    color: #f8f9fa;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-warning {
+    background: linear-gradient(45deg, #ffc107, #fd7e14);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 25px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+    color: white;
+  }
+
+  .event-box {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #f8f9fa;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .event-box:hover {
+    transform: scale(1.02);
+  }
+
+  .event-thumbnail {
+    flex: 0 0 100px;
+    margin-right: 20px;
+  }
+
+  .event-thumbnail img, .no-image-placeholder {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #6f42c1;
+  }
+
+     .no-image-placeholder {
+     background: linear-gradient(135deg, #6f42c1, #e83e8c);
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: white;
+     font-size: 2rem;
+     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+   }
+
+  .event-content {
+    flex-grow: 1;
+  }
+
+  .event-action {
+    color: #ccc !important;
+  }
+
+  .list-group-item {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border: 1px solid #6f42c1;
+    color: #f8f9fa;
+  }
+
+  .alert-info {
+    background: linear-gradient(135deg, rgba(13, 202, 240, 0.1), rgba(13, 202, 240, 0.05));
+    border: 1px solid rgba(13, 202, 240, 0.3);
+    border-radius: 12px;
+    color: #f8f9fa;
+  }
+
+  .section-title {
+    color: #00d9ff;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 2px #000;
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="solicitation-detail-bg">
+  <div class="container">
+    <!-- Header da página com botões -->
+    <div class="header-card">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <div class="d-flex align-items-center">
+            <div class="me-4">
+              <i class="fas fa-file-alt fa-3x text-white" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);"></i>
+            </div>
+            <div>
+              <h1 class="header-title">{% trans "Detalhe da Solicitação" %}</h1>
+              <p class="text-white-50">{% trans "Visualize e gerencie os detalhes da solicitação" %}</p>
+            </div>
+          </div>
+        </div>
+                 <div class="col-lg-4 text-end">
+           {% if not solicitation.status|in_list:"resolved,closed,cancelled,rejected" %}
+             <div class="d-flex justify-content-end gap-2">
+               <a href="{% url 'administrator:chat_room' solicitation.protocol %}" class="action-btn">
+                 <i class="fas fa-comments"></i>{% trans "Ir para o Chat" %}
+               </a>
+               {% if user.is_staff or user == solicitation.user %}
+               <a href="{% url 'solicitation:add_event_to_history' solicitation.protocol %}" class="action-btn action-btn-warning">
+                 <i class="fas fa-plus"></i>{% trans "Adicionar Evento" %}
+               </a>
+               {% endif %}
+             </div>
+           {% else %}
+             <div class="alert alert-info mb-0">
+               <i class="fas fa-info-circle"></i> 
+               {% trans "Esta solicitação está" %} <strong>{{ solicitation.get_status_display|lower }}</strong> {% trans "e não permite mais interações." %}
+             </div>
+           {% endif %}
+         </div>
+      </div>
+    </div>
+
+    <!-- Detalhes da Solicitação -->
+    <div class="detail-card">
+      <div class="card-header card-header-custom">
+        <h5 class="mb-0">{% trans "Informações da Solicitação" %}</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong class="text-white">{% trans "Protocolo:" %}</strong> 
+              {% if solicitation.get_display_protocol %}
+                <span class="badge protocol-badge">{{ solicitation.get_display_protocol }}</span>
+              {% else %}
+                <span class="badge bg-warning protocol-badge">
+                  <i class="fas fa-exclamation-triangle"></i> {% trans "Gerando..." %}
+                </span>
+              {% endif %}
+            </p>
+            <p><strong class="text-white">{% trans "Título:" %}</strong> {{ solicitation.title }}</p>
+            <p><strong class="text-white">{% trans "Categoria:" %}</strong> <span class="badge bg-secondary">{{ solicitation.get_category_display }}</span></p>
+            <p><strong class="text-white">{% trans "Prioridade:" %}</strong> 
+              {% if solicitation.priority == 'low' %}
+                <span class="badge bg-success">{{ solicitation.get_priority_display }}</span>
+              {% elif solicitation.priority == 'medium' %}
+                <span class="badge bg-warning">{{ solicitation.get_priority_display }}</span>
+              {% elif solicitation.priority == 'high' %}
+                <span class="badge bg-danger">{{ solicitation.get_priority_display }}</span>
+              {% elif solicitation.priority == 'urgent' %}
+                <span class="badge bg-dark">{{ solicitation.get_priority_display }}</span>
+              {% elif solicitation.priority == 'critical' %}
+                <span class="badge bg-danger">{{ solicitation.get_priority_display }}</span>
+              {% endif %}
+            </p>
+          </div>
+          <div class="col-md-6">
+            <p><strong class="text-white">{% trans "Status:" %}</strong> 
+              {% if solicitation.status == 'open' %}
+                <span class="badge bg-primary">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'pending' %}
+                <span class="badge bg-secondary">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'in_progress' %}
+                <span class="badge bg-warning">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'waiting_user' %}
+                <span class="badge bg-info">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'waiting_third_party' %}
+                <span class="badge bg-secondary">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'resolved' %}
+                <span class="badge bg-success">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'closed' %}
+                <span class="badge bg-dark">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'cancelled' %}
+                <span class="badge bg-secondary">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'rejected' %}
+                <span class="badge bg-danger">{{ solicitation.get_status_display }}</span>
+              {% endif %}
+            </p>
+            <p><strong class="text-white">{% trans "Criado em:" %}</strong> {{ solicitation.created_at|date:"d/m/Y H:i" }}</p>
+            {% if solicitation.resolved_at %}
+              <p><strong class="text-white">{% trans "Resolvido em:" %}</strong> {{ solicitation.resolved_at|date:"d/m/Y H:i" }}</p>
+            {% endif %}
+            {% if solicitation.closed_at %}
+              <p><strong class="text-white">{% trans "Fechado em:" %}</strong> {{ solicitation.closed_at|date:"d/m/Y H:i" }}</p>
+            {% endif %}
+            {% if solicitation.assigned_to %}
+              <p><strong class="text-white">{% trans "Atribuído para:" %}</strong> {{ solicitation.assigned_to.username }}</p>
+            {% endif %}
+          </div>
+        </div>
+        
+        <div class="row mt-3">
+          <div class="col-12">
+            <p><strong class="text-white">{% trans "Descrição:" %}</strong></p>
+            <div class="description-box">
+              {{ solicitation.description|linebreaks }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Participantes logo abaixo -->
+      <div class="card-footer card-footer-custom">
+        <h6 class="text-info">{% trans "Participantes" %}</h6>
+        <ul class="list-group list-group-flush">
+          {% for participant in participants %}
+            <li class="list-group-item">
+              {{ participant.user.username|upper }} - {{ participant.user.email }}
+            </li>
+          {% empty %}
+            <li class="list-group-item">{% trans "Nenhum participante cadastrado." %}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Formulário de Mudança de Status (apenas para staff) -->
+    {% if user.is_staff and status_form %}
+    <div class="detail-card">
+      <div class="card-header card-header-custom">
+        <h5 class="mb-0">{% trans "Alterar Status da Solicitação" %}</h5>
+      </div>
+      <div class="card-body">
+        <form method="post" action="{% url 'solicitation:status_update' solicitation.protocol %}">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-4">
+              <label for="{{ status_form.status.id_for_label }}" class="form-label">{% trans "Novo Status" %} *</label>
+              {{ status_form.status }}
+              {% if status_form.status.errors %}
+                <div class="text-danger">{{ status_form.status.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-4">
+              <label for="{{ status_form.assigned_to.id_for_label }}" class="form-label">{% trans "Atribuir para" %}</label>
+              {{ status_form.assigned_to }}
+              {% if status_form.assigned_to.errors %}
+                <div class="text-danger">{{ status_form.assigned_to.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+              <button type="submit" class="btn btn-warning">
+                <i class="fas fa-save me-2"></i>{% trans "Atualizar Status" %}
+              </button>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <label for="{{ status_form.comment.id_for_label }}" class="form-label">{% trans "Comentário" %}</label>
+              {{ status_form.comment }}
+              {% if status_form.comment.errors %}
+                <div class="text-danger">{{ status_form.comment.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Histórico de Eventos -->
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <h4 class="section-title">
+          <i class="fas fa-history me-2"></i>{% trans "Histórico de Eventos" %}
+        </h4>
+
+        {% for event in history %}
+          <div class="event-box">
+            <div class="d-flex">
+                             <div class="event-thumbnail">
+                 {% if event.image %}
+                   <img src="{{ event.image.url }}" alt="Event Image">
+                 {% else %}
+                   <div class="no-image-placeholder">
+                     <i class="fas fa-calendar-alt"></i>
+                   </div>
+                 {% endif %}
+               </div>
+              <div class="event-content">
+                <p class="mb-1"><strong class="text-white">{{ event.timestamp|date:"d/m/Y H:i" }}</strong></p>
+                <p class="mb-1"><strong class="text-white">{% trans "Usuário:" %}</strong> {% if event.user %}{{ event.user.username }}{% else %}{% trans "Sistema" %}{% endif %}</p>
+                <p class="event-action">{{ event.action }}</p>
+                {% if event.image %}
+                  <img src="{{ event.image.url }}" alt="Event Image" class="img-fluid mt-2 rounded" style="max-width: 300px; border: 2px solid #6f42c1;">
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="text-center text-muted">
+            <i class="fas fa-inbox fa-3x mb-3" style="color: #6f42c1;"></i>
+            <p>{% trans "Nenhum evento registrado." %}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<!-- JS adicional se necessário -->
+{% endblock extra_js %}

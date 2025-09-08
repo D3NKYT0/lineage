@@ -1,0 +1,251 @@
+{% extends "layouts/base.html" %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .box-manager-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .box-manager-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #fd7e14;
+    text-align: center;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(253, 126, 20, 0.5);
+  }
+
+  .delete-card {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #dc3545;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3);
+    transition: all 0.3s ease;
+    color: #f8f9fa;
+    overflow: hidden;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .delete-header {
+    background: #dc3545;
+    border-radius: 15px 15px 0 0;
+    padding: 2rem;
+    margin: -1px -1px 0 -1px;
+    text-align: center;
+  }
+
+  .delete-header-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+  }
+
+  .delete-content {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .delete-message {
+    color: #f8f9fa;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .box-info {
+    background: rgba(220, 53, 69, 0.1);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .box-type-name {
+    color: #fd7e14;
+    font-weight: 700;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    text-shadow: 0 0 10px rgba(253, 126, 20, 0.3);
+  }
+
+  .box-details {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .detail-item {
+    text-align: center;
+  }
+
+  .detail-label {
+    color: #b8c2cc;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+  }
+
+  .detail-value {
+    color: #f8f9fa;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .warning-icon {
+    font-size: 4rem;
+    color: #fd7e14;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 20px rgba(253, 126, 20, 0.5);
+  }
+
+  .action-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+    margin: 0 0.5rem;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.6);
+    color: white;
+    text-decoration: none;
+  }
+
+  .cancel-btn {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+  }
+
+  .cancel-btn:hover {
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @media (max-width: 768px) {
+    .box-manager-title {
+      font-size: 2rem;
+    }
+    
+    .delete-content {
+      padding: 1.5rem;
+    }
+    
+    .action-btn {
+      display: block;
+      margin: 0.5rem auto;
+      width: 200px;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="box-manager-bg">
+  <div class="container">
+    <h1 class="box-manager-title fade-in-up">
+      <i class="fas fa-exclamation-triangle me-3"></i>
+      {% trans "Confirmar Exclusão" %}
+    </h1>
+
+    <div class="delete-card fade-in-up">
+      <div class="delete-header">
+        <h4 class="delete-header-title">
+          <i class="fas fa-trash me-2"></i>
+          {% trans "Excluir Caixa" %}
+        </h4>
+      </div>
+      <div class="delete-content">
+        <div class="warning-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        
+        <div class="delete-message">
+          {% trans "Tem certeza que deseja excluir a caixa" %}
+        </div>
+
+        <div class="box-info">
+          <div class="box-type-name">{{ box.box_type.name }}</div>
+          <div class="box-details">
+            <div class="detail-item">
+              <div class="detail-label">{% trans "ID" %}</div>
+              <div class="detail-value">#{{ box.id }}</div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">{% trans "Usuário" %}</div>
+              <div class="detail-value">
+                {% if box.user %}
+                  {{ box.user.username }}
+                {% else %}
+                  <span class="text-muted">(sem usuário)</span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="detail-item">
+              <div class="detail-label">{% trans "Status" %}</div>
+              <div class="detail-value">
+                {% if box.opened %}
+                  <span class="text-success">{% trans "Aberta" %}</span>
+                {% else %}
+                  <span class="text-warning">{% trans "Fechada" %}</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="delete-message">
+          {% trans "Esta ação não pode ser desfeita!" %}
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="action-btn">
+            <i class="fas fa-trash me-2"></i>
+            {% trans "Confirmar Exclusão" %}
+          </button>
+          <a href="{% url 'games:box_list' %}" class="action-btn cancel-btn">
+            <i class="fas fa-times me-2"></i>
+            {% trans "Cancelar" %}
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

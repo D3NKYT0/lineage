@@ -1,0 +1,348 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %}Lista de Licenças - L2JPremium{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-key fa-fw"></i> Lista de Licenças
+        </h1>
+        <a href="{% url 'licence:create' %}" class="btn btn-primary btn-sm">
+            <i class="fas fa-plus fa-fw"></i> Nova Licença
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Filtros</h6>
+        </div>
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <label for="type" class="form-label">Tipo de Licença</label>
+                    <select name="type" id="type" class="form-select">
+                        <option value="">Todos os tipos</option>
+                        {% for value, label in license_types %}
+                        <option value="{{ value }}" {% if request.GET.type == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" id="status" class="form-select">
+                        <option value="">Todos os status</option>
+                        {% for value, label in license_status %}
+                        <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="search" class="form-label">Buscar</label>
+                    <input type="text" name="search" id="search" class="form-control" 
+                           placeholder="Domínio, empresa, email ou chave" 
+                           value="{{ request.GET.search }}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">&nbsp;</label>
+                    <div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search fa-fw"></i> Filtrar
+                        </button>
+                        <a href="{% url 'licence:list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times fa-fw"></i> Limpar
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Licenses List -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Licenças ({{ page_obj.paginator.count }})</h6>
+        </div>
+        <div class="card-body">
+            {% if page_obj %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Chave</th>
+                            <th>Domínio</th>
+                            <th>Empresa</th>
+                            <th>Tipo</th>
+                            <th>Status</th>
+                            <th>Expira em</th>
+                            <th>Verificações</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for license in page_obj %}
+                        <tr>
+                            <td>
+                                <code class="text-primary">{{ license.license_key|truncatechars:20 }}</code>
+                            </td>
+                            <td>
+                                <strong>{{ license.domain }}</strong>
+                                {% if license.contact_email %}
+                                <br><small class="text-muted">{{ license.contact_email }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if license.company_name %}
+                                {{ license.company_name }}
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if license.license_type == 'free' %}
+                                <span class="badge bg-info">L2JPremium FREE</span>
+                                {% else %}
+                                <span class="badge bg-success">L2JPremium PRO</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if license.status == 'active' %}
+                                <span class="badge bg-success">Ativa</span>
+                                {% elif license.status == 'expired' %}
+                                <span class="badge bg-danger">Expirada</span>
+                                {% elif license.status == 'suspended' %}
+                                <span class="badge bg-warning">Suspensa</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Inativa</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if license.expires_at %}
+                                {% if license.is_expired %}
+                                <span class="text-danger">
+                                    <i class="fas fa-exclamation-triangle"></i> Expirada
+                                </span>
+                                {% elif license.days_until_expiry <= 30 %}
+                                <span class="text-warning">
+                                    <i class="fas fa-clock"></i> {{ license.days_until_expiry }} dias
+                                </span>
+                                {% else %}
+                                <span class="text-success">
+                                    <i class="fas fa-calendar"></i> {{ license.expires_at|date:"d/m/Y" }}
+                                </span>
+                                {% endif %}
+                                {% else %}
+                                <span class="text-muted">Nunca expira</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">{{ license.verification_count }}</span>
+                                {% if license.last_verification %}
+                                <br><small class="text-muted">{{ license.last_verification|date:"d/m/Y H:i" }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'licence:detail' license.id %}" 
+                                       class="btn btn-sm btn-outline-primary" 
+                                       title="Ver detalhes">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{% url 'licence:edit' license.id %}" 
+                                       class="btn btn-sm btn-outline-warning" 
+                                       title="Editar">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    {% if license.status == 'pending' %}
+                                    <a href="{% url 'licence:activate' license.id %}" 
+                                       class="btn btn-sm btn-outline-success" 
+                                       title="Ativar"
+                                       onclick="return confirm('Ativar esta licença?')">
+                                        <i class="fas fa-play"></i>
+                                    </a>
+                                    {% elif license.status == 'active' %}
+                                    <a href="{% url 'licence:deactivate' license.id %}" 
+                                       class="btn btn-sm btn-outline-secondary" 
+                                       title="Desativar"
+                                       onclick="return confirm('Desativar esta licença?')">
+                                        <i class="fas fa-pause"></i>
+                                    </a>
+                                    {% elif license.status == 'suspended' %}
+                                    <a href="{% url 'licence:reactivate' license.id %}" 
+                                       class="btn btn-sm btn-outline-success" 
+                                       title="Reativar"
+                                       onclick="return confirm('Reativar esta licença?')">
+                                        <i class="fas fa-redo"></i>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <nav aria-label="Navegação de páginas">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            <i class="fas fa-angle-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            <i class="fas fa-angle-right"></i>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.type %}&type={{ request.GET.type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-key fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Nenhuma licença encontrada</h4>
+                <p class="text-muted">Não há licenças que correspondam aos filtros aplicados.</p>
+                <a href="{% url 'licence:create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus fa-fw"></i> Criar Primeira Licença
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total de Licenças
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_licenses }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-key fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Licenças Ativas
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ active_licenses }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-check-circle fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            L2JPremium PRO
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ pro_licenses }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-crown fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            L2JPremium FREE
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{ free_licenses }}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-gift fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Auto-submit form when filters change
+    $('#type, #status').change(function() {
+        $(this).closest('form').submit();
+    });
+    
+    // Search with delay
+    let searchTimeout;
+    $('#search').on('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            $(this).closest('form').submit();
+        }, 500);
+    });
+});
+</script>
+{% endblock %} 

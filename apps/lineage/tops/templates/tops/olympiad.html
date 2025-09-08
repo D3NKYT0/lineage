@@ -1,0 +1,417 @@
+{% extends 'tops/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Ranking Olimpíada" %}{% endblock %}
+
+{% block tops_content %}
+<div class="tops-olympiad">
+    <div class="tops-header-section">
+        <h1>{% trans "Ranking Olimpíada" %}</h1>
+        <p class="lead">{% trans "Os campeões da olimpíada" %}</p>
+    </div>
+
+    <!-- Seção de Filtros -->
+    <div class="tops-filters-section">
+        <form method="GET" action="{% url 'tops:olympiad' %}" id="tops-filters-form">
+            <div class="tops-filters-grid">
+                <div class="tops-filter-group">
+                    <label for="search">{% trans "Buscar" %}</label>
+                    <div class="tops-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search" name="search" 
+                               placeholder="{% trans 'Nome do jogador, clã ou classe' %}" 
+                               value="{{ filters.search }}">
+                    </div>
+                </div>
+                
+                <div class="tops-filter-group">
+                    <label for="class">{% trans "Classe" %}</label>
+                    <div class="tops-input-wrapper">
+                        <i class="fas fa-user-shield"></i>
+                        <select id="class" name="class">
+                            <option value="">{% trans "Todas as classes" %}</option>
+                            {% for class_name in available_classes %}
+                                <option value="{{ class_name }}" {% if filters.class == class_name %}selected{% endif %}>
+                                    {{ class_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="tops-filter-group">
+                    <label for="clan">{% trans "Clã" %}</label>
+                    <div class="tops-input-wrapper">
+                        <i class="fas fa-users"></i>
+                        <input type="text" id="clan" name="clan" 
+                               placeholder="{% trans 'Nome do clã' %}" 
+                               value="{{ filters.clan }}">
+                    </div>
+                </div>
+                
+                <div class="tops-filter-group">
+                    <label for="status">{% trans "Status" %}</label>
+                    <div class="tops-input-wrapper">
+                        <i class="fas fa-circle"></i>
+                        <select id="status" name="status">
+                            <option value="">{% trans "Todos" %}</option>
+                            <option value="online" {% if filters.status == 'online' %}selected{% endif %}>
+                                {% trans "Online" %}
+                            </option>
+                            <option value="offline" {% if filters.status == 'offline' %}selected{% endif %}>
+                                {% trans "Offline" %}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="tops-filter-group">
+                    <label for="min_points">{% trans "Pontos Mínimos" %}</label>
+                    <div class="tops-input-wrapper">
+                        <i class="fas fa-trophy"></i>
+                        <input type="number" id="min_points" name="min_points" 
+                               placeholder="{% trans 'Ex: 1000' %}" 
+                               min="0" value="{{ filters.min_points }}">
+                    </div>
+                </div>
+                
+                <div class="tops-filter-actions">
+                    <button type="submit" class="tops-btn tops-btn-primary">
+                        <i class="fas fa-search"></i> {% trans "Filtrar" %}
+                    </button>
+                    <a href="{% url 'tops:olympiad' %}" class="tops-btn tops-btn-secondary">
+                        <i class="fas fa-times"></i> {% trans "Limpar" %}
+                    </a>
+                </div>
+            </div>
+        </form>
+        
+        <div class="tops-filters-info">
+            <i class="fas fa-info-circle"></i>
+            <span>
+                {% if filtered_players == total_players %}
+                    {% trans "Mostrando todos os" %} {{ total_players }} {% trans "jogadores" %}
+                {% else %}
+                    {% trans "Mostrando" %} {{ filtered_players }} {% trans "de" %} {{ total_players }} {% trans "jogadores" %}
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+    <div class="tops-table-container">
+        {% if ranking %}
+        <div class="tops-table-responsive">
+            <table class="tops-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{% trans "Jogador" %}</th>
+                        <th>{% trans "Clã" %}</th>
+                        <th>{% trans "Pontos" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% trans "Classe" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in ranking %}
+                    <tr>
+                        <td>
+                            {% if forloop.counter == 1 %}
+                                <span class="tops-badge gold">🥇</span>
+                            {% elif forloop.counter == 2 %}
+                                <span class="tops-badge silver">🥈</span>
+                            {% elif forloop.counter == 3 %}
+                                <span class="tops-badge bronze">🥉</span>
+                            {% else %}
+                                <span class="tops-text-muted">{{ forloop.counter }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="tops-flex">
+                                {% if player.crest %}
+                                    <img src="data:image/png;base64,{{ player.crest }}" alt="Crest" class="tops-crest">
+                                {% endif %}
+                                <span class="tops-player-name">{{ player.char_name }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {% if player.clan_name %}
+                                <div class="tops-flex">
+                                    {% if player.clan_crest %}
+                                        <img src="data:image/png;base64,{{ player.clan_crest }}" alt="Clan Crest" class="tops-crest">
+                                    {% endif %}
+                                    <span>{{ player.clan_name }}</span>
+                                </div>
+                            {% else %}
+                                <span class="tops-text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="tops-badge warning">{{ player.olympiad_points|default:"-" }}</span>
+                        </td>
+                        <td>
+                            {% if player.online > 0 %}
+                                <span class="tops-badge success">🟢 {% trans "Online" %}</span>
+                            {% else %}
+                                <span class="tops-badge secondary">⚪ {% trans "Offline" %}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="tops-text-muted">{{ player.class_name|default:"-" }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="tops-empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>{% trans "Nenhum dado disponível" %}</h3>
+            <p>{% trans "Não foi possível carregar os dados do ranking da Olimpíada no momento." %}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.tops-filters-section {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(230, 199, 125, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.tops-filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.tops-filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.tops-filter-group label {
+    color: #e6c77d;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tops-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.tops-input-wrapper i {
+    position: absolute;
+    left: 12px;
+    color: #e6c77d;
+    font-size: 14px;
+    z-index: 2;
+}
+
+.tops-input-wrapper input,
+.tops-input-wrapper select {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(230, 199, 125, 0.3);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.tops-input-wrapper input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.tops-input-wrapper input:focus,
+.tops-input-wrapper select:focus {
+    outline: none;
+    border-color: #e6c77d;
+    box-shadow: 0 0 0 3px rgba(230, 199, 125, 0.1);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.tops-input-wrapper select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23e6c77d' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+/* Estilos para as opções do select */
+.tops-input-wrapper select option {
+    background-color: #1a1a2e;
+    color: #ffffff;
+    padding: 8px 12px;
+}
+
+/* Estilo para quando o select está aberto */
+.tops-input-wrapper select:focus option:hover,
+.tops-input-wrapper select:focus option:focus {
+    background-color: #e6c77d;
+    color: #1a1a2e;
+}
+
+/* Estilo para a opção selecionada */
+.tops-input-wrapper select option:checked {
+    background-color: #e6c77d;
+    color: #1a1a2e;
+    font-weight: 600;
+}
+
+/* Estilos adicionais para compatibilidade */
+.tops-input-wrapper select::-ms-expand {
+    display: none;
+}
+
+/* Estilo para o dropdown do select (Firefox) */
+.tops-input-wrapper select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #ffffff;
+}
+
+/* Estilo para o dropdown do select (Chrome/Safari) */
+.tops-input-wrapper select:focus {
+    color: #ffffff;
+}
+
+/* Estilo para garantir que o texto seja visível no select fechado */
+.tops-input-wrapper select {
+    color: #ffffff !important;
+}
+
+.tops-filter-actions {
+    display: flex;
+    gap: 15px;
+    align-items: end;
+}
+
+.tops-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tops-btn-primary {
+    background: linear-gradient(135deg, #e6c77d 0%, #d1a44f 100%);
+    color: #1a1a2e;
+}
+
+.tops-btn-primary:hover {
+    background: linear-gradient(135deg, #d1a44f 0%, #b8943f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(230, 199, 125, 0.3);
+}
+
+.tops-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tops-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.tops-filters-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(230, 199, 125, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #e6c77d;
+}
+
+.tops-filters-info i {
+    color: #e6c77d;
+    font-size: 16px;
+}
+
+.tops-filters-info span {
+    color: #e6c77d;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .tops-filters-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .tops-filter-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .tops-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit form when select fields change
+    document.getElementById('class').addEventListener('change', function() {
+        document.getElementById('tops-filters-form').submit();
+    });
+    
+    document.getElementById('status').addEventListener('change', function() {
+        document.getElementById('tops-filters-form').submit();
+    });
+    
+    // Search with delay
+    let searchTimeout;
+    document.getElementById('search').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            document.getElementById('tops-filters-form').submit();
+        }, 500);
+    });
+    
+    document.getElementById('clan').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            document.getElementById('tops-filters-form').submit();
+        }, 500);
+    });
+    
+    document.getElementById('min_points').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            document.getElementById('tops-filters-form').submit();
+        }, 500);
+    });
+});
+</script>
+{% endblock %} 

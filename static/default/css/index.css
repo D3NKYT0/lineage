@@ -1,0 +1,149 @@
+/* Hero Description */
+.hero-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    margin: 1rem 0 2rem;
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Clans Section */
+.clans {
+    padding: 100px 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.clans-title {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.clans-list {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.clan-first {
+    background: rgba(209, 164, 79, 0.1);
+    border: 1px solid rgba(209, 164, 79, 0.3);
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.clan-info h3 {
+    color: #d1a44f;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.clan-info p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0;
+}
+
+.clan-crests {
+    display: flex;
+    gap: 1rem;
+}
+
+.clan-crests img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+.clans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.clan-card {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.clan-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(209, 164, 79, 0.3);
+}
+
+.clan-card h4 {
+    color: #d1a44f;
+    margin-bottom: 1rem;
+}
+
+.clan-card p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0;
+}
+
+/* Online Players Section */
+.online {
+    padding: 80px 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.online-content {
+    text-align: center;
+}
+
+.online-content h2 {
+    color: #d1a44f;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.online-counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.online-counter #player-count {
+    font-size: 3rem;
+    color: #fff;
+    font-weight: bold;
+    text-shadow: 0 0 20px rgba(209, 164, 79, 0.5);
+}
+
+.online-counter .icon {
+    font-size: 2rem;
+}
+
+.online-content p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .clan-first {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .clan-crests {
+        justify-content: center;
+    }
+
+    .clans-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .online-counter #player-count {
+        font-size: 2.5rem;
+    }
+} 

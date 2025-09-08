@@ -1,0 +1,339 @@
+{% extends "layouts/base.html" %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .box-manager-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .box-manager-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #00d9ff;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(13, 217, 255, 0.5);
+  }
+
+  .delete-card {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #dc3545;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(220, 53, 69, 0.3);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .delete-header {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .delete-header-title {
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .delete-content {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .warning-icon {
+    font-size: 4rem;
+    color: #dc3545;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 20px rgba(220, 53, 69, 0.5);
+  }
+
+  .delete-message {
+    color: #f8f9fa;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .item-info {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(111, 66, 193, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 2rem 0;
+  }
+
+  .item-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #00d9ff;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(13, 217, 255, 0.3);
+  }
+
+  .item-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .detail-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(111, 66, 193, 0.2);
+    border-radius: 10px;
+    padding: 1rem;
+  }
+
+  .detail-label {
+    color: #b8c2cc;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+  }
+
+  .detail-value {
+    color: #f8f9fa;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .item-image {
+    border-radius: 10px;
+    border: 2px solid rgba(111, 66, 193, 0.3);
+    max-width: 100px;
+    margin: 0 auto 1rem;
+    display: block;
+  }
+
+  .rarity-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+  }
+
+  .rarity-common {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    color: white;
+  }
+
+  .rarity-rare {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    color: white;
+  }
+
+  .rarity-epic {
+    background: linear-gradient(45deg, #6f42c1, #e83e8c);
+    color: white;
+  }
+
+  .rarity-legendary {
+    background: linear-gradient(45deg, #fd7e14, #ffc107);
+    color: white;
+  }
+
+  .action-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    cursor: pointer;
+    margin: 0 0.5rem;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+    color: white;
+    text-decoration: none;
+  }
+
+  .delete-btn {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+  }
+
+  .delete-btn:hover {
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.6);
+  }
+
+  .cancel-btn {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+  }
+
+  .cancel-btn:hover {
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+  }
+
+  .back-btn {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+  }
+
+  .back-btn:hover {
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @media (max-width: 768px) {
+    .box-manager-title {
+      font-size: 2rem;
+    }
+    
+    .delete-header {
+      padding: 1.5rem;
+    }
+    
+    .delete-content {
+      padding: 1.5rem;
+    }
+    
+    .item-details {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="box-manager-bg">
+  <div class="container">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+      <div>
+        <h1 class="box-manager-title">
+          <i class="fas fa-trash me-3"></i>
+          {% trans "Excluir Item" %}
+        </h1>
+      </div>
+      <a href="{% url 'games:item_list' %}" class="action-btn back-btn">
+        <i class="fas fa-arrow-left me-2"></i>
+        {% trans "Voltar" %}
+      </a>
+    </div>
+
+    <!-- Card de Confirmação -->
+    <div class="delete-card fade-in-up">
+      <div class="delete-header">
+        <h4 class="delete-header-title">
+          <i class="fas fa-trash me-2"></i>
+          {% trans "Excluir Item" %}
+        </h4>
+      </div>
+      <div class="delete-content">
+        <div class="warning-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+
+        <div class="delete-message">
+          {% trans "Tem certeza que deseja excluir o item" %}
+        </div>
+
+        <!-- Informações do Item -->
+        <div class="item-info">
+          <div class="item-name">{{ item.name }}</div>
+          
+          {% if item.image %}
+            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="item-image">
+          {% endif %}
+          
+          <div class="item-details">
+            <div class="detail-item">
+              <div class="detail-label">{% trans "ID do Item" %}</div>
+              <div class="detail-value">{{ item.item_id }}</div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">{% trans "Enchant" %}</div>
+              <div class="detail-value">+{{ item.enchant }}</div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">{% trans "Raridade" %}</div>
+              <div class="detail-value">
+                <span class="rarity-badge rarity-{{ item.rarity }}">
+                  {{ item.get_rarity_display }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">{% trans "Pode ser Populado" %}</div>
+              <div class="detail-value">
+                {% if item.can_be_populated %}
+                  <i class="fas fa-check text-success"></i>
+                  {% trans "Sim" %}
+                {% else %}
+                  <i class="fas fa-times text-danger"></i>
+                  {% trans "Não" %}
+                {% endif %}
+              </div>
+            </div>
+            
+            {% if item.description %}
+              <div class="detail-item" style="grid-column: 1 / -1;">
+                <div class="detail-label">{% trans "Descrição" %}</div>
+                <div class="detail-value">{{ item.description }}</div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="delete-message">
+          {% trans "Esta ação não pode ser desfeita!" %}
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="action-btn delete-btn">
+            <i class="fas fa-trash me-2"></i>
+            {% trans "Confirmar Exclusão" %}
+          </button>
+          <a href="{% url 'games:item_list' %}" class="action-btn cancel-btn">
+            <i class="fas fa-times me-2"></i>
+            {% trans "Cancelar" %}
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

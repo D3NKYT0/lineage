@@ -1,0 +1,58 @@
+{% extends 'layouts/public.html' %}
+{% load static i18n %}
+
+{% block extrahead %}
+<link type="text/css" href="{% static 'public/css/terms.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}{% trans 'Termos e Condições' %} | {{ PROJECT_TITLE }}{% endblock %}
+
+{% block content %}
+<div class="container my-5 px-3 px-md-5 terms-page">
+  <div class="bg-dark p-5 rounded-4 shadow-lg border border-yellow-700" style="background-color: var(--bg-section);">
+    <h1 class="text-3xl text-center mb-5 text-yellow-400" style="text-shadow: var(--glow);">🛡️ {% trans 'Termos e Condições de Uso' %}</h1>
+    <p class="text-sm text-gray-400 text-end mb-4">{% trans 'Última atualização' %}: {{ last_updated|default:"Abril de 2025" }}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-4 mb-2">1. {% trans 'Sobre o Servidor' %}</h2>
+    <p>{% trans 'O' %} <strong>{{ PROJECT_TITLE }}</strong> {% trans 'é um servidor privado, sem vínculos com a NCSoft. Criado por fãs e para fins recreativos.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">2. {% trans 'Regras Gerais' %}</h2>
+    <ul class="list-disc ps-4 space-y-1">
+      <li>{% trans 'Proibido uso de bots, cheats, exploits ou automações.' %}</li>
+      <li>{% trans 'Contas compartilhadas são por sua conta e risco.' %}</li>
+      <li>{% trans 'Atitudes tóxicas não serão toleradas.' %}</li>
+      <li>{% trans 'Exploração de bugs será punida.' %}</li>
+      <li>{% trans 'A Staff pode agir contra comportamentos nocivos.' %}</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">3. {% trans 'Contas e Segurança' %}</h2>
+    <p>{% trans 'Você é responsável por sua conta. Use senhas seguras. Não nos responsabilizamos por perdas causadas por descuido.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">4. {% trans 'Política de Doações' %}</h2>
+    <p>{% trans 'Doações são voluntárias, sem reembolso, e ajudam na manutenção do servidor. Os benefícios podem mudar.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">5. {% trans 'Propriedade Intelectual' %}</h2>
+    <p>{% trans 'Lineage 2 é da NCSoft. Este servidor é feito por fãs e não possui fins lucrativos.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">6. {% trans 'Responsabilidades da Staff' %}</h2>
+    <p>{% trans 'A Staff visa manter o servidor justo e estável. Mudanças, resets ou manutenções podem ocorrer.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">7. {% trans 'Penalidades' %}</h2>
+    <p>{% trans 'Infrações podem resultar em:' %}</p>
+    <ul class="list-disc ps-4 space-y-1">
+      <li>{% trans 'Advertência' %}</li>
+      <li>{% trans 'Mute' %}</li>
+      <li>{% trans 'Banimento' %}</li>
+      <li>{% trans 'Perda de itens' %}</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">8. {% trans 'Alterações nos Termos' %}</h2>
+    <p>{% trans 'Os termos podem mudar. Ao continuar jogando, você aceita as atualizações automaticamente.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">9. {% trans 'Contato' %}</h2>
+    <p>{% trans 'Fale conosco pelo' %} <strong>{% trans 'Discord' %}</strong>, {% trans 'e-mail' %} {% trans 'ou fórum oficial em caso de dúvidas ou denúncias.' %}</p>
+
+    <p class="text-center text-gray-400 mt-10 italic">{{ PROJECT_TITLE }} — {% trans 'Um mundo para verdadeiros aventureiros.' %}</p>
+  </div>
+</div>
+{% endblock %}

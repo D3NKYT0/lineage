@@ -1,0 +1,181 @@
+{% extends 'downloads/base-downloads.html' %}
+{% load static i18n %}
+
+{% block content %}
+<section class="downloads-section">
+    <div class="container">
+        <div class="downloads-main-header" data-aos="fade-up" data-aos-duration="2000">
+            <h1>{% trans "Downloads" %}</h1>
+            <p>{% trans "Baixe tudo o que você precisa para começar sua jornada" %}</p>
+        </div>
+
+        {% for category in categories %}
+        <div class="download-category" data-aos="fade-up" data-aos-duration="2000">
+            <h2>{{ category.name }}</h2>
+            {% if category.description %}
+            <p class="category-description">{{ category.description }}</p>
+            {% endif %}
+
+            <div class="download-grid">
+                {% for download in category.downloads.all %}
+                <div class="download-card">
+                    <div class="download-info">
+                        <h3>{{ download.name }}</h3>
+                        {% if download.description %}
+                        <p>{{ download.description }}</p>
+                        {% endif %}
+                        <div class="download-meta">
+                            {% if download.version %}
+                            <span class="version">v{{ download.version }}</span>
+                            {% endif %}
+                            {% if download.file_size %}
+                            <span class="size">{{ download.file_size }}</span>
+                            {% endif %}
+                            <span class="downloads">{{ download.download_count }} {% trans "downloads" %}</span>
+                        </div>
+                    </div>
+                    <div class="download-actions">
+                        <a href="{% url 'downloads:download_redirect' download.pk %}" class="download-button" target="_blank">
+                            <i class="fas fa-download"></i>
+                            {% trans "Download" %}
+                        </a>
+                        <span class="hosting-type">{{ download.get_hosting_type_display }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="no-downloads" data-aos="fade-up" data-aos-duration="2000">
+            <p>{% trans "Nenhum download disponível no momento." %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extrahead %}
+<style>
+.downloads-section {
+    padding: 100px 0;
+    background: rgba(0, 0, 0, 0.8);
+    min-height: 100vh;
+}
+
+.downloads-main-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.downloads-main-header h1 {
+    font-size: 48px;
+    color: #fff;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+}
+
+.downloads-main-header p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 18px;
+}
+
+.download-category {
+    margin-bottom: 60px;
+}
+
+.download-category h2 {
+    color: #fff;
+    font-size: 32px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(255, 165, 0, 0.3);
+}
+
+.category-description {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 30px;
+}
+
+.download-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.download-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.download-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 165, 0, 0.2);
+}
+
+.download-info h3 {
+    color: #fff;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.download-info p {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.download-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.download-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.download-button {
+    background: linear-gradient(45deg, #ff8a00, #ff4d00);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.download-button:hover {
+    transform: scale(1.05);
+    color: #fff;
+}
+
+.hosting-type {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+}
+
+.no-downloads {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 50px 0;
+}
+
+@media (max-width: 768px) {
+    .downloads-main-header h1 {
+        font-size: 36px;
+    }
+    
+    .download-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %} 

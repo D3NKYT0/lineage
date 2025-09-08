@@ -1,0 +1,162 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    {% include 'includes/head.html' %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Base CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{% static 'default/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'default/css/media.css' %}">
+    <link rel="stylesheet" href="{% static 'default/css/font.css' %}">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link type="text/css" href="{% static 'public/css/layout.css' %}" rel="stylesheet">
+
+    <style>
+      body {
+          background: url({% static 'default/images/bg/5.jpg' %}) top fixed no-repeat;
+          background-position-y: 80px;
+          background-color: black;
+          min-height: 100vh;
+          position: relative;
+      }
+    </style>
+
+    {% block extrahead %}{% endblock %}
+  </head>
+  <body>
+    <!-- Loading Screen -->
+    <div class="loading">
+      <div class="l-logo">
+        <div class="letters">
+          {% if site_logo %}
+            <img src="{{ site_logo.image.url }}" alt="{{ site_logo.name }}">
+          {% else %}
+            <img src="{% static 'default/images/logo.png' %}" alt="{% trans 'Logo do Lineage2' %}">
+          {% endif %}
+        </div>
+        <div class="circle"><img src="{% static 'default/images/logo-circle.png' %}"></div>
+      </div>
+    </div>
+
+    {% block video_background %}{% endblock %}
+
+    <!-- Navigation -->
+    <nav>
+      <div class="open"><i class="fa-solid fa-bars"></i></div>
+
+      <ul>
+        <div class="close"><i class="fa-solid fa-xmark"></i></div>
+
+        <span><img src="{% static 'default/images/icons/nav-icon.png' %}"></span>
+
+        <li class="active"><a href="{% url 'index' %}">{% trans "Início" %}</a></li>
+        <li><a href="{% url 'wiki' %}">{% trans "Informações" %}</a></li>
+        <li><a href="{% url 'public_news_list' %}">{% trans "Notícias" %}</a></li>
+        <li><a href="{% url 'public_faq_list' %}">{% trans "Perguntas Frequentes" %}</a></li>
+      </ul>
+
+      <div>
+        {% if request.user.is_authenticated %}
+          <a class="user" href="{% url 'dashboard' %}">
+            <img src="{% static 'default/images/icons/user.png' %}">
+            <span>{% trans "Minha Conta" %}</span>
+          </a>
+        {% else %}
+          <a class="user" href="{% url 'login' %}">
+            <img src="{% static 'default/images/icons/user.png' %}">
+            <span>{% trans "Entrar" %}</span>
+          </a>
+        {% endif %}
+        <a class="download" href="{% url 'downloads:download_list' %}">{% trans "Download" %}</a>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="language">
+        <span style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <span>
+            <img src="{% static 'default/images/icons/world.png' %}">&nbsp;&nbsp;&nbsp;
+            {% if LANGUAGE_CODE == 'pt' %}{% trans "Português" %}
+            {% elif LANGUAGE_CODE == 'en' %}{% trans "English" %}
+            {% elif LANGUAGE_CODE == 'es' %}{% trans "Español" %}
+            {% endif %}
+          </span>
+          <span><img class="cursor" src="{% static 'default/images/icons/downcursor.png' %}"></span>
+        </span>
+      
+        <ul class="language-dropdown">
+          <li>
+            <form method="post" action="{% url 'set_language' %}">
+              {% csrf_token %}
+              <input type="hidden" name="language" value="es">
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <a href="#" onclick="this.closest('form').submit(); return false;">{% trans "Español" %}</a>
+            </form>
+          </li>
+          <li>
+            <form method="post" action="{% url 'set_language' %}">
+              {% csrf_token %}
+              <input type="hidden" name="language" value="pt">
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <a href="#" onclick="this.closest('form').submit(); return false;">{% trans "Português" %}</a>
+            </form>
+          </li>
+          <li>
+            <form method="post" action="{% url 'set_language' %}">
+              {% csrf_token %}
+              <input type="hidden" name="language" value="en">
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <a href="#" onclick="this.closest('form').submit(); return false;">{% trans "English" %}</a>
+            </form>
+          </li>
+        </ul>
+      </div>  
+
+      <div class="copyright container">
+        <div class="c-link">
+          <a href="{% url 'user_agreement' %}">{% trans "Acordo do Usuário" %}</a>
+          <a href="{% url 'terms' %}">{% trans "Termos de Serviço" %}</a>
+          <a href="{% url 'privacy_policy' %}">{% trans "Política de Privacidade" %}</a>
+        </div>
+
+        <div class="c-text">
+          {% if site_logo %}
+            <img src="{{ site_logo.image.url }}" alt="{{ site_logo.name }}">
+          {% else %}
+            <img src="{% static 'default/images/logo.png' %}" alt="{% trans 'Logo do Lineage2' %}">
+          {% endif %}
+          <p>© {% now "Y" %} {{ PROJECT_TITLE }}</p>
+          <span style="text-align: center; display: block;">
+            {% if SHOW_SLOGAN %}
+              {% trans "Feito com ❤️ por aventureiros para aventureiros." %}
+            {% endif %}
+          </span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    {% include 'includes/scripts.html' %}
+    <script src="{% static 'public/js/layout.js' %}"></script>
+    <script src="{% static 'default/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{% static 'default/js/main.js' %}"></script>
+    {% block extrascripts %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,71 @@
+{% extends 'layouts/public.html' %}
+{% load static i18n %}
+
+{% block extrahead %}
+<link type="text/css" href="{% static 'public/css/terms.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}{% trans 'Política de Privacidade' %} | {{ PROJECT_TITLE }}{% endblock %}
+
+{% block content %}
+<div class="container my-5 px-3 px-md-5 terms-page">
+  <div class="bg-dark p-5 rounded-4 shadow-lg border border-yellow-700" style="background-color: var(--bg-section);">
+    <h1 class="text-3xl text-center mb-5 text-yellow-400" style="text-shadow: var(--glow);">🔒 {% trans 'Política de Privacidade' %}</h1>
+    <p class="text-sm text-gray-400 text-end mb-4">{% trans 'Última atualização' %}: {{ last_updated|default:"Abril de 2025" }}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-4 mb-2">1. {% trans 'Informações que Coletamos' %}</h2>
+    <p>{% trans 'Coletamos as seguintes informações:' %}</p>
+    <ul class="list-disc ps-4 space-y-1">
+      <li>{% trans 'Informações da conta (nome de usuário, e-mail, senha)' %}</li>
+      <li>{% trans 'Dados de jogo (personagens, progresso, interações)' %}</li>
+      <li>{% trans 'Informações técnicas (IP, dispositivo, navegador)' %}</li>
+      <li>{% trans 'Comunicações com a equipe de suporte' %}</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">2. {% trans 'Como Usamos Suas Informações' %}</h2>
+    <p>{% trans 'Utilizamos suas informações para:' %}</p>
+    <ul class="list-disc ps-4 space-y-1">
+      <li>{% trans 'Fornecer e manter nossos serviços' %}</li>
+      <li>{% trans 'Melhorar a experiência do usuário' %}</li>
+      <li>{% trans 'Prevenir fraudes e abusos' %}</li>
+      <li>{% trans 'Comunicar atualizações importantes' %}</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">3. {% trans 'Compartilhamento de Dados' %}</h2>
+    <p>{% trans 'Não vendemos suas informações pessoais. Podemos compartilhar dados apenas quando:' %}</p>
+    <ul class="list-disc ps-4 space-y-1">
+      <li>{% trans 'Exigido por lei' %}</li>
+      <li>{% trans 'Necessário para proteger nossos direitos' %}</li>
+      <li>{% trans 'Com seu consentimento explícito' %}</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">4. {% trans 'Segurança dos Dados' %}</h2>
+    <p>{% trans 'Implementamos medidas de segurança para proteger suas informações, incluindo:' %}</p>
+    <ul class="list-disc ps-4 space-y-1">
+      <li>{% trans 'Criptografia de dados sensíveis' %}</li>
+      <li>{% trans 'Monitoramento de segurança' %}</li>
+      <li>{% trans 'Acesso restrito às informações' %}</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">5. {% trans 'Seus Direitos' %}</h2>
+    <p>{% trans 'Você tem direito a:' %}</p>
+    <ul class="list-disc ps-4 space-y-1">
+      <li>{% trans 'Acessar seus dados pessoais' %}</li>
+      <li>{% trans 'Corrigir informações imprecisas' %}</li>
+      <li>{% trans 'Solicitar a exclusão de dados' %}</li>
+      <li>{% trans 'Retirar seu consentimento' %}</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">6. {% trans 'Cookies e Tecnologias Similares' %}</h2>
+    <p>{% trans 'Utilizamos cookies e tecnologias similares para melhorar sua experiência e coletar informações sobre o uso do serviço.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">7. {% trans 'Alterações na Política' %}</h2>
+    <p>{% trans 'Podemos atualizar esta política periodicamente. Notificaremos sobre mudanças significativas.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">8. {% trans 'Contato' %}</h2>
+    <p>{% trans 'Para questões sobre privacidade, entre em contato através do' %} <strong>{% trans 'Discord' %}</strong> {% trans 'ou' %} <strong>{% trans 'e-mail' %}</strong>.</p>
+
+    <p class="text-center text-gray-400 mt-10 italic">{{ PROJECT_TITLE }} — {% trans 'Um mundo para verdadeiros aventureiros.' %}</p>
+  </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+  <div class="alert alert-success shadow-lg p-4">
+    <h2 class="mb-3">{% trans "Pagamento Aprovado!" %}</h2>
+    <p>{% trans "Suas moedas foram creditadas com sucesso na sua carteira." %}</p>
+    <a href="{% url 'wallet:dashboard' %}" class="btn btn-success mt-3">
+      {% trans "Ir para a Carteira" %}
+    </a>
+  </div>
+</div>
+{% endblock %}

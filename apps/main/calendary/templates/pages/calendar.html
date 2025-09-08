@@ -1,0 +1,354 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %} {% trans "Calendário" %} {% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .calendar-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .calendar-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #00d9ff;
+    text-align: center;
+    margin-bottom: 3rem;
+    text-shadow: 0 0 20px rgba(13, 217, 255, 0.5);
+  }
+
+  .calendar-card {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #6f42c1;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(111, 66, 193, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .calendar-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #6f42c1, #00d9ff);
+  }
+
+  #custom-calendar {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    border: 1px solid rgba(111, 66, 193, 0.3);
+  }
+
+  /* Estilização do FullCalendar */
+  .fc {
+    color: #f8f9fa !important;
+  }
+
+  .fc-toolbar {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 10px !important;
+    padding: 1rem !important;
+    margin-bottom: 1.5rem !important;
+    border: 1px solid rgba(111, 66, 193, 0.3) !important;
+  }
+
+  .fc-toolbar-title {
+    color: #00d9ff !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-weight: 600 !important;
+    text-shadow: 0 0 10px rgba(13, 217, 255, 0.3) !important;
+  }
+
+  .fc-button {
+    background: linear-gradient(45deg, #6f42c1, #e83e8c) !important;
+    border: none !important;
+    border-radius: 25px !important;
+    padding: 0.5rem 1rem !important;
+    color: white !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4) !important;
+  }
+
+  .fc-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(111, 66, 193, 0.6) !important;
+    background: linear-gradient(45deg, #e83e8c, #6f42c1) !important;
+  }
+
+  .fc-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 217, 255, 0.25) !important;
+  }
+
+  .fc-button-active {
+    background: linear-gradient(45deg, #00d9ff, #6f42c1) !important;
+    box-shadow: 0 4px 15px rgba(13, 217, 255, 0.4) !important;
+  }
+
+  .fc-daygrid-day {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(111, 66, 193, 0.2) !important;
+  }
+
+  .fc-daygrid-day:hover {
+    background: rgba(13, 217, 255, 0.1) !important;
+  }
+
+  .fc-daygrid-day.fc-day-today {
+    background: rgba(13, 217, 255, 0.15) !important;
+    border-color: #00d9ff !important;
+  }
+
+  .fc-daygrid-day-number {
+    color: #f8f9fa !important;
+    font-weight: 600 !important;
+  }
+
+  .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+    color: #00d9ff !important;
+    font-weight: 700 !important;
+  }
+
+  .fc-col-header-cell {
+    background: rgba(111, 66, 193, 0.3) !important;
+    border: 1px solid rgba(111, 66, 193, 0.5) !important;
+    color: #f8f9fa !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+  }
+
+  .fc-event {
+    background: linear-gradient(45deg, #6f42c1, #e83e8c) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: white !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .fc-event:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.5) !important;
+  }
+
+  .fc-event-title {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+
+  .fc-event-time {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+
+  /* Modal estilizado */
+  .modal-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e) !important;
+    border: 2px solid #6f42c1 !important;
+    border-radius: 20px !important;
+    box-shadow: 0 8px 32px rgba(111, 66, 193, 0.3) !important;
+  }
+
+  .modal-header {
+    background: linear-gradient(45deg, #6f42c1, #e83e8c) !important;
+    border-bottom: none !important;
+    border-radius: 18px 18px 0 0 !important;
+    padding: 1.5rem !important;
+  }
+
+  .modal-title {
+    color: white !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+  }
+
+  .btn-close {
+    filter: invert(1) !important;
+    opacity: 0.8 !important;
+  }
+
+  .btn-close:hover {
+    opacity: 1 !important;
+  }
+
+  .modal-body {
+    padding: 2rem !important;
+    color: #f8f9fa !important;
+  }
+
+  .modal-body h6 {
+    color: #00d9ff !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .modal-body p {
+    color: #f8f9fa !important;
+    font-size: 1.1rem !important;
+    margin-bottom: 0 !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  .modal-footer {
+    border-top: 1px solid rgba(111, 66, 193, 0.3) !important;
+    padding: 1.5rem !important;
+  }
+
+  .modal-footer .btn {
+    background: linear-gradient(45deg, #6c757d, #495057) !important;
+    border: none !important;
+    border-radius: 25px !important;
+    padding: 0.5rem 1.5rem !important;
+    color: white !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4) !important;
+  }
+
+  .modal-footer .btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6) !important;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @media (max-width: 768px) {
+    .calendar-title {
+      font-size: 2rem;
+    }
+    
+    .calendar-card {
+      padding: 1.5rem;
+    }
+    
+    #custom-calendar {
+      padding: 1rem;
+    }
+    
+    .fc-toolbar {
+      flex-direction: column !important;
+      gap: 1rem !important;
+    }
+    
+    .fc-toolbar-chunk {
+      display: flex !important;
+      justify-content: center !important;
+      gap: 0.5rem !important;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="calendar-bg">
+  <div class="container">
+    <!-- Header -->
+    <div class="text-center fade-in-up">
+      <h1 class="calendar-title">
+        <i class="fas fa-calendar-alt me-3"></i>
+        {% trans "Calendário" %}
+      </h1>
+    </div>
+
+    <!-- Calendário -->
+    <div class="calendar-card fade-in-up">
+      <div id="custom-calendar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Detalhes do Evento -->
+<div class="modal fade" id="eventDetailsModal" tabindex="-1" role="dialog" aria-labelledby="eventDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventDetailsModalLabel">
+                  <i class="fas fa-calendar-day me-2"></i>
+                  {% trans "Detalhes do Evento" %}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Fechar' %}"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <h6>
+                      <i class="fas fa-tag me-2"></i>
+                      {% trans "Título" %}
+                    </h6>
+                    <p id="eventTitle" class="mb-0"></p>
+                </div>
+                <div class="mb-3">
+                    <h6>
+                      <i class="fas fa-play me-2"></i>
+                      {% trans "Data de Início" %}
+                    </h6>
+                    <p id="eventStart" class="mb-0"></p>
+                </div>
+                <div class="mb-3">
+                    <h6>
+                      <i class="fas fa-stop me-2"></i>
+                      {% trans "Data de Término" %}
+                    </h6>
+                    <p id="eventEnd" class="mb-0"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" data-bs-dismiss="modal">
+                  <i class="fas fa-times me-2"></i>
+                  {% trans "Fechar" %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+  const GET_EVENT_URL = "{% url 'calendary:get_events' %}";
+  
+  // Passando as traduções do Django para o JavaScript
+  const TRANSLATIONS = {
+    calendarNotFound: "{% trans 'Elemento do calendário não encontrado' %}",
+    loadEventsError: "{% trans 'Erro ao carregar eventos:' %}",
+    buttonText: {
+      prev: "{% trans 'Anterior' %}",
+      next: "{% trans 'Próximo' %}",
+      today: "{% trans 'Hoje' %}",
+      month: "{% trans 'Mês' %}",
+      week: "{% trans 'Semana' %}",
+      day: "{% trans 'Dia' %}",
+      list: "{% trans 'Lista' %}"
+    }
+  };
+</script>
+<script src="{% static 'js/calendar.js' %}"></script>
+{% endblock extra_js %}

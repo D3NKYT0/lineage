@@ -1,0 +1,352 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ translation.title }}{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .roadmap-detail-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .roadmap-detail-card {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #6f42c1;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 8px 32px rgba(111, 66, 193, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .roadmap-detail-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #6f42c1, #00d9ff);
+  }
+
+  .roadmap-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .roadmap-date {
+    display: inline-block;
+    background: linear-gradient(45deg, #6f42c1, #e83e8c);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
+  }
+
+  .roadmap-status {
+    margin-bottom: 2rem;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .status-planned {
+    background: linear-gradient(45deg, #17a2b8, #138496);
+    color: white;
+  }
+
+  .status-in_progress {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+  }
+
+  .status-completed {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    color: white;
+  }
+
+  .roadmap-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #00d9ff;
+    margin-bottom: 2rem;
+    line-height: 1.3;
+    text-shadow: 0 0 20px rgba(13, 217, 255, 0.3);
+  }
+
+  .roadmap-image {
+    max-width: 100%;
+    border-radius: 15px;
+    border: 2px solid rgba(111, 66, 193, 0.3);
+    margin: 2rem 0;
+    box-shadow: 0 8px 25px rgba(111, 66, 193, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .roadmap-image:hover {
+    border-color: #00d9ff;
+    transform: scale(1.02);
+    box-shadow: 0 12px 35px rgba(13, 217, 255, 0.3);
+  }
+
+  .roadmap-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #f8f9fa;
+    margin: 2rem 0;
+  }
+
+  .roadmap-content h1, .roadmap-content h2, .roadmap-content h3, 
+  .roadmap-content h4, .roadmap-content h5, .roadmap-content h6 {
+    color: #00d9ff;
+    font-family: 'Orbitron', sans-serif;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .roadmap-content h1 { font-size: 2rem; }
+  .roadmap-content h2 { font-size: 1.8rem; }
+  .roadmap-content h3 { font-size: 1.6rem; }
+  .roadmap-content h4 { font-size: 1.4rem; }
+  .roadmap-content h5 { font-size: 1.2rem; }
+  .roadmap-content h6 { font-size: 1.1rem; }
+
+  .roadmap-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .roadmap-content ul, .roadmap-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+  }
+
+  .roadmap-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  .roadmap-content blockquote {
+    border-left: 4px solid #6f42c1;
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: #b8c2cc;
+  }
+
+  .roadmap-content code {
+    background: rgba(111, 66, 193, 0.2);
+    color: #00d9ff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .roadmap-content pre {
+    background: rgba(111, 66, 193, 0.1);
+    border: 1px solid rgba(111, 66, 193, 0.3);
+    border-radius: 10px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 2rem 0;
+  }
+
+  .roadmap-content pre code {
+    background: none;
+    color: #f8f9fa;
+    padding: 0;
+  }
+
+  .roadmap-meta {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(111, 66, 193, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .meta-item {
+    display: inline-block;
+    margin: 0 1rem;
+    color: #b8c2cc;
+  }
+
+  .meta-label {
+    font-weight: 600;
+    color: #00d9ff;
+    margin-right: 0.5rem;
+  }
+
+  .meta-value {
+    color: #f8f9fa;
+  }
+
+  .roadmap-navigation {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  .back-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, #6f42c1, #e83e8c);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
+  }
+
+  .back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(111, 66, 193, 0.6);
+    color: white;
+    text-decoration: none;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @media (max-width: 768px) {
+    .roadmap-detail-card {
+      padding: 2rem;
+    }
+    
+    .roadmap-title {
+      font-size: 2rem;
+    }
+    
+    .roadmap-date {
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+    }
+    
+    .meta-item {
+      display: block;
+      margin: 0.5rem 0;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="roadmap-detail-bg">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="roadmap-detail-card fade-in-up">
+          <!-- Header -->
+          <div class="roadmap-header">
+            <div class="roadmap-date">
+              <i class="fas fa-calendar-alt me-2"></i>
+              {{ roadmap.pub_date|date:'d/m/Y' }}
+            </div>
+            
+            <div class="roadmap-status">
+              <span class="status-badge status-{{ roadmap.status }}">
+                {% if roadmap.status == 'planned' %}
+                  <i class="fas fa-calendar-plus me-1"></i>
+                  {% trans 'Planejado' %}
+                {% elif roadmap.status == 'in_progress' %}
+                  <i class="fas fa-tools me-1"></i>
+                  {% trans 'Em andamento' %}
+                {% elif roadmap.status == 'completed' %}
+                  <i class="fas fa-check-circle me-1"></i>
+                  {% trans 'Concluído' %}
+                {% else %}
+                  {{ roadmap.status }}
+                {% endif %}
+              </span>
+            </div>
+            
+            <h1 class="roadmap-title">{{ translation.title }}</h1>
+          </div>
+
+          <!-- Imagem -->
+          {% if roadmap.image %}
+            <div class="text-center">
+              <img class="roadmap-image" src="{{ roadmap.image.url }}" alt="{{ translation.title }}">
+            </div>
+          {% endif %}
+
+          <!-- Conteúdo -->
+          <div class="roadmap-content">
+            {{ translation.content|safe }}
+          </div>
+
+          <!-- Meta informações -->
+          <div class="roadmap-meta">
+            <div class="meta-item">
+              <span class="meta-label">
+                <i class="fas fa-user me-1"></i>
+                {% trans "Autor" %}:
+              </span>
+              <span class="meta-value">{{ roadmap.author.username }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">
+                <i class="fas fa-clock me-1"></i>
+                {% trans "Publicado em" %}:
+              </span>
+              <span class="meta-value">{{ roadmap.pub_date|date:'d/m/Y H:i' }}</span>
+            </div>
+            {% if roadmap.conclusion_date %}
+            <div class="meta-item">
+              <span class="meta-label">
+                <i class="fas fa-flag-checkered me-1"></i>
+                {% trans "Concluído em" %}:
+              </span>
+              <span class="meta-value">{{ roadmap.conclusion_date|date:'d/m/Y H:i' }}</span>
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Navegação -->
+          <div class="roadmap-navigation">
+            <a href="{% url 'roadmap:index' %}" class="back-btn">
+              <i class="fas fa-arrow-left me-2"></i>
+              {% trans "Voltar para o roadmap" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<!-- JS extra, se necessário -->
+{% endblock extra_js %}

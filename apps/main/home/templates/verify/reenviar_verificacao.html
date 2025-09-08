@@ -1,0 +1,94 @@
+{% extends 'layouts/base-auth.html' %}
+{% load static widget_tweaks i18n %}
+
+{% block content %}
+<style>
+  body {
+    background: url("{{ background_url }}") no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  .resend-panel {
+    background-color: rgba(20, 20, 20, 0.95);
+    color: #f0e6d2;
+    border-radius: 1rem;
+    border: 1px solid #e0c36b;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.85);
+    font-family: 'Cinzel', serif;
+  }
+
+  .resend-panel h1 {
+    font-size: 1.5rem;
+    color: #e0c36b;
+    text-shadow: 0 0 8px rgba(255, 215, 100, 0.4);
+  }
+
+  label {
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: #f5deb3;
+  }
+
+  .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid #e0c36b;
+  }
+
+  .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #f0e68c;
+    box-shadow: 0 0 10px rgba(255, 255, 160, 0.5);
+  }
+
+  .btn-golden {
+    background: linear-gradient(to right, #b89b56, #d5c170);
+    color: #000;
+    font-weight: bold;
+    text-shadow: 0 0 5px #fff8dc;
+    border: none;
+  }
+
+  .btn-golden:hover {
+    background: linear-gradient(to right, #d5c170, #b89b56);
+    color: #000;
+  }
+
+  .alert {
+    font-size: 0.95rem;
+  }
+</style>
+
+<section class="vh-100 d-flex align-items-center justify-content-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="p-5 resend-panel">
+          <div class="text-center mb-4">
+            <h1>{% trans "Reenviar E-mail de Verificação" %}</h1>
+            <p class="text-gray">{% trans "Informe seu e-mail para receber um novo link de verificação." %}</p>
+          </div>
+
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="POST" class="mt-4">
+            {% csrf_token %}
+            <div class="form-group mb-4">
+              <label for="email">{% trans "Seu E-mail" %}</label>
+              <input type="email" name="email" placeholder="{% trans 'exemplo@dominio.com' %}" class="form-control" id="email" required>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-golden">{% trans "Reenviar" %}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,2650 @@
+/* ============================================================================
+ESTILOS PARA A REDE SOCIAL
+============================================================================ */
+
+/* Badge de verificação */
+.verified-badge {
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.verified-badge:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* ============================================================================
+BADGES DE TIPO DE PERFIL
+============================================================================ */
+
+/* Badge base */
+.profile-badge {
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    padding: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.profile-badge:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Super Admin - Dourado/Roxo */
+.profile-superadmin {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #8B0000;
+    border: 2px solid #FFD700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.profile-superadmin:hover {
+    background: linear-gradient(135deg, #FFA500, #FF8C00);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+}
+
+/* Staff - Azul/Roxo */
+.profile-staff {
+    background: linear-gradient(135deg, #4169E1, #8A2BE2);
+    color: white;
+    border: 2px solid #4169E1;
+    box-shadow: 0 0 10px rgba(65, 105, 225, 0.5);
+}
+
+.profile-staff:hover {
+    background: linear-gradient(135deg, #8A2BE2, #9370DB);
+    box-shadow: 0 0 15px rgba(65, 105, 225, 0.7);
+}
+
+/* Moderador - Verde */
+.profile-moderator {
+    background: linear-gradient(135deg, #32CD32, #228B22);
+    color: white;
+    border: 2px solid #32CD32;
+    box-shadow: 0 0 10px rgba(50, 205, 50, 0.5);
+}
+
+.profile-moderator:hover {
+    background: linear-gradient(135deg, #228B22, #006400);
+    box-shadow: 0 0 15px rgba(50, 205, 50, 0.7);
+}
+
+/* Verificado - Azul */
+.profile-verified {
+    background: linear-gradient(135deg, #1E90FF, #4169E1);
+    color: white;
+    border: 2px solid #1E90FF;
+    box-shadow: 0 0 10px rgba(30, 144, 255, 0.5);
+}
+
+.profile-verified:hover {
+    background: linear-gradient(135deg, #4169E1, #0000CD);
+    box-shadow: 0 0 15px rgba(30, 144, 255, 0.7);
+}
+
+/* Apoiador - Escarlate/Ruby com Neon */
+.profile-supporter {
+    background: linear-gradient(135deg, #FF1744, #D50000, #B71C1C);
+    color: #FFFFFF;
+    border: 2px solid #FF1744;
+    box-shadow: 
+        0 0 15px rgba(255, 23, 68, 0.6),
+        0 0 30px rgba(255, 23, 68, 0.3),
+        0 0 45px rgba(255, 23, 68, 0.1),
+        inset 0 0 20px rgba(255, 23, 68, 0.1);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-supporter::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 23, 68, 0.1), transparent);
+    animation: supporter-shimmer 3s infinite;
+    pointer-events: none;
+}
+
+.profile-supporter:hover {
+    background: linear-gradient(135deg, #D50000, #B71C1C, #8E0000);
+    box-shadow: 
+        0 0 20px rgba(255, 23, 68, 0.8),
+        0 0 40px rgba(255, 23, 68, 0.5),
+        0 0 60px rgba(255, 23, 68, 0.2),
+        inset 0 0 30px rgba(255, 23, 68, 0.2);
+    transform: scale(1.02);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 1);
+}
+
+/* Regular - Cinza */
+.profile-regular {
+    background: #6c757d;
+    color: white;
+    border: 2px solid #6c757d;
+}
+
+/* ============================================================================
+ESTILOS DE PERFIL COM CORES DIFERENCIADAS
+============================================================================ */
+
+/* Container do perfil com cores diferenciadas */
+.profile-container {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Super Admin - Borda dourada */
+.profile-container.profile-superadmin {
+    border: 3px solid #FFD700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.profile-container.profile-superadmin .card-header {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #8B0000;
+}
+
+/* Staff - Borda azul/roxa */
+.profile-container.profile-staff {
+    border: 3px solid #4169E1;
+    box-shadow: 0 0 20px rgba(65, 105, 225, 0.3);
+}
+
+.profile-container.profile-staff .card-header {
+    background: linear-gradient(135deg, #4169E1, #8A2BE2);
+    color: white;
+}
+
+/* Moderador - Borda verde */
+.profile-container.profile-moderator {
+    border: 3px solid #32CD32;
+    box-shadow: 0 0 20px rgba(50, 205, 50, 0.3);
+}
+
+.profile-container.profile-moderator .card-header {
+    background: linear-gradient(135deg, #32CD32, #228B22);
+    color: white;
+}
+
+/* Verificado - Borda azul */
+.profile-container.profile-verified {
+    border: 3px solid #1E90FF;
+    box-shadow: 0 0 20px rgba(30, 144, 255, 0.3);
+}
+
+.profile-container.profile-verified .card-header {
+    background: linear-gradient(135deg, #1E90FF, #4169E1);
+    color: white;
+}
+
+/* Apoiador - Borda escarlate com neon */
+.profile-container.profile-supporter {
+    border: 3px solid #FF1744;
+    box-shadow: 
+        0 0 25px rgba(255, 23, 68, 0.5),
+        0 0 50px rgba(255, 23, 68, 0.2),
+        inset 0 0 30px rgba(255, 23, 68, 0.05);
+    background: linear-gradient(135deg, rgba(255, 23, 68, 0.03), rgba(213, 0, 0, 0.03));
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-container.profile-supporter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 23, 68, 0.08), transparent);
+    animation: supporter-sweep 4s infinite;
+    pointer-events: none;
+}
+
+.profile-container.profile-supporter .card-header {
+    background: linear-gradient(135deg, #FF1744, #D50000, #B71C1C);
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 0 20px rgba(255, 23, 68, 0.3);
+}
+
+/* Regular - Sem borda especial */
+.profile-container.profile-regular {
+    border: 1px solid #dee2e6;
+}
+
+/* ============================================================================
+AVATAR COM BORDA DIFERENCIADA
+============================================================================ */
+
+.profile-avatar-container {
+    position: relative;
+}
+
+/* Super Admin - Borda dourada */
+.profile-avatar-container.profile-superadmin {
+    border: 4px solid #FFD700 !important;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+/* Staff - Borda azul/roxa */
+.profile-avatar-container.profile-staff {
+    border: 4px solid #4169E1 !important;
+    box-shadow: 0 0 15px rgba(65, 105, 225, 0.6);
+}
+
+/* Moderador - Borda verde */
+.profile-avatar-container.profile-moderator {
+    border: 4px solid #32CD32 !important;
+    box-shadow: 0 0 15px rgba(50, 205, 50, 0.6);
+}
+
+/* Verificado - Borda azul */
+.profile-avatar-container.profile-verified {
+    border: 4px solid #1E90FF !important;
+    box-shadow: 0 0 15px rgba(30, 144, 255, 0.6);
+}
+
+/* Apoiador - Borda escarlate com neon */
+.profile-avatar-container.profile-supporter {
+    border: 4px solid #FF1744 !important;
+    box-shadow: 
+        0 0 20px rgba(255, 23, 68, 0.7),
+        0 0 40px rgba(255, 23, 68, 0.3),
+        inset 0 0 15px rgba(255, 23, 68, 0.1);
+    position: relative;
+}
+
+.profile-avatar-container.profile-supporter::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #FF1744, #D50000, #B71C1C, #FF1744) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    animation: supporter-border-rotate 3s linear infinite;
+    z-index: -1;
+}
+
+/* Regular - Borda branca padrão */
+.profile-avatar-container.profile-regular {
+    border: 4px solid white !important;
+}
+
+/* ============================================================================
+NOME DO USUÁRIO COM CORES DIFERENCIADAS
+============================================================================ */
+
+/* Super Admin - Dourado */
+.profile-name.profile-superadmin {
+    color: #FFD700 !important;
+    text-shadow: 1px 1px 2px rgba(139, 0, 0, 0.5);
+}
+
+/* Staff - Azul/Roxo */
+.profile-name.profile-staff {
+    color: #4169E1 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Moderador - Verde */
+.profile-name.profile-moderator {
+    color: #32CD32 !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Verificado - Azul */
+.profile-name.profile-verified {
+    color: #1E90FF !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Apoiador - Escarlate com neon */
+.profile-name.profile-supporter {
+    color: #FF1744 !important;
+    text-shadow: 
+        0 0 10px rgba(255, 23, 68, 0.8),
+        0 0 20px rgba(255, 23, 68, 0.4),
+        1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-weight: 700;
+    position: relative;
+}
+
+.profile-name.profile-supporter::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 23, 68, 0.1), transparent);
+    animation: supporter-text-shimmer 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* Regular - Cor padrão */
+.profile-name.profile-regular {
+    color: inherit;
+}
+
+/* Botões de ação do formulário de posts */
+.action-button-wrapper {
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.action-button-wrapper:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.action-button {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.action-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s;
+}
+
+.action-button:hover::before {
+  left: 100%;
+}
+
+.action-button:hover {
+  border-color: #007bff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.action-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.2);
+}
+
+.action-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+  transition: transform 0.3s ease;
+}
+
+.action-button:hover .action-icon {
+  transform: scale(1.1);
+}
+
+.action-label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #495057;
+}
+
+.action-hint {
+  font-size: 11px;
+  color: #6c757d;
+  opacity: 0.8;
+}
+
+/* Estados específicos para cada tipo de botão */
+.action-button[data-type="image"]:hover {
+  border-color: #007bff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+}
+
+.action-button[data-type="video"]:hover {
+  border-color: #28a745;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.15);
+}
+
+.action-button[data-type="link"]:hover {
+  border-color: #17a2b8;
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.15);
+}
+
+.action-button[data-type="hashtag"]:hover {
+  border-color: #ffc107;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.15);
+}
+
+/* Barra de ações */
+.post-actions-bar {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.post-actions-bar:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Campos de input ocultos */
+.action-button-wrapper input[type="file"],
+.action-button-wrapper input[type="url"],
+.action-button-wrapper input[type="text"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Contadores melhorados */
+.char-counter, .hashtag-counter {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  background: rgba(0, 123, 255, 0.1);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.char-counter.warning {
+  background: rgba(255, 193, 7, 0.1);
+  color: #856404;
+}
+
+.char-counter.danger {
+  background: rgba(220, 53, 69, 0.1);
+  color: #721c24;
+}
+
+/* Botão de publicar melhorado */
+.btn-publish {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border: none;
+  border-radius: 25px;
+  padding: 10px 24px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.btn-publish:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+}
+
+.btn-publish:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+}
+
+/* Preview de mídia melhorado */
+.media-preview-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.media-preview-card .card-body {
+  padding: 16px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .action-button {
+    padding: 12px 8px;
+  }
+  
+  .action-icon {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  
+  .action-label {
+    font-size: 12px;
+  }
+  
+  .action-hint {
+    font-size: 10px;
+  }
+}
+
+/* Animações */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.action-button:focus {
+  animation: pulse 0.3s ease-in-out;
+}
+
+/* Estados de loading */
+.action-button.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.action-button.loading .action-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Melhorias para acessibilidade */
+.action-button:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.action-button-wrapper:focus-within .action-button {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* Tooltips personalizados */
+.action-button[data-tooltip] {
+  position: relative;
+}
+
+.action-button[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+.action-button[data-tooltip]:hover::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-bottom-color: #333;
+  z-index: 1000;
+}
+
+/* Campos de link e hashtag */
+#link-field-container,
+#hashtag-field-container {
+  animation: slideDown 0.3s ease-out;
+}
+
+#link-field-container .input-group,
+#hashtag-field-container .input-group {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#link-field-container .form-control,
+#hashtag-field-container .form-control {
+  border: none;
+  border-radius: 0;
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+#link-field-container .btn,
+#hashtag-field-container .btn {
+  border: none;
+  border-radius: 0;
+  padding: 12px 16px;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  transition: all 0.2s ease;
+}
+
+#link-field-container .btn:hover,
+#hashtag-field-container .btn:hover {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== ESTILOS PARA DIFERENCIAÇÃO DE PERFIS ===== */
+
+/* Badges de perfil */
+.profile-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.profile-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s ease;
+}
+
+.profile-badge:hover::before {
+  left: 100%;
+}
+
+/* ===== SUPERADMIN - IMPERADOR SUPREMO ===== */
+.profile-superadmin {
+  background: linear-gradient(135deg, #FFD700, #FFA500, #FF4500) !important;
+  color: #000 !important;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6) !important;
+  border: 2px solid #FFD700 !important;
+}
+
+.profile-container.profile-superadmin {
+  background: linear-gradient(135deg, #1a1a1a, #2d2d2d) !important;
+  border: 3px solid #FFD700 !important;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.3), inset 0 0 50px rgba(255, 215, 0, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.profile-container.profile-superadmin::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #FFD700, #FFA500, #FF4500, #FFD700);
+  animation: shimmer 2s infinite;
+}
+
+.profile-avatar-container.profile-superadmin {
+  border: 4px solid #FFD700 !important;
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.2) !important;
+  position: relative !important;
+}
+
+.profile-avatar-container.profile-superadmin::after {
+  content: '👑';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 24px;
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.8));
+  animation: crown-float 3s ease-in-out infinite;
+}
+
+.profile-name.profile-superadmin {
+  background: linear-gradient(45deg, #FFD700, #FFA500) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-weight: 900 !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+/* ===== STAFF - GUARDIÃO DO SISTEMA ===== */
+.profile-staff {
+  background: linear-gradient(135deg, #4169E1, #1E90FF, #00BFFF) !important;
+  color: white !important;
+  box-shadow: 0 0 20px rgba(65, 105, 225, 0.6) !important;
+  border: 2px solid #4169E1 !important;
+}
+
+.profile-container.profile-staff {
+  background: linear-gradient(135deg, #0f1419, #1a2332) !important;
+  border: 3px solid #4169E1 !important;
+  box-shadow: 0 0 30px rgba(65, 105, 225, 0.3), inset 0 0 50px rgba(65, 105, 225, 0.1) !important;
+  position: relative !important;
+}
+
+.profile-container.profile-staff::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #4169E1, #1E90FF, #00BFFF, #4169E1);
+  animation: shimmer 2s infinite;
+}
+
+.profile-avatar-container.profile-staff {
+  border: 4px solid #4169E1 !important;
+  box-shadow: 0 0 25px rgba(65, 105, 225, 0.8), inset 0 0 20px rgba(65, 105, 225, 0.2) !important;
+  position: relative !important;
+}
+
+.profile-avatar-container.profile-staff::after {
+  content: '🛡️';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 24px;
+  filter: drop-shadow(0 0 5px rgba(65, 105, 225, 0.8));
+  animation: shield-pulse 2s ease-in-out infinite;
+}
+
+.profile-name.profile-staff {
+  background: linear-gradient(45deg, #4169E1, #1E90FF) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-weight: 800 !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+/* ===== MODERADOR - VIGILANTE DA COMUNIDADE ===== */
+.profile-moderator {
+  background: linear-gradient(135deg, #32CD32, #00FF00, #7CFC00) !important;
+  color: #000 !important;
+  box-shadow: 0 0 20px rgba(50, 205, 50, 0.6) !important;
+  border: 2px solid #32CD32 !important;
+}
+
+.profile-container.profile-moderator {
+  background: linear-gradient(135deg, #0f1a0f, #1a2d1a) !important;
+  border: 3px solid #32CD32 !important;
+  box-shadow: 0 0 30px rgba(50, 205, 50, 0.3), inset 0 0 50px rgba(50, 205, 50, 0.1) !important;
+  position: relative !important;
+}
+
+.profile-container.profile-moderator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #32CD32, #00FF00, #7CFC00, #32CD32);
+  animation: shimmer 2s infinite;
+}
+
+.profile-avatar-container.profile-moderator {
+  border: 4px solid #32CD32 !important;
+  box-shadow: 0 0 25px rgba(50, 205, 50, 0.8), inset 0 0 20px rgba(50, 205, 50, 0.2) !important;
+  position: relative !important;
+}
+
+.profile-avatar-container.profile-moderator::after {
+  content: '⚖️';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 24px;
+  filter: drop-shadow(0 0 5px rgba(50, 205, 50, 0.8));
+  animation: scale-balance 2.5s ease-in-out infinite;
+}
+
+.profile-name.profile-moderator {
+  background: linear-gradient(45deg, #32CD32, #00FF00) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-weight: 800 !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+/* ===== VERIFICADO - MEMBRO VERIFICADO ===== */
+.profile-verified {
+  background: linear-gradient(135deg, #87CEEB, #00BFFF, #1E90FF) !important;
+  color: white !important;
+  box-shadow: 0 0 20px rgba(135, 206, 235, 0.6) !important;
+  border: 2px solid #87CEEB !important;
+}
+
+/* ===== APOIADOR - APOIADOR ===== */
+.profile-supporter {
+  background: linear-gradient(135deg, #DC143C, #B22222, #8B0000) !important;
+  color: white !important;
+  box-shadow: 0 0 20px rgba(220, 20, 60, 0.6) !important;
+  border: 2px solid #DC143C !important;
+}
+
+.profile-container.profile-verified {
+  background: linear-gradient(135deg, #0f1a2a, #1a2d4a) !important;
+  border: 3px solid #87CEEB !important;
+  box-shadow: 0 0 30px rgba(135, 206, 235, 0.3), inset 0 0 50px rgba(135, 206, 235, 0.1) !important;
+  position: relative !important;
+}
+
+.profile-container.profile-supporter {
+  background: linear-gradient(135deg, #1a0f0f, #2a1a1a) !important;
+  border: 3px solid #DC143C !important;
+  box-shadow: 0 0 30px rgba(220, 20, 60, 0.3), inset 0 0 50px rgba(220, 20, 60, 0.1) !important;
+  position: relative !important;
+}
+
+.profile-container.profile-verified::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #87CEEB, #00BFFF, #1E90FF, #87CEEB);
+  animation: shimmer 2s infinite;
+}
+
+.profile-container.profile-supporter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #DC143C, #B22222, #8B0000, #DC143C);
+  animation: shimmer 2s infinite;
+}
+
+.profile-avatar-container.profile-verified {
+  border: 4px solid #87CEEB !important;
+  box-shadow: 0 0 25px rgba(135, 206, 235, 0.8), inset 0 0 20px rgba(135, 206, 235, 0.2) !important;
+  position: relative !important;
+}
+
+.profile-avatar-container.profile-supporter {
+  border: 4px solid #DC143C !important;
+  box-shadow: 0 0 25px rgba(220, 20, 60, 0.8), inset 0 0 20px rgba(220, 20, 60, 0.2) !important;
+  position: relative !important;
+}
+
+.profile-avatar-container.profile-verified::after {
+  content: '✓';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #87CEEB, #00BFFF) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 14px !important;
+  box-shadow: 0 0 10px rgba(135, 206, 235, 0.8) !important;
+  animation: check-pulse 2s ease-in-out infinite;
+}
+
+.profile-avatar-container.profile-supporter::after {
+  content: '❤️';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #DC143C, #B22222) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 14px !important;
+  box-shadow: 0 0 10px rgba(220, 20, 60, 0.8) !important;
+  animation: heart-pulse 2s ease-in-out infinite;
+}
+
+.profile-name.profile-verified {
+  background: linear-gradient(45deg, #87CEEB, #00BFFF) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-weight: 700 !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+.profile-name.profile-supporter {
+  background: linear-gradient(45deg, #DC143C, #B22222) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-weight: 700 !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
+}
+
+/* ===== REGULAR - MEMBRO COMUM ===== */
+.profile-regular {
+  /* Sem diferenciação visual especial */
+}
+
+.profile-container.profile-regular {
+  background: white !important;
+  border: 1px solid #dee2e6 !important;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.profile-avatar-container.profile-regular {
+  border: 4px solid white !important;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.profile-name.profile-regular {
+  color: #212529 !important;
+  font-weight: 600 !important;
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes crown-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(5deg); }
+}
+
+@keyframes shield-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+@keyframes scale-balance {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+
+@keyframes check-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@keyframes heart-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* ===== EFEITOS ESPECIAIS PARA O CARD DE PERFIL ===== */
+.profile-container {
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.profile-container:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* Efeito de partículas para perfis especiais */
+.profile-container.profile-superadmin::after,
+.profile-container.profile-staff::after,
+.profile-container.profile-moderator::after,
+.profile-container.profile-verified::after,
+.profile-container.profile-supporter::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 1px, transparent 1px),
+    radial-gradient(circle at 40% 40%, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 50px 50px, 30px 30px, 20px 20px;
+  animation: particle-float 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes particle-float {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-50px); }
+}
+
+/* ===== ESTILOS PARA BADGES ESPECIAIS ===== */
+.badge.profile-superadmin {
+  background: linear-gradient(135deg, #FFD700, #FFA500, #FF4500) !important;
+  color: #000 !important;
+  font-weight: bold !important;
+  border: 1px solid #FFD700 !important;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important;
+}
+
+.badge.profile-staff {
+  background: linear-gradient(135deg, #4169E1, #1E90FF, #00BFFF) !important;
+  color: white !important;
+  font-weight: bold !important;
+  border: 1px solid #4169E1 !important;
+  box-shadow: 0 0 10px rgba(65, 105, 225, 0.5) !important;
+}
+
+.badge.profile-moderator {
+  background: linear-gradient(135deg, #32CD32, #00FF00, #7CFC00) !important;
+  color: #000 !important;
+  font-weight: bold !important;
+  border: 1px solid #32CD32 !important;
+  box-shadow: 0 0 10px rgba(50, 205, 50, 0.5) !important;
+}
+
+.badge.profile-verified {
+  background: linear-gradient(135deg, #87CEEB, #00BFFF, #1E90FF) !important;
+  color: white !important;
+  font-weight: bold !important;
+  border: 1px solid #87CEEB !important;
+  box-shadow: 0 0 10px rgba(135, 206, 235, 0.5) !important;
+}
+
+.badge.profile-supporter {
+  background: linear-gradient(135deg, #FF1744, #D50000, #B71C1C) !important;
+  color: white !important;
+  font-weight: bold !important;
+  border: 2px solid #FF1744 !important;
+  box-shadow: 
+      0 0 15px rgba(255, 23, 68, 0.6),
+      0 0 30px rgba(255, 23, 68, 0.3),
+      inset 0 0 10px rgba(255, 23, 68, 0.2) !important;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.badge.profile-supporter::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: supporter-badge-shimmer 2s infinite;
+  pointer-events: none;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .profile-avatar-container::after {
+    font-size: 18px !important;
+    top: -8px !important;
+    right: -8px !important;
+  }
+  
+  .profile-container::before {
+    height: 3px !important;
+  }
+  
+  .profile-avatar-container {
+    border-width: 3px !important;
+  }
+}
+
+/* ===== EFEITOS DE HOVER MELHORADOS ===== */
+.profile-badge:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 0 15px currentColor !important;
+}
+
+.profile-container:hover .profile-avatar-container::after {
+  animation-duration: 1s !important;
+}
+
+/* ===== ESTILOS PARA O COVER DO PERFIL ===== */
+.profile-cover.profile-superadmin {
+  background: linear-gradient(135deg, #FFD700, #FFA500, #FF4500) !important;
+  position: relative !important;
+}
+
+.profile-cover.profile-staff {
+  background: linear-gradient(135deg, #4169E1, #1E90FF, #00BFFF) !important;
+  position: relative !important;
+}
+
+.profile-cover.profile-moderator {
+  background: linear-gradient(135deg, #32CD32, #00FF00, #7CFC00) !important;
+  position: relative !important;
+}
+
+.profile-cover.profile-verified {
+  background: linear-gradient(135deg, #87CEEB, #00BFFF, #1E90FF) !important;
+  position: relative !important;
+}
+
+.profile-cover.profile-supporter {
+  background: linear-gradient(135deg, #FF1744, #D50000, #B71C1C) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.profile-cover.profile-supporter::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+      radial-gradient(circle at 20% 50%, rgba(255, 23, 68, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(213, 0, 0, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(183, 28, 28, 0.2) 0%, transparent 50%);
+  animation: supporter-cover-pulse 4s ease-in-out infinite;
+}
+
+/* Efeito de overlay nos covers */
+.profile-cover.profile-superadmin::after,
+.profile-cover.profile-staff::after,
+.profile-cover.profile-moderator::after,
+.profile-cover.profile-verified::after,
+.profile-cover.profile-supporter::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.1));
+  animation: cover-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes cover-shimmer {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* ===== SEÇÃO DE STATUS DO PERFIL ===== */
+.profile-status-display {
+  display: flex !important;
+  align-items: center !important;
+  padding: 15px !important;
+  border-radius: 12px !important;
+  margin: 10px 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
+}
+
+.profile-status-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.1));
+  animation: status-shimmer 3s ease-in-out infinite;
+}
+
+.profile-status-display:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2) !important;
+}
+
+.status-icon {
+  width: 50px !important;
+  height: 50px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 15px !important;
+  font-size: 24px !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.status-info {
+  flex: 1 !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+.status-title {
+  font-size: 18px !important;
+  font-weight: bold !important;
+  margin-bottom: 5px !important;
+}
+
+.status-description {
+  font-size: 14px !important;
+  opacity: 0.9 !important;
+}
+
+/* Estilos específicos para cada tipo de status */
+.profile-status-display.profile-superadmin {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2), rgba(255, 69, 0, 0.2)) !important;
+  border: 2px solid rgba(255, 215, 0, 0.5) !important;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3) !important;
+}
+
+.profile-status-display.profile-superadmin .status-icon {
+  background: linear-gradient(135deg, #FFD700, #FFA500) !important;
+  color: #000 !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6) !important;
+}
+
+.profile-status-display.profile-staff {
+  background: linear-gradient(135deg, rgba(65, 105, 225, 0.2), rgba(30, 144, 255, 0.2), rgba(0, 191, 255, 0.2)) !important;
+  border: 2px solid rgba(65, 105, 225, 0.5) !important;
+  box-shadow: 0 0 20px rgba(65, 105, 225, 0.3) !important;
+}
+
+.profile-status-display.profile-staff .status-icon {
+  background: linear-gradient(135deg, #4169E1, #1E90FF) !important;
+  color: white !important;
+  box-shadow: 0 0 15px rgba(65, 105, 225, 0.6) !important;
+}
+
+.profile-status-display.profile-moderator {
+  background: linear-gradient(135deg, rgba(50, 205, 50, 0.2), rgba(0, 255, 0, 0.2), rgba(124, 252, 0, 0.2)) !important;
+  border: 2px solid rgba(50, 205, 50, 0.5) !important;
+  box-shadow: 0 0 20px rgba(50, 205, 50, 0.3) !important;
+}
+
+.profile-status-display.profile-moderator .status-icon {
+  background: linear-gradient(135deg, #32CD32, #00FF00) !important;
+  color: #000 !important;
+  box-shadow: 0 0 15px rgba(50, 205, 50, 0.6) !important;
+}
+
+.profile-status-display.profile-verified {
+  background: linear-gradient(135deg, rgba(135, 206, 235, 0.2), rgba(0, 191, 255, 0.2), rgba(30, 144, 255, 0.2)) !important;
+  border: 2px solid rgba(135, 206, 235, 0.5) !important;
+  box-shadow: 0 0 20px rgba(135, 206, 235, 0.3) !important;
+}
+
+.profile-status-display.profile-verified .status-icon {
+  background: linear-gradient(135deg, #87CEEB, #00BFFF) !important;
+  color: white !important;
+  box-shadow: 0 0 15px rgba(135, 206, 235, 0.6) !important;
+}
+
+.profile-status-display.profile-supporter {
+  background: linear-gradient(135deg, rgba(255, 23, 68, 0.2), rgba(213, 0, 0, 0.2), rgba(183, 28, 28, 0.2)) !important;
+  border: 2px solid rgba(255, 23, 68, 0.6) !important;
+  box-shadow: 
+      0 0 20px rgba(255, 23, 68, 0.4),
+      inset 0 0 20px rgba(255, 23, 68, 0.1) !important;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.profile-status-display.profile-supporter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: supporter-status-sweep 3s infinite;
+  pointer-events: none;
+}
+
+.profile-status-display.profile-supporter .status-icon {
+  background: linear-gradient(135deg, #FF1744, #D50000) !important;
+  color: white !important;
+  box-shadow: 
+      0 0 15px rgba(255, 23, 68, 0.6),
+      0 0 30px rgba(255, 23, 68, 0.3) !important;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8) !important;
+  animation: supporter-heart-pulse 2s ease-in-out infinite !important;
+}
+
+@keyframes status-shimmer {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+/* ===== RESPONSIVIDADE PARA STATUS ===== */
+@media (max-width: 768px) {
+  .profile-status-display {
+    padding: 12px !important;
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+  
+  .status-icon {
+    width: 40px !important;
+    height: 40px !important;
+    margin-right: 0 !important;
+    margin-bottom: 10px !important;
+    font-size: 20px !important;
+  }
+  
+  .status-title {
+    font-size: 16px !important;
+  }
+  
+  .status-description {
+    font-size: 12px !important;
+  }
+}
+
+/* ===== EFEITOS ESPECIAIS NO AVATAR ===== */
+.profile-avatar-image {
+  transition: all 0.3s ease !important;
+  filter: brightness(1) !important;
+}
+
+.profile-avatar-container:hover .profile-avatar-image {
+  filter: brightness(1.1) !important;
+  transform: scale(1.05) !important;
+}
+
+.avatar-glow {
+  position: absolute !important;
+  top: -10px !important;
+  left: -10px !important;
+  right: -10px !important;
+  bottom: -10px !important;
+  border-radius: 50% !important;
+  z-index: -1 !important;
+  animation: avatar-glow-pulse 2s ease-in-out infinite !important;
+}
+
+.avatar-glow.profile-superadmin {
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.6), transparent 70%) !important;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.8) !important;
+}
+
+.avatar-glow.profile-staff {
+  background: radial-gradient(circle, rgba(65, 105, 225, 0.6), transparent 70%) !important;
+  box-shadow: 0 0 30px rgba(65, 105, 225, 0.8) !important;
+}
+
+.avatar-glow.profile-moderator {
+  background: radial-gradient(circle, rgba(50, 205, 50, 0.6), transparent 70%) !important;
+  box-shadow: 0 0 30px rgba(50, 205, 50, 0.8) !important;
+}
+
+.avatar-glow.profile-verified {
+  background: radial-gradient(circle, rgba(135, 206, 235, 0.6), transparent 70%) !important;
+  box-shadow: 0 0 30px rgba(135, 206, 235, 0.8) !important;
+}
+
+.avatar-glow.profile-supporter {
+  background: radial-gradient(circle, rgba(255, 23, 68, 0.7), transparent 70%) !important;
+  box-shadow: 
+      0 0 30px rgba(255, 23, 68, 0.8),
+      0 0 60px rgba(255, 23, 68, 0.4) !important;
+  animation: supporter-avatar-glow 3s ease-in-out infinite !important;
+}
+
+@keyframes avatar-glow-pulse {
+  0%, 100% { 
+    opacity: 0.6; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.1); 
+  }
+}
+
+/* ===== EFEITOS DE HOVER MELHORADOS NO CONTAINER ===== */
+.profile-container:hover .avatar-glow {
+  animation-duration: 1s !important;
+}
+
+.profile-container:hover .profile-avatar-container::after {
+  animation-duration: 0.8s !important;
+}
+
+/* ===== EFEITOS ESPECIAIS PARA MOBILE ===== */
+@media (max-width: 768px) {
+  .avatar-glow {
+    top: -5px !important;
+    left: -5px !important;
+    right: -5px !important;
+    bottom: -5px !important;
+  }
+  
+  .profile-avatar-container:hover .profile-avatar-image {
+    transform: scale(1.02) !important;
+  }
+}
+
+/* ===== ANIMAÇÕES ESPECÍFICAS DO APOIADOR ===== */
+@keyframes supporter-shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes supporter-sweep {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes supporter-border-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes supporter-text-shimmer {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+@keyframes supporter-badge-shimmer {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes supporter-cover-pulse {
+  0%, 100% { 
+    opacity: 0.3; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.6; 
+    transform: scale(1.05); 
+  }
+}
+
+@keyframes supporter-status-sweep {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes supporter-heart-pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    filter: brightness(1);
+  }
+  50% { 
+    transform: scale(1.1); 
+    filter: brightness(1.3);
+  }
+}
+
+@keyframes supporter-avatar-glow {
+  0%, 100% { 
+    opacity: 0.7; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.15); 
+  }
+}
+
+/* ============================================================================
+ESTILOS PARA HIERARQUIA DE COMENTÁRIOS E RESPOSTAS
+============================================================================ */
+
+/* Container principal de comentários */
+.comments-list {
+  position: relative;
+}
+
+/* Comentário principal */
+.comment-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+  transform: translateX(5px);
+}
+
+/* Avatar do comentário principal */
+.comment-item .avatar-container {
+  position: relative;
+  z-index: 2;
+}
+
+.comment-item .avatar-container::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #f8f9fa;
+  z-index: 1;
+}
+
+/* Conteúdo do comentário principal */
+.comment-item .bg-light {
+  position: relative;
+  border-left: 4px solid #007bff;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.comment-item .bg-light:hover {
+  border-left-width: 6px;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Linha conectora para respostas */
+.comment-item .ms-4 {
+  position: relative;
+}
+
+.comment-item .ms-4::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -20px;
+  width: 2px;
+  height: calc(100% + 10px);
+  background: linear-gradient(to bottom, #007bff, #6c757d);
+  border-radius: 1px;
+}
+
+/* Respostas de nível 1 */
+.comment-item .ms-4 .d-flex {
+  position: relative;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.comment-item .ms-4 .d-flex:hover {
+  transform: translateX(3px);
+}
+
+/* Avatar das respostas de nível 1 */
+.comment-item .ms-4 .avatar-container {
+  position: relative;
+  z-index: 2;
+}
+
+.comment-item .ms-4 .avatar-container::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid white;
+  z-index: 1;
+}
+
+/* Conteúdo das respostas de nível 1 */
+.comment-item .ms-4 .bg-white {
+  position: relative;
+  border-left: 3px solid #28a745;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+  box-shadow: 0 1px 6px rgba(40, 167, 69, 0.1);
+  transition: all 0.3s ease;
+}
+
+.comment-item .ms-4 .bg-white:hover {
+  border-left-width: 4px;
+  box-shadow: 0 3px 10px rgba(40, 167, 69, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Linha conectora para respostas de nível 2 */
+.replies-to-replies {
+  position: relative;
+}
+
+.replies-to-replies::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -15px;
+  width: 1px;
+  height: calc(100% + 5px);
+  background: linear-gradient(to bottom, #28a745, #6c757d);
+  border-radius: 0.5px;
+}
+
+/* Respostas de nível 2 */
+.replies-to-replies .d-flex {
+  position: relative;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.replies-to-replies .d-flex:hover {
+  transform: translateX(2px);
+}
+
+/* Avatar das respostas de nível 2 */
+.replies-to-replies .avatar-container {
+  position: relative;
+  z-index: 2;
+}
+
+.replies-to-replies .avatar-container::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #f8f9fa;
+  z-index: 1;
+}
+
+/* Conteúdo das respostas de nível 2 */
+.replies-to-replies .bg-light {
+  position: relative;
+  border-left: 2px solid #ffc107;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+  box-shadow: 0 1px 4px rgba(255, 193, 7, 0.1);
+  transition: all 0.3s ease;
+}
+
+.replies-to-replies .bg-light:hover {
+  border-left-width: 3px;
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);
+}
+
+/* Indicadores visuais de nível */
+.comment-level-indicator {
+  position: absolute;
+  top: 10px;
+  left: -25px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  z-index: 3;
+}
+
+.comment-level-indicator.level-1 {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.3);
+}
+
+.comment-level-indicator.level-2 {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3);
+}
+
+.comment-level-indicator.level-3 {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+  box-shadow: 0 2px 6px rgba(255, 193, 7, 0.3);
+}
+
+/* Badges de identificação */
+.comment-author-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 8px;
+  transition: all 0.3s ease;
+}
+
+.comment-author-badge.original-author {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 123, 255, 0.3);
+}
+
+.comment-author-badge.reply-author {
+  background: linear-gradient(135deg, #28a745, #1e7e34);
+  color: white;
+  box-shadow: 0 1px 3px rgba(40, 167, 69, 0.3);
+}
+
+.comment-author-badge.nested-reply-author {
+  background: linear-gradient(135deg, #ffc107, #e0a800);
+  color: #212529;
+  box-shadow: 0 1px 3px rgba(255, 193, 7, 0.3);
+}
+
+/* Setas indicativas */
+.comment-arrow {
+  position: absolute;
+  left: -12px;
+  top: 15px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 8px solid #007bff;
+  z-index: 1;
+}
+
+.reply-arrow {
+  position: absolute;
+  left: -10px;
+  top: 12px;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 6px solid #28a745;
+  z-index: 1;
+}
+
+.nested-reply-arrow {
+  position: absolute;
+  left: -8px;
+  top: 10px;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-right: 5px solid #ffc107;
+  z-index: 1;
+}
+
+/* Efeitos de hover melhorados */
+.comment-item:hover .comment-arrow,
+.comment-item .ms-4 .d-flex:hover .reply-arrow,
+.replies-to-replies .d-flex:hover .nested-reply-arrow {
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+}
+
+/* Formulários de resposta */
+.reply-form-container,
+.reply-to-reply-form-container {
+  position: relative;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  border-left: 3px solid #6c757d;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.reply-form-container:hover,
+.reply-to-reply-form-container:hover {
+  border-left-width: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Indicador de resposta */
+.reply-indicator {
+  position: absolute;
+  top: -8px;
+  left: 20px;
+  background: #6c757d;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  z-index: 3;
+}
+
+/* Melhorias para mobile */
+@media (max-width: 768px) {
+  .comment-item .ms-4::before {
+    left: -15px;
+    width: 1px;
+  }
+  
+  .replies-to-replies::before {
+    left: -10px;
+    width: 1px;
+  }
+  
+  .comment-level-indicator {
+    width: 16px;
+    height: 16px;
+    font-size: 8px;
+    left: -20px;
+  }
+  
+  .comment-arrow {
+    left: -8px;
+    border-right-width: 6px;
+  }
+  
+  .reply-arrow {
+    left: -6px;
+    border-right-width: 4px;
+  }
+  
+  .nested-reply-arrow {
+    left: -4px;
+    border-right-width: 3px;
+  }
+  
+  .comment-author-badge {
+    font-size: 8px;
+    padding: 1px 4px;
+  }
+}
+
+/* Animações suaves */
+.comment-item,
+.comment-item .ms-4 .d-flex,
+.replies-to-replies .d-flex {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efeitos de destaque para comentários importantes */
+.comment-item.highlighted .bg-light {
+  border-left-color: #dc3545;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%) !important;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+}
+
+.comment-item.highlighted .comment-arrow {
+  border-right-color: #dc3545;
+}
+
+/* Contador de respostas */
+.reply-counter {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  background: rgba(108, 117, 125, 0.1);
+  border-radius: 10px;
+  font-size: 10px;
+  color: #6c757d;
+  margin-left: 8px;
+  transition: all 0.3s ease;
+}
+
+.reply-counter:hover {
+  background: rgba(108, 117, 125, 0.2);
+  transform: scale(1.05);
+}
+
+/* Melhorias na acessibilidade */
+.comment-item:focus-within,
+.comment-item .ms-4 .d-flex:focus-within,
+.replies-to-replies .d-flex:focus-within {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Estados de carregamento */
+.comment-item.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.comment-item.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ============================================================================
+MELHORIAS FINAIS PARA HIERARQUIA DE COMENTÁRIOS
+============================================================================ */
+
+/* Garantir que os indicadores de nível sejam visíveis */
+.comment-level-indicator {
+  position: absolute !important;
+  top: 10px !important;
+  left: -25px !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 10px !important;
+  font-weight: bold !important;
+  color: white !important;
+  z-index: 10 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Garantir que as setas sejam visíveis */
+.comment-arrow,
+.reply-arrow,
+.nested-reply-arrow {
+  position: absolute !important;
+  z-index: 5 !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Melhorar a visibilidade das linhas conectoras */
+.comment-item .ms-4::before,
+.replies-to-replies::before {
+  content: '' !important;
+  position: absolute !important;
+  background: linear-gradient(to bottom, #007bff, #6c757d) !important;
+  border-radius: 1px !important;
+  z-index: 1 !important;
+}
+
+/* Garantir que os badges sejam visíveis */
+.comment-author-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 2px 6px !important;
+  border-radius: 12px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  margin-left: 8px !important;
+  transition: all 0.3s ease !important;
+  white-space: nowrap !important;
+}
+
+/* Melhorar a responsividade */
+@media (max-width: 576px) {
+  .comment-level-indicator {
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 8px !important;
+    left: -20px !important;
+    top: 8px !important;
+  }
+  
+  .comment-arrow {
+    left: -6px !important;
+    border-right-width: 4px !important;
+  }
+  
+  .reply-arrow {
+    left: -4px !important;
+    border-right-width: 3px !important;
+  }
+  
+  .nested-reply-arrow {
+    left: -3px !important;
+    border-right-width: 2px !important;
+  }
+  
+  .comment-author-badge {
+    font-size: 8px !important;
+    padding: 1px 4px !important;
+  }
+  
+  .comment-item .ms-4::before {
+    left: -10px !important;
+    width: 1px !important;
+  }
+  
+  .replies-to-replies::before {
+    left: -7px !important;
+    width: 1px !important;
+  }
+}
+
+/* Garantir que os formulários de resposta sejam bem visíveis */
+.reply-form-container,
+.reply-to-reply-form-container {
+  position: relative !important;
+  margin-top: 1rem !important;
+  padding: 1rem !important;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+  border-radius: 8px !important;
+  border-left: 3px solid #6c757d !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  z-index: 5 !important;
+}
+
+.reply-indicator {
+  position: absolute !important;
+  top: -8px !important;
+  left: 20px !important;
+  background: #6c757d !important;
+  color: white !important;
+  padding: 2px 8px !important;
+  border-radius: 10px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  z-index: 10 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Melhorar a acessibilidade */
+.comment-item:focus-within,
+.comment-item .ms-4 .d-flex:focus-within,
+.replies-to-replies .d-flex:focus-within {
+  outline: 2px solid #007bff !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
+}
+
+/* Garantir que os contadores de resposta sejam visíveis */
+.reply-counter {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 2px 6px !important;
+  background: rgba(108, 117, 125, 0.1) !important;
+  border-radius: 10px !important;
+  font-size: 10px !important;
+  color: #6c757d !important;
+  margin-left: 8px !important;
+  transition: all 0.3s ease !important;
+  white-space: nowrap !important;
+}
+
+/* Efeitos de hover melhorados */
+.comment-item:hover .bg-light,
+.comment-item .ms-4 .d-flex:hover .bg-white,
+.replies-to-replies .d-flex:hover .bg-light {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Garantir que as animações funcionem */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.comment-item,
+.comment-item .ms-4 .d-flex,
+.replies-to-replies .d-flex {
+  animation: fadeInUp 0.5s ease-out !important;
+}
+
+/* Melhorar a visibilidade dos avatares */
+.avatar-container {
+  position: relative !important;
+  z-index: 2 !important;
+  transition: all 0.3s ease !important;
+}
+
+.avatar-container:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+           /* Garantir que os botões de ação sejam bem visíveis */
+           .btn-link {
+             transition: all 0.3s ease !important;
+           }
+           
+           .btn-link:hover {
+             transform: scale(1.1) !important;
+             text-decoration: none !important;
+           }
+           
+           /* ============================================================================
+           ESTILOS PARA MENCÕES @USERNAME
+           ============================================================================ */
+           
+           /* Links de menção válidos */
+           .mention-link {
+             color: #007bff !important;
+             text-decoration: none !important;
+             font-weight: 600 !important;
+             background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.05)) !important;
+             padding: 2px 4px !important;
+             border-radius: 4px !important;
+             transition: all 0.3s ease !important;
+             position: relative !important;
+             display: inline-block !important;
+           }
+           
+           .mention-link:hover {
+             color: #0056b3 !important;
+             background: linear-gradient(135deg, rgba(0, 123, 255, 0.2), rgba(0, 123, 255, 0.1)) !important;
+             transform: translateY(-1px) !important;
+             box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2) !important;
+             text-decoration: none !important;
+           }
+           
+           .mention-link:active {
+             transform: translateY(0) !important;
+             box-shadow: 0 1px 2px rgba(0, 123, 255, 0.2) !important;
+           }
+           
+           /* Menções inválidas (usuário não existe) */
+           .mention-invalid {
+             color: #6c757d !important;
+             font-weight: 500 !important;
+             background: rgba(108, 117, 125, 0.1) !important;
+             padding: 2px 4px !important;
+             border-radius: 4px !important;
+             text-decoration: line-through !important;
+             opacity: 0.7 !important;
+             cursor: not-allowed !important;
+           }
+           
+           /* Efeito de destaque ao passar o mouse */
+           .mention-link::before {
+             content: '' !important;
+             position: absolute !important;
+             top: 0 !important;
+             left: 0 !important;
+             right: 0 !important;
+             bottom: 0 !important;
+             background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), transparent) !important;
+             border-radius: 4px !important;
+             opacity: 0 !important;
+             transition: opacity 0.3s ease !important;
+             z-index: -1 !important;
+           }
+           
+           .mention-link:hover::before {
+             opacity: 1 !important;
+           }
+           
+           /* Animação de entrada para menções */
+           .mention-link {
+             animation: mentionFadeIn 0.5s ease-out !important;
+           }
+           
+           @keyframes mentionFadeIn {
+             from {
+               opacity: 0;
+               transform: scale(0.9);
+             }
+             to {
+               opacity: 1;
+               transform: scale(1);
+             }
+           }
+           
+           /* Melhorias para mobile */
+           @media (max-width: 768px) {
+             .mention-link {
+               padding: 1px 3px !important;
+               font-size: 0.9em !important;
+             }
+             
+             .mention-invalid {
+               padding: 1px 3px !important;
+               font-size: 0.9em !important;
+             }
+           }
+           
+           /* Tooltip para menções */
+           .mention-link[data-username]:hover::after {
+             content: attr(data-username) !important;
+             position: absolute !important;
+             bottom: 100% !important;
+             left: 50% !important;
+             transform: translateX(-50%) !important;
+             background: #333 !important;
+             color: white !important;
+             padding: 4px 8px !important;
+             border-radius: 4px !important;
+             font-size: 12px !important;
+             white-space: nowrap !important;
+             z-index: 1000 !important;
+             margin-bottom: 5px !important;
+             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+           }
+           
+           .mention-link[data-username]:hover::before {
+             content: '' !important;
+             position: absolute !important;
+             bottom: 100% !important;
+             left: 50% !important;
+             transform: translateX(-50%) !important;
+             border: 4px solid transparent !important;
+             border-top-color: #333 !important;
+             margin-bottom: 1px !important;
+             z-index: 1000 !important;
+           }
+           
+           /* Estilos para sugestões de menção */
+           .mention-suggestions {
+             position: absolute !important;
+             background: white !important;
+             border: 1px solid #ddd !important;
+             border-radius: 4px !important;
+             box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+             max-height: 200px !important;
+             overflow-y: auto !important;
+             z-index: 1000 !important;
+             font-size: 14px !important;
+           }
+           
+           .mention-suggestion-item {
+             padding: 8px 12px !important;
+             cursor: pointer !important;
+             border-bottom: 1px solid #f0f0f0 !important;
+             transition: background-color 0.2s ease !important;
+           }
+           
+           .mention-suggestion-item:hover {
+             background-color: #f8f9fa !important;
+           }
+           
+           .mention-suggestion-item:last-child {
+             border-bottom: none !important;
+           }
+           
+           /* Preview de menções */
+           .mentions-preview {
+             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+             border-left: 3px solid #007bff !important;
+             border-radius: 4px !important;
+             padding: 8px 12px !important;
+             margin-top: 8px !important;
+             font-size: 12px !important;
+             color: #6c757d !important;
+             animation: fadeInUp 0.3s ease-out !important;
+           }
+           
+           /* Campo de texto com menções */
+           textarea.has-mentions {
+             border-color: #007bff !important;
+             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+           }
+           
+           /* Melhorias para mobile */
+           @media (max-width: 768px) {
+             .mention-suggestions {
+               max-height: 150px !important;
+               font-size: 13px !important;
+             }
+             
+             .mention-suggestion-item {
+               padding: 6px 10px !important;
+             }
+             
+             .mentions-preview {
+               font-size: 11px !important;
+               padding: 6px 10px !important;
+             }
+           }
+
+/* Melhorar a visibilidade das ações */
+.comment-item .bg-light .d-flex.gap-2,
+.comment-item .ms-4 .bg-white .d-flex.gap-2,
+.replies-to-replies .bg-light .d-flex.gap-2 {
+  opacity: 0.7 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.comment-item:hover .bg-light .d-flex.gap-2,
+.comment-item .ms-4 .d-flex:hover .bg-white .d-flex.gap-2,
+.replies-to-replies .d-flex:hover .bg-light .d-flex.gap-2 {
+  opacity: 1 !important;
+}
+
+/* ============================================================================
+ESTILOS PARA LINKS PROCESSADOS NO CONTEÚDO
+============================================================================ */
+
+/* Links de conteúdo (URLs) */
+.content-link {
+  color: #007bff !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.05)) !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  display: inline-block !important;
+  border-bottom: 1px dashed #007bff !important;
+}
+
+.content-link:hover {
+  color: #0056b3 !important;
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.2), rgba(0, 123, 255, 0.1)) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2) !important;
+  text-decoration: none !important;
+  border-bottom-style: solid !important;
+}
+
+.content-link:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 1px 2px rgba(0, 123, 255, 0.2) !important;
+}
+
+/* Links de hashtag */
+.hashtag-link {
+  color: #28a745 !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05)) !important;
+  padding: 2px 6px !important;
+  border-radius: 12px !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  display: inline-block !important;
+  border: 1px solid rgba(40, 167, 69, 0.3) !important;
+}
+
+.hashtag-link:hover {
+  color: #1e7e34 !important;
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(40, 167, 69, 0.1)) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 6px rgba(40, 167, 69, 0.3) !important;
+  text-decoration: none !important;
+  border-color: rgba(40, 167, 69, 0.6) !important;
+}
+
+.hashtag-link:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 1px 3px rgba(40, 167, 69, 0.3) !important;
+}
+
+/* Hashtags inválidas */
+.hashtag-invalid {
+  color: #6c757d !important;
+  font-weight: 500 !important;
+  background: rgba(108, 117, 125, 0.1) !important;
+  padding: 2px 6px !important;
+  border-radius: 12px !important;
+  text-decoration: line-through !important;
+  opacity: 0.7 !important;
+  cursor: not-allowed !important;
+  border: 1px solid rgba(108, 117, 125, 0.3) !important;
+}
+
+/* Efeitos de destaque ao passar o mouse */
+.content-link::before,
+.hashtag-link::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  border-radius: 4px !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+  z-index: -1 !important;
+}
+
+.content-link::before {
+  background: linear-gradient(135deg, rgba(0, 123, 255, 0.1), transparent) !important;
+}
+
+.hashtag-link::before {
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), transparent) !important;
+  border-radius: 12px !important;
+}
+
+.content-link:hover::before,
+.hashtag-link:hover::before {
+  opacity: 1 !important;
+}
+
+/* Animação de entrada para links */
+.content-link,
+.hashtag-link {
+  animation: linkFadeIn 0.5s ease-out !important;
+}
+
+@keyframes linkFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Tooltip para links */
+.content-link:hover::after {
+  content: 'Clique para abrir' !important;
+  position: absolute !important;
+  bottom: 100% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: #333 !important;
+  color: white !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+  z-index: 1000 !important;
+  margin-bottom: 5px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.hashtag-link:hover::after {
+  content: 'Ver posts com esta hashtag' !important;
+  position: absolute !important;
+  bottom: 100% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: #333 !important;
+  color: white !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+  z-index: 1000 !important;
+  margin-bottom: 5px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.content-link:hover::before,
+.hashtag-link:hover::before {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 100% !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  border: 4px solid transparent !important;
+  border-top-color: #333 !important;
+  margin-bottom: 1px !important;
+  z-index: 1000 !important;
+}
+
+/* Melhorias para mobile */
+@media (max-width: 768px) {
+  .content-link {
+    padding: 1px 3px !important;
+    font-size: 0.9em !important;
+  }
+  
+  .hashtag-link {
+    padding: 1px 4px !important;
+    font-size: 0.9em !important;
+  }
+  
+  .hashtag-invalid {
+    padding: 1px 4px !important;
+    font-size: 0.9em !important;
+  }
+  
+  .content-link:hover::after,
+  .hashtag-link:hover::after {
+    font-size: 10px !important;
+    padding: 3px 6px !important;
+  }
+}
+
+/* Efeitos especiais para links importantes */
+.content-link.important {
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05)) !important;
+  border-bottom-color: #dc3545 !important;
+  color: #dc3545 !important;
+}
+
+.content-link.important:hover {
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.2), rgba(220, 53, 69, 0.1)) !important;
+  color: #c82333 !important;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2) !important;
+}
+
+/* Efeitos para links de mídia social */
+.content-link[href*="twitter.com"],
+.content-link[href*="facebook.com"],
+.content-link[href*="instagram.com"],
+.content-link[href*="youtube.com"] {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05)) !important;
+  border-bottom-color: #ffc107 !important;
+  color: #856404 !important;
+}
+
+.content-link[href*="twitter.com"]:hover,
+.content-link[href*="facebook.com"]:hover,
+.content-link[href*="instagram.com"]:hover,
+.content-link[href*="youtube.com"]:hover {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 193, 7, 0.1)) !important;
+  color: #533f03 !important;
+  box-shadow: 0 2px 4px rgba(255, 193, 7, 0.2) !important;
+}
+
+/* ============================================================================
+MENU SUSPENSO ESTILO WHATSAPP
+============================================================================ */
+
+/* Menu suspenso estilo WhatsApp */
+.dropdown-menu {
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 12px !important;
+  padding: 8px !important;
+  min-width: 200px !important;
+  margin-top: 8px !important;
+}
+
+.dropdown-item {
+  border-radius: 8px !important;
+  padding: 12px 16px !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  font-weight: 500 !important;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa !important;
+  transform: translateX(2px) !important;
+}
+
+.dropdown-item label {
+  cursor: pointer !important;
+  margin: 0 !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.dropdown-item input[type="file"] {
+  display: none !important;
+}
+
+/* Botão do menu suspenso */
+#mediaDropdown, #mediaDropdownMobile {
+  border-radius: 20px !important;
+  padding: 8px 16px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  border: 1px solid #dee2e6 !important;
+  background-color: #fff !important;
+  color: #495057 !important;
+}
+
+#mediaDropdown:hover, #mediaDropdownMobile:hover {
+  background-color: #e9ecef !important;
+  transform: translateY(-1px) !important;
+  border-color: #adb5bd !important;
+}
+
+#mediaDropdown:focus, #mediaDropdownMobile:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+  border-color: #80bdff !important;
+}
+
+/* Ícones no menu */
+.dropdown-item i {
+  font-size: 1.1em !important;
+  width: 20px !important;
+  text-align: center !important;
+}
+
+/* Responsividade do menu */
+@media (max-width: 768px) {
+  .dropdown-menu {
+    min-width: 180px !important;
+    padding: 6px !important;
+  }
+  
+  .dropdown-item {
+    padding: 10px 14px !important;
+    font-size: 0.9em !important;
+  }
+  
+  #mediaDropdownMobile {
+    padding: 6px 12px !important;
+    font-size: 0.9em !important;
+  }
+}

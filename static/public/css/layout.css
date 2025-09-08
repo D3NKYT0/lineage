@@ -1,0 +1,272 @@
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 0;
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
+    padding-top: 80px;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+footer {
+    position: relative;
+    z-index: 2;
+}
+
+/* Trailer Section Styles */
+.trailer-section {
+    padding: 80px 0;
+    position: relative;
+}
+
+.trailer-title {
+    color: #fff;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.video-wrapper iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+}
+
+.trailer-description {
+    color: #fff;
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+/* Clans Section Styles */
+.clans {
+    padding: 80px 0;
+    position: relative;
+}
+
+.clans-table {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.table-header {
+    display: grid;
+    grid-template-columns: 60px 100px 2fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 215, 0, 0.1);
+    color: #ffd700;
+    font-weight: bold;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.table-body {
+    color: #fff;
+}
+
+.table-row {
+    display: grid;
+    grid-template-columns: 60px 100px 2fr 1fr 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.table-row:hover {
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.table-row.first-place {
+    background:rgb(122, 91, 10);
+    color: #000;
+    border: none;
+    margin: 1rem;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.7);
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.table-row.first-place:hover {
+    transform: scale(1.05);
+}
+
+.col-rank {
+    text-align: center;
+    font-weight: bold;
+}
+
+.rank-icon {
+    font-size: 1.5rem;
+}
+
+.crest-container {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+}
+
+.alliance-crest, .clan-crest {
+    width: auto;
+    height: 12px;
+    margin: 0;
+    object-fit: contain;
+}
+
+.col-name {
+    font-weight: bold;
+    color: #ffd700;
+}
+
+.col-level, .col-reputation {
+    text-align: center;
+}
+
+.col-alliance, .col-leader, .col-members {
+    text-align: center;
+    opacity: 0.9;
+}
+
+@media (max-width: 1200px) {
+    .table-header, .table-row {
+        grid-template-columns: 60px 100px 2fr 1fr 1fr 1fr;
+    }
+
+    .col-alliance, .col-leader {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .table-header, .table-row {
+        grid-template-columns: 60px 100px 2fr 1fr;
+    }
+
+    .col-reputation, .col-members {
+        display: none;
+    }
+
+    .clans-table {
+        margin: 0 1rem;
+    }
+}
+
+/* Online Section Styles */
+.online {
+    padding: 60px 0;
+    position: relative;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+    border-top: 1px solid rgba(255, 215, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+.online-content {
+    text-align: center;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+.online-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #ffd700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    font-family: 'Cinzel', serif;
+}
+
+.online-counter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.online-counter #player-count {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    font-family: 'Cinzel', serif;
+    min-width: 120px;
+}
+
+.online-counter .icon {
+    font-size: 2.5rem;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.3));
+}
+
+.online-content p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+    color: #ffd700;
+    font-family: 'Cinzel', serif;
+}
+
+@media (max-width: 768px) {
+    .online-content h2 {
+        font-size: 2rem;
+    }
+
+    .online-counter {
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+
+    .online-counter #player-count {
+        font-size: 3rem;
+        min-width: 100px;
+    }
+
+    .online-counter .icon {
+        font-size: 2rem;
+    }
+
+    .online-content p {
+        font-size: 1rem;
+    }
+}

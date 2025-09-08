@@ -1,0 +1,198 @@
+@media (max-width: 768px) {
+  h1 {
+    font-size: 40px;
+    line-height: 40px;
+  }
+  .loading .l-logo .letters img {
+    width: 250px;
+  }
+  .loading .l-logo .circle {
+    top: -70px;
+  }
+  .loading .l-logo .circle img {
+    width: 200px;
+  }
+  footer .c-link {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  footer .c-link a:not(:last-child) {
+    margin-bottom: 20px;
+  }
+  footer .c-link a {
+    margin: 0;
+  }
+  .c .c-link {
+    -webkit-transform: scale(0.9);
+            transform: scale(0.9);
+  }
+  .w .container {
+    width: 100%;
+  }
+  .w .w-list {
+    overflow-x: scroll;
+    padding-left: 20px;
+    padding-bottom: 30px;
+  }
+  .w .w-list .line {
+    width: 300px;
+  }
+  .w .w-list .wiki {
+    width: 300px;
+    margin-right: 20px;
+  }
+  .w .w-list .wiki div {
+    width: 300px;
+  }
+  .w .w-list .wiki div ul li a {
+    font-size: 17px;
+  }
+  .w .w-list a {
+    width: 300px;
+    margin-right: 20px;
+  }
+  .w .w-list a div {
+    width: 300px;
+  }
+  .f .title span {
+    font-size: 16px;
+  }
+  .f .title h1 {
+    font-size: 40px;
+    line-height: 40px;
+  }
+  .f .container {
+    width: 100%;
+  }
+  .f .f-list {
+    overflow-x: scroll;
+    padding-left: 20px;
+    padding-bottom: 30px;
+  }
+  .f .f-list a {
+    width: 300px;
+    margin-right: 20px;
+  }
+  .f .f-list a div {
+    width: 300px;
+  }
+  .h {
+    padding-top: 240px;
+  }
+  .h .h-logo {
+    margin-bottom: 90px;
+  }
+  .h .h-logo .letters {
+    width: 300px;
+  }
+  .h .h-logo .circle {
+    width: 230px;
+    top: -90px;
+  }
+  .h .h-link {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-transform: scale(0.9) !important;
+            transform: scale(0.9) !important;
+    margin-bottom: 30px;
+  }
+  .h .h-link a {
+    margin-bottom: 20px;
+  }
+  nav .open {
+    margin-left: 15px;
+    display: block;
+    width: 50px;
+    height: 50px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    border-radius: 100%;
+    background-color: transparent !important;
+    color: rgba(255, 255, 255, 0.39);
+    cursor: pointer;
+  }
+  nav ul {
+    position: fixed;
+    width: 340px;
+    height: 100vh;
+    background: -webkit-gradient(linear, left top, left bottom, from(#161616), to(rgba(15, 15, 15, 0.904)));
+    background: linear-gradient(#161616, rgba(15, 15, 15, 0.904));
+    -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    top: 0;
+    left: -340px;
+    bottom: 0;
+    padding: 40px 0px 40px 0px;
+    -webkit-transition: .5s;
+    transition: .5s;
+  }
+  nav ul .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px !important;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    border-radius: 100%;
+    background-color: transparent !important;
+    color: rgba(255, 255, 255, 0.39);
+    cursor: pointer;
+  }
+  nav ul.active {
+    left: 0;
+  }
+  nav ul li:not(:last-child) {
+    margin-right: 0;
+  }
+  nav ul li {
+    height: auto;
+    margin-bottom: 30px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.02);
+    width: 100%;
+  }
+  nav ul li::before {
+    display: none;
+  }
+  nav ul span {
+    margin-right: 0;
+    padding-right: 0;
+    margin-bottom: 50px;
+  }
+  nav ul span::before {
+    display: none;
+  }
+  nav div .download {
+    display: none;
+  }
+}
+/*# sourceMappingURL=media.css.map */

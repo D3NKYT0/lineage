@@ -1,0 +1,52 @@
+{% extends "layouts/base.html" %}
+{% load i18n l10n %}
+{% load static %}
+{% load itens_extras %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="card border-0 shadow-lg rounded-4">
+    <div class="card-header bg-primary text-white rounded-top-4 py-3 px-4">
+      <h4 class="mb-0 fw-bold"><i class="bi bi-arrow-left-right me-2"></i>{% trans "Trocar Item entre Jogadores" %}</h4>
+    </div>
+    <div class="card-body px-5 py-4">
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{% trans "Personagem Origem" %}</label>
+          <input type="text" class="form-control" value="{{ character_name_origem }}" readonly name="character_name_origem">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{% trans "Personagem Destino" %}</label>
+          <input type="text" class="form-control" name="character_name_destino" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{% trans "Item" %}</label>
+          <div class="d-flex align-items-center">
+              <img src="{% item_image_url item_id %}" 
+              alt="{{ item_name }}"
+              class="me-3 rounded border border-secondary"
+              style="width: 32px; height: 32px;">
+            <strong class="mb-0">{{ item_name }}</strong>
+          </div>
+          <input type="hidden" name="item_id" value="{{ item_id }}">
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold">{% trans "Quantidade" %}</label>
+          <input type="number" class="form-control" name="quantity" min="1" max="{{ max_quantity|unlocalize }}" required>
+        </div>
+
+        <div class="text-end">
+          <button type="submit" class="btn btn-success rounded-pill px-4 shadow-sm">
+            <i class="bi bi-check-circle me-2"></i>{% trans "Trocar" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

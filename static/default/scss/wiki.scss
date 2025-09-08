@@ -1,0 +1,225 @@
+html {
+    scroll-behavior: smooth;
+}
+
+.page {
+    background: url(../images/bg/5.jpg) top fixed no-repeat;
+    background-position-y: 80px;
+    background-color: black;
+}
+
+
+@keyframes opacity {
+    0% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.3;
+    }
+}
+
+.wiki {
+    padding: 0px 0px 200px 0px;
+
+    .w-container {
+        padding-top: 250px;
+        position: relative;
+
+        &::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            top: 125px;
+            height: 2px;
+            background-color: rgba(155, 135, 97, 0.06);
+        }
+    }
+    .w-content {
+        padding: 70px;
+        background-color: rgba(39, 36, 29, 0.767);
+        border-radius: 10px;
+        text-align: center;
+
+        table {
+            
+            text-align: left;
+            width: 100%;
+            background-color: rgba(48, 42, 32, 0.644);
+            padding: 40px;
+            border-radius: 10px;
+
+            tr {
+
+                th {
+                    padding: 20px;
+                    color: rgb(209, 164, 79);
+                    font-size: 20px;
+       
+                }
+
+                td {
+                    padding: 20px;
+                    color: rgba(255, 255, 255, 0.8);
+                 
+                }
+            }
+        }
+
+        .w-title {
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid rgba(165, 144, 106, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            span {
+                display: flex;
+                width: 10px;
+                height: 10px;
+                transform: rotate(45deg);
+                border: 2px solid rgb(155, 117, 48);
+                margin: 0px 20px 0px 20px;
+            }
+            h1 {
+                text-shadow: 0px 0px 20px rgba(255, 166, 0, 0.212);
+                font-size: 45px;
+            }
+        }
+
+        .w-subtitle {
+            text-align: center;
+            margin-bottom: 60px;
+
+            p:not(:last-child) {
+                margin-bottom: 10px;
+            }
+
+            p {
+                color: rgba(255, 255, 255, 0.459);
+                font-size: 14px;
+
+                strong {
+                    color: rgb(155, 117, 48);
+                    font-size: 25px;
+                    margin-bottom: 20px;
+                }
+            }
+        }
+
+    }
+
+    .intro {
+        text-align: center;
+        padding-top: 300px !important;
+       
+
+        img {
+            margin-bottom: 50px;
+            width: 300px;
+        }
+
+        span {
+            color: rgb(209, 164, 79);
+            margin-bottom: 20px;
+            display: block;
+            font-size: 20px;
+        }
+
+        h1 {
+            margin-bottom: 40px;
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.308);
+            line-height: 28px;
+        }
+    }
+
+    .w-nav {
+        position: fixed;
+        background-color: rgba(53, 47, 35, 0.9);
+        top: 73px;
+        height: 55px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding: 0px 30px 0px 30px;
+        z-index: 10;
+        backdrop-filter: blur(15px);
+
+        a:not(:last-child) {
+            margin-right: 50px;
+        }
+
+        a {
+            color: rgba(255, 255, 255, 0.61);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            transition: .5s;
+            border-bottom: 2px solid rgba(255, 255, 255, 0);
+
+            &:hover {
+                text-shadow: 0px 0px 20px rgb(243, 179, 61);
+            }
+
+            &.active {
+                color: rgb(209, 164, 79);
+                border-bottom: 2px solid rgb(209, 164, 79);
+            }
+        }
+
+        li {
+            height: 100%;
+            display: flex;
+            align-items: center;
+
+            a {
+                color: rgba(255, 255, 255, 0.61);
+                height: 100%;
+                display: flex;
+                align-items: center;
+
+                &.active {
+                    color: rgb(209, 164, 79);
+                    border-bottom: 2px solid rgb(209, 164, 79);
+                }
+            }
+        }
+
+    }
+}
+
+@media (max-width: 768px) {
+    .wiki {
+        .w-nav {
+            overflow-x: scroll;
+        }
+        .w-content {
+            padding: 50px 20px 50px 20px;
+            table {
+                overflow-x: scroll;
+                display: flex;
+                align-items: center;
+                justify-content: start;
+
+
+                tr {
+                    width: 200px !important;
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 1921px) {
+    .page {
+        background-size: cover;
+    }
+}

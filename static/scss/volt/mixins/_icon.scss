@@ -1,0 +1,5 @@
+@mixin icon-shape-variant($color) {
+    color: $color;
+    background-color: rgba( $color, .3 );
+}
+

@@ -1,0 +1,2211 @@
+/* ===== DIFERENCIAÇÃO DRÁSTICA DE PERFIS ===== */
+
+/* ===== SUPERADMIN - IMPERADOR SUPREMO ===== */
+body.profile-superadmin-page {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 25%, #1a1a1a 50%, #2d1810 75%, #1a1a1a 100%);
+  background-size: 400% 400%;
+  animation: superadmin-bg-shift 8s ease-in-out infinite;
+  position: relative;
+}
+
+body.profile-superadmin-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 69, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.profile-container.profile-superadmin {
+  background: linear-gradient(145deg, #2d1810, #1a1a1a);
+  border: 3px solid #FFD700;
+  border-radius: 20px;
+  box-shadow: 
+    0 0 30px rgba(255, 215, 0, 0.5),
+    inset 0 0 30px rgba(255, 215, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  animation: superadmin-glow 4s ease-in-out infinite;
+}
+
+.profile-container.profile-superadmin::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent, #FFD700, transparent, #FF4500, transparent);
+  animation: superadmin-rotate 10s linear infinite;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.profile-cover.profile-superadmin {
+  position: relative;
+  background-size: cover !important;
+  background-position: center !important;
+  animation: superadmin-cover-shift 6s ease-in-out infinite;
+}
+
+.profile-cover.profile-superadmin::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.7), rgba(255, 69, 0, 0.7), rgba(255, 215, 0, 0.7));
+  background-size: 200% 200% !important;
+  animation: superadmin-cover-shift 6s ease-in-out infinite;
+  z-index: 1;
+}
+
+.profile-cover.profile-superadmin::after {
+  content: '👑 IMPERADOR SUPREMO 👑';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  animation: superadmin-text-pulse 2s ease-in-out infinite;
+  z-index: 2;
+}
+
+.profile-avatar-container.profile-superadmin {
+  border: 4px solid #FFD700;
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.8),
+    inset 0 0 20px rgba(255, 215, 0, 0.3);
+  animation: superadmin-avatar-pulse 3s ease-in-out infinite;
+}
+
+.avatar-glow.profile-superadmin {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.6), transparent);
+  animation: superadmin-glow-pulse 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+.profile-name.profile-superadmin {
+  color: #FFD700 !important;
+  text-shadow: 
+    0 0 10px rgba(255, 215, 0, 0.8),
+    2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+  animation: superadmin-text-shimmer 3s ease-in-out infinite;
+}
+
+.profile-badge.profile-superadmin {
+  background: linear-gradient(45deg, #FFD700, #FF4500);
+  border: 2px solid #FFD700;
+  border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+  animation: superadmin-badge-rotate 4s linear infinite;
+}
+
+.profile-status-display.profile-superadmin {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 69, 0, 0.2));
+  border: 2px solid #FFD700;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+  animation: superadmin-status-pulse 3s ease-in-out infinite;
+}
+
+/* ===== STAFF - GUARDIÃO DO SISTEMA ===== */
+body.profile-staff-page {
+  background: linear-gradient(135deg, #0a0a2e 0%, #16213e 25%, #0a0a2e 50%, #16213e 75%, #0a0a2e 100%);
+  background-size: 400% 400%;
+  animation: staff-bg-shift 10s ease-in-out infinite;
+  position: relative;
+}
+
+body.profile-staff-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 30% 70%, rgba(65, 105, 225, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 30%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(65, 105, 225, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.profile-container.profile-staff {
+  background: linear-gradient(145deg, #16213e, #0a0a2e);
+  border: 3px solid #4169E1;
+  border-radius: 20px;
+  box-shadow: 
+    0 0 30px rgba(65, 105, 225, 0.5),
+    inset 0 0 30px rgba(65, 105, 225, 0.1);
+  position: relative;
+  overflow: hidden;
+  animation: staff-glow 4s ease-in-out infinite;
+}
+
+.profile-container.profile-staff::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent, #4169E1, transparent, #8A2BE2, transparent);
+  animation: staff-rotate 12s linear infinite;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.profile-cover.profile-staff {
+  position: relative;
+  background-size: cover !important;
+  background-position: center !important;
+  animation: staff-cover-shift 8s ease-in-out infinite;
+}
+
+.profile-cover.profile-staff::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(65, 105, 225, 0.7), rgba(138, 43, 226, 0.7), rgba(65, 105, 225, 0.7));
+  background-size: 200% 200% !important;
+  animation: staff-cover-shift 8s ease-in-out infinite;
+  z-index: 1;
+}
+
+.profile-cover.profile-staff::after {
+  content: '🛡️ GUARDIÃO DO SISTEMA 🛡️';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: bold;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  animation: staff-text-pulse 2.5s ease-in-out infinite;
+  z-index: 2;
+}
+
+.profile-avatar-container.profile-staff {
+  border: 4px solid #4169E1;
+  box-shadow: 
+    0 0 20px rgba(65, 105, 225, 0.8),
+    inset 0 0 20px rgba(65, 105, 225, 0.3);
+  animation: staff-avatar-pulse 3s ease-in-out infinite;
+}
+
+.avatar-glow.profile-staff {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(65, 105, 225, 0.6), transparent);
+  animation: staff-glow-pulse 2.5s ease-in-out infinite;
+  z-index: -1;
+}
+
+.profile-name.profile-staff {
+  color: #4169E1 !important;
+  text-shadow: 
+    0 0 10px rgba(65, 105, 225, 0.8),
+    2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+  animation: staff-text-shimmer 3.5s ease-in-out infinite;
+}
+
+.profile-badge.profile-staff {
+  background: linear-gradient(45deg, #4169E1, #8A2BE2);
+  border: 2px solid #4169E1;
+  border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 0 15px rgba(65, 105, 225, 0.8);
+  animation: staff-badge-float 4s ease-in-out infinite;
+}
+
+.profile-status-display.profile-staff {
+  background: linear-gradient(135deg, rgba(65, 105, 225, 0.2), rgba(138, 43, 226, 0.2));
+  border: 2px solid #4169E1;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(65, 105, 225, 0.4);
+  animation: staff-status-pulse 3.5s ease-in-out infinite;
+}
+
+/* ===== MODERADOR - VIGILANTE DA COMUNIDADE ===== */
+body.profile-moderator-page {
+  background: linear-gradient(135deg, #0a2e0a 0%, #1e3a1e 25%, #0a2e0a 50%, #1e3a1e 75%, #0a2e0a 100%);
+  background-size: 400% 400%;
+  animation: moderator-bg-shift 9s ease-in-out infinite;
+  position: relative;
+}
+
+body.profile-moderator-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 25% 75%, rgba(50, 205, 50, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 25%, rgba(34, 139, 34, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 45% 55%, rgba(50, 205, 50, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.profile-container.profile-moderator {
+  background: linear-gradient(145deg, #1e3a1e, #0a2e0a);
+  border: 3px solid #32CD32;
+  border-radius: 20px;
+  box-shadow: 
+    0 0 30px rgba(50, 205, 50, 0.5),
+    inset 0 0 30px rgba(50, 205, 50, 0.1);
+  position: relative;
+  overflow: hidden;
+  animation: moderator-glow 4s ease-in-out infinite;
+}
+
+.profile-container.profile-moderator::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent, #32CD32, transparent, #228B22, transparent);
+  animation: moderator-rotate 11s linear infinite;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.profile-cover.profile-moderator {
+  position: relative;
+  background-size: cover !important;
+  background-position: center !important;
+  animation: moderator-cover-shift 7s ease-in-out infinite;
+}
+
+.profile-cover.profile-moderator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(50, 205, 50, 0.7), rgba(34, 139, 34, 0.7), rgba(50, 205, 50, 0.7));
+  background-size: 200% 200% !important;
+  animation: moderator-cover-shift 7s ease-in-out infinite;
+  z-index: 1;
+}
+
+.profile-cover.profile-moderator::after {
+  content: '🔍 VIGILANTE DA COMUNIDADE 🔍';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  animation: moderator-text-pulse 2.2s ease-in-out infinite;
+  z-index: 2;
+}
+
+.profile-avatar-container.profile-moderator {
+  border: 4px solid #32CD32;
+  box-shadow: 
+    0 0 20px rgba(50, 205, 50, 0.8),
+    inset 0 0 20px rgba(50, 205, 50, 0.3);
+  animation: moderator-avatar-pulse 3s ease-in-out infinite;
+}
+
+.avatar-glow.profile-moderator {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(50, 205, 50, 0.6), transparent);
+  animation: moderator-glow-pulse 2.2s ease-in-out infinite;
+  z-index: -1;
+}
+
+.profile-name.profile-moderator {
+  color: #32CD32 !important;
+  text-shadow: 
+    0 0 10px rgba(50, 205, 50, 0.8),
+    2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+  animation: moderator-text-shimmer 3.2s ease-in-out infinite;
+}
+
+.profile-badge.profile-moderator {
+  background: linear-gradient(45deg, #32CD32, #228B22);
+  border: 2px solid #32CD32;
+  border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 0 15px rgba(50, 205, 50, 0.8);
+  animation: moderator-badge-bounce 4s ease-in-out infinite;
+}
+
+.profile-status-display.profile-moderator {
+  background: linear-gradient(135deg, rgba(50, 205, 50, 0.2), rgba(34, 139, 34, 0.2));
+  border: 2px solid #32CD32;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(50, 205, 50, 0.4);
+  animation: moderator-status-pulse 3.2s ease-in-out infinite;
+}
+
+/* ===== VERIFICADO - MEMBRO VERIFICADO ===== */
+body.profile-verified-page {
+  background: linear-gradient(135deg, #0a1a2e 0%, #1e2e4a 25%, #0a1a2e 50%, #1e2e4a 75%, #0a1a2e 100%);
+  background-size: 400% 400%;
+  animation: verified-bg-shift 12s ease-in-out infinite;
+  position: relative;
+}
+
+/* ===== APOIADOR - APOIADOR ESCARLATE ===== */
+body.profile-supporter-page {
+  background: linear-gradient(135deg, #0f0505 0%, #1a0a0a 25%, #2a0f0f 50%, #1a0a0a 75%, #0f0505 100%);
+  background-size: 400% 400%;
+  animation: supporter-bg-shift 8s ease-in-out infinite;
+  position: relative;
+}
+
+body.profile-verified-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(135, 206, 235, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(70, 130, 180, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(135, 206, 235, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+body.profile-supporter-page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 23, 68, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(213, 0, 0, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 40% 60%, rgba(183, 28, 28, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 60% 40%, rgba(255, 23, 68, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+  animation: supporter-bg-pulse 6s ease-in-out infinite;
+}
+
+.profile-container.profile-verified {
+  background: linear-gradient(145deg, #1e2e4a, #0a1a2e);
+  border: 3px solid #87CEEB;
+  border-radius: 20px;
+  box-shadow: 
+    0 0 30px rgba(135, 206, 235, 0.5),
+    inset 0 0 30px rgba(135, 206, 235, 0.1);
+  position: relative;
+  overflow: hidden;
+  animation: verified-glow 4s ease-in-out infinite;
+}
+
+.profile-container.profile-verified::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent, #87CEEB, transparent, #4682B4, transparent);
+  animation: verified-rotate 14s linear infinite;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.profile-cover.profile-verified {
+  position: relative;
+  background-size: cover !important;
+  background-position: center !important;
+  animation: verified-cover-shift 10s ease-in-out infinite;
+}
+
+.profile-cover.profile-verified::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(135, 206, 235, 0.7), rgba(70, 130, 180, 0.7), rgba(135, 206, 235, 0.7));
+  background-size: 200% 200% !important;
+  animation: verified-cover-shift 10s ease-in-out infinite;
+  z-index: 1;
+}
+
+.profile-cover.profile-verified::after {
+  content: '✅ MEMBRO VERIFICADO ✅';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  animation: verified-text-pulse 2.8s ease-in-out infinite;
+  z-index: 2;
+}
+
+.profile-avatar-container.profile-verified {
+  border: 4px solid #87CEEB;
+  box-shadow: 
+    0 0 20px rgba(135, 206, 235, 0.8),
+    inset 0 0 20px rgba(135, 206, 235, 0.3);
+  animation: verified-avatar-pulse 3s ease-in-out infinite;
+}
+
+.avatar-glow.profile-verified {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(135, 206, 235, 0.6), transparent);
+  animation: verified-glow-pulse 2.8s ease-in-out infinite;
+  z-index: -1;
+}
+
+.profile-name.profile-verified {
+  color: #87CEEB !important;
+  text-shadow: 
+    0 0 10px rgba(135, 206, 235, 0.8),
+    2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+  animation: verified-text-shimmer 3.8s ease-in-out infinite;
+}
+
+.profile-badge.profile-verified {
+  background: linear-gradient(45deg, #87CEEB, #4682B4);
+  border: 2px solid #87CEEB;
+  border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 0 15px rgba(135, 206, 235, 0.8);
+  animation: verified-badge-wave 4s ease-in-out infinite;
+}
+
+.profile-status-display.profile-verified {
+  background: linear-gradient(135deg, rgba(135, 206, 235, 0.2), rgba(70, 130, 180, 0.2));
+  border: 2px solid #87CEEB;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(135, 206, 235, 0.4);
+  animation: verified-status-pulse 3.8s ease-in-out infinite;
+}
+
+/* ===== ANIMAÇÕES ESPECÍFICAS ===== */
+
+/* Superadmin Animations */
+@keyframes superadmin-bg-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes superadmin-glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.5), inset 0 0 30px rgba(255, 215, 0, 0.1); }
+  50% { box-shadow: 0 0 50px rgba(255, 215, 0, 0.8), inset 0 0 50px rgba(255, 215, 0, 0.2); }
+}
+
+@keyframes superadmin-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes superadmin-cover-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes superadmin-text-pulse {
+  0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+@keyframes superadmin-avatar-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(255, 215, 0, 1), inset 0 0 30px rgba(255, 215, 0, 0.5); }
+}
+
+@keyframes superadmin-glow-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes superadmin-text-shimmer {
+  0%, 100% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.8); }
+  50% { text-shadow: 0 0 20px rgba(255, 215, 0, 1), 2px 2px 8px rgba(0, 0, 0, 0.8); }
+}
+
+@keyframes superadmin-badge-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes superadmin-status-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.7); }
+}
+
+/* Staff Animations */
+@keyframes staff-bg-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes staff-glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(65, 105, 225, 0.5), inset 0 0 30px rgba(65, 105, 225, 0.1); }
+  50% { box-shadow: 0 0 50px rgba(65, 105, 225, 0.8), inset 0 0 50px rgba(65, 105, 225, 0.2); }
+}
+
+@keyframes staff-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes staff-cover-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes staff-text-pulse {
+  0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+@keyframes staff-avatar-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(65, 105, 225, 0.8), inset 0 0 20px rgba(65, 105, 225, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(65, 105, 225, 1), inset 0 0 30px rgba(65, 105, 225, 0.5); }
+}
+
+@keyframes staff-glow-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes staff-text-shimmer {
+  0%, 100% { text-shadow: 0 0 10px rgba(65, 105, 225, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.8); }
+  50% { text-shadow: 0 0 20px rgba(65, 105, 225, 1), 2px 2px 8px rgba(0, 0, 0, 0.8); }
+}
+
+@keyframes staff-badge-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes staff-status-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(65, 105, 225, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(65, 105, 225, 0.7); }
+}
+
+/* Moderator Animations */
+@keyframes moderator-bg-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes moderator-glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(50, 205, 50, 0.5), inset 0 0 30px rgba(50, 205, 50, 0.1); }
+  50% { box-shadow: 0 0 50px rgba(50, 205, 50, 0.8), inset 0 0 50px rgba(50, 205, 50, 0.2); }
+}
+
+@keyframes moderator-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes moderator-cover-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes moderator-text-pulse {
+  0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+@keyframes moderator-avatar-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(50, 205, 50, 0.8), inset 0 0 20px rgba(50, 205, 50, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(50, 205, 50, 1), inset 0 0 30px rgba(50, 205, 50, 0.5); }
+}
+
+@keyframes moderator-glow-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes moderator-text-shimmer {
+  0%, 100% { text-shadow: 0 0 10px rgba(50, 205, 50, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.8); }
+  50% { text-shadow: 0 0 20px rgba(50, 205, 50, 1), 2px 2px 8px rgba(0, 0, 0, 0.8); }
+}
+
+@keyframes moderator-badge-bounce {
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-3px) scale(1.05); }
+}
+
+@keyframes moderator-status-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(50, 205, 50, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(50, 205, 50, 0.7); }
+}
+
+/* Verified Animations */
+@keyframes verified-bg-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes verified-glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(135, 206, 235, 0.5), inset 0 0 30px rgba(135, 206, 235, 0.1); }
+  50% { box-shadow: 0 0 50px rgba(135, 206, 235, 0.8), inset 0 0 50px rgba(135, 206, 235, 0.2); }
+}
+
+@keyframes verified-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes verified-cover-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes verified-text-pulse {
+  0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+@keyframes verified-avatar-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(135, 206, 235, 0.8), inset 0 0 20px rgba(135, 206, 235, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(135, 206, 235, 1), inset 0 0 30px rgba(135, 206, 235, 0.5); }
+}
+
+@keyframes verified-glow-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes verified-text-shimmer {
+  0%, 100% { text-shadow: 0 0 10px rgba(135, 206, 235, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.8); }
+  50% { text-shadow: 0 0 20px rgba(135, 206, 235, 1), 2px 2px 8px rgba(0, 0, 0, 0.8); }
+}
+
+@keyframes verified-badge-wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  75% { transform: rotate(-5deg); }
+}
+
+@keyframes verified-status-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(135, 206, 235, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(135, 206, 235, 0.7); }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .profile-cover.profile-superadmin::after,
+  .profile-cover.profile-staff::after,
+  .profile-cover.profile-moderator::after,
+  .profile-cover.profile-verified::after {
+    font-size: 14px;
+  }
+  
+  .profile-container {
+    margin: 10px;
+  }
+  
+  .profile-status-display {
+    padding: 15px;
+  }
+}
+
+/* ===== EFEITOS ESPECIAIS ADICIONAIS ===== */
+.profile-container.profile-superadmin .card-body,
+.profile-container.profile-staff .card-body,
+.profile-container.profile-moderator .card-body,
+.profile-container.profile-verified .card-body {
+  position: relative;
+  z-index: 1;
+}
+
+.profile-container.profile-superadmin .btn,
+.profile-container.profile-staff .btn,
+.profile-container.profile-moderator .btn,
+.profile-container.profile-verified .btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.profile-container.profile-superadmin .btn:hover,
+.profile-container.profile-staff .btn:hover,
+.profile-container.profile-moderator .btn:hover,
+.profile-container.profile-verified .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Efeito de partículas flutuantes */
+.profile-container.profile-superadmin::after,
+.profile-container.profile-staff::after,
+.profile-container.profile-moderator::after,
+.profile-container.profile-verified::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 1px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: particle-float 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Efeitos especiais para o status display */
+.profile-status-display .status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+  font-size: 24px;
+  animation: status-icon-pulse 2s ease-in-out infinite;
+}
+
+.profile-status-display.profile-superadmin .status-icon {
+  background: linear-gradient(45deg, #FFD700, #FF4500);
+  color: #1a1a1a;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+}
+
+.profile-status-display.profile-staff .status-icon {
+  background: linear-gradient(45deg, #4169E1, #8A2BE2);
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(65, 105, 225, 0.6);
+}
+
+.profile-status-display.profile-moderator .status-icon {
+  background: linear-gradient(45deg, #32CD32, #228B22);
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(50, 205, 50, 0.6);
+}
+
+.profile-status-display.profile-verified .status-icon {
+  background: linear-gradient(45deg, #87CEEB, #4682B4);
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(135, 206, 235, 0.6);
+}
+
+.profile-status-display {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-radius: 15px;
+  margin: 15px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-status-display .status-info {
+  flex: 1;
+}
+
+.profile-status-display .status-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.profile-status-display .status-description {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Efeito de destaque nos elementos do perfil */
+.profile-container.profile-superadmin .text-muted,
+.profile-container.profile-staff .text-muted,
+.profile-container.profile-moderator .text-muted,
+.profile-container.profile-verified .text-muted {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Garantir que todos os textos sejam brancos e legíveis */
+.profile-container.profile-superadmin,
+.profile-container.profile-staff,
+.profile-container.profile-moderator,
+.profile-container.profile-verified {
+  color: #ffffff !important;
+}
+
+.profile-container.profile-superadmin p,
+.profile-container.profile-staff p,
+.profile-container.profile-moderator p,
+.profile-container.profile-verified p {
+  color: #ffffff !important;
+}
+
+.profile-container.profile-superadmin small,
+.profile-container.profile-staff small,
+.profile-container.profile-moderator small,
+.profile-container.profile-verified small {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.profile-container.profile-superadmin .card-text,
+.profile-container.profile-staff .card-text,
+.profile-container.profile-moderator .card-text,
+.profile-container.profile-verified .card-text {
+  color: #ffffff !important;
+}
+
+.profile-container.profile-superadmin .status-description,
+.profile-container.profile-staff .status-description,
+.profile-container.profile-moderator .status-description,
+.profile-container.profile-verified .status-description {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.profile-container.profile-superadmin .status-title,
+.profile-container.profile-staff .status-title,
+.profile-container.profile-moderator .status-title,
+.profile-container.profile-verified .status-title {
+  color: #ffffff !important;
+  font-weight: bold;
+}
+
+/* Garantir que os ícones sejam visíveis */
+.profile-container.profile-superadmin .bi,
+.profile-container.profile-staff .bi,
+.profile-container.profile-moderator .bi,
+.profile-container.profile-verified .bi {
+  color: #ffffff !important;
+}
+
+.profile-container.profile-superadmin .text-muted .bi,
+.profile-container.profile-staff .text-muted .bi,
+.profile-container.profile-moderator .text-muted .bi,
+.profile-container.profile-verified .text-muted .bi {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.profile-container.profile-superadmin .card,
+.profile-container.profile-staff .card,
+.profile-container.profile-moderator .card,
+.profile-container.profile-verified .card {
+  background: transparent;
+  border: none;
+}
+
+/* Efeito de destaque nas estatísticas */
+.profile-container.profile-superadmin .d-flex.align-items-center a,
+.profile-container.profile-staff .d-flex.align-items-center a,
+.profile-container.profile-moderator .d-flex.align-items-center a,
+.profile-container.profile-verified .d-flex.align-items-center a {
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.profile-container.profile-superadmin .d-flex.align-items-center a:hover,
+.profile-container.profile-staff .d-flex.align-items-center a:hover,
+.profile-container.profile-moderator .d-flex.align-items-center a:hover,
+.profile-container.profile-verified .d-flex.align-items-center a:hover {
+  transform: scale(1.05);
+}
+
+.profile-container.profile-superadmin .d-flex.align-items-center a strong,
+.profile-container.profile-staff .d-flex.align-items-center a strong,
+.profile-container.profile-moderator .d-flex.align-items-center a strong,
+.profile-container.profile-verified .d-flex.align-items-center a strong {
+  transition: all 0.3s ease;
+}
+
+.profile-container.profile-superadmin .d-flex.align-items-center a:hover strong,
+.profile-container.profile-staff .d-flex.align-items-center a:hover strong,
+.profile-container.profile-moderator .d-flex.align-items-center a:hover strong,
+.profile-container.profile-verified .d-flex.align-items-center a:hover strong {
+  text-shadow: 0 0 10px currentColor;
+}
+
+@keyframes particle-float {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-50px); }
+}
+
+@keyframes status-icon-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Efeito de destaque no conteúdo do perfil */
+.profile-container.profile-superadmin .profile-info,
+.profile-container.profile-staff .profile-info,
+.profile-container.profile-moderator .profile-info,
+.profile-container.profile-verified .profile-info {
+  position: relative;
+  z-index: 2;
+}
+
+/* Garantir que links e elementos de navegação sejam visíveis */
+.profile-container.profile-superadmin a:not(.btn),
+.profile-container.profile-staff a:not(.btn),
+.profile-container.profile-moderator a:not(.btn),
+.profile-container.profile-verified a:not(.btn) {
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+.profile-container.profile-superadmin a:not(.btn):hover,
+.profile-container.profile-staff a:not(.btn):hover,
+.profile-container.profile-moderator a:not(.btn):hover,
+.profile-container.profile-verified a:not(.btn):hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+  text-decoration: underline;
+}
+
+/* Garantir que os elementos de estatísticas sejam visíveis */
+.profile-container.profile-superadmin .d-flex.align-items-center a strong,
+.profile-container.profile-staff .d-flex.align-items-center a strong,
+.profile-container.profile-moderator .d-flex.align-items-center a strong,
+.profile-container.profile-verified .d-flex.align-items-center a strong {
+  color: #ffffff !important;
+  font-weight: bold;
+}
+
+/* Garantir que os elementos de informação de contato sejam visíveis */
+.profile-container.profile-superadmin .d-flex.flex-wrap span,
+.profile-container.profile-staff .d-flex.flex-wrap span,
+.profile-container.profile-moderator .d-flex.flex-wrap span,
+.profile-container.profile-verified .d-flex.flex-wrap span {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Efeito de destaque nos botões de ação */
+.profile-container.profile-superadmin .btn-outline-primary,
+.profile-container.profile-staff .btn-outline-primary,
+.profile-container.profile-moderator .btn-outline-primary,
+.profile-container.profile-verified .btn-outline-primary {
+  border-width: 2px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.profile-container.profile-superadmin .btn-outline-primary {
+  border-color: #FFD700;
+  color: #FFD700;
+}
+
+.profile-container.profile-superadmin .btn-outline-primary:hover {
+  background-color: #FFD700;
+  border-color: #FFD700;
+  color: #1a1a1a;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.profile-container.profile-staff .btn-outline-primary {
+  border-color: #4169E1;
+  color: #4169E1;
+}
+
+.profile-container.profile-staff .btn-outline-primary:hover {
+  background-color: #4169E1;
+  border-color: #4169E1;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(65, 105, 225, 0.5);
+}
+
+.profile-container.profile-moderator .btn-outline-primary {
+  border-color: #32CD32;
+  color: #32CD32;
+}
+
+.profile-container.profile-moderator .btn-outline-primary:hover {
+  background-color: #32CD32;
+  border-color: #32CD32;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(50, 205, 50, 0.5);
+}
+
+.profile-container.profile-verified .btn-outline-primary {
+  border-color: #87CEEB;
+  color: #87CEEB;
+}
+
+.profile-container.profile-verified .btn-outline-primary:hover {
+  background-color: #87CEEB;
+  border-color: #87CEEB;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(135, 206, 235, 0.5);
+}
+
+/* ===== ANIMAÇÕES ESPECÍFICAS DO APOIADOR ===== */
+@keyframes supporter-bg-pulse {
+  0%, 100% { 
+    opacity: 0.8; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.02); 
+  }
+}
+
+/* ===== APOIADOR - APOIADOR ESCARLATE ===== */
+.profile-container.profile-supporter {
+  background: linear-gradient(145deg, #2a0f0f, #1a0a0a);
+  border: 3px solid #DC143C;
+  border-radius: 20px;
+  box-shadow: 
+    0 0 30px rgba(220, 20, 60, 0.5),
+    inset 0 0 30px rgba(220, 20, 60, 0.1);
+  position: relative;
+  overflow: hidden;
+  animation: supporter-glow 4s ease-in-out infinite;
+}
+
+.profile-container.profile-supporter::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent, #DC143C, transparent, #B71C1C, transparent);
+  animation: supporter-rotate 10s linear infinite;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.profile-cover.profile-supporter {
+  position: relative;
+  background-size: cover !important;
+  background-position: center !important;
+  animation: supporter-cover-shift 5s ease-in-out infinite;
+}
+
+.profile-cover.profile-supporter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(220, 20, 60, 0.7), rgba(183, 28, 28, 0.7), rgba(220, 20, 60, 0.7));
+  background-size: 200% 200% !important;
+  animation: supporter-cover-shift 5s ease-in-out infinite;
+  z-index: 1;
+}
+
+.profile-cover.profile-supporter::after {
+  content: '❤️ APOIADOR ESCARLATE ❤️';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: bold;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+  animation: supporter-text-pulse 2.3s ease-in-out infinite;
+  z-index: 2;
+}
+
+.profile-avatar-container.profile-supporter {
+  border: 4px solid #DC143C;
+  box-shadow: 
+    0 0 20px rgba(220, 20, 60, 0.8),
+    inset 0 0 20px rgba(220, 20, 60, 0.3);
+  animation: supporter-avatar-pulse 3s ease-in-out infinite;
+}
+
+.avatar-glow.profile-supporter {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(220, 20, 60, 0.6), transparent);
+  animation: supporter-glow-pulse 2.3s ease-in-out infinite;
+  z-index: -1;
+}
+
+.profile-name.profile-supporter {
+  color: #DC143C !important;
+  text-shadow: 
+    0 0 10px rgba(220, 20, 60, 0.8),
+    2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+  animation: supporter-text-shimmer 3.3s ease-in-out infinite;
+}
+
+.profile-badge.profile-supporter {
+  background: linear-gradient(45deg, #DC143C, #B71C1C);
+  border: 2px solid #DC143C;
+  border-radius: 50%;
+  padding: 8px;
+  box-shadow: 0 0 15px rgba(220, 20, 60, 0.8);
+  animation: supporter-badge-heartbeat 4s ease-in-out infinite;
+}
+
+.profile-status-display.profile-supporter {
+  background: linear-gradient(135deg, rgba(220, 20, 60, 0.2), rgba(183, 28, 28, 0.2));
+  border: 2px solid #DC143C;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+  animation: supporter-status-pulse 3.3s ease-in-out infinite;
+}
+
+/* ===== ANIMAÇÕES DO APOIADOR ===== */
+@keyframes supporter-glow {
+  0%, 100% { 
+    box-shadow: 
+      0 0 30px rgba(220, 20, 60, 0.5),
+      inset 0 0 30px rgba(220, 20, 60, 0.1);
+  }
+  50% { 
+    box-shadow: 
+      0 0 40px rgba(220, 20, 60, 0.8),
+      inset 0 0 40px rgba(220, 20, 60, 0.2);
+  }
+}
+
+@keyframes supporter-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes supporter-cover-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes supporter-text-pulse {
+  0%, 100% { 
+    opacity: 1; 
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes supporter-avatar-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 20px rgba(220, 20, 60, 0.8),
+      inset 0 0 20px rgba(220, 20, 60, 0.3);
+  }
+  50% { 
+    box-shadow: 
+      0 0 30px rgba(220, 20, 60, 1),
+      inset 0 0 30px rgba(220, 20, 60, 0.5);
+  }
+}
+
+@keyframes supporter-glow-pulse {
+  0%, 100% { 
+    opacity: 0.6; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.8; 
+    transform: scale(1.1);
+  }
+}
+
+@keyframes supporter-text-shimmer {
+  0%, 100% { 
+    text-shadow: 
+      0 0 10px rgba(220, 20, 60, 0.8),
+      2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+  50% { 
+    text-shadow: 
+      0 0 20px rgba(220, 20, 60, 1),
+      2px 2px 8px rgba(0, 0, 0, 0.8);
+  }
+}
+
+@keyframes supporter-badge-heartbeat {
+  0%, 100% { 
+    transform: scale(1); 
+    box-shadow: 0 0 15px rgba(220, 20, 60, 0.8);
+  }
+  25% { 
+    transform: scale(1.1); 
+    box-shadow: 0 0 20px rgba(220, 20, 60, 1);
+  }
+  50% { 
+    transform: scale(1); 
+    box-shadow: 0 0 15px rgba(220, 20, 60, 0.8);
+  }
+  75% { 
+    transform: scale(1.05); 
+    box-shadow: 0 0 18px rgba(220, 20, 60, 0.9);
+  }
+}
+
+@keyframes supporter-status-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+  }
+  50% { 
+    box-shadow: 0 0 30px rgba(220, 20, 60, 0.6);
+  }
+}
+
+/* ===== NAVEGAÇÃO COM TEXTOS BRANCOS ===== */
+/* Exceções para a navegação principal - manter textos escuros para legibilidade */
+body.profile-superadmin-page .navbar-top .navbar-brand,
+body.profile-staff-page .navbar-top .navbar-brand,
+body.profile-moderator-page .navbar-top .navbar-brand,
+body.profile-verified-page .navbar-top .navbar-brand,
+body.profile-supporter-page .navbar-top .navbar-brand {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .navbar-nav .nav-link,
+body.profile-staff-page .navbar-top .navbar-nav .nav-link,
+body.profile-moderator-page .navbar-top .navbar-nav .nav-link,
+body.profile-verified-page .navbar-top .navbar-nav .nav-link,
+body.profile-supporter-page .navbar-top .navbar-nav .nav-link {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .dropdown-item,
+body.profile-staff-page .navbar-top .dropdown-item,
+body.profile-moderator-page .navbar-top .dropdown-item,
+body.profile-verified-page .navbar-top .dropdown-item,
+body.profile-supporter-page .navbar-top .dropdown-item {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .btn,
+body.profile-staff-page .navbar-top .btn,
+body.profile-moderator-page .navbar-top .btn,
+body.profile-verified-page .navbar-top .btn,
+body.profile-supporter-page .navbar-top .btn {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .bi,
+body.profile-staff-page .navbar-top .bi,
+body.profile-moderator-page .navbar-top .bi,
+body.profile-verified-page .navbar-top .bi,
+body.profile-supporter-page .navbar-top .bi {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .text-dark,
+body.profile-staff-page .navbar-top .text-dark,
+body.profile-moderator-page .navbar-top .text-dark,
+body.profile-verified-page .navbar-top .text-dark,
+body.profile-supporter-page .navbar-top .text-dark {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .text-muted,
+body.profile-staff-page .navbar-top .text-muted,
+body.profile-moderator-page .navbar-top .text-muted,
+body.profile-verified-page .navbar-top .text-muted,
+body.profile-supporter-page .navbar-top .text-muted {
+  color: #6c757d !important;
+}
+
+/* Manter estilos especiais para o botão Social na navegação */
+body.profile-superadmin-page .navbar-top .btn-social,
+body.profile-staff-page .navbar-top .btn-social,
+body.profile-moderator-page .navbar-top .btn-social,
+body.profile-verified-page .navbar-top .btn-social,
+body.profile-supporter-page .navbar-top .btn-social {
+  color: #ffffff !important;
+}
+
+body.profile-superadmin-page .navbar-top .btn-social .social-text,
+body.profile-staff-page .navbar-top .btn-social .social-text,
+body.profile-moderator-page .navbar-top .btn-social .social-text,
+body.profile-verified-page .navbar-top .btn-social .social-text,
+body.profile-supporter-page .navbar-top .btn-social .social-text {
+  color: #ffffff !important;
+}
+
+body.profile-superadmin-page .navbar-top .btn-social .social-icon,
+body.profile-staff-page .navbar-top .btn-social .social-icon,
+body.profile-moderator-page .navbar-top .btn-social .social-icon,
+body.profile-verified-page .navbar-top .btn-social .social-icon,
+body.profile-supporter-page .navbar-top .btn-social .social-icon {
+  color: #ffffff !important;
+}
+
+/* Exceções adicionais para elementos específicos da navegação */
+body.profile-superadmin-page .navbar-top .notification-bell,
+body.profile-staff-page .navbar-top .notification-bell,
+body.profile-moderator-page .navbar-top .notification-bell,
+body.profile-verified-page .navbar-top .notification-bell,
+body.profile-supporter-page .navbar-top .notification-bell {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .notification-bell .icon,
+body.profile-staff-page .navbar-top .notification-bell .icon,
+body.profile-moderator-page .navbar-top .notification-bell .icon,
+body.profile-verified-page .navbar-top .notification-bell .icon,
+body.profile-supporter-page .navbar-top .notification-bell .icon {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .media-body,
+body.profile-staff-page .navbar-top .media-body,
+body.profile-moderator-page .navbar-top .media-body,
+body.profile-verified-page .navbar-top .media-body,
+body.profile-supporter-page .navbar-top .media-body {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .media-body .text-gray-900,
+body.profile-staff-page .navbar-top .media-body .text-gray-900,
+body.profile-moderator-page .navbar-top .media-body .text-gray-900,
+body.profile-verified-page .navbar-top .media-body .text-gray-900,
+body.profile-supporter-page .navbar-top .media-body .text-gray-900 {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .dropdown-icon,
+body.profile-staff-page .navbar-top .dropdown-icon,
+body.profile-moderator-page .navbar-top .dropdown-icon,
+body.profile-verified-page .navbar-top .dropdown-icon,
+body.profile-supporter-page .navbar-top .dropdown-icon {
+  color: #6c757d !important;
+}
+
+body.profile-superadmin-page .navbar-top .text-gray-400,
+body.profile-staff-page .navbar-top .text-gray-400,
+body.profile-moderator-page .navbar-top .text-gray-400,
+body.profile-verified-page .navbar-top .text-gray-400,
+body.profile-supporter-page .navbar-top .text-gray-400 {
+  color: #6c757d !important;
+}
+
+body.profile-superadmin-page .navbar-top .text-gray-900,
+body.profile-staff-page .navbar-top .text-gray-900,
+body.profile-moderator-page .navbar-top .text-gray-900,
+body.profile-verified-page .navbar-top .text-gray-900,
+body.profile-supporter-page .navbar-top .text-gray-900 {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .text-primary,
+body.profile-staff-page .navbar-top .text-primary,
+body.profile-moderator-page .navbar-top .text-primary,
+body.profile-verified-page .navbar-top .text-primary,
+body.profile-supporter-page .navbar-top .text-primary {
+  color: #0d6efd !important;
+}
+
+body.profile-superadmin-page .navbar-top .text-warning,
+body.profile-staff-page .navbar-top .text-warning,
+body.profile-moderator-page .navbar-top .text-warning,
+body.profile-verified-page .navbar-top .text-warning,
+body.profile-supporter-page .navbar-top .text-warning {
+  color: #ffc107 !important;
+}
+
+body.profile-superadmin-page .navbar-top .text-danger,
+body.profile-staff-page .navbar-top .text-danger,
+body.profile-moderator-page .navbar-top .text-danger,
+body.profile-verified-page .navbar-top .text-danger,
+body.profile-supporter-page .navbar-top .text-danger {
+  color: #dc3545 !important;
+}
+
+/* Exceções para o dropdown do usuário na navegação */
+body.profile-superadmin-page .navbar-top .dashboard-dropdown,
+body.profile-staff-page .navbar-top .dashboard-dropdown,
+body.profile-moderator-page .navbar-top .dashboard-dropdown,
+body.profile-verified-page .navbar-top .dashboard-dropdown,
+body.profile-supporter-page .navbar-top .dashboard-dropdown {
+  background-color: #ffffff !important;
+  border: 1px solid #dee2e6 !important;
+}
+
+body.profile-superadmin-page .navbar-top .dashboard-dropdown .dropdown-item,
+body.profile-staff-page .navbar-top .dashboard-dropdown .dropdown-item,
+body.profile-moderator-page .navbar-top .dashboard-dropdown .dropdown-item,
+body.profile-verified-page .navbar-top .dashboard-dropdown .dropdown-item,
+body.profile-supporter-page .navbar-top .dashboard-dropdown .dropdown-item {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .dashboard-dropdown .dropdown-item:hover,
+body.profile-staff-page .navbar-top .dashboard-dropdown .dropdown-item:hover,
+body.profile-moderator-page .navbar-top .dashboard-dropdown .dropdown-item:hover,
+body.profile-verified-page .navbar-top .dashboard-dropdown .dropdown-item:hover,
+body.profile-supporter-page .navbar-top .dashboard-dropdown .dropdown-item:hover {
+  background-color: #f8f9fa !important;
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top .dashboard-dropdown .dropdown-divider,
+body.profile-staff-page .navbar-top .dashboard-dropdown .dropdown-divider,
+body.profile-moderator-page .navbar-top .dashboard-dropdown .dropdown-divider,
+body.profile-verified-page .navbar-top .dashboard-dropdown .dropdown-divider,
+body.profile-supporter-page .navbar-top .dashboard-dropdown .dropdown-divider {
+  border-color: #dee2e6 !important;
+}
+
+/* Exceções para o dropdown de notificações na navegação */
+body.profile-superadmin-page .navbar-top #notificationDropdown,
+body.profile-staff-page .navbar-top #notificationDropdown,
+body.profile-moderator-page .navbar-top #notificationDropdown,
+body.profile-verified-page .navbar-top #notificationDropdown,
+body.profile-supporter-page .navbar-top #notificationDropdown {
+  background-color: #ffffff !important;
+  border: 1px solid #dee2e6 !important;
+}
+
+body.profile-superadmin-page .navbar-top #notificationDropdown .dropdown-header,
+body.profile-staff-page .navbar-top #notificationDropdown .dropdown-header,
+body.profile-moderator-page .navbar-top #notificationDropdown .dropdown-header,
+body.profile-verified-page .navbar-top #notificationDropdown .dropdown-header,
+body.profile-supporter-page .navbar-top #notificationDropdown .dropdown-header {
+  color: #212529 !important;
+  background-color: #f8f9fa !important;
+}
+
+/* Exceção específica para o h5 dentro do dropdown-header */
+body.profile-superadmin-page .navbar-top #notificationDropdown .dropdown-header h5,
+body.profile-staff-page .navbar-top #notificationDropdown .dropdown-header h5,
+body.profile-moderator-page .navbar-top #notificationDropdown .dropdown-header h5,
+body.profile-verified-page .navbar-top #notificationDropdown .dropdown-header h5,
+body.profile-supporter-page .navbar-top #notificationDropdown .dropdown-header h5 {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top #notificationDropdown .dropdown-item,
+body.profile-staff-page .navbar-top #notificationDropdown .dropdown-item,
+body.profile-moderator-page .navbar-top #notificationDropdown .dropdown-item,
+body.profile-verified-page .navbar-top #notificationDropdown .dropdown-item,
+body.profile-supporter-page .navbar-top #notificationDropdown .dropdown-item {
+  color: #212529 !important;
+}
+
+body.profile-superadmin-page .navbar-top #notificationDropdown .dropdown-item:hover,
+body.profile-staff-page .navbar-top #notificationDropdown .dropdown-item:hover,
+body.profile-moderator-page .navbar-top #notificationDropdown .dropdown-item:hover,
+body.profile-verified-page .navbar-top #notificationDropdown .dropdown-item:hover,
+body.profile-supporter-page .navbar-top #notificationDropdown .dropdown-item:hover {
+  background-color: #f8f9fa !important;
+  color: #212529 !important;
+}
+
+         body.profile-superadmin-page .navbar-top #notificationDropdown .text-muted,
+         body.profile-staff-page .navbar-top #notificationDropdown .text-muted,
+         body.profile-moderator-page .navbar-top #notificationDropdown .text-muted,
+         body.profile-verified-page .navbar-top #notificationDropdown .text-muted,
+         body.profile-supporter-page .navbar-top #notificationDropdown .text-muted {
+           color: #6c757d !important;
+         }
+         
+         /* Exceções para os itens de notificação dinâmicos */
+         body.profile-superadmin-page .navbar-top #notificationDropdown .list-group-item,
+         body.profile-staff-page .navbar-top #notificationDropdown .list-group-item,
+         body.profile-moderator-page .navbar-top #notificationDropdown .list-group-item,
+         body.profile-verified-page .navbar-top #notificationDropdown .list-group-item,
+         body.profile-supporter-page .navbar-top #notificationDropdown .list-group-item {
+           color: #212529 !important;
+           background-color: #ffffff !important;
+         }
+         
+         body.profile-superadmin-page .navbar-top #notificationDropdown .list-group-item:hover,
+         body.profile-staff-page .navbar-top #notificationDropdown .list-group-item:hover,
+         body.profile-moderator-page .navbar-top #notificationDropdown .list-group-item:hover,
+         body.profile-verified-page .navbar-top #notificationDropdown .list-group-item:hover,
+         body.profile-supporter-page .navbar-top #notificationDropdown .list-group-item:hover {
+           background-color: #f8f9fa !important;
+           color: #212529 !important;
+         }
+         
+         body.profile-superadmin-page .navbar-top #notificationDropdown .list-group-item h4,
+         body.profile-staff-page .navbar-top #notificationDropdown .list-group-item h4,
+         body.profile-moderator-page .navbar-top #notificationDropdown .list-group-item h4,
+         body.profile-verified-page .navbar-top #notificationDropdown .list-group-item h4,
+         body.profile-supporter-page .navbar-top #notificationDropdown .list-group-item h4 {
+           color: #212529 !important;
+         }
+         
+         body.profile-superadmin-page .navbar-top #notificationDropdown .list-group-item p,
+         body.profile-staff-page .navbar-top #notificationDropdown .list-group-item p,
+         body.profile-moderator-page .navbar-top #notificationDropdown .list-group-item p,
+         body.profile-verified-page .navbar-top #notificationDropdown .list-group-item p,
+         body.profile-supporter-page .navbar-top #notificationDropdown .list-group-item p {
+           color: #212529 !important;
+         }
+         
+         body.profile-superadmin-page .navbar-top #notificationDropdown .list-group-item small,
+         body.profile-staff-page .navbar-top #notificationDropdown .list-group-item small,
+         body.profile-moderator-page .navbar-top #notificationDropdown .list-group-item small,
+         body.profile-verified-page .navbar-top #notificationDropdown .list-group-item small,
+         body.profile-supporter-page .navbar-top #notificationDropdown .list-group-item small {
+           color: #dc3545 !important;
+         }
+
+         /* Exceções para o modal de notificação */
+         body.profile-superadmin-page #notificationModal .modal-title,
+         body.profile-staff-page #notificationModal .modal-title,
+         body.profile-moderator-page #notificationModal .modal-title,
+         body.profile-verified-page #notificationModal .modal-title,
+         body.profile-supporter-page #notificationModal .modal-title {
+           color: #212529 !important;
+         }
+
+         body.profile-superadmin-page #notificationModal .modal-body,
+         body.profile-staff-page #notificationModal .modal-body,
+         body.profile-moderator-page #notificationModal .modal-body,
+         body.profile-verified-page #notificationModal .modal-body,
+         body.profile-supporter-page #notificationModal .modal-body {
+           color: #212529 !important;
+         }
+
+         body.profile-superadmin-page #notificationModal .notification-details,
+         body.profile-staff-page #notificationModal .notification-details,
+         body.profile-moderator-page #notificationModal .notification-details,
+         body.profile-verified-page #notificationModal .notification-details,
+         body.profile-supporter-page #notificationModal .notification-details {
+           color: #212529 !important;
+         }
+
+         body.profile-superadmin-page #notificationModal .notification-type,
+         body.profile-staff-page #notificationModal .notification-type,
+         body.profile-moderator-page #notificationModal .notification-type,
+         body.profile-verified-page #notificationModal .notification-type,
+         body.profile-supporter-page #notificationModal .notification-type {
+           color: #212529 !important;
+         }
+
+         body.profile-superadmin-page #notificationModal .notification-message,
+         body.profile-staff-page #notificationModal .notification-message,
+         body.profile-moderator-page #notificationModal .notification-message,
+         body.profile-verified-page #notificationModal .notification-message,
+         body.profile-supporter-page #notificationModal .notification-message {
+           color: #212529 !important;
+         }
+
+         body.profile-superadmin-page #notificationModal .notification-created-at,
+         body.profile-staff-page #notificationModal .notification-created-at,
+         body.profile-moderator-page #notificationModal .notification-created-at,
+         body.profile-verified-page #notificationModal .notification-created-at,
+         body.profile-supporter-page #notificationModal .notification-created-at {
+           color: #212529 !important;
+         }
+
+/* Estilos para outros elementos da interface (não navegação) */
+body.profile-superadmin-page .navbar-brand:not(.navbar-top .navbar-brand),
+body.profile-staff-page .navbar-brand:not(.navbar-top .navbar-brand),
+body.profile-moderator-page .navbar-brand:not(.navbar-top .navbar-brand),
+body.profile-verified-page .navbar-brand:not(.navbar-top .navbar-brand),
+body.profile-supporter-page .navbar-brand:not(.navbar-top .navbar-brand) {
+  color: #ffffff !important;
+}
+
+body.profile-superadmin-page .navbar-nav .nav-link:not(.navbar-top .navbar-nav .nav-link),
+body.profile-staff-page .navbar-nav .nav-link:not(.navbar-top .navbar-nav .nav-link),
+body.profile-moderator-page .navbar-nav .nav-link:not(.navbar-top .navbar-nav .nav-link),
+body.profile-verified-page .navbar-nav .nav-link:not(.navbar-top .navbar-nav .nav-link),
+body.profile-supporter-page .navbar-nav .nav-link:not(.navbar-top .navbar-nav .nav-link) {
+  color: #ffffff !important;
+}
+
+body.profile-superadmin-page .dropdown-item:not(.navbar-top .dropdown-item),
+body.profile-staff-page .dropdown-item:not(.navbar-top .dropdown-item),
+body.profile-moderator-page .dropdown-item:not(.navbar-top .dropdown-item),
+body.profile-verified-page .dropdown-item:not(.navbar-top .dropdown-item),
+body.profile-supporter-page .dropdown-item:not(.navbar-top .dropdown-item) {
+  color: #ffffff !important;
+}
+
+body.profile-superadmin-page .btn:not(.navbar-top .btn):not(.btn-social),
+body.profile-staff-page .btn:not(.navbar-top .btn):not(.btn-social),
+body.profile-moderator-page .btn:not(.navbar-top .btn):not(.btn-social),
+body.profile-verified-page .btn:not(.navbar-top .btn):not(.btn-social),
+body.profile-supporter-page .btn:not(.navbar-top .btn):not(.btn-social) {
+  color: #ffffff !important;
+}
+
+body.profile-superadmin-page .bi:not(.navbar-top .bi):not(.btn-social .bi),
+body.profile-staff-page .bi:not(.navbar-top .bi):not(.btn-social .bi),
+body.profile-moderator-page .bi:not(.navbar-top .bi):not(.btn-social .bi),
+body.profile-verified-page .bi:not(.navbar-top .bi):not(.btn-social .bi),
+body.profile-supporter-page .bi:not(.navbar-top .bi):not(.btn-social .bi) {
+  color: #ffffff !important;
+}
+
+body.profile-superadmin-page .text-dark:not(.navbar-top .text-dark),
+body.profile-staff-page .text-dark:not(.navbar-top .text-dark),
+body.profile-moderator-page .text-dark:not(.navbar-top .text-dark),
+body.profile-verified-page .text-dark:not(.navbar-top .text-dark),
+body.profile-supporter-page .text-dark:not(.navbar-top .text-dark) {
+  color: #ffffff !important;
+}
+
+body.profile-superadmin-page .text-muted:not(.navbar-top .text-muted),
+body.profile-staff-page .text-muted:not(.navbar-top .text-muted),
+body.profile-moderator-page .text-muted:not(.navbar-top .text-muted),
+body.profile-verified-page .text-muted:not(.navbar-top .text-muted),
+body.profile-supporter-page .text-muted:not(.navbar-top .text-muted) {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* ===== EXCEÇÕES PARA O FOOTER ===== */
+/* Manter o footer com texto preto em todos os tipos de perfil */
+body.profile-superadmin-page footer,
+body.profile-staff-page footer,
+body.profile-moderator-page footer,
+body.profile-verified-page footer,
+body.profile-supporter-page footer {
+  color: #000000 !important;
+}
+
+body.profile-superadmin-page footer .text-dark,
+body.profile-staff-page footer .text-dark,
+body.profile-moderator-page footer .text-dark,
+body.profile-verified-page footer .text-dark,
+body.profile-supporter-page footer .text-dark {
+  color: #000000 !important;
+}
+
+body.profile-superadmin-page footer .text-muted,
+body.profile-staff-page footer .text-muted,
+body.profile-moderator-page footer .text-muted,
+body.profile-verified-page footer .text-muted,
+body.profile-supporter-page footer .text-muted {
+  color: #6c757d !important;
+}
+
+body.profile-superadmin-page footer a,
+body.profile-staff-page footer a,
+body.profile-moderator-page footer a,
+body.profile-verified-page footer a,
+body.profile-supporter-page footer a {
+  color: #000000 !important;
+}
+
+body.profile-superadmin-page footer a:hover,
+body.profile-staff-page footer a:hover,
+body.profile-moderator-page footer a:hover,
+body.profile-verified-page footer a:hover,
+body.profile-supporter-page footer a:hover {
+  color: #000000 !important;
+  opacity: 0.7;
+}
+
+/* Garantir que todos os parágrafos do footer sejam pretos */
+body.profile-superadmin-page footer p,
+body.profile-staff-page footer p,
+body.profile-moderator-page footer p,
+body.profile-verified-page footer p,
+body.profile-supporter-page footer p {
+  color: #000000 !important;
+}
+
+/* Garantir que spans dentro do footer sejam pretos */
+body.profile-superadmin-page footer span,
+body.profile-staff-page footer span,
+body.profile-moderator-page footer span,
+body.profile-verified-page footer span,
+body.profile-supporter-page footer span {
+  color: #000000 !important;
+}
+
+/* ===== SIDEBAR COM TEXTOS BRANCOS ===== */
+body.profile-superadmin-page .sidebar .nav-link,
+body.profile-staff-page .sidebar .nav-link,
+body.profile-moderator-page .sidebar .nav-link,
+body.profile-verified-page .sidebar .nav-link,
+body.profile-supporter-page .sidebar .nav-link {
+  color: #ffffff !important;
+}
+body.profile-superadmin-page .sidebar .nav-link:hover,
+body.profile-staff-page .sidebar .nav-link:hover,
+body.profile-moderator-page .sidebar .nav-link:hover,
+body.profile-verified-page .sidebar .nav-link:hover,
+body.profile-supporter-page .sidebar .nav-link:hover {
+  color: #ffffff !important;
+}
+body.profile-superadmin-page .sidebar .nav-link.active,
+body.profile-staff-page .sidebar .nav-link.active,
+body.profile-moderator-page .sidebar .nav-link.active,
+body.profile-verified-page .sidebar .nav-link.active,
+body.profile-supporter-page .sidebar .nav-link.active {
+  color: #ffffff !important;
+}
+
+/* ===== OUTROS ELEMENTOS DA INTERFACE ===== */
+body.profile-superadmin-page h1,
+body.profile-superadmin-page h2,
+body.profile-superadmin-page h3,
+body.profile-superadmin-page h4,
+body.profile-superadmin-page h5,
+body.profile-superadmin-page h6,
+body.profile-staff-page h1,
+body.profile-staff-page h2,
+body.profile-staff-page h3,
+body.profile-staff-page h4,
+body.profile-staff-page h5,
+body.profile-staff-page h6,
+body.profile-moderator-page h1,
+body.profile-moderator-page h2,
+body.profile-moderator-page h3,
+body.profile-moderator-page h4,
+body.profile-moderator-page h5,
+body.profile-moderator-page h6,
+body.profile-verified-page h1,
+body.profile-verified-page h2,
+body.profile-verified-page h3,
+body.profile-verified-page h4,
+body.profile-verified-page h5,
+body.profile-verified-page h6,
+body.profile-supporter-page h1,
+body.profile-supporter-page h2,
+body.profile-supporter-page h3,
+body.profile-supporter-page h4,
+body.profile-supporter-page h5,
+body.profile-supporter-page h6 {
+  color: #ffffff !important;
+}
+body.profile-superadmin-page p,
+body.profile-staff-page p,
+body.profile-moderator-page p,
+body.profile-verified-page p,
+body.profile-supporter-page p {
+  color: #ffffff !important;
+}
+body.profile-superadmin-page a,
+body.profile-staff-page a,
+body.profile-moderator-page a,
+body.profile-verified-page a,
+body.profile-supporter-page a {
+  color: #ffffff !important;
+}
+body.profile-superadmin-page .badge,
+body.profile-staff-page .badge,
+body.profile-moderator-page .badge,
+body.profile-verified-page .badge,
+body.profile-supporter-page .badge {
+  color: #ffffff !important;
+}
+body.profile-superadmin-page .form-control,
+body.profile-staff-page .form-control,
+body.profile-moderator-page .form-control,
+body.profile-verified-page .form-control,
+body.profile-supporter-page .form-control {
+  color: #ffffff !important;
+}
+body.profile-superadmin-page .form-label,
+body.profile-staff-page .form-label,
+body.profile-moderator-page .form-label,
+body.profile-verified-page .form-label,
+body.profile-supporter-page .form-label {
+  color: #ffffff !important;
+}
+body.profile-superadmin-page .form-text,
+body.profile-staff-page .form-text,
+body.profile-moderator-page .form-text,
+body.profile-verified-page .form-text,
+body.profile-supporter-page .form-text {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* ===== BOTÕES DO APOIADOR ===== */
+.profile-container.profile-supporter .btn-outline-primary {
+  border-color: #DC143C;
+  color: #DC143C;
+}
+
+.profile-container.profile-supporter .btn-outline-primary:hover {
+  background-color: #DC143C;
+  border-color: #DC143C;
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+}
+
+/* ===== ELEMENTOS ESPECÍFICOS DO APOIADOR ===== */
+.profile-container.profile-supporter .text-muted,
+.profile-container.profile-supporter .card-text,
+.profile-container.profile-supporter .status-description,
+.profile-container.profile-supporter .status-title,
+.profile-container.profile-supporter .bi,
+.profile-container.profile-supporter .text-muted .bi {
+  color: #ffffff !important;
+}
+
+.profile-container.profile-supporter .card {
+  background: transparent;
+  border: none;
+}
+
+.profile-container.profile-supporter .d-flex.align-items-center a,
+.profile-container.profile-supporter .d-flex.align-items-center a:hover,
+.profile-container.profile-supporter .d-flex.align-items-center a strong,
+.profile-container.profile-supporter .d-flex.align-items-center a:hover strong,
+.profile-container.profile-supporter .d-flex.flex-wrap span,
+.profile-container.profile-supporter a:not(.btn),
+.profile-container.profile-supporter a:not(.btn):hover {
+  color: #ffffff !important;
+}
+
+.profile-container.profile-supporter a:not(.btn):hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.profile-container.profile-supporter .d-flex.align-items-center a:hover strong {
+  text-shadow: 0 0 10px currentColor;
+}
+
+/* ===== STATUS ICON DO APOIADOR ===== */
+.profile-status-display.profile-supporter .status-icon {
+  background: linear-gradient(45deg, #DC143C, #B71C1C);
+  color: #ffffff;
+  box-shadow: 0 0 20px rgba(220, 20, 60, 0.6);
+}
+
+/* ===== TEXTO DOS POSTS EM PRETO ===== */
+/* Posts section - texto preto para todos os tipos de perfil */
+body.profile-superadmin-page .card:not(.profile-container) .card-text,
+body.profile-superadmin-page .card:not(.profile-container) .card-title,
+body.profile-superadmin-page .card:not(.profile-container) h6,
+body.profile-superadmin-page .card:not(.profile-container) p,
+body.profile-superadmin-page .card:not(.profile-container) small,
+body.profile-superadmin-page .card:not(.profile-container) a:not(.btn),
+body.profile-superadmin-page .card:not(.profile-container) .text-muted,
+body.profile-superadmin-page .card:not(.profile-container) .dropdown-item,
+body.profile-superadmin-page .card:not(.profile-container) .badge,
+body.profile-staff-page .card:not(.profile-container) .card-text,
+body.profile-staff-page .card:not(.profile-container) .card-title,
+body.profile-staff-page .card:not(.profile-container) h6,
+body.profile-staff-page .card:not(.profile-container) p,
+body.profile-staff-page .card:not(.profile-container) small,
+body.profile-staff-page .card:not(.profile-container) a:not(.btn),
+body.profile-staff-page .card:not(.profile-container) .text-muted,
+body.profile-staff-page .card:not(.profile-container) .dropdown-item,
+body.profile-staff-page .card:not(.profile-container) .badge,
+body.profile-moderator-page .card:not(.profile-container) .card-text,
+body.profile-moderator-page .card:not(.profile-container) .card-title,
+body.profile-moderator-page .card:not(.profile-container) h6,
+body.profile-moderator-page .card:not(.profile-container) p,
+body.profile-moderator-page .card:not(.profile-container) small,
+body.profile-moderator-page .card:not(.profile-container) a:not(.btn),
+body.profile-moderator-page .card:not(.profile-container) .text-muted,
+body.profile-moderator-page .card:not(.profile-container) .dropdown-item,
+body.profile-moderator-page .card:not(.profile-container) .badge,
+body.profile-verified-page .card:not(.profile-container) .card-text,
+body.profile-verified-page .card:not(.profile-container) .card-title,
+body.profile-verified-page .card:not(.profile-container) h6,
+body.profile-verified-page .card:not(.profile-container) p,
+body.profile-verified-page .card:not(.profile-container) small,
+body.profile-verified-page .card:not(.profile-container) a:not(.btn),
+body.profile-verified-page .card:not(.profile-container) .text-muted,
+body.profile-verified-page .card:not(.profile-container) .dropdown-item,
+body.profile-verified-page .card:not(.profile-container) .badge,
+body.profile-supporter-page .card:not(.profile-container) .card-text,
+body.profile-supporter-page .card:not(.profile-container) .card-title,
+body.profile-supporter-page .card:not(.profile-container) h6,
+body.profile-supporter-page .card:not(.profile-container) p,
+body.profile-supporter-page .card:not(.profile-container) small,
+body.profile-supporter-page .card:not(.profile-container) a:not(.btn),
+body.profile-supporter-page .card:not(.profile-container) .text-muted,
+body.profile-supporter-page .card:not(.profile-container) .dropdown-item,
+body.profile-supporter-page .card:not(.profile-container) .badge {
+  color: #000000 !important;
+}
+
+/* Posts específicos - texto preto */
+body.profile-superadmin-page .post-card .card-text,
+body.profile-superadmin-page .post-card .card-title,
+body.profile-superadmin-page .post-card h6,
+body.profile-superadmin-page .post-card p,
+body.profile-superadmin-page .post-card small,
+body.profile-superadmin-page .post-card a:not(.btn),
+body.profile-superadmin-page .post-card .text-muted,
+body.profile-superadmin-page .post-card .dropdown-item,
+body.profile-superadmin-page .post-card .badge,
+body.profile-staff-page .post-card .card-text,
+body.profile-staff-page .post-card .card-title,
+body.profile-staff-page .post-card h6,
+body.profile-staff-page .post-card p,
+body.profile-staff-page .post-card small,
+body.profile-staff-page .post-card a:not(.btn),
+body.profile-staff-page .post-card .text-muted,
+body.profile-staff-page .post-card .dropdown-item,
+body.profile-staff-page .post-card .badge,
+body.profile-moderator-page .post-card .card-text,
+body.profile-moderator-page .post-card .card-title,
+body.profile-moderator-page .post-card h6,
+body.profile-moderator-page .post-card p,
+body.profile-moderator-page .post-card small,
+body.profile-moderator-page .post-card a:not(.btn),
+body.profile-moderator-page .post-card .text-muted,
+body.profile-moderator-page .post-card .dropdown-item,
+body.profile-moderator-page .post-card .badge,
+body.profile-verified-page .post-card .card-text,
+body.profile-verified-page .post-card .card-title,
+body.profile-verified-page .post-card h6,
+body.profile-verified-page .post-card p,
+body.profile-verified-page .post-card small,
+body.profile-verified-page .post-card a:not(.btn),
+body.profile-verified-page .post-card .text-muted,
+body.profile-verified-page .post-card .dropdown-item,
+body.profile-verified-page .post-card .badge,
+body.profile-supporter-page .post-card .card-text,
+body.profile-supporter-page .post-card .card-title,
+body.profile-supporter-page .post-card h6,
+body.profile-supporter-page .post-card p,
+body.profile-supporter-page .post-card small,
+body.profile-supporter-page .post-card a:not(.btn),
+body.profile-supporter-page .post-card .text-muted,
+body.profile-supporter-page .post-card .dropdown-item,
+body.profile-supporter-page .post-card .badge {
+  color: #000000 !important;
+}
+
+/* ===== ÍCONES DOS BOTÕES DE AÇÃO DOS POSTS ===== */
+/* Superadmin - ícones dos botões de ação */
+body.profile-superadmin-page .btn-outline-primary .bi {
+  color: #FFD700 !important;
+}
+
+body.profile-superadmin-page .btn-outline-secondary .bi {
+  color: #f0bc74 !important;
+}
+
+body.profile-superadmin-page .btn-outline-success .bi {
+  color: #28a745 !important;
+}
+
+/* Staff - ícones dos botões de ação */
+body.profile-staff-page .btn-outline-primary .bi {
+  color: #4169E1 !important;
+}
+
+body.profile-staff-page .btn-outline-secondary .bi {
+  color: #f0bc74 !important;
+}
+
+body.profile-staff-page .btn-outline-success .bi {
+  color: #28a745 !important;
+}
+
+/* Moderator - ícones dos botões de ação */
+body.profile-moderator-page .btn-outline-primary .bi {
+  color: #32CD32 !important;
+}
+
+body.profile-moderator-page .btn-outline-secondary .bi {
+  color: #f0bc74 !important;
+}
+
+body.profile-moderator-page .btn-outline-success .bi {
+  color: #28a745 !important;
+}
+
+/* Verified - ícones dos botões de ação */
+body.profile-verified-page .btn-outline-primary .bi {
+  color: #87CEEB !important;
+}
+
+body.profile-verified-page .btn-outline-secondary .bi {
+  color: #f0bc74 !important;
+}
+
+body.profile-verified-page .btn-outline-success .bi {
+  color: #28a745 !important;
+}
+
+/* Supporter - ícones dos botões de ação */
+body.profile-supporter-page .btn-outline-primary .bi {
+  color: #DC143C !important;
+}
+
+body.profile-supporter-page .btn-outline-secondary .bi {
+  color: #f0bc74 !important;
+}
+
+body.profile-supporter-page .btn-outline-success .bi {
+  color: #28a745 !important;
+}
+
+/* Hover states para os ícones */
+body.profile-superadmin-page .btn-outline-primary:hover .bi {
+  color: #1a1a1a !important;
+}
+
+body.profile-staff-page .btn-outline-primary:hover .bi,
+body.profile-moderator-page .btn-outline-primary:hover .bi,
+body.profile-verified-page .btn-outline-primary:hover .bi,
+body.profile-supporter-page .btn-outline-primary:hover .bi {
+  color: #ffffff !important;
+}
+
+body.profile-superadmin-page .btn-outline-secondary:hover .bi,
+body.profile-staff-page .btn-outline-secondary:hover .bi,
+body.profile-moderator-page .btn-outline-secondary:hover .bi,
+body.profile-verified-page .btn-outline-secondary:hover .bi,
+body.profile-supporter-page .btn-outline-secondary:hover .bi {
+  color: #1f2937 !important;
+}
+
+body.profile-superadmin-page .btn-outline-success:hover .bi,
+body.profile-staff-page .btn-outline-success:hover .bi,
+body.profile-moderator-page .btn-outline-success:hover .bi,
+body.profile-verified-page .btn-outline-success:hover .bi,
+body.profile-supporter-page .btn-outline-success:hover .bi {
+  color: #ffffff !important;
+}
+
+/* ===== NÚMEROS DOS BOTÕES DE AÇÃO DOS POSTS ===== */
+/* Superadmin - números dos botões de ação */
+body.profile-superadmin-page .btn-outline-primary .like-count {
+  color: #FFD700 !important;
+}
+
+body.profile-superadmin-page .btn-outline-secondary .comment-count {
+  color: #f0bc74 !important;
+}
+
+body.profile-superadmin-page .btn-outline-success .share-count {
+  color: #28a745 !important;
+}
+
+/* Staff - números dos botões de ação */
+body.profile-staff-page .btn-outline-primary .like-count {
+  color: #4169E1 !important;
+}
+
+body.profile-staff-page .btn-outline-secondary .comment-count {
+  color: #f0bc74 !important;
+}
+
+body.profile-staff-page .btn-outline-success .share-count {
+  color: #28a745 !important;
+}
+
+/* Moderator - números dos botões de ação */
+body.profile-moderator-page .btn-outline-primary .like-count {
+  color: #32CD32 !important;
+}
+
+body.profile-moderator-page .btn-outline-secondary .comment-count {
+  color: #f0bc74 !important;
+}
+
+body.profile-moderator-page .btn-outline-success .share-count {
+  color: #28a745 !important;
+}
+
+/* Verified - números dos botões de ação */
+body.profile-verified-page .btn-outline-primary .like-count {
+  color: #87CEEB !important;
+}
+
+body.profile-verified-page .btn-outline-secondary .comment-count {
+  color: #f0bc74 !important;
+}
+
+body.profile-verified-page .btn-outline-success .share-count {
+  color: #28a745 !important;
+}
+
+/* Supporter - números dos botões de ação */
+body.profile-supporter-page .btn-outline-primary .like-count {
+  color: #DC143C !important;
+}
+
+body.profile-supporter-page .btn-outline-secondary .comment-count {
+  color: #f0bc74 !important;
+}
+
+body.profile-supporter-page .btn-outline-success .share-count {
+  color: #28a745 !important;
+}
+
+/* Hover states para os números */
+body.profile-superadmin-page .btn-outline-primary:hover .like-count {
+  color: #1a1a1a !important;
+}
+
+body.profile-staff-page .btn-outline-primary:hover .like-count,
+body.profile-moderator-page .btn-outline-primary:hover .like-count,
+body.profile-verified-page .btn-outline-primary:hover .like-count,
+body.profile-supporter-page .btn-outline-primary:hover .like-count {
+  color: #ffffff !important;
+}
+
+body.profile-superadmin-page .btn-outline-secondary:hover .comment-count,
+body.profile-staff-page .btn-outline-secondary:hover .comment-count,
+body.profile-moderator-page .btn-outline-secondary:hover .comment-count,
+body.profile-verified-page .btn-outline-secondary:hover .comment-count,
+body.profile-supporter-page .btn-outline-secondary:hover .comment-count {
+  color: #1f2937 !important;
+}
+
+body.profile-superadmin-page .btn-outline-success:hover .share-count,
+body.profile-staff-page .btn-outline-success:hover .share-count,
+body.profile-moderator-page .btn-outline-success:hover .share-count,
+body.profile-verified-page .btn-outline-success:hover .share-count,
+body.profile-supporter-page .btn-outline-success:hover .share-count {
+  color: #ffffff !important;
+}

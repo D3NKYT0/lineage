@@ -1,0 +1,202 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Criar Nova Licença" %} - {{ settings.PROJECT_TITLE }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">{% trans "Criar Nova Licença L2JPremium" %}</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{% url 'licence:dashboard' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> {% trans "Voltar" %}
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-plus"></i> {% trans "Informações da Licença" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="license_type" class="form-label">{% trans "Tipo de Licença" %} *</label>
+                                    <select class="form-select" id="license_type" name="license_type" required>
+                                        {% for value, label in license_types %}
+                                        <option value="{{ value }}">{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="domain" class="form-label">{% trans "Domínio" %} *</label>
+                                    <input type="text" class="form-control" id="domain" name="domain" 
+                                           placeholder="exemplo.com" required>
+                                    <div class="form-text">{% trans "Domínio onde a licença será ativada" %}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="contact_email" class="form-label">{% trans "E-mail de Contato" %} *</label>
+                                    <input type="email" class="form-control" id="contact_email" name="contact_email" 
+                                           placeholder="contato@exemplo.com" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="contact_phone" class="form-label">{% trans "Telefone de Contato" %}</label>
+                                    <input type="text" class="form-control" id="contact_phone" name="contact_phone" 
+                                           placeholder="(11) 99999-9999">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="company_name" class="form-label">{% trans "Nome da Empresa/Cliente" %}</label>
+                            <input type="text" class="form-control" id="company_name" name="company_name" 
+                                   placeholder="Nome da empresa ou cliente">
+                        </div>
+
+                        <!-- Campos específicos do L2JPremium PRO -->
+                        <div id="pro-fields" style="display: none;">
+                            <hr>
+                            <h6 class="text-primary">{% trans "Campos Específicos - L2JPremium PRO" %}</h6>
+                            <div class="mb-3">
+                                <label for="contract_number" class="form-label">{% trans "Número do Contrato" %} *</label>
+                                <input type="text" class="form-control" id="contract_number" name="contract_number" 
+                                       placeholder="CONTRATO-2024-001">
+                                <div class="form-text">
+                                    {% trans "Número do contrato comercial (obrigatório para L2JPremium PRO)" %}<br>
+                                    <small class="text-warning">
+                                        <i class="fas fa-info-circle"></i> 
+                                        {% trans "O contrato será validado via registro DNS TXT em l2jpremium-contract.{domain}" %}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'licence:dashboard' %}" class="btn btn-secondary me-md-2">
+                                {% trans "Cancelar" %}
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> {% trans "Criar Licença" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Informações sobre os tipos de licença -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> {% trans "Tipos de Licença" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6 class="text-info">L2JPremium FREE</h6>
+                        <ul class="list-unstyled small">
+                            <li><i class="fas fa-check text-success"></i> {% trans "Uso gratuito" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Sem contrato" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Funcionalidades básicas" %}</li>
+                            <li><i class="fas fa-times text-danger"></i> {% trans "Sem suporte oficial" %}</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6 class="text-success">L2JPremium PRO</h6>
+                        <ul class="list-unstyled small">
+                            <li><i class="fas fa-check text-success"></i> {% trans "Suporte profissional" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Atualizações garantidas" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Personalização" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Código fonte" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "SLA garantido" %}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Funcionalidades incluídas -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-cogs"></i> {% trans "Funcionalidades" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="free-features">
+                        <h6 class="text-info">L2JPremium FREE</h6>
+                        <ul class="list-unstyled small">
+                            <li><i class="fas fa-check text-success"></i> {% trans "Painel administrativo" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Funcionalidades básicas" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Sistema de temas" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Acesso à API" %}</li>
+                        </ul>
+                    </div>
+                    
+                    <div id="pro-features" style="display: none;">
+                        <h6 class="text-success">L2JPremium PRO</h6>
+                        <ul class="list-unstyled small">
+                            <li><i class="fas fa-check text-success"></i> {% trans "Todas as funcionalidades FREE" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Suporte técnico" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Atualizações automáticas" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Personalização avançada" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Suporte prioritário" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Código fonte completo" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Serviço de instalação" %}</li>
+                            <li><i class="fas fa-check text-success"></i> {% trans "Integração com banco de dados" %}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const licenseTypeSelect = document.getElementById('license_type');
+    const proFields = document.getElementById('pro-fields');
+    const freeFeatures = document.getElementById('free-features');
+    const proFeatures = document.getElementById('pro-features');
+    
+    function toggleFields() {
+        const selectedType = licenseTypeSelect.value;
+        const contractField = document.getElementById('contract_number');
+        
+        if (selectedType === 'pro') {
+            proFields.style.display = 'block';
+            freeFeatures.style.display = 'none';
+            proFeatures.style.display = 'block';
+            contractField.required = true;
+        } else {
+            proFields.style.display = 'none';
+            freeFeatures.style.display = 'block';
+            proFeatures.style.display = 'none';
+            contractField.required = false;
+        }
+    }
+    
+    licenseTypeSelect.addEventListener('change', toggleFields);
+    toggleFields(); // Executa na carga inicial
+});
+</script>
+{% endblock %} 

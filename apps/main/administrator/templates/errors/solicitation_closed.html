@@ -1,0 +1,35 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'dashboard' %}">
+                <i class="fas fa-home" aria-hidden="true"></i> {% trans "Home" %}
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="fas fa-comments-slash" aria-hidden="true"></i> {% trans "Chat Indisponível" %}
+        </li>
+    </ol>
+</nav>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="text-center mt-4">
+    <h1 class="display-4 text-warning">
+        <i class="fas fa-comment-slash" aria-hidden="true"></i> {% trans "Chat Indisponível!" %}
+    </h1>
+    <p class="lead mt-3">
+        {% trans "A solicitação" %} <strong>{{ solicitation.protocol|upper }}</strong> {% trans "foi" %} <strong>{{ status|lower }}</strong> {% trans "e não está mais disponível para conversa." %}
+    </p>
+    <p class="text-muted">{% trans "Se você precisar de mais informações, entre em contato com o suporte." %}</p>
+
+    <div class="mt-4">
+        <a href="{% url 'solicitation:solicitation_list' %}" class="btn btn-outline-secondary btn-lg">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i> {% trans "Voltar para as solicitações" %}
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,208 @@
+.hidden {
+    display: none;
+}
+
+.chat-box {
+    background-color: #fdfcfc;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.shadow-text {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+    color: white !important;
+}
+
+.custom-overflow {
+    overflow-y: auto;
+    max-height: 500px; /* Altura máxima do container */
+    background-color: #F5F5F5 !important;
+}
+
+.desativar {
+    display: none !important;
+}
+
+.text-end {
+    text-align: right;
+}
+
+.text-start {
+    text-align: left;
+}
+
+.current-user {
+    background-color: #bbe7e1;
+    color: #000000;
+    border-radius: 10px 0px 10px 10px;
+    padding: 10px;
+    max-width: 70%;
+    display: inline-block;
+    overflow-wrap: break-word;
+}
+
+.current-friend {
+    background-color: #e5e3e3;
+    color: #000000;
+    border-radius: 0px 10px 10px 10px;
+    padding: 10px;
+    max-width: 70%;
+    display: inline-block;
+    overflow-wrap: break-word;
+}
+
+.friend-item.active .friend-name {
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 1);
+}
+
+.friend-item.active {
+    background-color: #3f4d67;
+    color: white;
+}
+
+/* Estilos para o status dos amigos */
+.friend-status {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.friend-status i {
+    font-size: 8px;
+}
+
+.friend-status.text-success i {
+    color: #28a745;
+    animation: pulse 2s infinite;
+}
+
+.friend-status.text-muted i {
+    color: #6c757d;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.title-current {
+    display: flex; 
+    gap: 2px;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 5px;
+}
+
+.title-friend {
+    display: flex; 
+    gap: 2px;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+/* Estilos para o texto da data/hora */
+.title-current small {
+    font-size: 11px;
+    color: white;
+    opacity: 0.9;
+    line-height: 1.2;
+}
+
+.title-friend small {
+    font-size: 11px;
+    color: #666;
+    opacity: 0.8;
+    line-height: 1.2;
+}
+
+.emoji-modal {
+    display: none; /* Oculto por padrão */
+    position: fixed; /* Fica em uma posição fixa */
+    z-index: 1000; /* Fica acima de outros elementos */
+    left: 0;
+    top: 0;
+    width: 100%; /* Largura total */
+    height: 100%; /* Altura total */
+    overflow: auto; /* Adiciona barra de rolagem se necessário */
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro com transparência */
+}
+
+.emoji-modal-content {
+    background-color: white;
+    margin: 15% auto; /* Centraliza o modal */
+    padding: 0; /* Remover padding para permitir rolagem */
+    border: 1px solid #888;
+    width: 100%; /* Largura do modal para se ajustar em dispositivos móveis */
+    max-width: 400px; /* Largura máxima do modal */
+    border-radius: 8px; /* Cantos arredondados */
+    overflow-y: auto; /* Adiciona rolagem vertical */
+    max-height: 70vh; /* Altura máxima do modal em relação à viewport */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.emoji-list {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto; /* Adiciona rolagem vertical se a lista de emojis exceder a altura */
+    max-height: 300px; /* Limita a altura da lista de emojis */
+}
+
+.emoji {
+    cursor: pointer;
+    margin: 2px;
+    font-size: 30px;
+}
+
+.emoji-tabs {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+}
+
+.tab-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.tab-button.active {
+    border-bottom: 2px solid #007bff; /* ou outra cor para destacar */
+}
+
+.tab-button:focus {
+    outline: none; /* Remove o contorno padrão ao focar */
+    box-shadow: none; /* Remove qualquer sombra que possa aparecer */
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: flex; /* Mudar para flex para ajustar melhor os emojis */
+    flex-wrap: wrap; /* Permite que os emojis se ajustem em várias linhas */
+}

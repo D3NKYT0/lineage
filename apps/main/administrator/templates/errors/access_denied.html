@@ -1,0 +1,33 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'home:index' %}">
+                <i class="fas fa-home" aria-hidden="true"></i> {% trans "Home" %}
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="fas fa-ban" aria-hidden="true"></i> {% trans "Acesso Negado" %}
+        </li>
+    </ol>
+</nav>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="text-center mt-4">
+    <h1 class="display-4 text-danger">
+        <i class="fas fa-times-circle" aria-hidden="true"></i> {% trans "Acesso Negado!" %}
+    </h1>
+    <p class="lead mt-3">{% trans "Você não tem permissão para acessar esta sala de chat." %}</p>
+    
+    <div class="mt-4">
+        <a href="{% url 'home:index' %}" class="btn btn-outline-secondary btn-lg">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i> {% trans "Voltar para a página inicial" %}
+        </a>
+    </div>
+</div>
+
+{% endblock %}

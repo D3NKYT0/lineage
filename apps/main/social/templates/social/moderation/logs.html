@@ -1,0 +1,509 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %} {% trans "Logs de Moderação" %} {% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Cabeçalho -->
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">
+            <i class="bi bi-journal-text text-primary"></i> {% trans "Logs de Moderação" %}
+          </h4>
+          <div class="btn-group">
+            <!-- Dropdown de Export -->
+            <div class="dropdown">
+              <button class="btn btn-success btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-download"></i> {% trans "Exportar" %}
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="#" onclick="exportExcel()">
+                    <i class="bi bi-file-earmark-excel text-success"></i> {% trans "Excel (.xlsx)" %}
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" onclick="exportCSV()">
+                    <i class="bi bi-file-earmark-text text-primary"></i> {% trans "CSV (.csv)" %}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <a href="{% url 'social:moderation_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-arrow-left"></i> {% trans "Voltar ao Dashboard" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-funnel"></i> {% trans "Filtros" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          <form method="get" class="row g-3">
+            <div class="col-md-3">
+              <label for="action_type" class="form-label">{% trans "Tipo de Ação" %}</label>
+              <select class="form-control" id="action_type" name="action_type">
+                <option value="">{% trans "Todos os tipos" %}</option>
+                {% for action_type in action_types %}
+                  <option value="{{ action_type.0 }}" {% if request.GET.action_type == action_type.0 %}selected{% endif %}>
+                    {{ action_type.1 }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label for="moderator" class="form-label">{% trans "Moderador" %}</label>
+              <select class="form-control" id="moderator" name="moderator">
+                <option value="">{% trans "Todos os moderadores" %}</option>
+                {% for moderator in moderators %}
+                  <option value="{{ moderator.id }}" {% if request.GET.moderator == moderator.id|stringformat:"s" %}selected{% endif %}>
+                    {{ moderator.username }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label for="date_from" class="form-label">{% trans "Data Inicial" %}</label>
+              <input type="date" class="form-control" id="date_from" name="date_from" value="{{ request.GET.date_from }}">
+            </div>
+            <div class="col-md-2">
+              <label for="date_to" class="form-label">{% trans "Data Final" %}</label>
+              <input type="date" class="form-control" id="date_to" name="date_to" value="{{ request.GET.date_to }}">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">&nbsp;</label>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">
+                  <i class="bi bi-search"></i> {% trans "Filtrar" %}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                {% trans "Total de Ações" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_actions }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-activity fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                {% trans "Ações Hoje" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ actions_today }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-calendar-check fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                {% trans "Moderadores Ativos" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ active_moderators }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-people fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                {% trans "Última Atividade" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ last_activity|default:"Nunca" }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de logs -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+          <h6 class="m-0 font-weight-bold text-primary">
+            {% trans "Logs de Moderação" %} ({{ page_obj.paginator.count }})
+          </h6>
+          <div class="btn-group btn-group-sm" role="group">
+            <button type="button" class="btn btn-outline-secondary" onclick="clearFilters()">
+              <i class="bi bi-x-circle"></i> {% trans "Limpar Filtros" %}
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          {% if page_obj %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>{% trans "Data/Hora" %}</th>
+                    <th>{% trans "Ação" %}</th>
+                    <th>{% trans "Moderador" %}</th>
+                    <th>{% trans "Alvo" %}</th>
+                    <th>{% trans "Descrição" %}</th>
+                    <th>{% trans "IP" %}</th>
+                    <th>{% trans "Detalhes" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for log in page_obj %}
+                  <tr>
+                    <td>
+                      <small class="text-muted">{{ log.created_at|date:"d/m/Y" }}</small>
+                      <br>
+                      <small class="text-muted">{{ log.created_at|date:"H:i:s" }}</small>
+                    </td>
+                    <td>
+                      <span class="badge bg-{% if log.action_type == 'delete_content' %}danger{% elif log.action_type == 'hide_content' %}warning{% elif log.action_type == 'suspend_user' %}danger{% elif log.action_type == 'ban_user' %}danger{% elif log.action_type == 'filter_triggered' %}info{% else %}primary{% endif %}">
+                        {{ log.get_action_type_display }}
+                      </span>
+                    </td>
+                    <td>
+                      {% if log.moderator %}
+                        <div class="d-flex align-items-center">
+                          {% if log.moderator.avatar %}
+                            <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' log.moderator.uuid timestamp %}" 
+                                 class="rounded-circle me-2" width="24" height="24" alt="Avatar">
+                          {% else %}
+                            <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                                 class="rounded-circle me-2" width="24" height="24" alt="Avatar">
+                          {% endif %}
+                          <span>{{ log.moderator.username }}</span>
+                        </div>
+                      {% else %}
+                        <span class="text-muted">{% trans "Sistema" %}</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                          {% if log.target_type == 'post' %}
+                            <i class="bi bi-file-text text-primary"></i>
+                          {% elif log.target_type == 'comment' %}
+                            <i class="bi bi-chat text-info"></i>
+                          {% elif log.target_type == 'user' %}
+                            <i class="bi bi-person text-warning"></i>
+                          {% elif log.target_type == 'report' %}
+                            <i class="bi bi-flag text-danger"></i>
+                          {% else %}
+                            <i class="bi bi-gear text-secondary"></i>
+                          {% endif %}
+                        </div>
+                        <div class="flex-grow-1 ms-2">
+                          <div class="fw-bold">{{ log.get_target_type_display }}</div>
+                          <small class="text-muted">ID: {{ log.target_id }}</small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="text-truncate" style="max-width: 200px;" title="{{ log.description }}">
+                        {{ log.description }}
+                      </div>
+                    </td>
+                    <td>
+                      {% if log.ip_address %}
+                        <small class="text-muted">{{ log.ip_address }}</small>
+                      {% else %}
+                        <span class="text-muted">-</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if log.details %}
+                        <button type="button" class="btn btn-sm btn-outline-info" 
+                                onclick="showDetails('{{ log.description|escapejs }}', '{{ log.details|escapejs }}', '{{ log.created_at|date:"d/m/Y H:i:s" }}')"
+                                title="{% trans 'Ver Detalhes' %}">
+                          <i class="bi bi-eye"></i>
+                        </button>
+                      {% else %}
+                        <span class="text-muted">-</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginação -->
+            {% if page_obj.has_other_pages %}
+              <nav aria-label="{% trans 'Navegação de páginas' %}">
+                <ul class="pagination justify-content-center">
+                  {% if page_obj.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page=1{% if request.GET.action_type %}&action_type={{ request.GET.action_type }}{% endif %}{% if request.GET.moderator %}&moderator={{ request.GET.moderator }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}">
+                        <i class="bi bi-chevron-double-left"></i>
+                      </a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.action_type %}&action_type={{ request.GET.action_type }}{% endif %}{% if request.GET.moderator %}&moderator={{ request.GET.moderator }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}">
+                        <i class="bi bi-chevron-left"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+
+                  {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                      <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                      </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.action_type %}&action_type={{ request.GET.action_type }}{% endif %}{% if request.GET.moderator %}&moderator={{ request.GET.moderator }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}">{{ num }}</a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if page_obj.has_next %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.action_type %}&action_type={{ request.GET.action_type }}{% endif %}{% if request.GET.moderator %}&moderator={{ request.GET.moderator }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}">
+                        <i class="bi bi-chevron-right"></i>
+                      </a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.action_type %}&action_type={{ request.GET.action_type }}{% endif %}{% if request.GET.moderator %}&moderator={{ request.GET.moderator }}{% endif %}{% if request.GET.date_from %}&date_from={{ request.GET.date_from }}{% endif %}{% if request.GET.date_to %}&date_to={{ request.GET.date_to }}{% endif %}">
+                        <i class="bi bi-chevron-double-right"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </nav>
+            {% endif %}
+
+          {% else %}
+            <div class="text-center py-5">
+              <i class="bi bi-journal-text fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">{% trans "Nenhum log encontrado" %}</h5>
+              <p class="text-muted">{% trans "Não há logs que correspondam aos filtros aplicados." %}</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para detalhes -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Detalhes do Log" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <strong>{% trans "Data/Hora" %}:</strong>
+          <span id="detail-timestamp"></span>
+        </div>
+        <div class="mb-3">
+          <strong>{% trans "Descrição" %}:</strong>
+          <p id="detail-description" class="mb-0"></p>
+        </div>
+        <div class="mb-3">
+          <strong>{% trans "Detalhes Adicionais" %}:</strong>
+          <div id="detail-details" class="mt-2 p-3 bg-light rounded"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Fechar" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Função para mostrar detalhes
+function showDetails(description, details, timestamp) {
+    document.getElementById('detail-description').textContent = description;
+    document.getElementById('detail-details').textContent = details;
+    document.getElementById('detail-timestamp').textContent = timestamp;
+    
+    new bootstrap.Modal(document.getElementById('detailsModal')).show();
+}
+
+// Função para limpar filtros
+function clearFilters() {
+    window.location.href = "{% url 'social:moderation_logs' %}";
+}
+
+// Função para exportar logs
+function exportLogs() {
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('export', 'csv');
+    
+    fetch(currentUrl.toString())
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'logs_moderacao_' + new Date().toISOString().split('T')[0] + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('{% trans "Erro ao exportar logs." %}');
+        });
+}
+
+// Funções de export
+function exportExcel() {
+    const currentUrl = new URL(window.location);
+    const params = currentUrl.searchParams;
+    
+    // Construir URL com os filtros atuais
+    const exportUrl = new URL("{% url 'social:export_logs_excel' %}", window.location.origin);
+    params.forEach((value, key) => {
+        exportUrl.searchParams.append(key, value);
+    });
+    
+    // Mostrar loading
+    const originalText = event.target.innerHTML;
+    event.target.innerHTML = '<i class="bi bi-hourglass-split"></i> {% trans "Gerando..." %}';
+    event.target.disabled = true;
+    
+    // Fazer o download
+    window.location.href = exportUrl.toString();
+    
+    // Restaurar botão após um tempo
+    setTimeout(() => {
+        event.target.innerHTML = originalText;
+        event.target.disabled = false;
+    }, 3000);
+}
+
+function exportCSV() {
+    const currentUrl = new URL(window.location);
+    const params = currentUrl.searchParams;
+    
+    // Construir URL com os filtros atuais
+    const exportUrl = new URL("{% url 'social:export_logs_csv' %}", window.location.origin);
+    params.forEach((value, key) => {
+        exportUrl.searchParams.append(key, value);
+    });
+    
+    // Mostrar loading
+    const originalText = event.target.innerHTML;
+    event.target.innerHTML = '<i class="bi bi-hourglass-split"></i> {% trans "Gerando..." %}';
+    event.target.disabled = true;
+    
+    // Fazer o download
+    window.location.href = exportUrl.toString();
+    
+    // Restaurar botão após um tempo
+    setTimeout(() => {
+        event.target.innerHTML = originalText;
+        event.target.disabled = false;
+    }, 3000);
+}
+
+// Auto-submit do formulário quando os filtros mudam
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.querySelector('form[method="get"]');
+    const filterInputs = filterForm.querySelectorAll('select, input[type="date"]');
+    
+    filterInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            filterForm.submit();
+        });
+    });
+});
+</script>
+
+<style>
+.badge {
+    font-size: 0.75em;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,.075);
+}
+
+.border-left-primary {
+    border-left: 0.25rem solid #007bff !important;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid #28a745 !important;
+}
+
+.border-left-info {
+    border-left: 0.25rem solid #17a2b8 !important;
+}
+
+.border-left-warning {
+    border-left: 0.25rem solid #ffc107 !important;
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+</style>
+{% endblock content %}

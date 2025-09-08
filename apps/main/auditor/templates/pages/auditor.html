@@ -1,0 +1,144 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{% trans "Auditoria" %}</li>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="reports-container">
+    <div class="container">
+        <!-- Header -->
+        <div class="reports-header">
+            <h1 class="reports-title">{% trans "Real-time Auditor Middleware Data" %}</h1>
+            <p class="reports-subtitle">{% trans "Monitoramento em tempo real das atividades do sistema" %}</p>
+        </div>
+
+        <!-- Content -->
+        <div class="reports-card">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="audit-content">
+                        <ul id="audit-data-list" class="audit-list">
+                            <!-- List items will be dynamically added here -->
+                        </ul>
+                        
+                        <div id="loading-message" class="loading-container" style="display:none;">
+                            <div class="loading-spinner">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </div>
+                            <p class="loading-text">{% trans "Carregando dados..." %}</p>
+                        </div>
+                        
+                        <div id="error-message" class="error-container" style="display:none;">
+                            <div class="error-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <p class="error-text">{% trans "Erro ao carregar os dados de auditoria. Tente novamente." %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botão de Volta -->
+        <div class="text-center mt-5">
+            <a href="{% url 'dashboard' %}" class="report-back-button">
+                <i class="fas fa-arrow-left me-2"></i>
+                {% trans "Voltar ao Dashboard Principal" %}
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Carregar jQuery de um CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        var limit = 10;  // Defina o limite de registros
+
+        // Função para pegar dados da auditoria e atualizar a lista
+        function fetchAuditorData() {
+            $('#loading-message').show();  // Exibe a mensagem de carregamento
+            $('#error-message').hide();  // Esconde a mensagem de erro
+
+            $.ajax({
+                url: `/app/auditor/data?limit=${limit}`,  // URL para a view AuditorDataView com o limite
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function(xhr, settings) {
+                    // Inclui o CSRF token se a aplicação Django usar CSRF
+                    var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+                    if (csrfToken) {
+                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                    }
+                },
+                success: function(data) {
+                    $('#loading-message').hide();  // Esconde a mensagem de carregamento
+                    $('#audit-data-list').empty();  // Limpa os itens existentes
+                    if (data.length > 0) {
+                        $.each(data, function(index, item) {
+                            var listItem = `<li class="audit-item">
+                                <div class="audit-item-header">
+                                    <span class="audit-date">${item.date}</span>
+                                    <span class="audit-method ${item.method.toLowerCase()}">${item.method}</span>
+                                </div>
+                                <div class="audit-item-content">
+                                    <div class="audit-field">
+                                        <strong>{% trans "Path:" %}</strong> 
+                                        <span class="audit-path">${item.path}</span>
+                                    </div>
+                                    <div class="audit-field">
+                                        <strong>{% trans "Total Time:" %}</strong> 
+                                        <span class="audit-time">${item.total_time}</span>
+                                    </div>
+                                    <div class="audit-field">
+                                        <strong>{% trans "Python Time:" %}</strong> 
+                                        <span class="audit-time">${item.python_time}</span>
+                                    </div>
+                                    <div class="audit-field">
+                                        <strong>{% trans "DB Time:" %}</strong> 
+                                        <span class="audit-time">${item.db_time}</span>
+                                    </div>
+                                    <div class="audit-field">
+                                        <strong>{% trans "Total Queries:" %}</strong> 
+                                        <span class="audit-queries">${item.total_queries}</span>
+                                    </div>
+                                    <div class="audit-field">
+                                        <strong>{% trans "Response Status Code:" %}</strong> 
+                                        <span class="audit-status ${item.response_status_code >= 400 ? 'error' : 'success'}">${item.response_status_code}</span>
+                                    </div>
+                                    <div class="audit-field">
+                                        <strong>{% trans "User Agent:" %}</strong> 
+                                        <span class="audit-user-agent">${item.user_agent}</span>
+                                    </div>
+                                </div>
+                            </li>`;
+                            $('#audit-data-list').append(listItem);  // Adiciona novo item à lista
+                        });
+                    } else {
+                        $('#audit-data-list').append('<li class="audit-item empty-state">{% trans "Nenhum dado de auditoria encontrado." %}</li>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#loading-message').hide();  // Esconde a mensagem de carregamento
+                    $('#error-message').show();  // Exibe a mensagem de erro
+                    console.error('Erro ao buscar dados de auditoria:', error);
+                }
+            });
+        }
+
+        // Busca dados inicialmente
+        fetchAuditorData();
+
+        // Busca dados a cada 5 segundos (intervalo ajustável conforme necessário)
+        setInterval(fetchAuditorData, 5000);
+    });
+</script>
+{% endblock content %}

@@ -1,0 +1,232 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Licença Expirada" %} - {{ settings.PROJECT_TITLE }}{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .license-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    width: 90%;
+    backdrop-filter: blur(10px);
+  }
+
+  .license-icon {
+    font-size: 5rem;
+    color: #ff6b6b;
+    margin-bottom: 1rem;
+    animation: shake 2s infinite;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+  }
+
+  .license-title {
+    color: #2d3748;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .license-subtitle {
+    color: #718096;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .license-alert {
+    background: #fed7d7;
+    border: 2px solid #feb2b2;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    color: #c53030;
+  }
+
+  .license-alert h4 {
+    color: #c53030;
+    margin-bottom: 0.5rem;
+  }
+
+  .license-info {
+    background: #f7fafc;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-left: 4px solid #ff6b6b;
+    text-align: left;
+  }
+
+  .license-info h4 {
+    color: #2d3748;
+    margin-bottom: 1rem;
+  }
+
+  .license-info ul {
+    color: #718096;
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .license-info li {
+    margin-bottom: 0.5rem;
+  }
+
+  .action-buttons {
+    margin-top: 2rem;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-secondary {
+    background: #718096;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    background: #4a5568;
+    transform: translateY(-2px);
+  }
+
+  .status-badge {
+    display: inline-block;
+    background: #ff6b6b;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin: 1rem 0;
+  }
+
+  .contact-section {
+    background: #edf2f7;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .contact-section h5 {
+    color: #2d3748;
+    margin-bottom: 1rem;
+  }
+
+  .contact-section p {
+    color: #718096;
+    margin: 0;
+  }
+</style>
+
+<div class="license-container">
+  <div class="license-icon">
+    <i class="fas fa-exclamation-triangle"></i>
+  </div>
+  
+  <h1 class="license-title">{% trans "Licença Expirada" %}</h1>
+  
+  <div class="status-badge">
+    <i class="fas fa-times-circle"></i> {% trans "ACESSO BLOQUEADO" %}
+  </div>
+  
+  <p class="license-subtitle">
+    {% trans "A licença do sistema L2JPremium expirou ou não é válida. O acesso ao sistema foi bloqueado." %}
+  </p>
+
+  <div class="license-alert">
+    <h4><i class="fas fa-exclamation-circle"></i> {% trans "Ação Necessária" %}</h4>
+    <p>
+      {% trans "Como superusuário, você precisa renovar a licença para restaurar o acesso ao sistema." %}
+    </p>
+  </div>
+
+  <div class="license-info">
+    <h4><i class="fas fa-info-circle"></i> {% trans "O que aconteceu?" %}</h4>
+    <ul>
+      <li>{% trans "A licença L2JPremium expirou ou foi invalidada" %}</li>
+      <li>{% trans "O sistema bloqueou automaticamente todos os acessos" %}</li>
+      <li>{% trans "Usuários comuns veem uma tela de manutenção" %}</li>
+      <li>{% trans "Apenas superusuários podem ver esta tela de licença" %}</li>
+    </ul>
+  </div>
+
+  <div class="license-info">
+    <h4><i class="fas fa-tools"></i> {% trans "Como resolver?" %}</h4>
+    <ul>
+      <li>{% trans "Entre em contato com o suporte para renovar a licença" %}</li>
+      <li>{% trans "Verifique se o domínio está correto na licença" %}</li>
+      <li>{% trans "Confirme se o pagamento foi processado" %}</li>
+      <li>{% trans "Ative a nova licença no painel administrativo" %}</li>
+    </ul>
+  </div>
+
+  <div class="action-buttons">
+    <a href="{% url 'licence:status' %}" class="btn btn-primary">
+      <i class="fas fa-cog"></i> {% trans "Gerenciar Licença" %}
+    </a>
+    <a href="{% url 'licence:dashboard' %}" class="btn btn-secondary">
+      <i class="fas fa-chart-bar"></i> {% trans "Dashboard" %}
+    </a>
+  </div>
+
+  <div class="contact-section">
+    <h5><i class="fas fa-headset"></i> {% trans "Suporte Técnico" %}</h5>
+    <p>
+      {% trans "Para renovar sua licença ou obter suporte técnico:" %}
+    </p>
+    <ul style="text-align: left; margin-top: 1rem;">
+      <li><strong>{% trans "E-mail:" %}</strong> suporte@L2JPremium.com</li>
+      <li><strong>{% trans "Discord:" %}</strong> https://discord.gg/L2JPremium</li>
+      <li><strong>{% trans "WhatsApp:" %}</strong> +55 (11) 99999-9999</li>
+    </ul>
+  </div>
+
+  <div style="margin-top: 2rem;">
+    <p style="color: #718096; font-size: 0.9rem;">
+      <i class="fas fa-shield-alt"></i>
+      {% trans "Esta é uma medida de segurança para proteger o sistema." %}
+    </p>
+  </div>
+</div>
+
+<script>
+  // Atualiza a página automaticamente a cada 60 segundos para verificar se a licença foi renovada
+  setTimeout(function() {
+    window.location.reload();
+  }, 60000);
+</script>
+{% endblock %} 

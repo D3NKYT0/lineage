@@ -1,0 +1,214 @@
+/* ===== TOPS - CSS LIMPO E ESPECÍFICO ===== */
+
+/* Container principal */
+.tops-container {
+    display: flex;
+    min-height: 100vh;
+    background: transparent;
+}
+
+/* Navegação lateral */
+.tops-nav-container {
+    width: 280px;
+    background: rgba(53, 47, 35, 0.95);
+    backdrop-filter: blur(15px);
+    border-right: 1px solid rgba(230, 199, 125, 0.2);
+    padding: 30px 0;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.tops-nav-header {
+    padding: 0 30px 30px;
+    border-bottom: 1px solid rgba(230, 199, 125, 0.2);
+    margin-bottom: 30px;
+}
+
+.tops-nav-header h2 {
+    color: #e6c77d;
+    font-size: 24px;
+    margin: 0;
+    text-shadow: 0px 0px 10px rgba(230, 199, 125, 0.3);
+}
+
+.tops-nav-menu {
+    padding: 0 20px;
+}
+
+.tops-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tops-nav-item {
+    margin-bottom: 8px;
+}
+
+.tops-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.tops-nav-link:hover {
+    background: rgba(230, 199, 125, 0.1);
+    color: #e6c77d;
+    transform: translateX(5px);
+    text-decoration: none;
+}
+
+.tops-nav-link.active {
+    background: linear-gradient(135deg, rgba(230, 199, 125, 0.2), rgba(155, 117, 48, 0.2));
+    color: #e6c77d;
+    border: 1px solid rgba(230, 199, 125, 0.3);
+}
+
+.tops-nav-link i {
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Conteúdo principal */
+.tops-content {
+    flex: 1;
+    margin-left: 280px;
+    padding: 30px;
+    background: transparent;
+}
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Página inicial */
+.tops-home {
+    text-align: center;
+}
+
+.welcome-section h1 {
+    color: #e6c77d;
+    font-size: 48px;
+    margin-bottom: 20px;
+    text-shadow: 0px 0px 20px rgba(230, 199, 125, 0.4);
+}
+
+.welcome-section .lead {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.tops-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.tops-category-card {
+    transition: all 0.3s ease;
+}
+
+.tops-category-card:hover {
+    transform: translateY(-10px);
+}
+
+.tops-category-card .card {
+    background: rgba(53, 47, 35, 0.9);
+    border: 1px solid rgba(230, 199, 125, 0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.tops-category-card .card:hover {
+    border-color: rgba(230, 199, 125, 0.6);
+    box-shadow: 0 10px 30px rgba(230, 199, 125, 0.2);
+}
+
+.tops-category-card .card-title {
+    color: #e6c77d;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.tops-category-card .card-text {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+/* Seções de cabeçalho */
+.tops-header-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.tops-header-section h1 {
+    color: #e6c77d;
+    font-size: 36px;
+    margin-bottom: 15px;
+    text-shadow: 0px 0px 15px rgba(230, 199, 125, 0.4);
+}
+
+.tops-header-section .lead {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 18px;
+    margin: 0;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .tops-container {
+        flex-direction: column;
+    }
+    
+    .tops-nav-container {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 20px 0;
+    }
+    
+    .tops-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+    
+    .tops-header-section h1 {
+        font-size: 28px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 32px;
+    }
+}
+
+@media (max-width: 576px) {
+    .tops-nav-link {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+    
+    .tops-nav-link i {
+        font-size: 16px;
+    }
+    
+    .tops-header-section h1 {
+        font-size: 24px;
+    }
+    
+    .welcome-section h1 {
+        font-size: 28px;
+    }
+} 

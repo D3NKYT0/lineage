@@ -1,0 +1,31 @@
+//Timeline list group
+.list-group-timeline {
+	.list-group-item {
+		position: relative;
+		.col-auto {
+			z-index: 999;
+		}
+		&::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 4px;
+			height: 100%;
+			border-left: 2px solid $border-color;
+		}
+
+		&::after {
+			content: "";
+			position: absolute;
+			top: 15px;
+			left: 8px;
+			width: 10px;
+			height: 10px;
+			margin-top: 0.425rem;
+			margin-left: -0.5rem;
+			border: 2px solid $gray-200;
+			background: $white;
+			@include border-radius($border-radius);
+		}
+	}
+}

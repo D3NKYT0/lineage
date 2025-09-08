@@ -1,0 +1,186 @@
+{% extends 'layouts/base-auth.html' %}
+{% load static widget_tweaks i18n %}
+
+{% block content %}
+<style>
+  body {
+    background: url("{{ background_url }}") no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  .register-panel {
+    background-color: rgba(15, 15, 15, 0.92);
+    color: #f0e6d2;
+    border-radius: 1rem;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+    border: 1px solid #e0c36b;
+  }
+
+  .register-panel h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: #e0c36b;
+    text-shadow: 0 0 10px rgba(255, 215, 100, 0.4);
+  }
+
+  .register-panel p {
+    color: #dcd4b0;
+    font-size: 0.95rem;
+  }
+
+  .register-panel .form-control {
+    background-color: #1a1a1a;
+    border-color: #444;
+    color: #fff;
+  }
+
+  .register-panel .form-control::placeholder {
+    color: #aaa;
+  }
+
+  .btn-register {
+    background: linear-gradient(to right, #b89b56, #d5c170);
+    color: #000;
+    font-weight: bold;
+    text-shadow: 0 0 5px #fff8dc;
+    border: none;
+  }
+
+  .btn-register:hover {
+    background: linear-gradient(to right, #d5c170, #b89b56);
+  }
+
+  .btn-outline-light {
+    color: #e0c36b;
+    border-color: #e0c36b;
+  }
+
+  .btn-outline-light:hover {
+    background-color: #e0c36b;
+    color: #000;
+  }
+
+  label {
+    font-weight: bold;
+    color: #e0c36b;
+  }
+
+  /* Estilos para o ícone de olho */
+  .password-field {
+    position: relative;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #e0c36b;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+    z-index: 10;
+  }
+
+  .password-toggle:hover {
+    color: #fff;
+  }
+
+  .password-toggle:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .password-field .form-control {
+    padding-right: 40px; /* Espaço para o ícone */
+  }
+</style>
+
+<section class="vh-100 d-flex align-items-center justify-content-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="p-4 register-panel">
+          <h2 class="text-center mb-3">{% trans "Crie sua conta mestre" %}</h2>
+          <p class="text-center mb-4">{% trans "Preencha os campos abaixo para se juntar à aventura." %}</p>
+          <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="username">{{ form.username.label }}</label>
+              {{ form.username|add_class:"form-control" }}
+              <div class="text-danger mt-1">{{ form.username.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email">{{ form.email.label }}</label>
+              {{ form.email|add_class:"form-control" }}
+              <div class="text-danger mt-1">{{ form.email.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password1">{{ form.password1.label }}</label>
+              <div class="password-field">
+                {{ form.password1|add_class:"form-control" }}
+                <button type="button" class="password-toggle" onclick="togglePassword('id_password1')">
+                  <i class="bi bi-eye" id="eye-icon-password1"></i>
+                </button>
+              </div>
+              <div class="text-danger mt-1">{{ form.password1.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password2">{{ form.password2.label }}</label>
+              <div class="password-field">
+                {{ form.password2|add_class:"form-control" }}
+                <button type="button" class="password-toggle" onclick="togglePassword('id_password2')">
+                  <i class="bi bi-eye" id="eye-icon-password2"></i>
+                </button>
+              </div>
+              <div class="text-danger mt-1">{{ form.password2.errors }}</div>
+            </div>
+
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+              <label class="form-check-label" for="terms">
+                {% trans "Eu concordo com os" %} <a href="{% url 'terms' %}" class="text-white">{% trans "termos e condições" %}</a>
+              </label>
+            </div>
+
+            <div class="h-captcha" data-sitekey="{{ hcaptcha_site_key }}"></div>
+
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-register">{% trans "Registrar" %}</button>
+            </div>
+          </form>
+
+          <div class="mt-4 text-center">
+            <a href="{% url 'login' %}" class="btn btn-outline-light">{% trans "← Já tem conta? Faça login" %}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function togglePassword(inputId) {
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById('eye-icon-' + inputId.split('_')[1]);
+  
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.remove('bi-eye');
+    icon.classList.add('bi-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.remove('bi-eye-slash');
+    icon.classList.add('bi-eye');
+  }
+}
+</script>
+
+<script src="https://hcaptcha.com/1/api.js" async defer></script>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'tops/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Ranking Clans" %}{% endblock %}
+
+{% block tops_content %}
+<div class="tops-clans">
+    <div class="tops-header-section">
+        <h1>{% trans "Ranking Clans" %}</h1>
+        <p class="lead">{% trans "Os clãs mais poderosos" %}</p>
+    </div>
+
+    <div class="tops-table-container">
+        {% if clans %}
+        <div class="tops-table-responsive">
+            <table class="tops-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{% trans "Clã" %}</th>
+                        <th>{% trans "Líder" %}</th>
+                        <th>{% trans "Nível" %}</th>
+                        <th>{% trans "Membros" %}</th>
+                        <th>{% trans "Reputação" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for clan in clans %}
+                    <tr>
+                        <td>
+                            {% if forloop.counter == 1 %}
+                                <span class="tops-badge gold">🥇</span>
+                            {% elif forloop.counter == 2 %}
+                                <span class="tops-badge silver">🥈</span>
+                            {% elif forloop.counter == 3 %}
+                                <span class="tops-badge bronze">🥉</span>
+                            {% else %}
+                                <span class="tops-text-muted">{{ forloop.counter }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="tops-flex">
+                                {% if clan.crest %}
+                                    <img src="data:image/png;base64,{{ clan.crest }}" alt="Clan Crest" class="tops-crest">
+                                {% endif %}
+                                <span class="tops-player-name">{{ clan.clan_name }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="tops-text-muted">{{ clan.char_name|default:"-" }}</span>
+                        </td>
+                        <td>
+                            <span class="tops-badge info">{{ clan.clan_level|default:"-" }}</span>
+                        </td>
+                        <td>
+                            <span class="tops-badge primary">{{ clan.membros|default:"-" }}</span>
+                        </td>
+                        <td>
+                            <span class="tops-badge success">{{ clan.reputation_score|default:"0" }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="tops-empty-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>{% trans "Nenhum dado disponível" %}</h3>
+            <p>{% trans "Não foi possível carregar os dados do ranking de Clãs no momento." %}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

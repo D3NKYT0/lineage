@@ -1,0 +1,1285 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load social_tags %}
+
+{% block title %} {% trans "Post" %} - {{ post.author.get_full_name|default:post.author.username }} {% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/social.css' %}">
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      
+      <!-- Post principal -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="d-flex align-items-center">
+            <div class="avatar-container me-3" style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden;">
+              {% if post.author.avatar %}
+                <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' post.author.uuid timestamp %}" 
+                     alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+              {% else %}
+                <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                     alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+              {% endif %}
+            </div>
+            <div class="flex-grow-1">
+              <h6 class="mb-0">
+                <a href="{% url 'social:user_profile' post.author.username %}" class="text-decoration-none">
+                  {{ post.author.get_full_name|default:post.author.username }}{% verified_badge post.author "14px" %}
+                </a>
+              </h6>
+              <small class="text-muted">
+                {{ post.created_at|timesince }} {% trans "atrás" %}
+                {% if not post.is_public %}
+                  <span class="badge bg-secondary ms-2">
+                    <i class="bi bi-lock"></i> {% trans "Privado" %}
+                  </span>
+                {% endif %}
+              </small>
+            </div>
+            {% if post.author == user %}
+              <div class="dropdown">
+                <button class="btn btn-link text-muted" type="button" data-bs-toggle="dropdown">
+                  <i class="bi bi-three-dots"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'social:post_edit' post.id %}">
+                    <i class="bi bi-pencil"></i> {% trans "Editar" %}
+                  </a></li>
+                  <li><a class="dropdown-item text-danger" href="{% url 'social:post_delete' post.id %}">
+                    <i class="bi bi-trash"></i> {% trans "Excluir" %}
+                  </a></li>
+                </ul>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <!-- Conteúdo do post -->
+          <div class="post-content mb-3">
+                            {{ post.content|process_content|linebreaks }}
+          </div>
+          
+          <!-- Mídia do post -->
+          {% if post.has_media %}
+            {% if post.image %}
+              <div class="post-media mb-3">
+                <img src="{{ post.image.url }}" alt="Post image" class="img-fluid rounded" style="max-height: 500px;">
+              </div>
+            {% endif %}
+            {% if post.video %}
+              <div class="post-media mb-3">
+                <video controls class="w-100 rounded" style="max-height: 500px;">
+                  <source src="{{ post.video.url }}" type="video/mp4">
+                  {% trans "Seu navegador não suporta vídeos." %}
+                </video>
+              </div>
+            {% endif %}
+          {% endif %}
+          
+          <!-- Link compartilhado -->
+          {% if post.has_link %}
+            <div class="shared-link mb-3">
+              <div class="card bg-light">
+                <div class="card-body">
+                  {% if post.link_image %}
+                    <img src="{{ post.link_image }}" alt="Link preview" class="img-fluid rounded mb-2" style="max-height: 200px;">
+                  {% endif %}
+                  <h6 class="card-title">{{ post.link_title|default:post.link }}</h6>
+                  {% if post.link_description %}
+                    <p class="card-text text-muted">{{ post.link_description|truncatewords:30 }}</p>
+                  {% endif %}
+                  <a href="{{ post.link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-box-arrow-up-right"></i> {% trans "Abrir link" %}
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          
+          <!-- Hashtags -->
+          {% if post.hashtags.all %}
+            <div class="hashtags mb-3">
+              {% for post_hashtag in post.hashtags.all %}
+                <a href="{% url 'social:hashtag_detail' post_hashtag.hashtag.name %}" 
+                   class="badge bg-primary text-decoration-none me-1 mb-1">
+                  #{{ post_hashtag.hashtag.name }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+          
+          <!-- Informações do post -->
+          {% if post.is_edited %}
+            <div class="post-info mb-3">
+              <small class="text-muted">
+                <i class="bi bi-pencil"></i> {% trans "Editado em" %} {{ post.edited_at|date:"d/m/Y H:i" }}
+              </small>
+            </div>
+          {% endif %}
+          
+          <!-- Estatísticas do post -->
+          <div class="post-stats mb-3 p-2 bg-light rounded">
+            <div class="row text-center">
+              <div class="col">
+                <i class="bi bi-eye text-info"></i>
+                <small class="ms-1">{{ post.views_count }} {% trans "visualizações" %}</small>
+              </div>
+              <div class="col">
+                <i class="bi bi-heart text-danger"></i>
+                <small class="ms-1">{{ post.likes_count }} {% trans "curtidas" %}</small>
+              </div>
+              <div class="col">
+                <i class="bi bi-chat text-success"></i>
+                <small class="ms-1">{{ post.comments_count }} {% trans "comentários" %}</small>
+              </div>
+              {% if post.shares_count > 0 %}
+              <div class="col">
+                <i class="bi bi-share text-warning"></i>
+                <small class="ms-1">{{ post.shares_count }} {% trans "compartilhamentos" %}</small>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <!-- Ações do post -->
+          <div class="post-actions border-top pt-3">
+            <div class="row g-2">
+              <div class="col-auto">
+                <button class="btn btn-outline-danger btn-sm like-btn" data-post-id="{{ post.id }}">
+                  <i class="bi {% if post.is_liked_by_current_user %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                  <span class="likes-count">{{ post.likes_count }}</span>
+                  {% trans "Curtir" %}
+                </button>
+              </div>
+              <div class="col-auto">
+                <button class="btn btn-outline-success btn-sm" onclick="document.querySelector('#comment-form').scrollIntoView();">
+                  <i class="bi bi-chat"></i>
+                  {{ post.comments_count }}
+                  {% trans "Comentar" %}
+                </button>
+              </div>
+              {% if post.author != user %}
+              <div class="col-auto">
+                <button class="btn btn-outline-warning btn-sm share-btn" data-post-id="{{ post.id }}">
+                  <i class="bi bi-share"></i>
+                  {% trans "Compartilhar" %}
+                </button>
+              </div>
+              {% endif %}
+              <div class="col-auto ms-auto">
+                <a href="{% url 'social:user_profile' post.author.username %}" class="btn btn-outline-info btn-sm">
+                  <i class="bi bi-person"></i> {% trans "Ver perfil" %}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Seção de comentários -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">{% trans "Comentários" %} ({{ post.comments_count }})</h5>
+        </div>
+        <div class="card-body">
+          
+          <!-- Formulário para novo comentário -->
+          <form method="post" class="mb-4" id="comment-form">
+            {% csrf_token %}
+            <div class="d-flex align-items-start">
+              <div class="avatar-container me-3" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                {% if user.avatar %}
+                  <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                       alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                {% else %}
+                  <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                       alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                {% endif %}
+              </div>
+              <div class="flex-grow-1">
+                {{ form.content }}
+                {% if form.content.errors %}
+                  <div class="text-danger small">{{ form.content.errors.0 }}</div>
+                {% endif %}
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                  <small class="text-muted">
+                    <span id="comment-char-count">0</span>/500 {% trans "caracteres" %}
+                  </small>
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    <i class="bi bi-send"></i> {% trans "Comentar" %}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+          
+          <!-- Lista de comentários -->
+          {% if comments %}
+            <div class="comments-list">
+              {% for comment in comments %}
+                <div class="d-flex mb-3 comment-item">
+                  <!-- Indicador de nível -->
+                  <div class="comment-level-indicator level-1">1</div>
+                  
+                  <!-- Seta indicativa -->
+                  <div class="comment-arrow"></div>
+                  
+                  <div class="avatar-container me-3" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                    {% if comment.author.avatar %}
+                      <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' comment.author.uuid timestamp %}" 
+                           alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                    {% else %}
+                      <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                           alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                    {% endif %}
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="bg-light rounded p-3">
+                      <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                          <h6 class="mb-0">
+                            <a href="{% url 'social:user_profile' comment.author.username %}" class="text-decoration-none">
+                              {{ comment.author.get_full_name|default:comment.author.username }}{% verified_badge comment.author "12px" %}
+                            </a>
+                            {% if comment.author == post.author %}
+                              <span class="comment-author-badge original-author">{% trans "Autor" %}</span>
+                            {% endif %}
+                          </h6>
+                          <small class="text-muted">
+                            {{ comment.created_at|timesince }} {% trans "atrás" %}
+                          </small>
+                        </div>
+                        {% if comment.author == user or post.author == user %}
+                          <div class="dropdown">
+                            <button class="btn btn-link text-muted btn-sm p-0" type="button" data-bs-toggle="dropdown">
+                              <i class="bi bi-three-dots"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item text-danger" href="{% url 'social:delete_comment' comment.id %}">
+                                <i class="bi bi-trash"></i> {% trans "Excluir" %}
+                              </a></li>
+                            </ul>
+                          </div>
+                        {% endif %}
+                      </div>
+                      <p class="mb-0">{{ comment.content|process_content|linebreaks }}</p>
+                      
+                      <!-- Ações do comentário -->
+                      <div class="d-flex justify-content-between align-items-center mt-2">
+                        <div class="d-flex gap-2">
+                          <button class="btn btn-link text-muted btn-sm p-0 reply-btn" 
+                                  data-comment-id="{{ comment.id }}" 
+                                  data-author-username="{{ comment.author.username }}">
+                            <i class="bi bi-reply"></i> {% trans "Responder" %}
+                          </button>
+                          <button class="btn btn-link text-muted btn-sm p-0 like-comment-btn" 
+                                  data-comment-id="{{ comment.id }}">
+                            <i class="bi {% if comment.is_liked_by_current_user %}bi-heart-fill text-danger{% else %}bi-heart{% endif %}"></i>
+                            <span class="comment-likes-count">{{ comment.likes_count }}</span>
+                          </button>
+                        </div>
+                        <div class="d-flex align-items-center">
+                          <span class="reply-counter">
+                            <i class="bi bi-chat-dots me-1"></i>
+                            {{ comment.replies.count }} {% trans "resposta" %}{{ comment.replies.count|pluralize:"s" }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- Formulário de resposta (inicialmente oculto) -->
+                    <div class="reply-form-container mt-2" id="reply-form-{{ comment.id }}" style="display: none;">
+                      <!-- Indicador de resposta -->
+                      <div class="reply-indicator">{% trans "Respondendo" %}</div>
+                      
+                      <form method="post" class="reply-form" data-comment-id="{{ comment.id }}">
+                        {% csrf_token %}
+                        <input type="hidden" name="parent_comment_id" value="{{ comment.id }}">
+                        <div class="d-flex align-items-start">
+                          <div class="avatar-container me-2" style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden;">
+                            {% if user.avatar %}
+                              <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                            {% else %}
+                              <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                            {% endif %}
+                          </div>
+                          <div class="flex-grow-1">
+                            <textarea name="reply_content" class="form-control form-control-sm" rows="2" 
+                                      placeholder="{% trans 'Escreva uma resposta...' %}" maxlength="300" 
+                                      data-author-username="{{ comment.author.username }}"></textarea>
+                            <div class="d-flex justify-content-between align-items-center mt-1">
+                              <small class="text-muted">
+                                <span class="reply-char-count">0</span>/300 {% trans "caracteres" %}
+                              </small>
+                              <div class="d-flex gap-1">
+                                <button type="button" class="btn btn-sm btn-outline-secondary cancel-reply-btn">
+                                  {% trans "Cancelar" %}
+                                </button>
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                  <i class="bi bi-send"></i> {% trans "Responder" %}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    
+                    <!-- Respostas aos comentários (máximo 2 níveis) -->
+                    {% if comment.replies.exists %}
+                      <div class="ms-4 mt-3">
+                        {% for reply in comment.replies.all %}
+                          <div class="d-flex mb-2">
+                            <!-- Indicador de nível -->
+                            <div class="comment-level-indicator level-2">2</div>
+                            
+                            <!-- Seta indicativa -->
+                            <div class="reply-arrow"></div>
+                            
+                            <div class="avatar-container me-2" style="width: 30px; height: 30px; border-radius: 50%; overflow: hidden;">
+                              {% if reply.author.avatar %}
+                                <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' reply.author.uuid timestamp %}" 
+                                     alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                              {% else %}
+                                <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                                     alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                              {% endif %}
+                            </div>
+                            <div class="flex-grow-1">
+                              <div class="bg-white border rounded p-2">
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                  <div>
+                                    <h6 class="mb-0 small">
+                                      <a href="{% url 'social:user_profile' reply.author.username %}" class="text-decoration-none">
+                                        {{ reply.author.get_full_name|default:reply.author.username }}{% verified_badge reply.author "10px" %}
+                                      </a>
+                                      {% if reply.author == comment.author %}
+                                        <span class="comment-author-badge reply-author">{% trans "Respondeu" %}</span>
+                                      {% elif reply.author == post.author %}
+                                        <span class="comment-author-badge original-author">{% trans "Autor" %}</span>
+                                      {% endif %}
+                                    </h6>
+                                    <small class="text-muted">
+                                      {{ reply.created_at|timesince }} {% trans "atrás" %}
+                                    </small>
+                                  </div>
+                                  {% if reply.author == user or post.author == user %}
+                                    <div class="dropdown">
+                                      <button class="btn btn-link text-muted btn-sm p-0" type="button" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots"></i>
+                                      </button>
+                                      <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item text-danger" href="{% url 'social:delete_comment' reply.id %}">
+                                          <i class="bi bi-trash"></i> {% trans "Excluir" %}
+                                        </a></li>
+                                      </ul>
+                                    </div>
+                                  {% endif %}
+                                </div>
+                                <p class="mb-0 small">{{ reply.content|process_content }}</p>
+                                
+                                <!-- Ações da resposta -->
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                  <div class="d-flex gap-2">
+                                    <button class="btn btn-link text-muted btn-sm p-0 reply-to-reply-btn" 
+                                            data-comment-id="{{ reply.id }}" 
+                                            data-author-username="{{ reply.author.username }}">
+                                      <i class="bi bi-reply"></i> {% trans "Responder" %}
+                                    </button>
+                                    <button class="btn btn-link text-muted btn-sm p-0 like-reply-btn" 
+                                            data-comment-id="{{ reply.id }}">
+                                      <i class="bi {% if reply.is_liked_by_current_user %}bi-heart-fill text-danger{% else %}bi-heart{% endif %}"></i>
+                                      <span class="reply-likes-count">{{ reply.likes_count }}</span>
+                                    </button>
+                                  </div>
+                                  {% if reply.replies.exists %}
+                                    <span class="reply-counter">
+                                      <i class="bi bi-chat-dots me-1"></i>
+                                      {{ reply.replies.count }} {% trans "resposta" %}{{ reply.replies.count|pluralize:"s" }}
+                                    </span>
+                                  {% endif %}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <!-- Respostas às respostas (nível 2) -->
+                          {% if reply.replies.exists %}
+                            <div class="replies-to-replies ms-4 mt-1">
+                              {% for reply_to_reply in reply.replies.all %}
+                                <div class="d-flex mb-1">
+                                  <!-- Indicador de nível -->
+                                  <div class="comment-level-indicator level-3">3</div>
+                                  
+                                  <!-- Seta indicativa -->
+                                  <div class="nested-reply-arrow"></div>
+                                  
+                                  <div class="avatar-container me-2" style="width: 25px; height: 25px; border-radius: 50%; overflow: hidden;">
+                                    {% if reply_to_reply.author.avatar %}
+                                      <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' reply_to_reply.author.uuid timestamp %}" 
+                                           alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                                    {% else %}
+                                      <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                                           alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                                    {% endif %}
+                                  </div>
+                                  <div class="flex-grow-1">
+                                    <div class="bg-light rounded p-2">
+                                      <div class="d-flex justify-content-between align-items-start mb-1">
+                                        <div>
+                                          <h6 class="mb-0 small">
+                                            <a href="{% url 'social:user_profile' reply_to_reply.author.username %}" class="text-decoration-none">
+                                              {{ reply_to_reply.author.get_full_name|default:reply_to_reply.author.username }}{% verified_badge reply_to_reply.author "8px" %}
+                                            </a>
+                                            {% if reply_to_reply.author == reply.author %}
+                                              <span class="comment-author-badge nested-reply-author">{% trans "Respondeu" %}</span>
+                                            {% elif reply_to_reply.author == comment.author %}
+                                              <span class="comment-author-badge reply-author">{% trans "Respondeu" %}</span>
+                                            {% elif reply_to_reply.author == post.author %}
+                                              <span class="comment-author-badge original-author">{% trans "Autor" %}</span>
+                                            {% endif %}
+                                          </h6>
+                                          <small class="text-muted">
+                                            {{ reply_to_reply.created_at|timesince }} {% trans "atrás" %}
+                                          </small>
+                                        </div>
+                                        {% if reply_to_reply.author == user or post.author == user %}
+                                          <div class="dropdown">
+                                            <button class="btn btn-link text-muted btn-sm p-0" type="button" data-bs-toggle="dropdown">
+                                              <i class="bi bi-three-dots"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                              <li><a class="dropdown-item text-danger" href="{% url 'social:delete_comment' reply_to_reply.id %}">
+                                                <i class="bi bi-trash"></i> {% trans "Excluir" %}
+                                              </a></li>
+                                            </ul>
+                                          </div>
+                                        {% endif %}
+                                      </div>
+                                      <p class="mb-0 small">{{ reply_to_reply.content|process_content }}</p>
+                                      
+                                      <!-- Ações da resposta de nível 2 -->
+                                      <div class="d-flex justify-content-between align-items-center mt-1">
+                                        <div class="d-flex gap-2">
+                                          <button class="btn btn-link text-muted btn-sm p-0 reply-to-reply-btn" 
+                                                  data-comment-id="{{ reply_to_reply.id }}" 
+                                                  data-author-username="{{ reply_to_reply.author.username }}">
+                                            <i class="bi bi-reply"></i> {% trans "Responder" %}
+                                          </button>
+                                          <button class="btn btn-link text-muted btn-sm p-0 like-reply-btn" 
+                                                  data-comment-id="{{ reply_to_reply.id }}">
+                                            <i class="bi {% if reply_to_reply.is_liked_by_current_user %}bi-heart-fill text-danger{% else %}bi-heart{% endif %}"></i>
+                                            <span class="reply-likes-count">{{ reply_to_reply.likes_count }}</span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              {% endfor %}
+                            </div>
+                          {% endif %}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                    
+                    <!-- Formulário de resposta às respostas (inicialmente oculto) -->
+                    <div class="reply-to-reply-form-container mt-2" id="reply-to-reply-form-{{ comment.id }}" style="display: none;">
+                      <!-- Indicador de resposta -->
+                      <div class="reply-indicator">{% trans "Respondendo" %}</div>
+                      
+                      <form method="post" class="reply-to-reply-form" data-comment-id="{{ comment.id }}" data-parent-comment-id="{{ comment.id }}">
+                        {% csrf_token %}
+                        <input type="hidden" name="parent_comment_id" value="{{ comment.id }}">
+                        <input type="hidden" name="reply_to_reply" value="true">
+                        <div class="d-flex align-items-start">
+                          <div class="avatar-container me-2" style="width: 25px; height: 25px; border-radius: 50%; overflow: hidden;">
+                            {% if user.avatar %}
+                              <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                            {% else %}
+                              <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                            {% endif %}
+                          </div>
+                          <div class="flex-grow-1">
+                            <textarea name="reply_content" class="form-control form-control-sm" rows="1" 
+                                      placeholder="{% trans 'Escreva uma resposta...' %}" maxlength="200"></textarea>
+                            <div class="d-flex justify-content-between align-items-center mt-1">
+                              <small class="text-muted">
+                                <span class="reply-to-reply-char-count">0</span>/200 {% trans "caracteres" %}
+                              </small>
+                              <div class="d-flex gap-1">
+                                <button type="button" class="btn btn-sm btn-outline-secondary cancel-reply-to-reply-btn">
+                                  {% trans "Cancelar" %}
+                                </button>
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                  <i class="bi bi-send"></i> {% trans "Responder" %}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-4">
+              <i class="bi bi-chat-dots display-4 text-muted"></i>
+              <h5 class="mt-3">{% trans "Nenhum comentário ainda" %}</h5>
+              <p class="text-muted">{% trans "Seja o primeiro a comentar!" %}</p>
+            </div>
+          {% endif %}
+          
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript para interações -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Adicionar animações suaves aos comentários
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observar todos os comentários
+    document.querySelectorAll('.comment-item, .comment-item .ms-4 .d-flex, .replies-to-replies .d-flex').forEach(item => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(20px)';
+        item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(item);
+    });
+    
+    // Melhorar a experiência de hover
+    document.querySelectorAll('.comment-item, .comment-item .ms-4 .d-flex, .replies-to-replies .d-flex').forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(5px)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+        });
+    });
+    // Contador de caracteres para comentários
+    const commentField = document.querySelector('#{{ form.content.id_for_label }}');
+    const commentCharCount = document.querySelector('#comment-char-count');
+    
+    if (commentField && commentCharCount) {
+        commentField.addEventListener('input', function() {
+            commentCharCount.textContent = this.value.length;
+            
+            // Mudar cor baseado na quantidade de caracteres
+            if (this.value.length > 450) {
+                commentCharCount.classList.add('text-warning');
+                commentCharCount.classList.remove('text-muted');
+            } else if (this.value.length > 500) {
+                commentCharCount.classList.add('text-danger');
+                commentCharCount.classList.remove('text-warning');
+            } else {
+                commentCharCount.classList.add('text-muted');
+                commentCharCount.classList.remove('text-warning', 'text-danger');
+            }
+        });
+    }
+    
+    // Like/Unlike post
+    const likeBtn = document.querySelector('.like-btn');
+    if (likeBtn) {
+        likeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const postId = this.dataset.postId;
+            const icon = this.querySelector('i');
+            const countSpan = this.querySelector('.likes-count');
+            
+            // Adicionar feedback visual
+            this.disabled = true;
+            
+            fetch(`/social/post/${postId}/like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.liked) {
+                    icon.className = 'bi bi-heart-fill';
+                    this.classList.remove('btn-outline-danger');
+                    this.classList.add('btn-danger');
+                } else {
+                    icon.className = 'bi bi-heart';
+                    this.classList.remove('btn-danger');
+                    this.classList.add('btn-outline-danger');
+                }
+                countSpan.textContent = data.likes_count;
+                
+                // Atualizar também nas estatísticas
+                const statsLikes = document.querySelector('.post-stats .bi-heart').nextElementSibling;
+                if (statsLikes) {
+                    statsLikes.textContent = `${data.likes_count} curtidas`;
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao curtir o post. Tente novamente.');
+            })
+            .finally(() => {
+                this.disabled = false;
+            });
+        });
+    }
+    
+    // Compartilhar post
+    const shareBtn = document.querySelector('.share-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const postId = this.dataset.postId;
+            const currentUrl = window.location.href;
+            
+            // Verificar se a API de compartilhamento nativo está disponível
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Post do {{ post.author.get_full_name|default:post.author.username }}',
+                    text: '{{ post.content|truncatewords:20|escapejs }}',
+                    url: currentUrl
+                }).catch(err => console.log('Erro ao compartilhar:', err));
+            } else {
+                // Fallback: copiar para área de transferência
+                navigator.clipboard.writeText(currentUrl).then(() => {
+                    // Feedback visual
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="bi bi-check"></i> Copiado!';
+                    this.classList.add('btn-success');
+                    this.classList.remove('btn-outline-warning');
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-outline-warning');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Erro ao copiar:', err);
+                    alert('Link do post: ' + currentUrl);
+                });
+            }
+        });
+    }
+    
+    // Funcionalidade de resposta aos comentários
+    const replyBtns = document.querySelectorAll('.reply-btn');
+    const cancelReplyBtns = document.querySelectorAll('.cancel-reply-btn');
+    const replyForms = document.querySelectorAll('.reply-form');
+    
+    // Botões de responder
+    replyBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const commentId = this.dataset.commentId;
+            const replyForm = document.getElementById(`reply-form-${commentId}`);
+            
+            if (replyForm) {
+                // Ocultar todos os outros formulários de resposta
+                document.querySelectorAll('.reply-form-container').forEach(form => {
+                    form.style.display = 'none';
+                });
+                
+                // Mostrar o formulário de resposta atual
+                replyForm.style.display = 'block';
+                
+                // Focar no campo de resposta
+                const replyField = replyForm.querySelector('textarea[name="reply_content"]');
+                if (replyField) {
+                    replyField.focus();
+                }
+            }
+        });
+    });
+    
+    // Botões de cancelar resposta
+    cancelReplyBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const replyForm = this.closest('.reply-form-container');
+            if (replyForm) {
+                replyForm.style.display = 'none';
+                
+                // Limpar o campo de resposta
+                const replyField = replyForm.querySelector('textarea[name="reply_content"]');
+                if (replyField) {
+                    replyField.value = '';
+                    const charCount = replyForm.querySelector('.reply-char-count');
+                    if (charCount) {
+                        charCount.textContent = '0';
+                    }
+                }
+            }
+        });
+    });
+    
+    // Contador de caracteres para respostas
+    document.querySelectorAll('textarea[name="reply_content"]').forEach(textarea => {
+        textarea.addEventListener('input', function() {
+            const charCount = this.closest('.reply-form').querySelector('.reply-char-count');
+            if (charCount) {
+                charCount.textContent = this.value.length;
+                
+                // Mudar cor baseado na quantidade de caracteres
+                if (this.value.length > 250) {
+                    charCount.classList.add('text-warning');
+                    charCount.classList.remove('text-muted');
+                } else if (this.value.length > 300) {
+                    charCount.classList.add('text-danger');
+                    charCount.classList.remove('text-warning');
+                } else {
+                    charCount.classList.add('text-muted');
+                    charCount.classList.remove('text-warning', 'text-danger');
+                }
+            }
+        });
+    });
+    
+    // Envio de formulários de resposta
+    replyForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const commentId = this.dataset.commentId;
+            const replyContent = this.querySelector('textarea[name="reply_content"]').value.trim();
+            
+            if (!replyContent) {
+                alert('{% trans "A resposta não pode estar vazia." %}');
+                return;
+            }
+            
+            if (replyContent.length > 300) {
+                alert('{% trans "A resposta não pode ter mais de 300 caracteres." %}');
+                return;
+            }
+            
+            // Enviar resposta via AJAX
+            const formData = new FormData();
+            formData.append('reply_content', replyContent);
+            formData.append('parent_comment_id', commentId);
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+            
+            fetch('{% url "social:post_detail" post.id %}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Recarregar a página para mostrar a nova resposta
+                    window.location.reload();
+                } else {
+                    throw new Error('Erro ao enviar resposta');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('{% trans "Erro ao enviar resposta. Tente novamente." %}');
+            });
+        });
+    });
+    
+    // Smooth scroll para comentários
+    const commentButtons = document.querySelectorAll('[onclick*="comment-form"]');
+    commentButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('#comment-form').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+            
+            // Focar no campo de comentário
+            setTimeout(() => {
+                const commentField = document.querySelector('#{{ form.content.id_for_label }}');
+                if (commentField) {
+                    commentField.focus();
+                }
+            }, 500);
+        });
+    });
+    
+    // Auto-resize do textarea de comentário
+    if (commentField) {
+        commentField.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    }
+    
+    // Likes em comentários
+    const likeCommentBtns = document.querySelectorAll('.like-comment-btn');
+    likeCommentBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const commentId = this.dataset.commentId;
+            const icon = this.querySelector('i');
+            const countSpan = this.querySelector('.comment-likes-count');
+            
+            this.disabled = true;
+            
+            fetch(`/social/comment/${commentId}/like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.liked) {
+                    icon.className = 'bi bi-heart-fill text-danger';
+                } else {
+                    icon.className = 'bi bi-heart';
+                }
+                countSpan.textContent = data.likes_count;
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao curtir o comentário. Tente novamente.');
+            })
+            .finally(() => {
+                this.disabled = false;
+            });
+        });
+    });
+    
+    // Likes em respostas
+    const likeReplyBtns = document.querySelectorAll('.like-reply-btn');
+    likeReplyBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const commentId = this.dataset.commentId;
+            const icon = this.querySelector('i');
+            const countSpan = this.querySelector('.reply-likes-count');
+            
+            this.disabled = true;
+            
+            fetch(`/social/comment/${commentId}/like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.liked) {
+                    icon.className = 'bi bi-heart-fill text-danger';
+                } else {
+                    icon.className = 'bi bi-heart';
+                }
+                countSpan.textContent = data.likes_count;
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao curtir a resposta. Tente novamente.');
+            })
+            .finally(() => {
+                this.disabled = false;
+            });
+        });
+    });
+    
+    // Responder às respostas
+    const replyToReplyBtns = document.querySelectorAll('.reply-to-reply-btn');
+    const cancelReplyToReplyBtns = document.querySelectorAll('.cancel-reply-to-reply-btn');
+    const replyToReplyForms = document.querySelectorAll('.reply-to-reply-form');
+    
+    // Botões de responder às respostas (funciona para qualquer nível)
+    replyToReplyBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const commentId = this.dataset.commentId;
+            const authorUsername = this.dataset.authorUsername;
+            
+            // Encontrar o comentário principal para usar o formulário correto
+            let currentElement = this.closest('.comment-item');
+            let mainCommentId = null;
+            
+            // Procurar pelo ID do comentário principal
+            while (currentElement && !mainCommentId) {
+                const commentIdMatch = currentElement.querySelector('[data-comment-id]');
+                if (commentIdMatch && commentIdMatch.classList.contains('reply-btn')) {
+                    mainCommentId = commentIdMatch.dataset.commentId;
+                    break;
+                }
+                currentElement = currentElement.parentElement;
+            }
+            
+            if (mainCommentId) {
+                const replyToReplyForm = document.getElementById(`reply-to-reply-form-${mainCommentId}`);
+                
+                if (replyToReplyForm) {
+                    // Ocultar todos os outros formulários de resposta
+                    document.querySelectorAll('.reply-form-container, .reply-to-reply-form-container').forEach(form => {
+                        form.style.display = 'none';
+                    });
+                    
+                    // Mostrar o formulário de resposta às respostas
+                    replyToReplyForm.style.display = 'block';
+                    
+                    // Focar no campo de resposta e adicionar citação
+                    const replyField = replyToReplyForm.querySelector('textarea[name="reply_content"]');
+                    if (replyField) {
+                        replyField.focus();
+                        // Adicionar citação automática
+                        if (!replyField.value.includes(`@${authorUsername}`)) {
+                            replyField.value = `@${authorUsername} `;
+                        }
+                    }
+                }
+            }
+        });
+    });
+    
+    // Botões de cancelar resposta às respostas
+    cancelReplyToReplyBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const replyToReplyForm = this.closest('.reply-to-reply-form-container');
+            if (replyToReplyForm) {
+                replyToReplyForm.style.display = 'none';
+                
+                // Limpar o campo de resposta
+                const replyField = replyToReplyForm.querySelector('textarea[name="reply_content"]');
+                if (replyField) {
+                    replyField.value = '';
+                    const charCount = replyToReplyForm.querySelector('.reply-to-reply-char-count');
+                    if (charCount) {
+                        charCount.textContent = '0';
+                    }
+                }
+            }
+        });
+    });
+    
+    // Contador de caracteres para respostas às respostas
+    document.querySelectorAll('.reply-to-reply-form textarea[name="reply_content"]').forEach(textarea => {
+        textarea.addEventListener('input', function() {
+            const charCount = this.closest('.reply-to-reply-form').querySelector('.reply-to-reply-char-count');
+            if (charCount) {
+                charCount.textContent = this.value.length;
+                
+                // Mudar cor baseado na quantidade de caracteres
+                if (this.value.length > 150) {
+                    charCount.classList.add('text-warning');
+                    charCount.classList.remove('text-muted');
+                } else if (this.value.length > 200) {
+                    charCount.classList.add('text-danger');
+                    charCount.classList.remove('text-warning');
+                } else {
+                    charCount.classList.add('text-muted');
+                    charCount.classList.remove('text-warning', 'text-danger');
+                }
+            }
+        });
+    });
+    
+    // Envio de formulários de resposta às respostas
+    replyToReplyForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const commentId = this.dataset.commentId;
+            const replyContent = this.querySelector('textarea[name="reply_content"]').value.trim();
+            
+            if (!replyContent) {
+                alert('{% trans "A resposta não pode estar vazia." %}');
+                return;
+            }
+            
+            if (replyContent.length > 200) {
+                alert('{% trans "A resposta não pode ter mais de 200 caracteres." %}');
+                return;
+            }
+            
+            // Enviar resposta via AJAX
+            const formData = new FormData();
+            formData.append('reply_content', replyContent);
+            formData.append('parent_comment_id', commentId);
+            formData.append('reply_to_reply', 'true');
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+            
+            fetch('{% url "social:post_detail" post.id %}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Recarregar a página para mostrar a nova resposta
+                    window.location.reload();
+                } else {
+                    throw new Error('Erro ao enviar resposta');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('{% trans "Erro ao enviar resposta. Tente novamente." %}');
+            });
+        });
+    });
+    
+    // Citação automática ao responder comentários
+    replyBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const commentId = this.dataset.commentId;
+            const authorUsername = this.dataset.authorUsername;
+            const replyForm = document.getElementById(`reply-form-${commentId}`);
+            
+            if (replyForm) {
+                // Ocultar todos os outros formulários de resposta
+                document.querySelectorAll('.reply-form-container, .reply-to-reply-form-container').forEach(form => {
+                    form.style.display = 'none';
+                });
+                
+                // Mostrar o formulário de resposta atual
+                replyForm.style.display = 'block';
+                
+                // Focar no campo de resposta e adicionar citação
+                const replyField = replyForm.querySelector('textarea[name="reply_content"]');
+                if (replyField) {
+                    replyField.focus();
+                    // Adicionar citação automática
+                    if (!replyField.value.includes(`@${authorUsername}`)) {
+                        replyField.value = `@${authorUsername} `;
+                    }
+                }
+            }
+        });
+    });
+    
+    // ============================================================================
+    // FUNCIONALIDADE PARA MENCÕES @USERNAME
+    // ============================================================================
+    
+    // Adicionar funcionalidade aos links de menção
+    document.querySelectorAll('.mention-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const username = this.dataset.username;
+            const href = this.getAttribute('href');
+            
+            // Efeito visual de clique
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+            
+            // Navegar para o perfil do usuário
+            if (href) {
+                window.location.href = href;
+            }
+        });
+        
+        // Efeito de hover melhorado
+        link.addEventListener('mouseenter', function() {
+            this.style.zIndex = '10';
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            this.style.zIndex = '';
+        });
+    });
+    
+    // Detectar menções em tempo real nos campos de texto
+    const textAreas = document.querySelectorAll('textarea[name="content"], textarea[name="reply_content"]');
+    textAreas.forEach(textarea => {
+        textarea.addEventListener('input', function() {
+            const text = this.value;
+            const mentionPattern = /@([a-zA-Z0-9_-]+)/g;
+            const mentions = text.match(mentionPattern);
+            
+            if (mentions) {
+                // Adicionar classe para indicar que há menções
+                this.classList.add('has-mentions');
+                
+                // Mostrar preview das menções (opcional)
+                const previewContainer = this.parentElement.querySelector('.mentions-preview');
+                if (!previewContainer) {
+                    const preview = document.createElement('div');
+                    preview.className = 'mentions-preview mt-2 p-2 bg-light rounded';
+                    preview.style.fontSize = '12px';
+                    preview.style.color = '#6c757d';
+                    preview.innerHTML = `<i class="bi bi-at"></i> Menções detectadas: ${mentions.join(', ')}`;
+                    this.parentElement.appendChild(preview);
+                } else {
+                    previewContainer.innerHTML = `<i class="bi bi-at"></i> Menções detectadas: ${mentions.join(', ')}`;
+                }
+            } else {
+                // Remover classe e preview se não há menções
+                this.classList.remove('has-mentions');
+                const previewContainer = this.parentElement.querySelector('.mentions-preview');
+                if (previewContainer) {
+                    previewContainer.remove();
+                }
+            }
+        });
+    });
+    
+    // Auto-complete para menções (opcional - funcionalidade avançada)
+    function setupMentionAutocomplete(textarea) {
+        let mentionList = null;
+        let currentMention = '';
+        
+        textarea.addEventListener('input', function(e) {
+            const cursorPos = this.selectionStart;
+            const textBeforeCursor = this.value.substring(0, cursorPos);
+            const mentionMatch = textBeforeCursor.match(/@([a-zA-Z0-9_-]*)$/);
+            
+            if (mentionMatch) {
+                currentMention = mentionMatch[1];
+                showMentionSuggestions(currentMention, textarea);
+            } else {
+                hideMentionSuggestions();
+            }
+        });
+        
+        textarea.addEventListener('keydown', function(e) {
+            if (mentionList && mentionList.style.display !== 'none') {
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter') {
+                    e.preventDefault();
+                    handleMentionNavigation(e.key);
+                }
+            }
+        });
+    }
+    
+    function showMentionSuggestions(query, textarea) {
+        // Aqui você pode implementar uma chamada AJAX para buscar usuários
+        // Por enquanto, vamos usar uma lista estática de exemplo
+        const suggestions = ['admin', 'moderator', 'user1', 'user2']; // Exemplo
+        const filteredSuggestions = suggestions.filter(user => 
+            user.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        if (filteredSuggestions.length > 0) {
+            createMentionList(filteredSuggestions, textarea);
+        }
+    }
+    
+    function createMentionList(suggestions, textarea) {
+        hideMentionSuggestions();
+        
+        mentionList = document.createElement('div');
+        mentionList.className = 'mention-suggestions';
+        mentionList.style.cssText = `
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        `;
+        
+        suggestions.forEach((suggestion, index) => {
+            const item = document.createElement('div');
+            item.className = 'mention-suggestion-item';
+            item.style.cssText = `
+                padding: 8px 12px;
+                cursor: pointer;
+                border-bottom: 1px solid #f0f0f0;
+            `;
+            item.textContent = `@${suggestion}`;
+            item.dataset.username = suggestion;
+            
+            if (index === 0) item.style.backgroundColor = '#f8f9fa';
+            
+            item.addEventListener('click', () => {
+                insertMention(suggestion, textarea);
+                hideMentionSuggestions();
+            });
+            
+            mentionList.appendChild(item);
+        });
+        
+        // Posicionar a lista
+        const rect = textarea.getBoundingClientRect();
+        mentionList.style.left = rect.left + 'px';
+        mentionList.style.top = (rect.bottom + 5) + 'px';
+        mentionList.style.width = rect.width + 'px';
+        
+        document.body.appendChild(mentionList);
+    }
+    
+    function hideMentionSuggestions() {
+        if (mentionList) {
+            mentionList.remove();
+            mentionList = null;
+        }
+    }
+    
+    function handleMentionNavigation(key) {
+        const items = mentionList.querySelectorAll('.mention-suggestion-item');
+        const currentIndex = Array.from(items).findIndex(item => 
+            item.style.backgroundColor === 'rgb(248, 249, 250)'
+        );
+        
+        if (key === 'ArrowDown') {
+            const nextIndex = (currentIndex + 1) % items.length;
+            items[currentIndex].style.backgroundColor = '';
+            items[nextIndex].style.backgroundColor = '#f8f9fa';
+        } else if (key === 'ArrowUp') {
+            const prevIndex = currentIndex === 0 ? items.length - 1 : currentIndex - 1;
+            items[currentIndex].style.backgroundColor = '';
+            items[prevIndex].style.backgroundColor = '#f8f9fa';
+        } else if (key === 'Enter') {
+            const selectedItem = items[currentIndex];
+            if (selectedItem) {
+                insertMention(selectedItem.dataset.username, document.activeElement);
+                hideMentionSuggestions();
+            }
+        }
+    }
+    
+    function insertMention(username, textarea) {
+        const cursorPos = textarea.selectionStart;
+        const textBeforeCursor = textarea.value.substring(0, cursorPos);
+        const textAfterCursor = textarea.value.substring(cursorPos);
+        
+        // Encontrar a posição do @ mais recente
+        const lastAtPos = textBeforeCursor.lastIndexOf('@');
+        const newText = textBeforeCursor.substring(0, lastAtPos) + `@${username} ` + textAfterCursor;
+        
+        textarea.value = newText;
+        textarea.focus();
+        
+        // Posicionar o cursor após a menção
+        const newCursorPos = lastAtPos + username.length + 2; // +2 para @ e espaço
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }
+    
+    // Aplicar auto-complete aos campos de texto
+    textAreas.forEach(setupMentionAutocomplete);
+});
+</script>
+{% endblock content %}

@@ -1,0 +1,275 @@
+{% extends "layouts/base.html" %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .box-manager-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .box-manager-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #00d9ff;
+    text-align: center;
+    margin-bottom: 3rem;
+    text-shadow: 0 0 20px rgba(13, 217, 255, 0.5);
+  }
+
+  .stats-card {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #6f42c1;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(111, 66, 193, 0.3);
+    transition: all 0.3s ease;
+    color: #f8f9fa;
+    overflow: hidden;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .stats-card:hover {
+    transform: translateY(-5px);
+    border-color: #00d9ff;
+    box-shadow: 0 12px 40px rgba(13, 217, 255, 0.4);
+  }
+
+  .stats-title {
+    color: #f8f9fa;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .stats-number {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
+
+  .stats-primary {
+    color: #00d9ff;
+    text-shadow: 0 0 15px rgba(13, 217, 255, 0.5);
+  }
+
+  .stats-success {
+    color: #28a745;
+    text-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
+  }
+
+  .stats-danger {
+    color: #fd7e14;
+    text-shadow: 0 0 15px rgba(253, 126, 20, 0.5);
+  }
+
+  .action-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, #6f42c1, #e83e8c);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
+    width: 100%;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(111, 66, 193, 0.6);
+    color: white;
+    text-decoration: none;
+  }
+
+  .action-card {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #6f42c1;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(111, 66, 193, 0.3);
+    transition: all 0.3s ease;
+    color: #f8f9fa;
+    overflow: hidden;
+    text-align: center;
+    padding: 2rem;
+    height: 100%;
+  }
+
+  .action-card:hover {
+    transform: translateY(-5px);
+    border-color: #00d9ff;
+    box-shadow: 0 12px 40px rgba(13, 217, 255, 0.4);
+  }
+
+  .action-title {
+    color: #f8f9fa;
+    font-weight: 600;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .action-description {
+    color: #b8c2cc;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .create-btn {
+    background: linear-gradient(45deg, #fd7e14, #e83e8c);
+    box-shadow: 0 4px 15px rgba(253, 126, 20, 0.4);
+  }
+
+  .create-btn:hover {
+    box-shadow: 0 6px 20px rgba(253, 126, 20, 0.6);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .fade-in-up:nth-child(1) { animation-delay: 0.1s; }
+  .fade-in-up:nth-child(2) { animation-delay: 0.2s; }
+  .fade-in-up:nth-child(3) { animation-delay: 0.3s; }
+  .fade-in-up:nth-child(4) { animation-delay: 0.4s; }
+  .fade-in-up:nth-child(5) { animation-delay: 0.5s; }
+  .fade-in-up:nth-child(6) { animation-delay: 0.6s; }
+
+  @media (max-width: 768px) {
+    .box-manager-title {
+      font-size: 2rem;
+    }
+    
+    .stats-number {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="box-manager-bg">
+  <div class="container">
+    <h1 class="box-manager-title fade-in-up">
+      <i class="fas fa-boxes me-3"></i>
+      {% trans "Painel de Gerenciamento de Caixas" %}
+    </h1>
+
+    <!-- Estatísticas -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="stats-card fade-in-up">
+          <div class="stats-title">
+            <i class="fas fa-tags me-2"></i>
+            {% trans "Tipos de Caixas" %}
+          </div>
+          <div class="stats-number stats-primary">{{ box_type_count }}</div>
+          <a href="{% url 'games:box_type_list' %}" class="action-btn">
+            <i class="fas fa-eye me-2"></i>
+            {% trans "Ver Tipos de Caixa" %}
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="stats-card fade-in-up">
+          <div class="stats-title">
+            <i class="fas fa-box me-2"></i>
+            {% trans "Caixas Criadas" %}
+          </div>
+          <div class="stats-number stats-success">{{ box_count }}</div>
+          <a href="{% url 'games:box_list' %}" class="action-btn">
+            <i class="fas fa-eye me-2"></i>
+            {% trans "Ver Caixas" %}
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="stats-card fade-in-up">
+          <div class="stats-title">
+            <i class="fas fa-gem me-2"></i>
+            {% trans "Itens Cadastrados" %}
+          </div>
+          <div class="stats-number stats-danger">{{ item_count }}</div>
+          <a href="{% url 'games:item_list' %}" class="action-btn">
+            <i class="fas fa-eye me-2"></i>
+            {% trans "Ver Itens" %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ações rápidas -->
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="action-card fade-in-up">
+          <div class="action-title">
+            <i class="fas fa-plus-circle me-2"></i>
+            {% trans "Criar Tipo de Caixa" %}
+          </div>
+          <div class="action-description">
+            {% trans "Adicione um novo tipo de caixa com raridades e preços definidos." %}
+          </div>
+          <a href="{% url 'games:box_type_create' %}" class="action-btn create-btn">
+            <i class="fas fa-plus me-2"></i>
+            {% trans "Novo Tipo de Caixa" %}
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="action-card fade-in-up">
+          <div class="action-title">
+            <i class="fas fa-box-open me-2"></i>
+            {% trans "Criar Caixa" %}
+          </div>
+          <div class="action-description">
+            {% trans "Associe caixas aos usuários com base nos tipos existentes." %}
+          </div>
+          <a href="{% url 'games:box_create' %}" class="action-btn create-btn">
+            <i class="fas fa-plus me-2"></i>
+            {% trans "Nova Caixa" %}
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="action-card fade-in-up">
+          <div class="action-title">
+            <i class="fas fa-gem me-2"></i>
+            {% trans "Cadastrar Item" %}
+          </div>
+          <div class="action-description">
+            {% trans "Cadastre novos itens disponíveis para as caixas." %}
+          </div>
+          <a href="{% url 'games:item_create' %}" class="action-btn create-btn">
+            <i class="fas fa-plus me-2"></i>
+            {% trans "Novo Item" %}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

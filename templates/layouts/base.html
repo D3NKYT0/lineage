@@ -1,0 +1,118 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head> 
+  {% include 'includes/head.html' %}
+  {% block extrastyle %}{% endblock extrastyle %}
+  {% block extrahead %}{% endblock extrahead %}
+  <style>
+    .submenu-items .dropdown-item {
+      padding-left: 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  {% block nav %}
+    {% include 'includes/nav.html' %}
+  {% endblock nav %}
+
+  {% block sidebar %}
+    {% include 'includes/sidebar.html' %}
+  {% endblock sidebar %}
+
+  <main class="content">
+    {% include 'includes/floating-notifications.html' %}
+
+    {% block header %}
+      {% include 'includes/navigation.html' %}
+    {% endblock header %}
+
+    {% block content %}{% endblock content %}
+
+    {% block theme_settings %}{% endblock theme_settings %}
+
+    {% block footer %}
+      {% include 'includes/footer.html' %}
+    {% endblock footer %}
+  </main>
+
+  {% include "includes/notification.html" %}
+  {% include 'includes/scripts.html' %}
+  {% block extra_js %}{% endblock extra_js %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggle = document.getElementById('configToggle');
+      const submenu = document.getElementById('configSubmenu');
+  
+      toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation(); // impede o fechamento automático
+        submenu.classList.toggle('d-none');
+      });
+  
+      // Fecha o submenu quando o dropdown principal for fechado
+      document.querySelectorAll('.dropdown').forEach(dropdown => {
+        dropdown.addEventListener('hide.bs.dropdown', function () {
+          submenu.classList.add('d-none');
+        });
+      });
+    });
+  </script>
+  <script>
+    (function () {
+      const LOCK_URL = "{% url 'activate_lock' %}";
+      const LOCK_URL_ALT = "{% url 'lock' %}";
+      const INACTIVITY_MINUTES = 5;
+      const TIME_LIMIT = INACTIVITY_MINUTES * 60 * 1000; // 5 minutos em milissegundos
+
+      // Lista de caminhos permitidos (mesmos do middleware)
+      const ALLOWED_PATHS = [
+        "{{ settings.STATIC_URL }}",
+        "{{ settings.MEDIA_URL }}",
+        '/decrypted-file/',
+        '/public/',
+        '/wiki/',
+        '/pages/',
+        '/set-language/',
+        '/verify/',
+        '/components/',
+        '/accounts/',
+      ];
+
+      let inactivityTimer;
+
+      function isPathAllowed(path) {
+        return ALLOWED_PATHS.some(allowedPath => path.startsWith(allowedPath));
+      }
+
+      function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+          const currentPath = window.location.pathname;
+          
+          // Não redireciona se estiver em páginas de lock ou em caminhos permitidos
+          if (currentPath === LOCK_URL || 
+              currentPath === LOCK_URL_ALT || 
+              isPathAllowed(currentPath)) {
+            return;
+          }
+
+          // Usa o parâmetro next como Django faz
+          const fullPath = currentPath + window.location.search;
+          window.location.href = `${LOCK_URL}?next=${encodeURIComponent(fullPath)}`;
+        }, TIME_LIMIT);
+      }
+
+      // Atividade reinicia o timer
+      const activityEvents = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'];
+      activityEvents.forEach(event => {
+        document.addEventListener(event, resetInactivityTimer, true);
+      });
+
+      // Inicia o timer
+      resetInactivityTimer();
+    })();
+  </script>
+</body>
+</html>

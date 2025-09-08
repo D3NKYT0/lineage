@@ -1,0 +1,394 @@
+{% extends "layouts/base.html" %}
+{% load i18n l10n %}
+
+{% block extrastyle %}
+<style>
+  .reports-container {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+    color: #ffffff;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Particle effect background */
+  .reports-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.1), transparent),
+      radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.1), transparent),
+      radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.1), transparent),
+      radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.1), transparent),
+      radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.1), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: sparkle 20s linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes sparkle {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-100px); }
+  }
+
+  .dashboard-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .epic-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    border-radius: 25px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+    position: relative;
+    overflow: hidden;
+    animation: headerGlow 3s ease-in-out infinite alternate;
+  }
+
+  .epic-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes headerGlow {
+    0% { box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4); }
+    100% { box-shadow: 0 15px 50px rgba(102, 126, 234, 0.6); }
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+  }
+
+  .epic-header h1 {
+    color: #ffffff;
+    margin: 0;
+    font-weight: 800;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .epic-header p {
+    color: rgba(255,255,255,0.9);
+    margin: 1rem 0 0 0;
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .fancy-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.8s ease-out;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fancy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+  }
+
+  .fancy-card:hover::before {
+    left: 100%;
+  }
+
+  .character-info {
+    background: linear-gradient(135deg, rgba(111, 66, 193, 0.1) 0%, rgba(111, 66, 193, 0.05) 100%);
+    border: 1px solid rgba(111, 66, 193, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    backdrop-filter: blur(5px);
+  }
+
+  .character-name {
+    color: #6f42c1;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .unstuck-icon {
+    font-size: 4rem;
+    color: #ffc107;
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  .btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+    border: none;
+    border-radius: 15px;
+    padding: 1rem 2rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+    color: #ffffff;
+  }
+
+  .btn-warning:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+    background: linear-gradient(135deg, #e0a800 0%, #e55a00 100%);
+    color: #ffffff;
+  }
+
+  .btn-warning:active {
+    transform: translateY(0);
+  }
+
+  .alert {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(5px);
+  }
+
+  .alert-success {
+    border-color: rgba(40, 167, 69, 0.3);
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.05) 100%);
+  }
+
+  .alert-error, .alert-danger {
+    border-color: rgba(220, 53, 69, 0.3);
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(220, 53, 69, 0.05) 100%);
+  }
+
+  .alert-warning {
+    border-color: rgba(255, 193, 7, 0.3);
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+  }
+
+  .alert-info {
+    border-color: rgba(23, 162, 184, 0.3);
+    background: linear-gradient(135deg, rgba(23, 162, 184, 0.1) 0%, rgba(23, 162, 184, 0.05) 100%);
+  }
+
+  .service-info {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .service-info h6 {
+    color: #ffc107;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .service-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+  }
+
+  .service-info li {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .service-info li::before {
+    content: '⚠';
+    position: absolute;
+    left: 0;
+    color: #ffc107;
+    font-weight: bold;
+  }
+
+  .unstuck-description {
+    background: linear-gradient(135deg, rgba(23, 162, 184, 0.1) 0%, rgba(23, 162, 184, 0.05) 100%);
+    border: 1px solid rgba(23, 162, 184, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    backdrop-filter: blur(5px);
+  }
+
+  .unstuck-description h6 {
+    color: #17a2b8;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .unstuck-description p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .reports-container {
+      padding: 1rem 0;
+    }
+    
+    .epic-header {
+      padding: 1.5rem;
+      margin: 1rem;
+    }
+    
+    .epic-header h1 {
+      font-size: 2rem;
+    }
+    
+    .fancy-card {
+      padding: 1.5rem;
+      margin: 1rem;
+    }
+    
+    .unstuck-icon {
+      font-size: 3rem;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="dashboard-content">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+          
+          <!-- Header Épico -->
+          <div class="epic-header">
+            <h1>
+              <i class="fas fa-undo-alt me-3"></i>
+              {% trans "Desbugar Personagem" %}
+            </h1>
+            <p>
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              {% trans "Libere seu personagem de situações complicadas" %}
+            </p>
+          </div>
+
+          <!-- Formulário -->
+          <div class="fancy-card">
+            <!-- Informações do Personagem -->
+            <div class="character-info">
+              <div class="character-name">
+                <i class="fas fa-user me-2"></i>
+                {{ char_name }}
+              </div>
+            </div>
+
+            <!-- Descrição do Serviço -->
+            <div class="unstuck-description">
+              <h6>
+                <i class="fas fa-info-circle me-2"></i>
+                {% trans "O que este serviço faz?" %}
+              </h6>
+              <p>
+                {% trans "Este serviço irá teleportar seu personagem para uma localização segura, resolvendo problemas como travamentos, quedas em locais inacessíveis ou qualquer situação que impeça o movimento normal do personagem." %}
+              </p>
+            </div>
+
+            <!-- Ícone Animado -->
+            <div class="text-center mb-4">
+              <div class="unstuck-icon">
+                <i class="fas fa-undo-alt"></i>
+              </div>
+            </div>
+
+            <form method="POST">
+              {% csrf_token %}
+              
+              <div class="d-grid">
+                <button type="submit" class="btn btn-warning btn-lg">
+                  <i class="fas fa-magic me-2"></i>
+                  {% trans "Desbugar Personagem" %}
+                </button>
+              </div>
+            </form>
+
+            <!-- Mensagens -->
+            {% if messages %}
+              <div class="mt-4">
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }}">
+                    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' or message.tags == 'danger' %}exclamation-triangle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %} me-2"></i>
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <!-- Informações do Serviço -->
+            <div class="service-info">
+              <h6>
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                {% trans "Informações Importantes" %}
+              </h6>
+              <ul>
+                <li>{% trans "O personagem será teleportado para uma localização segura" %}</li>
+                <li>{% trans "Este serviço é gratuito e pode ser usado quando necessário" %}</li>
+                <li>{% trans "Use apenas quando realmente estiver travado" %}</li>
+                <li>{% trans "O personagem será desconectado brevemente durante o processo" %}</li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'wiki/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Buscar" %} - {% trans "Wiki" %}{% endblock %}
+
+{% block wiki_content %}
+<div class="wiki-search">
+    <div class="page-header mb-4">
+        <div class="page-title-section">
+            <h1 class="page-title">
+                <i class="fas fa-search"></i>
+                {% trans "Buscar no Wiki" %}
+            </h1>
+        </div>
+    </div>
+
+    <!-- Formulário de Busca -->
+    <div class="search-form mb-5">
+        <form method="get" action="{% url 'wiki:search' %}">
+            <div class="input-group">
+                <input type="text" 
+                       name="q" 
+                       value="{{ query }}" 
+                       class="form-control form-control-lg" 
+                       placeholder="{% trans 'Digite sua busca...' %}"
+                       required>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-search"></i>
+                    {% trans "Buscar" %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Resultados da Busca -->
+    {% if query %}
+    <div class="search-results">
+        <div class="results-header mb-4">
+            <h3>
+                <i class="fas fa-search"></i>
+                {% trans "Resultados da busca" %}
+            </h3>
+            <p class="text-muted">
+                {% if results_count %}
+                    {{ results_count }} {% trans "resultado(s) encontrado(s) para" %} "{{ query }}"
+                {% else %}
+                    {% trans "Nenhum resultado encontrado para" %} "{{ query }}"
+                {% endif %}
+            </p>
+        </div>
+
+        {% if pages or updates %}
+            <!-- Páginas Encontradas -->
+            {% if pages %}
+            <div class="search-section mb-5">
+                <h4>
+                    <i class="fas fa-file-alt"></i>
+                    {% trans "Páginas" %} ({{ pages.count }})
+                </h4>
+                <div class="row">
+                    {% for page in pages %}
+                    <div class="col-md-6 mb-3">
+                        <div class="search-result-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{% url 'wiki:page' page.slug %}" class="text-decoration-none">
+                                            {{ page.translations.first.title }}
+                                        </a>
+                                    </h5>
+                                    <p class="card-text">
+                                        {{ page.translations.first.content|striptags|truncatewords:20 }}
+                                    </p>
+                                    <div class="result-meta">
+                                        <span class="badge bg-secondary">{{ page.get_content_type_display }}</span>
+                                        {% if page.is_menu_item %}
+                                            <span class="badge bg-success">{% trans "Menu" %}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Atualizações Encontradas -->
+            {% if updates %}
+            <div class="search-section">
+                <h4>
+                    <i class="fas fa-sync"></i>
+                    {% trans "Atualizações" %} ({{ updates.count }})
+                </h4>
+                <div class="row">
+                    {% for update in updates %}
+                    <div class="col-md-6 mb-3">
+                        <div class="search-result-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{% url 'wiki:update_detail' update.pk %}" class="text-decoration-none">
+                                            v{{ update.version }} - {{ update.translations.first.title }}
+                                        </a>
+                                    </h5>
+                                    <p class="card-text">
+                                        {{ update.translations.first.content|striptags|truncatewords:20 }}
+                                    </p>
+                                    <div class="result-meta">
+                                        <span class="badge bg-primary">{{ update.release_date|date:"d/m/Y" }}</span>
+                                        {% if update.is_major %}
+                                            <span class="badge bg-warning">{% trans "Principal" %}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="no-results">
+                <div class="text-center">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4>{% trans "Nenhum resultado encontrado" %}</h4>
+                    <p class="text-muted">
+                        {% trans "Tente usar termos diferentes ou mais específicos." %}
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

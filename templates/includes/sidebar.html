@@ -1,0 +1,502 @@
+{% load i18n static admin_volt check_include %}
+
+<nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
+  <div class="sidebar-inner px-2 pt-2 pb-4">
+    <div class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
+      <div class="d-flex align-items-center">
+        <div class="avatar-lg me-4">
+          <div class="avatar-container" style="width: 4.5rem; height: 4.5rem; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255, 255, 255, 0.3); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); position: relative;">
+            {% if user.avatar %}
+              <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                   alt="User-Profile-Image" 
+                   style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+            {% else %}
+              <img alt="Image placeholder" 
+                   src="{% static 'assets/img/team/generic_user.png' %}"
+                   style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+            {% endif %}
+          </div>
+        </div>
+        <div class="d-block">
+          <h2 class="h5 mb-3">Olá, {{ request.user.username }}</h2>
+          <a href="{% url 'logout' %}" class="btn btn-secondary btn-sm d-inline-flex align-items-center">
+            <svg class="icon icon-xxs me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+            {% trans "Sair" %}
+          </a>
+        </div>
+      </div>
+      <div class="collapse-close d-md-none">
+        <a href="#sidebarMenu" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu"
+          aria-expanded="true" aria-label="Toggle navigation">
+          <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <ul class="nav flex-column pt-3 pt-md-0">
+      <li class="nav-item">
+        <a href="{% url 'index' %}" class="nav-link d-flex align-items-center">
+          <span class="sidebar-icon">
+            {% if site_logo %}
+              <img src="{{ site_logo.image.url }}" height="60" alt="{{ site_logo.name }}">
+            {% else %}
+              <img src="{% static 'assets/img/l2_logo.png' %}" height="60" alt="Lineage2 Logo" />
+            {% endif %}
+          </span>
+        </a>
+      </li>
+
+      <li class="nav-item {% if 'dashboard' in segment %}active{% endif %}">
+        <a href="{% url 'dashboard' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path d="M10 6a4 4 0 11-4 4 4 4 0 014-4z"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Início" %}</span>
+        </a>
+      </li>
+
+      <li class="nav-item {% if 'calendar' in segment %}active{% endif %}">
+        <a href="{% url 'calendary:calendar' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Calendário" %}</span>
+        </a>
+      </li>
+      <li class="nav-item {% if 'roadmap' in segment %}active{% endif %}">
+        <a href="{% url 'roadmap:index' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="5" width="14" height="10" rx="2" fill="currentColor"/>
+              <rect x="7" y="7" width="2" height="6" rx="1" fill="#fff"/>
+              <rect x="11" y="7" width="2" height="6" rx="1" fill="#fff"/>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Roadmap" %}</span>
+        </a>
+      </li>
+      
+      {% if user.is_authenticated %}
+
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      <li class="nav-item {% if 'shop' in segment %}active{% endif %}">
+        <a href="{% url 'shop:shop_home' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 3a1 1 0 000 2h1l1 9a2 2 0 002 2h6a2 2 0 002-2l1-9h1a1 1 0 100-2H4zm2 2h8l-1 9H7L6 5z"></path>
+              <path d="M9 13a1 1 0 102 0 1 1 0 00-2 0z"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Loja Online" %}</span>
+        </a>
+      </li>
+      
+      <li class="nav-item {% if 'history' in segment %}active{% endif %}">
+        <a href="{% url 'shop:purchase_history' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 2a1 1 0 000 2h8a1 1 0 100-2H6zM3 6a1 1 0 011-1h12a1 1 0 011 1v9a2 2 0 01-2 2H5a2 2 0 01-2-2V6zm2 1v8h10V7H5zm2 2h6a1 1 0 110 2H7a1 1 0 110-2z"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Histórico de Compras" %}</span>
+        </a>
+      </li>
+
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      <li class="nav-item {% if 'bag' in segment %}active{% endif %}">
+        <a href="{% url 'games:bag_dashboard' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 4a3 3 0 016 0h1a2 2 0 012 2v9a3 3 0 01-3 3H5a3 3 0 01-3-3V6a2 2 0 012-2h1zm3-1a1 1 0 00-1 1h2a1 1 0 00-1-1zm0 4a1 1 0 000 2h4a1 1 0 100-2H8z"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Minha Bag" %}</span>
+        </a>
+      </li>      
+
+      <li class="nav-item">
+        <span class="nav-link collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+          data-bs-target="#submenu-games">
+          <span>
+            <span class="sidebar-icon">
+              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 8h-4.184a3.001 3.001 0 00-5.632 0H7a5 5 0 000 10h1v-2H7a3 3 0 010-6h4.184a3.001 3.001 0 005.632 0H21a1 1 0 000-2zM9 13H8v1a1 1 0 11-2 0v-1H5a1 1 0 110-2h1v-1a1 1 0 112 0v1h1a1 1 0 110 2zm6.5-1.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm2.5 2a1 1 0 100-2 1 1 0 000 2z"/>
+              </svg>
+            </span>
+            {% trans "Games" %}
+            <span class="sidebar-text"></span>
+          </span>
+          <span class="link-arrow">
+            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </span>
+        </span>
+        <div class="multi-level collapse {% if 'games' in parent %}show{% endif %}" role="list" id="submenu-games" aria-expanded="false">
+          <ul class="flex-column nav">
+      
+            <li class="nav-item {% if 'top-level' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'games:roulette_page' %}">
+                <span class="sidebar-text">{% trans "Roleta" %}</span>
+              </a>
+            </li>
+
+            <li class="nav-item {% if 'box' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'games:box_user_dashboard' %}">
+                <span class="sidebar-text">{% trans "Caixas" %}</span>
+              </a>
+            </li>
+
+            <li class="nav-item {% if 'economy' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'games:economy-game' %}">
+                <span class="sidebar-text">{% trans "Economia Mortal" %}</span>
+              </a>
+            </li>
+      
+          </ul>
+        </div>
+      </li>  
+      
+      <li class="nav-item {% if 'battle-pass' in segment %}active{% endif %}">
+        <a href="{% url 'games:battle_pass' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 3a2 2 0 012-2h8a2 2 0 012 2v1H4V3zm0 3h12v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm6 2a1 1 0 100 2 1 1 0 000-2zm-2 3a1 1 0 100 2h4a1 1 0 100-2H8z" />
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Battle Pass" %}</span>
+        </a>
+      </li>
+
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      <li class="nav-item {% if 'faq' in segment %}active{% endif %}">
+        <a href="{% url 'faq:faq_list' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path d="M10 6a4 4 0 11-4 4 4 4 0 014-4z"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Ajuda (FAQ)" %}</span>
+        </a>
+      </li> 
+
+      <li class="nav-item {% if 'news' in segment %}active{% endif %}">
+        <a href="{% url 'news:index' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path d="M10 6a4 4 0 11-4 4 4 4 0 014-4z"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Notícias" %}</span>
+        </a>
+      </li> 
+
+      <li class="nav-item {% if 'message' in segment %}active{% endif %}">
+        <a href="{% url 'message:index' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path d="M10 6a4 4 0 11-4 4 4 4 0 014-4z"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Mensagens" %}</span>
+        </a>
+      </li> 
+
+      <li class="nav-item {% if 'solicitation' in segment %}active{% endif %}">
+        <a href="{% url 'solicitation:solicitation_list' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path d="M10 6a4 4 0 11-4 4 4 4 0 014-4z"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Solicitações" %}</span>
+        </a>
+      </li> 
+
+      <li class="nav-item {% if 'downloads' in segment %}active{% endif %}">
+        <a href="{% url 'downloads:internal_download_list' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Downloads" %}</span>
+        </a>
+      </li>
+
+      {% endif %}
+
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      <li class="nav-item">
+        <span class="nav-link  collapsed  d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+          data-bs-target="#submenu-tops">
+          <span>
+            <span class="sidebar-icon">
+              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 2a1 1 0 00-1 1v2a4 4 0 004 4h2a4 4 0 004-4V3a1 1 0 00-1-1H6zM4 5a2 2 0 01-2-2h2v2zm12-2h2a2 2 0 01-2 2V3z"></path>
+                <path fill-rule="evenodd" d="M4 13a6 6 0 0012 0H4zm6 3a3 3 0 003-3H7a3 3 0 003 3z" clip-rule="evenodd"></path>
+              </svg>
+            </span>            
+            {% trans "Tops" %}
+            <span class="sidebar-text"></span>
+          </span>
+          <span class="link-arrow">
+            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </span>
+        </span>
+        <div class="multi-level collapse {% if 'tops' in parent %}show{% endif %}" role="list" id="submenu-tops" aria-expanded="false">
+          <ul class="flex-column nav">
+
+            <li class="nav-item {% if 'top-level' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'server:top_level' %}">
+                <span class="sidebar-text">{% trans "Top Level" %}</span>
+              </a>
+            </li>
+            
+            <li class="nav-item {% if 'top-pk' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'server:top_pk' %}">
+                <span class="sidebar-text">{% trans "Top PK" %}</span>
+              </a>
+            </li>
+            
+            <li class="nav-item {% if 'top-pk' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'server:top_pvp' %}">
+                <span class="sidebar-text">{% trans "Top PVP" %}</span>
+              </a>
+            </li>
+            
+            <li class="nav-item {% if 'top-adena' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'server:top_adena' %}">
+                <span class="sidebar-text">{% trans "Top Adena" %}</span>
+              </a>
+            </li>
+            
+            <li class="nav-item {% if 'top-clans' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'server:top_clans' %}">
+                <span class="sidebar-text">{% trans "Top Clans" %}</span>
+              </a>
+            </li>
+            
+            <li class="nav-item {% if 'top-clans' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'server:top_online' %}">
+                <span class="sidebar-text">{% trans "Top Online" %}</span>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <span class="nav-link collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse"
+          data-bs-target="#submenu-heroes">
+          <span>
+            <span class="sidebar-icon">
+              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 2a1 1 0 00-1 1v2a4 4 0 004 4h2a4 4 0 004-4V3a1 1 0 00-1-1H6zM4 5a2 2 0 01-2-2h2v2zm12-2h2a2 2 0 01-2 2V3z"></path>
+                <path fill-rule="evenodd" d="M4 13a6 6 0 0012 0H4zm6 3a3 3 0 003-3H7a3 3 0 003 3z" clip-rule="evenodd"></path>
+              </svg>
+            </span>
+            {% trans "Heroes" %}
+            <span class="sidebar-text"></span>
+          </span>
+          <span class="link-arrow">
+            <svg class="icon icon-sm" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </span>
+        </span>
+        <div class="multi-level collapse {% if 'heroes' in parent %}show{% endif %}" role="list" id="submenu-heroes" aria-expanded="false">
+          <ul class="flex-column nav">
+      
+            <li class="nav-item {% if 'top-olympiad' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'server:olympiad_ranking' %}">
+                <span class="sidebar-text">{% trans "Top Olympiad" %}</span>
+              </a>
+            </li>
+            
+            <li class="nav-item {% if 'top-heroes-all' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'server:olympiad_all_heroes' %}">
+                <span class="sidebar-text">{% trans "All Heroes" %}</span>
+              </a>
+            </li>
+            
+            <li class="nav-item {% if 'top-heroes-current' in segment %}active{% endif %}">
+              <a class="nav-link" href="{% url 'server:olympiad_current_heroes' %}">
+                <span class="sidebar-text">{% trans "Current Heroes" %}</span>
+              </a>
+            </li>
+      
+          </ul>
+        </div>
+      </li>      
+
+      <li class="nav-item {% if 'siege' in segment %}active{% endif %}">
+        <a href="{% url 'server:siege_ranking' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 2c.55 0 1 .45 1 1v3h3c.55 0 1 .45 1 1s-.45 1-1 1h-3v3c0 .55-.45 1-1 1s-1-.45-1-1v-3H6c-.55 0-1-.45-1-1s.45-1 1-1h3V5c0-.55.45-1 1-1z" clip-rule="evenodd"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Castle Siege" %}</span>
+        </a>
+      </li>
+      
+      <li class="nav-item {% if 'boss-jewel' in segment %}active{% endif %}">
+        <a href="{% url 'server:boss_jewel_locations' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 2c.55 0 1 .45 1 1v3h3c.55 0 1 .45 1 1s-.45 1-1 1h-3v3c0 .55-.45 1-1 1s-1-.45-1-1v-3H6c-.55 0-1-.45-1-1s.45-1 1-1h3V5c0-.55.45-1 1-1z" clip-rule="evenodd"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Boss Jewel Locations" %}</span>
+        </a>
+      </li>
+
+      <li class="nav-item {% if 'grandboss-status' in segment %}active{% endif %}">
+        <a href="{% url 'server:grandboss' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c.55 0 1 .45 1 1v5h4c.55 0 1 .45 1 1s-.45 1-1 1h-5V6c0-.55.45-1 1-1z" clip-rule="evenodd"/>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Grand Boss Status" %}</span>
+        </a>
+      </li>
+
+      {% if request.user.is_superuser %}
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      <li class="nav-item">
+        <a href="{% url 'accountancy:dashboard' %}" class="nav-link d-flex align-items-center">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12H9v4a1 1 0 002 0V6zm0 6H9v2a1 1 0 002 0v-2z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Dashboard Contábil" %}</span>
+        </a>
+      </li>   
+
+      <li class="nav-item">
+        <a href="{% url 'reports:dashboard' %}" class="nav-link d-flex align-items-center">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12H9v4a1 1 0 002 0V6zm0 6H9v2a1 1 0 002 0v-2z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Dashboard de Relatórios" %}</span>
+        </a>
+      </li>
+
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      <li class="nav-item">
+        <a href="{% url 'auditor:auditor' %}" class="nav-link d-flex align-items-center">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Auditoria" %}</span>
+        </a>
+      </li>
+      
+      <!-- Logs Info -->
+      <li class="nav-item">
+        <a href="{% url 'log_info_dashboard' %}" class="nav-link d-flex align-items-center">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M9 6h2v8H9z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M9 10h2v2H9z" clip-rule="evenodd"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Logs de Informação" %}</span>
+        </a>
+      </li>
+
+      <!-- Logs Errors -->
+      <li class="nav-item">
+        <a href="{% url 'log_error_dashboard' %}" class="nav-link d-flex align-items-center">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M9 6h2v8H9z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M9 10h2v2H9z" clip-rule="evenodd"></path>
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Logs de Erro" %}</span>
+        </a>
+      </li>
+
+      {% endif %}
+
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      <li class="nav-item">
+        <div class="nav-link d-flex align-items-center justify-content-center">
+          <span class="sidebar-text text-muted small">v{{ version }}</span>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .nav-item .nav-link{
+    min-width: 100%;
+  }
+
+  .nav-link {
+    width: fit-content;
+    padding: 8px !important;
+    max-width: 100%;
+    text-wrap: wrap;
+  }
+  
+  
+  .sidebar__support-btn {
+    height: 140px !important;
+    width: 100px !important;
+    background-color: #1F2937 !important;
+  }
+</style>

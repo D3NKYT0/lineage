@@ -1,0 +1,702 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block extrahead %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .profile-container {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .profile-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    border: 2px solid #6f42c1;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .profile-header {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .profile-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .profile-avatar-container {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    margin: 0 auto 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .profile-subtitle {
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  .profile-body {
+    padding: 2rem;
+  }
+
+  .info-section {
+    margin-bottom: 2rem;
+  }
+
+  .info-section h4 {
+    color: #6f42c1;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-left: 4px solid #6f42c1;
+    padding-left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .info-item {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .info-item:hover {
+    border-color: #6f42c1;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .info-label {
+    font-weight: 600;
+    color: #6f42c1;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .info-value {
+    font-size: 1.1rem;
+    color: #495057;
+    font-weight: 500;
+    word-break: break-word;
+  }
+
+  .info-value.empty {
+    color: #6c757d;
+    font-style: italic;
+  }
+
+  .bio-content {
+    background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border-left: 4px solid #6f42c1;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+
+  .btn-elegant {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-primary-elegant {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.3);
+  }
+
+  .btn-primary-elegant:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(111, 66, 193, 0.4);
+    color: white;
+  }
+
+  .btn-secondary-elegant {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+  }
+
+  .btn-secondary-elegant:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+    color: white;
+  }
+
+  .btn-warning-elegant {
+    background: linear-gradient(135deg, #ffc107, #fd7e14);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+  }
+
+  .btn-warning-elegant:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.4);
+    color: white;
+  }
+
+  .btn-info-elegant {
+    background: linear-gradient(135deg, #17a2b8, #20c997);
+    color: white;
+    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+  }
+
+  .btn-info-elegant:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+    color: white;
+  }
+
+  .status-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 2px solid;
+    transition: all 0.3s ease;
+  }
+
+  .status-card.warning {
+    border-color: #ffc107;
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  }
+
+  .status-card.info {
+    border-color: #17a2b8;
+    background: linear-gradient(135deg, #d1ecf1, #b8e6e6);
+  }
+
+  .status-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .status-description {
+    color: #495057;
+    margin-bottom: 1rem;
+  }
+
+  .progress-indicator {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 2px solid #e9ecef;
+  }
+
+  .progress-title {
+    font-weight: 600;
+    color: #6f42c1;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .progress-bar-container {
+    background: #e9ecef;
+    border-radius: 10px;
+    height: 12px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6f42c1, #e83e8c);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+  }
+
+  .progress-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-align: center;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    border-color: #6f42c1;
+    transform: translateY(-2px);
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+    color: #6f42c1;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #495057;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+  }
+
+  .verified-badge {
+    background: rgba(40, 167, 69, 0.1);
+    border: 2px solid rgba(40, 167, 69, 0.3);
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+    display: inline-flex;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    animation: verifiedPulse 2s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+  }
+
+  .verified-badge i {
+    color: #28a745;
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    animation: verifiedShine 3s ease-in-out infinite;
+  }
+
+  .verified-badge span {
+    color: #28a745;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  @keyframes verifiedPulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+  }
+
+  @keyframes verifiedShine {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .profile-body {
+      padding: 1.5rem;
+    }
+    
+    .profile-header {
+      padding: 2rem 1.5rem;
+    }
+    
+    .profile-name {
+      font-size: 1.5rem;
+    }
+    
+    .action-buttons {
+      flex-direction: column;
+    }
+    
+    .btn-elegant {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+{% endblock extrahead %}
+
+{% block content %}
+<div class="profile-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <!-- Profile Header Card -->
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar-container">
+              {% if user.avatar %}
+                <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}"
+                     alt="{% trans 'Imagem de perfil' %}" class="avatar-image">
+              {% else %}
+                <img class="avatar-image"
+                     alt="{% trans 'Imagem de perfil padrão' %}"
+                     src="{% static 'assets/img/team/generic_user.png' %}">
+              {% endif %}
+            </div>
+            <h1 class="profile-name">{{ user.username }}</h1>
+            <p class="profile-subtitle">
+              {% if user.first_name and user.last_name %}
+                {{ user.first_name }} {{ user.last_name }}
+              {% else %}
+                {% trans "Jogador" %}
+              {% endif %}
+            </p>
+            {% if user.is_verified_account %}
+              <div class="verified-badge">
+                <i class="fas fa-check-circle"></i>
+                <span>{% trans "Conta Verificada" %}</span>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="profile-body">
+            <!-- Progress Indicator -->
+            {% if not user.first_name or not user.last_name or not user.bio %}
+              <div class="progress-indicator">
+                <div class="progress-title">
+                  <i class="fas fa-chart-line"></i>
+                  {% trans "Progresso do Perfil" %}
+                </div>
+                <div class="progress-bar-container">
+                  {% if not user.first_name and not user.last_name and not user.bio %}
+                    <div class="progress-bar-fill" style="width: 0%;"></div>
+                  {% elif not user.first_name or not user.last_name %}
+                    <div class="progress-bar-fill" style="width: 33%;"></div>
+                  {% elif not user.bio %}
+                    <div class="progress-bar-fill" style="width: 66%;"></div>
+                  {% endif %}
+                </div>
+                <div class="progress-text">
+                  {% if not user.first_name and not user.last_name and not user.bio %}
+                    {% trans "0/3 campos preenchidos" %}
+                  {% elif not user.first_name or not user.last_name %}
+                    {% trans "1/3 campos preenchidos" %}
+                  {% elif not user.bio %}
+                    {% trans "2/3 campos preenchidos" %}
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div class="stat-value">
+                  {% if user.is_email_verified %}
+                    <i class="fas fa-check-circle text-success"></i>
+                  {% else %}
+                    <i class="fas fa-times-circle text-warning"></i>
+                  {% endif %}
+                </div>
+                <div class="stat-label">{% trans "E-mail Verificado" %}</div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="stat-value">
+                  {% if user.is_2fa_enabled %}
+                    <i class="fas fa-check-circle text-success"></i>
+                  {% else %}
+                    <i class="fas fa-times-circle text-warning"></i>
+                  {% endif %}
+                </div>
+                <div class="stat-label">{% trans "2FA Ativo" %}</div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="stat-value">
+                  {% if user.addresses.exists %}
+                    <i class="fas fa-check-circle text-success"></i>
+                  {% else %}
+                    <i class="fas fa-times-circle text-warning"></i>
+                  {% endif %}
+                </div>
+                <div class="stat-label">{% trans "Endereço" %}</div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-heart"></i>
+                </div>
+                <div class="stat-value">
+                  {% if user.bio %}
+                    <i class="fas fa-check-circle text-success"></i>
+                  {% else %}
+                    <i class="fas fa-times-circle text-warning"></i>
+                  {% endif %}
+                </div>
+                <div class="stat-label">{% trans "Bio" %}</div>
+              </div>
+            </div>
+
+            <!-- Personal Information -->
+            <div class="info-section">
+              <h4><i class="fas fa-user"></i> {% trans "Informações Pessoais" %}</h4>
+              <div class="info-grid">
+                <div class="info-item">
+                  <div class="info-label">
+                    <i class="fas fa-envelope"></i> {% trans "E-mail" %}
+                  </div>
+                  <div class="info-value {% if not user.email %}empty{% endif %}">
+                    {% if user.email %}{{ user.email }}{% else %}{% trans 'Não informado' %}{% endif %}
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <div class="info-label">
+                    <i class="fas fa-user-circle"></i> {% trans "Nome" %}
+                  </div>
+                  <div class="info-value {% if not user.first_name %}empty{% endif %}">
+                    {% if user.first_name %}{{ user.first_name }}{% else %}{% trans 'Não informado' %}{% endif %}
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <div class="info-label">
+                    <i class="fas fa-user-circle"></i> {% trans "Sobrenome" %}
+                  </div>
+                  <div class="info-value {% if not user.last_name %}empty{% endif %}">
+                    {% if user.last_name %}{{ user.last_name }}{% else %}{% trans 'Não informado' %}{% endif %}
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <div class="info-label">
+                    <i class="fas fa-id-card"></i> {% trans "CPF" %}
+                  </div>
+                  <div class="info-value {% if not user.cpf %}empty{% endif %}">
+                    {% if user.cpf %}{{ user.cpf }}{% else %}{% trans 'Não informado' %}{% endif %}
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <div class="info-label">
+                    <i class="fas fa-venus-mars"></i> {% trans "Gênero" %}
+                  </div>
+                  <div class="info-value {% if not user.gender %}empty{% endif %}">
+                    {% if user.gender %}
+                      {% if user.gender == 'male' %}{% trans 'Masculino' %}
+                      {% elif user.gender == 'female' %}{% trans 'Feminino' %}
+                      {% elif user.gender == 'non_binary' %}{% trans 'Não Binário' %}
+                      {% else %}{% trans 'Prefiro não dizer' %}
+                      {% endif %}
+                    {% else %}
+                      {% trans 'Não informado' %}
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <div class="info-label">
+                    <i class="fas fa-globe"></i> {% trans "Website" %}
+                  </div>
+                  <div class="info-value {% if not user.website %}empty{% endif %}">
+                    {% if user.website %}
+                      <a href="{{ user.website }}" target="_blank" class="text-decoration-none">
+                        {{ user.website }}
+                        <i class="fas fa-external-link-alt ms-1"></i>
+                      </a>
+                    {% else %}
+                      {% trans 'Não informado' %}
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="info-item">
+                  <div class="info-label">
+                    <i class="fas fa-map-marker-alt"></i> {% trans "Endereço" %}
+                  </div>
+                  <div class="info-value {% if not user.addresses.exists %}empty{% endif %}">
+                    {% if user.addresses.exists %}
+                      {{ user.addresses.first }}
+                    {% else %}
+                      {% trans 'Não informado' %}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bio Section -->
+            {% if user.bio %}
+              <div class="info-section">
+                <h4><i class="fas fa-heart"></i> {% trans "Sobre Você" %}</h4>
+                <div class="bio-content">
+                  {{ user.bio }}
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+              <a href="{% url 'edit_profile' %}" class="btn-elegant btn-primary-elegant">
+                <i class="fas fa-edit"></i> {% trans 'Editar Perfil' %}
+              </a>
+              <a href="{% url 'edit_avatar' %}" class="btn-elegant btn-secondary-elegant">
+                <i class="fas fa-camera"></i> {% trans 'Editar Avatar' %}
+              </a>
+              <a href="{% url 'add_or_edit_address' %}" class="btn-elegant btn-secondary-elegant">
+                <i class="fas fa-map-marker-alt"></i>
+                {% if user.addresses.exists %}
+                  {% trans 'Editar Endereço' %}
+                {% else %}
+                  {% trans 'Cadastrar Endereço' %}
+                {% endif %}
+              </a>
+              <a href="{% url 'message:friends_list' %}" class="btn-elegant btn-info-elegant">
+                <i class="fas fa-users"></i> {% trans 'Ver Amigos' %}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Cards -->
+        {% if not user.is_email_verified or not user.is_2fa_enabled %}
+          <div class="profile-card">
+            <div class="profile-body">
+              <h4><i class="fas fa-exclamation-triangle"></i> {% trans "Configurações de Segurança" %}</h4>
+              
+              {% if not user.is_email_verified %}
+                <div class="status-card warning">
+                  <div class="status-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    {% trans 'E-mail não verificado' %}
+                  </div>
+                  <div class="status-description">
+                    {% trans 'Seu e-mail ainda não foi verificado. Verifique sua caixa de entrada ou spam.' %}
+                  </div>
+                  <form method="post" action="{% url 'reenviar_verificacao' %}" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="email" value="{{ user.email }}">
+                    <button type="submit" class="btn-elegant btn-warning-elegant">
+                      <i class="fas fa-paper-plane"></i> {% trans 'Reenviar Verificação' %}
+                    </button>
+                  </form>
+                </div>
+              {% endif %}
+
+              {% if not user.is_2fa_enabled %}
+                <div class="status-card info">
+                  <div class="status-title">
+                    <i class="fas fa-shield-alt"></i>
+                    {% trans '2FA Desativado' %}
+                  </div>
+                  <div class="status-description">
+                    {% trans 'A autenticação em duas etapas ainda não está ativada em sua conta.' %}
+                  </div>
+                  <form method="post" action="{% url 'ativar_2fa' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-elegant btn-info-elegant">
+                      <i class="fas fa-lock"></i> {% trans 'Ativar 2FA' %}
+                    </button>
+                  </form>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.7/dist/inputmask.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var cpfField = document.getElementById('cpf');
+    if (cpfField) {
+      var im = new Inputmask('999.999.999-99');
+      im.mask(cpfField);
+    }
+  });
+</script>
+{% endblock content %}

@@ -1,0 +1,610 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %} {% trans "Filtros de Conteúdo" %} {% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Cabeçalho -->
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">
+            <i class="bi bi-funnel text-primary"></i> {% trans "Filtros de Conteúdo" %}
+          </h4>
+          <div>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#createFilterModal">
+              <i class="bi bi-plus-circle"></i> {% trans "Novo Filtro" %}
+            </button>
+            <a href="{% url 'social:moderation_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-arrow-left"></i> {% trans "Voltar ao Dashboard" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                {% trans "Total de Filtros" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_filters }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-funnel fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                {% trans "Ativos" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ active_filters }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-check-circle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                {% trans "Total de Correspondências" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_matches }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-search fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                {% trans "Última Atividade" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">
+                {% if last_activity %}
+                  {{ last_activity|date:"d/m/Y H:i" }}
+                {% else %}
+                  {% trans "Nunca" %}
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Teste de filtro -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-search"></i> {% trans "Testar Filtro" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          <form method="post" action="{% url 'social:test_content_filter' %}" id="testFilterForm">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-4">
+                <label for="test_pattern" class="form-label">{% trans "Padrão" %}</label>
+                <input type="text" class="form-control" id="test_pattern" name="pattern" 
+                       value="{{ test_pattern|default:'' }}" 
+                       placeholder="{% trans 'Digite o padrão para testar...' %}">
+              </div>
+              <div class="col-md-3">
+                <label for="test_filter_type" class="form-label">{% trans "Tipo" %}</label>
+                <select class="form-control" id="test_filter_type" name="filter_type">
+                  <option value="keyword" {% if test_filter_type == 'keyword' %}selected{% endif %}>{% trans "Palavra-chave" %}</option>
+                  <option value="regex" {% if test_filter_type == 'regex' %}selected{% endif %}>{% trans "Expressão Regular" %}</option>
+                  <option value="spam_pattern" {% if test_filter_type == 'spam_pattern' %}selected{% endif %}>{% trans "Padrão de Spam" %}</option>
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label for="test_content" class="form-label">{% trans "Conteúdo para Testar" %}</label>
+                <input type="text" class="form-control" id="test_content" name="content" 
+                       value="{{ test_content|default:'' }}" 
+                       placeholder="{% trans 'Digite o conteúdo...' %}">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary w-100">
+                  <i class="bi bi-search"></i> {% trans "Testar" %}
+                </button>
+              </div>
+            </div>
+          </form>
+          
+          {% if test_result is not None %}
+            <div class="mt-3">
+              <div class="alert alert-{% if test_result %}warning{% else %}success{% endif %} d-flex align-items-center">
+                <div class="me-3">
+                  {% if test_result %}
+                    <i class="bi bi-exclamation-triangle fs-4"></i>
+                  {% else %}
+                    <i class="bi bi-check-circle fs-4"></i>
+                  {% endif %}
+                </div>
+                <div class="flex-grow-1">
+                  <h6 class="alert-heading mb-1">{% trans "Resultado do Teste" %}</h6>
+                  {% if test_result %}
+                    <strong>⚠️ {% trans "FILTRO ACIONADO!" %}</strong><br>
+                    <small>{% trans "O conteúdo seria detectado pelo filtro e sofreria ação de moderação." %}</small>
+                  {% else %}
+                    <strong>✅ {% trans "CONTEÚDO APROVADO" %}</strong><br>
+                    <small>{% trans "O conteúdo não corresponde ao padrão e passaria pela moderação." %}</small>
+                  {% endif %}
+                  <br>
+                  <small class="text-muted">
+                    <strong>{% trans "Padrão testado" %}:</strong> "{{ test_pattern }}" 
+                    ({{ test_filter_type|title }})
+                  </small>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de filtros -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            {% trans "Filtros Configurados" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          {% if filters %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>{% trans "Nome" %}</th>
+                    <th>{% trans "Tipo" %}</th>
+                    <th>{% trans "Padrão" %}</th>
+                    <th>{% trans "Ação" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Correspondências" %}</th>
+                    <th>{% trans "Última Atividade" %}</th>
+                    <th>{% trans "Ações" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for filter in filters %}
+                  <tr>
+                    <td>
+                      <strong>{{ filter.name }}</strong>
+                      {% if filter.description %}
+                        <br><small class="text-muted">{{ filter.description }}</small>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <span class="badge bg-{% if filter.filter_type == 'keyword' %}primary{% elif filter.filter_type == 'regex' %}info{% elif filter.filter_type == 'spam_pattern' %}warning{% else %}secondary{% endif %}">
+                        {{ filter.get_filter_type_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <code class="small">{{ filter.pattern|truncatechars:30 }}</code>
+                      {% if filter.case_sensitive %}
+                        <br><small class="text-muted">{% trans "Sensível a maiúsculas/minúsculas" %}</small>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <span class="badge bg-{% if filter.action == 'flag' %}info{% elif filter.action == 'auto_hide' %}warning{% elif filter.action == 'auto_delete' %}danger{% else %}secondary{% endif %}">
+                        {{ filter.get_action_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="filter_{{ filter.id }}" 
+                               {% if filter.is_active %}checked{% endif %}
+                               onchange="toggleFilter({{ filter.id }}, this.checked)">
+                        <label class="form-check-label" for="filter_{{ filter.id }}">
+                          {% if filter.is_active %}
+                            <span class="text-success">{% trans "Ativo" %}</span>
+                          {% else %}
+                            <span class="text-muted">{% trans "Inativo" %}</span>
+                          {% endif %}
+                        </label>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge bg-secondary">{{ filter.matches_count }}</span>
+                      {% if filter.last_matched %}
+                        <br><small class="text-muted">{{ filter.last_matched|date:"d/m/Y" }}</small>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <small class="text-muted">{{ filter.created_at|date:"d/m/Y" }}</small>
+                    </td>
+                    <td>
+                      <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-primary" 
+                                onclick="editFilter({{ filter.id }}, '{{ filter.name }}', '{{ filter.pattern }}', '{{ filter.filter_type }}', '{{ filter.action }}', '{{ filter.description|default:"" }}', {{ filter.case_sensitive|yesno:"true,false" }}, {{ filter.apply_to_posts|yesno:"true,false" }}, {{ filter.apply_to_comments|yesno:"true,false" }}, {{ filter.apply_to_usernames|yesno:"true,false" }})"
+                                title="{% trans 'Editar' %}">
+                          <i class="bi bi-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" 
+                                onclick="deleteFilter({{ filter.id }}, '{{ filter.name }}')"
+                                title="{% trans 'Excluir' %}">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="text-center py-5">
+              <i class="bi bi-funnel fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">{% trans "Nenhum filtro configurado" %}</h5>
+              <p class="text-muted">{% trans "Clique em 'Novo Filtro' para criar seu primeiro filtro de conteúdo." %}</p>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createFilterModal">
+                <i class="bi bi-plus-circle"></i> {% trans "Criar Primeiro Filtro" %}
+              </button>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para criar filtro -->
+<div class="modal fade" id="createFilterModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Novo Filtro de Conteúdo" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="post" action="{% url 'social:content_filters' %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              {{ filter_form.name.label_tag }}
+              {{ filter_form.name }}
+              {% if filter_form.name.errors %}
+                <div class="text-danger small">{{ filter_form.name.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              {{ filter_form.filter_type.label_tag }}
+              {{ filter_form.filter_type }}
+              {% if filter_form.filter_type.errors %}
+                <div class="text-danger small">{{ filter_form.filter_type.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-12">
+              {{ filter_form.pattern.label_tag }}
+              {{ filter_form.pattern }}
+              {% if filter_form.pattern.errors %}
+                <div class="text-danger small">{{ filter_form.pattern.errors.0 }}</div>
+              {% endif %}
+              <div class="form-text">{{ filter_form.pattern.help_text }}</div>
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-md-6">
+              {{ filter_form.action.label_tag }}
+              {{ filter_form.action }}
+              {% if filter_form.action.errors %}
+                <div class="text-danger small">{{ filter_form.action.errors.0 }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6">
+              {{ filter_form.description.label_tag }}
+              {{ filter_form.description }}
+              {% if filter_form.description.errors %}
+                <div class="text-danger small">{{ filter_form.description.errors.0 }}</div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-md-3">
+              <div class="form-check">
+                {{ filter_form.case_sensitive }}
+                {{ filter_form.case_sensitive.label_tag }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-check">
+                {{ filter_form.apply_to_posts }}
+                {{ filter_form.apply_to_posts.label_tag }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-check">
+                {{ filter_form.apply_to_comments }}
+                {{ filter_form.apply_to_comments.label_tag }}
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-check">
+                {{ filter_form.apply_to_usernames }}
+                {{ filter_form.apply_to_usernames.label_tag }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancelar" %}</button>
+          <button type="submit" class="btn btn-primary">{% trans "Criar Filtro" %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para editar filtro -->
+<div class="modal fade" id="editFilterModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Editar Filtro" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="post" id="editFilterForm">
+        {% csrf_token %}
+        <div class="modal-body">
+          <input type="hidden" id="edit_filter_id" name="filter_id">
+          
+          <div class="row">
+            <div class="col-md-6">
+              <label for="edit_name" class="form-label">{% trans "Nome" %}</label>
+              <input type="text" class="form-control" id="edit_name" name="name" required>
+            </div>
+            <div class="col-md-6">
+              <label for="edit_filter_type" class="form-label">{% trans "Tipo de Filtro" %}</label>
+              <select class="form-control" id="edit_filter_type" name="filter_type" required>
+                <option value="keyword">{% trans "Palavra-chave" %}</option>
+                <option value="regex">{% trans "Expressão Regular" %}</option>
+                <option value="spam_pattern">{% trans "Padrão de Spam" %}</option>
+                <option value="url_pattern">{% trans "Padrão de URL" %}</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-12">
+              <label for="edit_pattern" class="form-label">{% trans "Padrão" %}</label>
+              <textarea class="form-control" id="edit_pattern" name="pattern" rows="3" required></textarea>
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <label for="edit_action" class="form-label">{% trans "Ação" %}</label>
+              <select class="form-control" id="edit_action" name="action" required>
+                <option value="flag">{% trans "Marcar para Revisão" %}</option>
+                <option value="auto_hide">{% trans "Ocultar Automaticamente" %}</option>
+                <option value="auto_delete">{% trans "Deletar Automaticamente" %}</option>
+                <option value="notify_moderator">{% trans "Notificar Moderador" %}</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="edit_description" class="form-label">{% trans "Descrição" %}</label>
+              <textarea class="form-control" id="edit_description" name="description" rows="3"></textarea>
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-md-3">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="edit_case_sensitive" name="case_sensitive">
+                <label class="form-check-label" for="edit_case_sensitive">{% trans "Sensível a Maiúsculas/Minúsculas" %}</label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="edit_apply_to_posts" name="apply_to_posts">
+                <label class="form-check-label" for="edit_apply_to_posts">{% trans "Aplicar a Posts" %}</label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="edit_apply_to_comments" name="apply_to_comments">
+                <label class="form-check-label" for="edit_apply_to_comments">{% trans "Aplicar a Comentários" %}</label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="edit_apply_to_usernames" name="apply_to_usernames">
+                <label class="form-check-label" for="edit_apply_to_usernames">{% trans "Aplicar a Nomes de Usuário" %}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancelar" %}</button>
+          <button type="submit" class="btn btn-primary">{% trans "Salvar Alterações" %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Função para alternar status do filtro
+function toggleFilter(filterId, isActive) {
+    fetch(`/social/moderation/filters/${filterId}/toggle/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({ is_active: isActive })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('{% trans "Erro ao atualizar filtro:" %} ' + data.error);
+            // Reverter o checkbox
+            document.getElementById(`filter_${filterId}`).checked = !isActive;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('{% trans "Erro ao processar a requisição." %}');
+        // Reverter o checkbox
+        document.getElementById(`filter_${filterId}`).checked = !isActive;
+    });
+}
+
+// Função para editar filtro
+function editFilter(id, name, pattern, filterType, action, description, caseSensitive, applyToPosts, applyToComments, applyToUsernames) {
+    document.getElementById('edit_filter_id').value = id;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_pattern').value = pattern;
+    document.getElementById('edit_filter_type').value = filterType;
+    document.getElementById('edit_action').value = action;
+    document.getElementById('edit_description').value = description;
+    document.getElementById('edit_case_sensitive').checked = caseSensitive;
+    document.getElementById('edit_apply_to_posts').checked = applyToPosts;
+    document.getElementById('edit_apply_to_comments').checked = applyToComments;
+    document.getElementById('edit_apply_to_usernames').checked = applyToUsernames;
+    
+    document.getElementById('editFilterForm').action = `/social/moderation/filters/${id}/edit/`;
+    
+    new bootstrap.Modal(document.getElementById('editFilterModal')).show();
+}
+
+// Função para excluir filtro
+function deleteFilter(filterId, filterName) {
+    if (confirm(`{% trans "Tem certeza que deseja excluir o filtro" %} "${filterName}"?`)) {
+        fetch(`/social/moderation/filters/${filterId}/delete/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('{% trans "Erro ao excluir filtro:" %} ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('{% trans "Erro ao processar a requisição." %}');
+        });
+    }
+}
+
+// Validação do formulário de teste
+document.getElementById('testFilterForm').addEventListener('submit', function(e) {
+    const pattern = document.getElementById('test_pattern').value.trim();
+    const content = document.getElementById('test_content').value.trim();
+    const filterType = document.getElementById('test_filter_type').value;
+    
+    if (!pattern) {
+        e.preventDefault();
+        alert('{% trans "Digite um padrão para testar." %}');
+        return;
+    }
+    
+    if (!content) {
+        e.preventDefault();
+        alert('{% trans "Digite conteúdo para testar." %}');
+        return;
+    }
+    
+    if (filterType === 'regex') {
+        try {
+            new RegExp(pattern);
+        } catch (error) {
+            e.preventDefault();
+            alert('{% trans "Expressão regular inválida:" %} ' + error.message);
+            return;
+        }
+    }
+});
+</script>
+
+<style>
+.badge {
+    font-size: 0.75em;
+}
+
+.form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.border-left-primary {
+    border-left: 0.25rem solid #007bff !important;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid #28a745 !important;
+}
+
+.border-left-warning {
+    border-left: 0.25rem solid #ffc107 !important;
+}
+
+.border-left-info {
+    border-left: 0.25rem solid #17a2b8 !important;
+}
+
+code {
+    background-color: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,.075);
+}
+</style>
+{% endblock content %}

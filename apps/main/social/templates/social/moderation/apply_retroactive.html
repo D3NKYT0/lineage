@@ -1,0 +1,422 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %} {% trans "Aplicar Filtros Retroativos" %} {% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Cabeçalho -->
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">
+            <i class="bi bi-arrow-clockwise text-warning"></i> {% trans "Aplicar Filtros Retroativos" %}
+          </h4>
+          <a href="{% url 'social:moderation_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> {% trans "Voltar ao Dashboard" %}
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            <strong>{% trans "O que são Filtros Retroativos?" %}</strong><br>
+            {% trans "Esta ferramenta aplica os filtros de moderação atuais a todo o conteúdo já existente no sistema (posts e comentários criados antes da ativação dos filtros)." %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estatísticas -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card bg-primary text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title">{% trans "Filtros Ativos" %}</h6>
+              <h3>{{ active_filters.count }}</h3>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-shield-check fs-1"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title">{% trans "Posts Total" %}</h6>
+              <h3 id="total-posts">...</h3>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-file-post fs-1"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-success text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title">{% trans "Comentários Total" %}</h6>
+              <h3 id="total-comments">...</h3>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-chat-dots fs-1"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-warning text-white">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div>
+              <h6 class="card-title">{% trans "Tempo Estimado" %}</h6>
+              <h3 id="estimated-time">...</h3>
+            </div>
+            <div class="align-self-center">
+              <i class="bi bi-clock fs-1"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulário -->
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-gear"></i> {% trans "Configurações da Aplicação" %}
+          </h5>
+        </div>
+        <div class="card-body">
+          <form id="retroactive-form" method="post">
+            {% csrf_token %}
+            
+            <!-- Tipo de Conteúdo -->
+            <div class="mb-3">
+              <label for="content_type" class="form-label">
+                <i class="bi bi-file-earmark-text"></i> {% trans "Tipo de Conteúdo" %}
+              </label>
+              <select class="form-control" id="content_type" name="content_type" required>
+                <option value="all">{% trans "Todos (Posts + Comentários)" %}</option>
+                <option value="posts">{% trans "Apenas Posts" %}</option>
+                <option value="comments">{% trans "Apenas Comentários" %}</option>
+              </select>
+              <div class="form-text">
+                {% trans "Escolha que tipo de conteúdo será analisado pelos filtros" %}
+              </div>
+            </div>
+
+            <!-- Filtro Específico -->
+            <div class="mb-3">
+              <label for="filter_id" class="form-label">
+                <i class="bi bi-funnel"></i> {% trans "Filtro Específico" %} 
+                <span class="text-muted">({% trans "Opcional" %})</span>
+              </label>
+              <select class="form-control" id="filter_id" name="filter_id">
+                <option value="">{% trans "Aplicar todos os filtros ativos" %}</option>
+                {% for filter in active_filters %}
+                  <option value="{{ filter.id }}">
+                    {{ filter.name }} ({{ filter.get_action_display }})
+                  </option>
+                {% endfor %}
+              </select>
+              <div class="form-text">
+                {% trans "Deixe em branco para aplicar todos os filtros ou escolha um específico" %}
+              </div>
+            </div>
+
+            <!-- Modo Simulação -->
+            <div class="mb-4">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="dry_run" name="dry_run" checked>
+                <label class="form-check-label" for="dry_run">
+                  <i class="bi bi-eye"></i> {% trans "Modo Simulação (Dry Run)" %}
+                </label>
+              </div>
+              <div class="form-text text-warning">
+                <i class="bi bi-exclamation-triangle"></i>
+                {% trans "Recomendado: Execute primeiro em modo simulação para ver o que seria afetado, depois execute novamente sem simulação." %}
+              </div>
+            </div>
+
+            <!-- Botões -->
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <button type="button" class="btn btn-outline-info" id="simulate-btn">
+                <i class="bi bi-eye"></i> {% trans "Simular" %}
+              </button>
+              <button type="submit" class="btn btn-warning" id="apply-btn">
+                <i class="bi bi-arrow-clockwise"></i> {% trans "Aplicar Filtros" %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Painel de Filtros Ativos -->
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-list-check"></i> {% trans "Filtros Ativos" %}
+          </h6>
+        </div>
+        <div class="card-body p-0">
+          {% if active_filters %}
+            <div class="list-group list-group-flush">
+              {% for filter in active_filters %}
+                <div class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                      <h6 class="mb-1">{{ filter.name }}</h6>
+                      <p class="mb-1 text-muted small">{{ filter.description|default:"Sem descrição" }}</p>
+                      <small class="text-muted">
+                        {{ filter.get_filter_type_display }} → {{ filter.get_action_display }}
+                      </small>
+                    </div>
+                    <div class="text-end">
+                      {% if filter.action == 'flag' %}
+                        <span class="badge bg-warning">🏴</span>
+                      {% elif filter.action == 'auto_hide' %}
+                        <span class="badge bg-info">👁️</span>
+                      {% elif filter.action == 'auto_delete' %}
+                        <span class="badge bg-danger">🗑️</span>
+                      {% elif filter.action == 'notify_moderator' %}
+                        <span class="badge bg-primary">📧</span>
+                      {% endif %}
+                      <br>
+                      <small class="text-muted">{{ filter.matches_count }} matches</small>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="card-body text-center text-muted">
+              <i class="bi bi-exclamation-circle fs-1"></i>
+              <p class="mt-2">{% trans "Nenhum filtro ativo encontrado" %}</p>
+              <a href="{% url 'social:content_filters' %}" class="btn btn-outline-primary btn-sm">
+                {% trans "Configurar Filtros" %}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resultado da Operação -->
+  <div class="row mt-4" id="result-section" style="display: none;">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            <i class="bi bi-clipboard-data"></i> {% trans "Resultado da Operação" %}
+          </h5>
+        </div>
+        <div class="card-body">
+          <div id="result-content">
+            <!-- Conteúdo será preenchido via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmação -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">
+          <i class="bi bi-exclamation-triangle text-warning"></i> {% trans "Confirmar Operação" %}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{% trans "Você está prestes a aplicar filtros de moderação a todo o conteúdo existente." %}</p>
+        <div class="alert alert-warning">
+          <strong>{% trans "Atenção:" %}</strong>
+          <ul class="mb-0">
+            <li>{% trans "Esta operação pode demorar alguns minutos" %}</li>
+            <li>{% trans "Conteúdo pode ser ocultado ou deletado automaticamente" %}</li>
+            <li>{% trans "A operação não pode ser desfeita" %}</li>
+          </ul>
+        </div>
+        <p class="mb-0">{% trans "Deseja continuar?" %}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          {% trans "Cancelar" %}
+        </button>
+        <button type="button" class="btn btn-warning" id="confirm-apply">
+          {% trans "Sim, Aplicar Filtros" %}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('retroactive-form');
+    const simulateBtn = document.getElementById('simulate-btn');
+    const applyBtn = document.getElementById('apply-btn');
+    const dryRunCheckbox = document.getElementById('dry_run');
+    const resultSection = document.getElementById('result-section');
+    const resultContent = document.getElementById('result-content');
+    const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+
+    // Carregar estatísticas
+    loadStatistics();
+
+    // Simulação
+    simulateBtn.addEventListener('click', function() {
+        dryRunCheckbox.checked = true;
+        submitForm();
+    });
+
+    // Aplicação real
+    applyBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (dryRunCheckbox.checked) {
+            submitForm();
+        } else {
+            confirmModal.show();
+        }
+    });
+
+    // Confirmação da operação
+    document.getElementById('confirm-apply').addEventListener('click', function() {
+        confirmModal.hide();
+        submitForm();
+    });
+
+    function loadStatistics() {
+        // Aqui você poderia fazer uma chamada AJAX para obter estatísticas reais
+        // Por enquanto, valores de exemplo
+        document.getElementById('total-posts').textContent = '?';
+        document.getElementById('total-comments').textContent = '?';
+        document.getElementById('estimated-time').textContent = '?';
+    }
+
+    function submitForm() {
+        const formData = new FormData(form);
+        const isDryRun = dryRunCheckbox.checked;
+        
+        // Mostrar loading
+        showLoading(isDryRun);
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            showResult(data, isDryRun);
+        })
+        .catch(error => {
+            hideLoading();
+            showError(error);
+        });
+    }
+
+    function showLoading(isDryRun) {
+        const mode = isDryRun ? '{% trans "Simulando" %}' : '{% trans "Aplicando" %}';
+        resultContent.innerHTML = `
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">${mode} filtros de moderação...</p>
+                <small class="text-muted">{% trans "Esta operação pode demorar alguns minutos" %}</small>
+            </div>
+        `;
+        resultSection.style.display = 'block';
+        resultSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function hideLoading() {
+        // Loading será substituído pelo resultado
+    }
+
+    function showResult(data, isDryRun) {
+        if (data.success) {
+            const mode = isDryRun ? '{% trans "Simulação" %}' : '{% trans "Aplicação" %}';
+            const alertClass = isDryRun ? 'alert-info' : 'alert-success';
+            const icon = isDryRun ? 'bi-eye' : 'bi-check-circle';
+            
+            resultContent.innerHTML = `
+                <div class="alert ${alertClass}">
+                    <i class="${icon}"></i>
+                    <strong>${mode} {% trans "concluída com sucesso!" %}</strong>
+                </div>
+                <div class="mt-3">
+                    <h6>{% trans "Detalhes da Operação:" %}</h6>
+                    <pre class="bg-light p-3 rounded small">${data.output || 'Nenhum detalhe disponível'}</pre>
+                </div>
+            `;
+        } else {
+            showError(data.error || '{% trans "Erro desconhecido" %}');
+        }
+    }
+
+    function showError(error) {
+        resultContent.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle"></i>
+                <strong>{% trans "Erro durante a operação:" %}</strong><br>
+                ${error}
+            </div>
+        `;
+        resultSection.style.display = 'block';
+    }
+});
+</script>
+
+<style>
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.list-group-item {
+    border-left: 0;
+    border-right: 0;
+}
+
+pre {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.form-text {
+    font-size: 0.875em;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+</style>
+{% endblock content %}

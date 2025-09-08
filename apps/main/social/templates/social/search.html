@@ -1,0 +1,202 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %} {% trans "Buscar" %} {% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      
+      <!-- Formulário de busca -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <form method="get" class="row g-3">
+            <div class="col-md-8">
+              {{ form.q }}
+            </div>
+            <div class="col-md-3">
+              {{ form.search_type }}
+            </div>
+            <div class="col-md-1">
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Resultados -->
+      {% if form.q.value %}
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">
+              {% trans "Resultados para" %}: "{{ form.q.value }}"
+            </h5>
+          </div>
+          <div class="card-body">
+            {% if results %}
+              {% for result in results %}
+                {% if result.type == 'user' %}
+                  <!-- Resultado de usuário -->
+                  <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                    <div class="avatar-container me-3" style="width: 50px; height: 50px; border-radius: 50%; overflow: hidden;">
+                      {% if result.object.avatar %}
+                        <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' result.object.uuid timestamp %}" 
+                             alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                      {% else %}
+                        <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                             alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                      {% endif %}
+                    </div>
+                    <div class="flex-grow-1">
+                      <h6 class="mb-1">
+                        <a href="{% url 'social:user_profile' result.object.username %}" class="text-decoration-none">
+                          {{ result.object.get_full_name|default:result.object.username }}
+                        </a>
+                      </h6>
+                      <p class="text-muted mb-1">@{{ result.object.username }}</p>
+                      {% if result.profile and result.profile.bio %}
+                        <small class="text-muted">{{ result.profile.bio|truncatechars:100 }}</small>
+                      {% endif %}
+                    </div>
+                    <div class="ms-3">
+                      <a href="{% url 'social:user_profile' result.object.username %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-person"></i> {% trans "Ver perfil" %}
+                      </a>
+                    </div>
+                  </div>
+                {% elif result.type == 'post' %}
+                  <!-- Resultado de post -->
+                  <div class="card mb-3">
+                    <div class="card-header bg-transparent">
+                      <div class="d-flex align-items-center">
+                        <div class="avatar-container me-3" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                          {% if result.object.author.avatar %}
+                            <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' result.object.author.uuid timestamp %}" 
+                                 alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                          {% else %}
+                            <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                                 alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                          {% endif %}
+                        </div>
+                        <div class="flex-grow-1">
+                          <h6 class="mb-0">
+                            <a href="{% url 'social:user_profile' result.object.author.username %}" class="text-decoration-none">
+                              {{ result.object.author.get_full_name|default:result.object.author.username }}
+                            </a>
+                          </h6>
+                          <small class="text-muted">
+                            {{ result.object.created_at|timesince }} {% trans "atrás" %}
+                          </small>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <p class="card-text">{{ result.object.content|truncatewords:50 }}</p>
+                      <a href="{% url 'social:post_detail' result.object.id %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-eye"></i> {% trans "Ver post completo" %}
+                      </a>
+                    </div>
+                  </div>
+                {% elif result.type == 'hashtag' %}
+                  <!-- Resultado de hashtag -->
+                  <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                    <div class="me-3">
+                      <i class="bi bi-hash display-6 text-primary"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                      <h6 class="mb-1">
+                        <a href="{% url 'social:hashtag_detail' result.object.name %}" class="text-decoration-none">
+                          #{{ result.object.name }}
+                        </a>
+                      </h6>
+                      <p class="text-muted mb-1">{% trans "Hashtag" %}</p>
+                    </div>
+                    <div class="ms-3">
+                      <a href="{% url 'social:hashtag_detail' result.object.name %}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-hash"></i> {% trans "Ver posts" %}
+                      </a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <div class="text-center py-5">
+                <i class="bi bi-search display-1 text-muted"></i>
+                <h4 class="mt-3">{% trans "Nenhum resultado encontrado" %}</h4>
+                <p class="text-muted">{% trans "Tente buscar por outros termos ou verificar a ortografia." %}</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <!-- Página inicial de busca -->
+        <div class="card">
+          <div class="card-body text-center py-5">
+            <i class="bi bi-search display-1 text-muted"></i>
+            <h4 class="mt-3">{% trans "Buscar usuários e posts" %}</h4>
+            <p class="text-muted">{% trans "Digite algo na caixa de busca acima para começar." %}</p>
+            
+            <div class="row mt-4">
+              <div class="col-md-6">
+                <div class="card border-0 bg-light">
+                  <div class="card-body text-center">
+                    <i class="bi bi-people display-4 text-primary"></i>
+                    <h5 class="mt-3">{% trans "Buscar usuários" %}</h5>
+                    <p class="text-muted">{% trans "Encontre pessoas para seguir e interagir." %}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="card border-0 bg-light">
+                  <div class="card-body text-center">
+                    <i class="bi bi-chat-quote display-4 text-primary"></i>
+                    <h5 class="mt-3">{% trans "Buscar posts" %}</h5>
+                    <p class="text-muted">{% trans "Descubra conteúdo interessante." %}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript para melhorar a experiência de busca -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('#{{ form.q.id_for_label }}');
+    const searchType = document.querySelector('#{{ form.search_type.id_for_label }}');
+    
+    // Focar no campo de busca
+    if (searchInput) {
+        searchInput.focus();
+    }
+    
+    // Busca automática ao pressionar Enter
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.form.submit();
+            }
+        });
+    }
+    
+    // Busca automática ao mudar o tipo
+    if (searchType) {
+        searchType.addEventListener('change', function() {
+            if (searchInput && searchInput.value.trim()) {
+                this.form.submit();
+            }
+        });
+    }
+});
+</script>
+{% endblock content %}

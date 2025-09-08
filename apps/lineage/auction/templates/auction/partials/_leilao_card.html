@@ -1,0 +1,70 @@
+{% load i18n l10n static %}
+{% load itens_extras %}
+
+<div class="col-md-6 col-lg-4">
+    <div class="card bg-dark text-light border-secondary h-100">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>{{ leilao.item_name }}</strong>
+        <span class="badge bg-primary">ID: {{ leilao.item_id }}</span>
+      </div>
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <img src="{% item_image_url leilao.item_id %}"
+               alt="{{ leilao.item_name }}"
+               class="me-3 rounded border border-secondary"
+               style="width: 64px; height: 64px;">
+          <div>
+            <p class="mb-1">
+              <i class="bi bi-person-fill"></i>
+              <strong>{% trans "Vendedor:" %}</strong> {{ leilao.seller.username }}
+            </p>
+            <p class="mb-1">
+              <i class="bi bi-currency-dollar"></i>
+              <strong>{% trans "Lance Atual:" %}</strong>
+              R$ {{ leilao.current_bid|default:leilao.starting_bid }}
+            </p>
+            <p class="mb-0">
+              <i class="bi bi-clock-fill"></i>
+              <strong>{% trans "Restante:" %}</strong>
+              <span class="text-warning fw-bold">
+                {{ leilao.end_time|timeuntil }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer d-flex justify-content-between">
+        <div class="d-flex">
+
+          {% if leilao.status == 'pending' %}
+            {% if user != leilao.seller %}
+              <a href="{% url 'auction:fazer_lance' leilao.id %}" class="btn btn-success btn-sm me-2">
+                <i class="bi bi-gavel"></i> {% trans "Dar Lance" %}
+              </a>
+            {% endif %}
+            {% if user == leilao.seller %}
+              <div class="btn-group">
+                <a href="{% url 'auction:cancelar_leilao' leilao.id %}" class="btn btn-warning btn-sm">
+                  <i class="bi bi-x-octagon"></i> {% trans "Cancelar" %}
+                </a>
+                <a href="{% url 'auction:encerrar_leilao' leilao.id %}" class="btn btn-danger btn-sm">
+                  <i class="bi bi-x-circle"></i> {% trans "Finalizar" %}
+                </a>
+              </div>
+            {% endif %}
+          {% endif %}
+
+          {% if leilao.status == 'expired' %}
+            {% if user == leilao.seller %}
+              <a href="{% url 'auction:encerrar_leilao' leilao.id %}" class="btn btn-danger btn-sm">
+                <i class="bi bi-box-arrow-in-down"></i> {% trans "Finalizar Entrega" %}
+              </a>
+            {% endif %}
+          {% endif %}
+
+        </div>
+      </div>
+
+    </div>
+</div>

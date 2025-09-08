@@ -1,0 +1,808 @@
+/* Custom Admin Styles with Grayscale Theme */
+
+:root {
+    --primary: #4a4a4a;
+    --secondary: #f8f9fa;
+    --success: #6c757d;
+    --info: #495057;
+    --warning: #868e96;
+    --danger: #343a40;
+    --light: #e9ecef;
+    --dark: #212529;
+    --default: #343a40;
+    --white: #fff;
+    --neutral: #fff;
+    --darker: #1a1a1a;
+    --border: #dee2e6;
+    --border-light: #f8f9fa;
+    --input-border: #ced4da;
+    --input-background: #fff;
+    --sidebar-width: 250px;
+    --navbar-height: 70px;
+}
+
+/* Navbar Customization */
+.navbar {
+    background: var(--default) !important;
+    box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.1) !important;
+    padding: 0.5rem 1rem;
+    height: var(--navbar-height);
+}
+
+.navbar-primary {
+    background: linear-gradient(to right, var(--darker), var(--default)) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar-primary .navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--white) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-primary .navbar-brand:hover {
+    transform: translateY(-1px);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-primary .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.navbar-primary .nav-link:hover {
+    color: var(--white) !important;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.navbar-primary .nav-link.active {
+    color: var(--white) !important;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.navbar-primary .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+}
+
+.navbar-primary .navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.navbar-primary .navbar-toggler:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.navbar-primary .navbar-toggler:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.navbar-primary .dropdown-menu {
+    background: var(--white);
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+}
+
+.navbar-primary .dropdown-item {
+    color: var(--dark);
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.navbar-primary .dropdown-item:hover {
+    background: var(--secondary);
+    color: var(--dark);
+}
+
+.navbar-primary .dropdown-item.active {
+    background: var(--primary);
+    color: var(--white);
+}
+
+.navbar-primary .navbar-text {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.navbar-primary .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.5);
+    color: var(--white);
+    transition: all 0.3s ease;
+}
+
+.navbar-primary .btn-outline-light:hover {
+    background: var(--white);
+    color: var(--dark);
+    border-color: var(--white);
+}
+
+.navbar-primary .form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--white);
+}
+
+.navbar-primary .form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--white);
+    box-shadow: none;
+}
+
+.navbar-primary .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.navbar-primary .badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+}
+
+/* Sidebar Customization */
+.sidebar {
+    background: var(--darker) !important;
+    box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.1) !important;
+    width: var(--sidebar-width);
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.8) !important;
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+    color: var(--white) !important;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .nav-link.active {
+    color: var(--white) !important;
+    background: var(--primary);
+}
+
+/* Card Customization */
+.card {
+    border: none;
+    box-shadow: 0 0 2rem 0 rgba(0, 0, 0, 0.1) !important;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+    background: var(--white);
+}
+
+.card-header {
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 1.5rem;
+}
+
+/* Button Customization */
+.btn {
+    font-weight: 600;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.375rem;
+    transition: all 0.15s ease;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.15);
+}
+
+/* Primary Button */
+.btn-primary {
+    background: #0d6efd;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #0b5ed7;
+    color: #ffffff;
+}
+
+/* Success Button */
+.btn-success {
+    background: #198754;
+    color: #ffffff;
+}
+
+.btn-success:hover {
+    background: #157347;
+    color: #ffffff;
+}
+
+/* Info Button */
+.btn-info {
+    background: #0dcaf0;
+    color: #000000;
+}
+
+.btn-info:hover {
+    background: #31d2f2;
+    color: #000000;
+}
+
+/* Warning Button */
+.btn-warning {
+    background: #ffc107;
+    color: #000000;
+}
+
+.btn-warning:hover {
+    background: #ffca2c;
+    color: #000000;
+}
+
+/* Danger Button */
+.btn-danger {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.btn-danger:hover {
+    background: #bb2d3b;
+    color: #ffffff;
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background: #6c757d;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background: #5c636a;
+    color: #ffffff;
+}
+
+/* Light Button */
+.btn-light {
+    background: #f8f9fa;
+    color: #000000;
+}
+
+.btn-light:hover {
+    background: #f9fafb;
+    color: #000000;
+}
+
+/* Dark Button */
+.btn-dark {
+    background: #212529;
+    color: #ffffff;
+}
+
+.btn-dark:hover {
+    background: #1c1f23;
+    color: #ffffff;
+}
+
+/* Outline Buttons */
+.btn-outline-primary {
+    border: 2px solid #0d6efd;
+    color: #0d6efd;
+    background: #ffffff;
+}
+
+.btn-outline-primary:hover {
+    background: #0d6efd;
+    color: #ffffff;
+}
+
+.btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+    background: #ffffff;
+}
+
+.btn-outline-secondary:hover {
+    background: #6c757d;
+    color: #ffffff;
+}
+
+.btn-outline-success {
+    border: 2px solid #198754;
+    color: #198754;
+    background: #ffffff;
+}
+
+.btn-outline-success:hover {
+    background: #198754;
+    color: #ffffff;
+}
+
+.btn-outline-danger {
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    background: #ffffff;
+}
+
+.btn-outline-danger:hover {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.btn-outline-warning {
+    border: 2px solid #ffc107;
+    color: #ffc107;
+    background: #ffffff;
+}
+
+.btn-outline-warning:hover {
+    background: #ffc107;
+    color: #000000;
+}
+
+.btn-outline-info {
+    border: 2px solid #0dcaf0;
+    color: #0dcaf0;
+    background: #ffffff;
+}
+
+.btn-outline-info:hover {
+    background: #0dcaf0;
+    color: #000000;
+}
+
+.btn-outline-light {
+    border: 2px solid #f8f9fa;
+    color: #6c757d;
+    background: #ffffff;
+}
+
+.btn-outline-light:hover {
+    background: #f8f9fa;
+    color: #000000;
+}
+
+.btn-outline-dark {
+    border: 2px solid #212529;
+    color: #212529;
+    background: #ffffff;
+}
+
+.btn-outline-dark:hover {
+    background: #212529;
+    color: #ffffff;
+}
+
+/* Form Control Buttons */
+.form-control {
+    border: 1px solid var(--input-border);
+    border-radius: 0.375rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    background-color: var(--input-background);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(74, 74, 74, 0.15);
+    background-color: var(--white);
+}
+
+/* Form Control Button Variants */
+.btn-success.form-control {
+    background-color: #198754;
+    color: #ffffff;
+    border: 1px solid #198754;
+}
+
+.btn-success.form-control:hover {
+    background-color: #157347;
+    color: #ffffff;
+}
+
+.btn-danger.form-control {
+    background-color: #dc3545;
+    color: #ffffff;
+    border: 1px solid #dc3545;
+}
+
+.btn-danger.form-control:hover {
+    background-color: #bb2d3b;
+    color: #ffffff;
+}
+
+.btn-info.form-control {
+    background-color: #0dcaf0;
+    color: #000000;
+    border: 1px solid #0dcaf0;
+}
+
+.btn-info.form-control:hover {
+    background-color: #31d2f2;
+    color: #000000;
+}
+
+.btn-warning.form-control {
+    background-color: #ffc107;
+    color: #000000;
+    border: 1px solid #ffc107;
+}
+
+.btn-warning.form-control:hover {
+    background-color: #ffca2c;
+    color: #000000;
+}
+
+.btn-primary.form-control {
+    background-color: #0d6efd;
+    color: #ffffff;
+    border: 1px solid #0d6efd;
+}
+
+.btn-primary.form-control:hover {
+    background-color: #0b5ed7;
+    color: #ffffff;
+}
+
+.btn-secondary.form-control {
+    background-color: #6c757d;
+    color: #ffffff;
+    border: 1px solid #6c757d;
+}
+
+.btn-secondary.form-control:hover {
+    background-color: #5c636a;
+    color: #ffffff;
+}
+
+.btn-light.form-control {
+    background-color: #f8f9fa;
+    color: #000000;
+    border: 1px solid #dee2e6;
+}
+
+.btn-light.form-control:hover {
+    background-color: #f9fafb;
+    color: #000000;
+}
+
+.btn-dark.form-control {
+    background-color: #212529;
+    color: #ffffff;
+    border: 1px solid #212529;
+}
+
+.btn-dark.form-control:hover {
+    background-color: #1c1f23;
+    color: #ffffff;
+}
+
+/* Form Control Button States */
+.btn.form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.15);
+}
+
+.btn.form-control:disabled,
+.btn.form-control.disabled {
+    opacity: 0.65;
+    pointer-events: none;
+}
+
+/* Form Control Button with Icon */
+.btn.form-control i {
+    margin-right: 0.5rem;
+}
+
+/* Form Control Button Loading State */
+.btn.form-control .spinner-border {
+    margin-right: 0.5rem;
+}
+
+/* Button Groups */
+.btn-group {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.btn-group .btn {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
+/* Small Buttons */
+.btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+}
+
+/* Large Buttons */
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+/* Block Buttons */
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+/* Disabled Buttons */
+.btn:disabled,
+.btn.disabled {
+    opacity: 0.65;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Button with Icon */
+.btn i {
+    margin-right: 0.5rem;
+}
+
+/* Loading State */
+.btn .spinner-border {
+    margin-right: 0.5rem;
+}
+
+/* Table Customization */
+.table {
+    color: var(--dark);
+}
+
+.table thead th {
+    border-top: none;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.025em;
+    background-color: var(--secondary);
+}
+
+.table tbody tr:hover {
+    background-color: var(--secondary);
+}
+
+/* Alert Customization */
+.alert {
+    border: none;
+    border-radius: 0.375rem;
+    padding: 1rem 1.5rem;
+}
+
+.alert-success {
+    background-color: rgba(108, 117, 125, 0.1);
+    color: var(--success);
+}
+
+.alert-danger {
+    background-color: rgba(52, 58, 64, 0.1);
+    color: var(--danger);
+}
+
+/* Badge Customization */
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 600;
+    border-radius: 0.375rem;
+}
+
+.badge-primary {
+    background-color: var(--primary);
+}
+
+.badge-secondary {
+    background-color: var(--secondary);
+    color: var(--dark);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--light);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+    }
+    
+    .navbar {
+        padding: 0.5rem;
+    }
+
+    .navbar-primary .navbar-collapse {
+        background: var(--darker);
+        margin-top: 0.5rem;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .navbar-primary .nav-link {
+        padding: 0.75rem 1rem;
+    }
+
+    .navbar-primary .nav-link.active::after {
+        display: none;
+    }
+}
+
+/* Custom Animations */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Custom Utilities */
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.shadow {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.shadow-lg {
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+/* Custom Transitions */
+.transition-all {
+    transition: all 0.2s ease;
+}
+
+/* Custom Focus States */
+.focus-primary:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(74, 74, 74, 0.25);
+}
+
+/* Custom Hover Effects */
+.hover-shadow:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Custom Text Colors */
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.text-success {
+    color: var(--success) !important;
+}
+
+.text-danger {
+    color: var(--danger) !important;
+}
+
+.text-warning {
+    color: var(--warning) !important;
+}
+
+.text-info {
+    color: var(--info) !important;
+}
+
+/* Additional Grayscale Elements */
+.bg-light {
+    background-color: var(--secondary) !important;
+}
+
+.bg-dark {
+    background-color: var(--dark) !important;
+}
+
+.border {
+    border-color: var(--border) !important;
+}
+
+/* Custom Form Elements */
+select.form-control {
+    background-color: var(--white);
+    color: var(--dark);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Custom Links */
+a {
+    color: var(--primary);
+}
+
+a:hover {
+    color: var(--dark);
+}
+
+/* Custom Dividers */
+hr {
+    border-color: var(--border);
+}
+
+/* Custom Modal */
+.modal-content {
+    background-color: var(--white);
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border);
+} 

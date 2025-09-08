@@ -1,0 +1,72 @@
+{% extends "layouts/base.html" %}
+{% load i18n lineage_extras %}
+
+{% block extrastyle %}
+<style>
+  .clan-name-container {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Espaço entre o grupo de crests e o nome */
+  }
+
+  .crest-group {
+    display: flex;
+    align-items: center;
+    width: 26px;
+    gap: 0px; /* Espaço entre as duas imagens */
+  }
+
+  .top-clan-crest {
+    width: auto;
+    height: 14px;
+    margin: 0;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h2 class="text-center mb-4">{% trans "Boss Jewel Locations" %}</h2>
+
+    {% if jewel_locations %}
+    <div class="table-responsive-md">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>{% trans "Item" %}</th>
+            <th>{% trans "Count" %}</th>
+            <th class="d-none d-md-table-cell">{% trans "Character" %}</th>
+            <th class="d-none d-md-table-cell">{% trans "Clan" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for location in jewel_locations %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ location.item_name }}</td>
+            <td>{{ location.count }}</td>
+            <td class="d-none d-md-table-cell">{{ location.char_name }}</td>
+            <td><div class="clan-name-container">
+              <div class="crest-group">
+                <img src="data:image/png;base64,{{ location.clan_crest_image_base64 }}" alt="Crest do Clã" class="top-clan-crest">
+                {% if clan.ally_crest_image_base64 %}
+                  <img src="data:image/png;base64,{{ location.ally_crest_image_base64 }}" alt="Crest da Aliança" class="top-clan-crest">
+                {% endif %}
+              </div>
+              {{ location.clan_name|default:"-" }}
+            </div></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+      {% trans "Nenhuma localização de Boss Jewel encontrada." %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

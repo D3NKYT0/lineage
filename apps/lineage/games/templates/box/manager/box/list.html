@@ -1,0 +1,316 @@
+{% extends "layouts/base.html" %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .box-manager-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .box-manager-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #00d9ff;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(13, 217, 255, 0.5);
+  }
+
+  .action-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+    color: white;
+    text-decoration: none;
+  }
+
+  .back-btn {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+  }
+
+  .back-btn:hover {
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+  }
+
+  .edit-btn {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+  }
+
+  .edit-btn:hover {
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
+  }
+
+  .delete-btn {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+    padding: 8px 20px;
+    font-size: 0.9rem;
+  }
+
+  .delete-btn:hover {
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.6);
+  }
+
+  .boxes-table {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #6f42c1;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(111, 66, 193, 0.3);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .table {
+    margin-bottom: 0;
+    color: #f8f9fa;
+  }
+
+  .table thead th {
+    background: #6f42c1;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-family: 'Orbitron', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1.5rem 1rem;
+  }
+
+  .table tbody tr {
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .table tbody tr:hover {
+    background: rgba(13, 217, 255, 0.1);
+    transform: scale(1.01);
+  }
+
+  .table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .table tbody tr:nth-child(even):hover {
+    background: rgba(13, 217, 255, 0.1);
+  }
+
+  .table td {
+    border: none;
+    border-bottom: 1px solid rgba(111, 66, 193, 0.3);
+    padding: 1.5rem 1rem;
+    vertical-align: middle;
+  }
+
+  .table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .box-id {
+    color: #00d9ff;
+    font-weight: 700;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+  }
+
+  .box-user {
+    color: #f8f9fa;
+    font-weight: 600;
+  }
+
+  .box-type {
+    color: #28a745;
+    font-weight: 600;
+  }
+
+  .box-status {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .status-opened {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+  }
+
+  .status-closed {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    color: white;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #b8c2cc;
+  }
+
+  .empty-state i {
+    font-size: 3rem;
+    color: #6f42c1;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @media (max-width: 768px) {
+    .box-manager-title {
+      font-size: 2rem;
+    }
+    
+    .table-responsive {
+      border-radius: 15px;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="box-manager-bg">
+  <div class="container">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+      <div>
+        <h1 class="box-manager-title">
+          <i class="fas fa-box me-3"></i>
+          {% trans "Caixas Criadas" %}
+        </h1>
+      </div>
+      <a href="{% url 'games:box_create' %}" class="action-btn">
+        <i class="fas fa-plus me-2"></i>
+        {% trans "Nova Caixa" %}
+      </a>
+    </div>
+
+    <!-- Tabela de Caixas -->
+    <div class="boxes-table fade-in-up">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>
+                <i class="fas fa-hashtag me-2"></i>
+                {% trans "ID" %}
+              </th>
+              <th>
+                <i class="fas fa-user me-2"></i>
+                {% trans "Usuário" %}
+              </th>
+              <th>
+                <i class="fas fa-tag me-2"></i>
+                {% trans "Tipo" %}
+              </th>
+              <th>
+                <i class="fas fa-box-open me-2"></i>
+                {% trans "Status" %}
+              </th>
+              <th>
+                <i class="fas fa-cogs me-2"></i>
+                {% trans "Ações" %}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for box in boxes %}
+            <tr>
+              <td>
+                <div class="box-id">#{{ box.id }}</div>
+              </td>
+              <td>
+                <div class="box-user">
+                  {% if box.user %}
+                    {{ box.user.username }}
+                  {% else %}
+                    <span class="text-muted">(sem usuário)</span>
+                  {% endif %}
+                </div>
+              </td>
+              <td>
+                <div class="box-type">{{ box.box_type.name }}</div>
+              </td>
+              <td>
+                <span class="box-status {% if box.opened %}status-opened{% else %}status-closed{% endif %}">
+                  {% if box.opened %}
+                    <i class="fas fa-check me-1"></i>
+                    {% trans "Aberta" %}
+                  {% else %}
+                    <i class="fas fa-times me-1"></i>
+                    {% trans "Fechada" %}
+                  {% endif %}
+                </span>
+              </td>
+              <td>
+                <a href="{% url 'games:box_edit' box.id %}" class="action-btn edit-btn">
+                  <i class="fas fa-edit me-1"></i>
+                  {% trans "Editar" %}
+                </a>
+                <a href="{% url 'games:box_delete' box.id %}" class="action-btn delete-btn">
+                  <i class="fas fa-trash me-1"></i>
+                  {% trans "Excluir" %}
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5">
+                <div class="empty-state">
+                  <i class="fas fa-box-open"></i>
+                  <h5>{% trans "Nenhuma caixa encontrada" %}</h5>
+                  <p>{% trans "Comece criando sua primeira caixa." %}</p>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Botão para voltar ao dashboard -->
+    <div class="text-center fade-in-up">
+      <a href="{% url 'games:box_manager_dashboard' %}" class="action-btn back-btn">
+        <i class="fas fa-arrow-left me-2"></i>
+        {% trans "Voltar ao Dashboard" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

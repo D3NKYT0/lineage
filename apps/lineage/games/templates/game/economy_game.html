@@ -1,0 +1,350 @@
+{% extends "layouts/base.html" %}
+{% load i18n l10n %}
+{% load static %}
+
+{% block extrastyle %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap');
+
+body {
+    font-family: 'UnifrakturCook', cursive;
+}
+
+.economy-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+}
+
+.weapon-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    padding: 20px;
+    color: #fff;
+}
+
+.monster-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 18px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s;
+}
+
+.monster-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 15px rgba(173, 216, 230, 0.3);
+}
+
+.monster-card.disabled {
+    opacity: 0.4;
+    filter: grayscale(80%);
+    pointer-events: none;
+}
+
+.monster-card img {
+    width: 85px;
+    height: 85px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #111;
+    border: 2px solid #444;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.1);
+}
+
+.monster-info {
+    flex-grow: 1;
+}
+
+.monster-info h5 {
+    font-weight: bold;
+    color: #00d9ff;
+    margin-bottom: 6px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.monster-attrs {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 6px;
+    font-style: italic;
+}
+
+.btn-action {
+    border-radius: 50px;
+    padding: 10px 24px;
+    font-weight: bold;
+    margin-top: 12px;
+    white-space: nowrap;
+    background: linear-gradient(135deg, #181818, #2a2a2a);
+    color: #fff;
+    border: 1px solid #555;
+    text-shadow: 1px 1px 2px #000;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.1);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-action:hover {
+    background: linear-gradient(135deg, #2e2e2e, #3c3c3c);
+    box-shadow: 0 0 12px #00d9ff;
+}
+
+.enchant-section {
+    margin-top: 40px;
+    padding: 30px;
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+}
+
+.enchant-section h3 {
+    color: #ffd700;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.enchant-section .btn {
+    margin-top: 20px;
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s;
+}
+
+.enchant-section .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+@keyframes magicRespawn {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0; }
+}
+
+.respawn-particle {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #00ffff, #0088ff);
+    border-radius: 50%;
+    animation: magicRespawn 1s ease-out;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0;
+}
+</style>
+
+<link rel="stylesheet" href="{% static 'roulette/style.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<div class="economy-bg">
+    <div class="container">
+        <div class="text-center mb-5">
+            <div class="d-flex flex-wrap justify-content-center gap-4 align-items-center">
+
+                <div>
+                    <h2 class="fw-bold text-info mb-1">⚔️ {% trans "Minha Arma" %}: +{{ weapon.level }}</h2>
+                </div>
+
+                <div>
+                    <p class="text-light mb-1">
+                        {% trans "Fragmentos" %}: <strong class="text-warning">{{ weapon.fragments }}</strong>
+                    </p>
+                </div>
+
+                <div class="text-light d-flex align-items-center gap-2">
+                    <span>{% trans "Fichas restantes" %}: <strong class="text-success">{{ request.user.fichas }}</strong></span>
+                    <button class="btn btn-warning btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#buyTokensModal">
+                        <i class="bi bi-cart-plus me-1"></i> {% trans "Comprar" %}
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h3 class="text-white mb-4">{% trans "Monstros disponíveis" %}</h3>
+                {% for mon in monsters %}
+                <div class="monster-card
+                    {% if weapon.level < mon.required_weapon_level or not mon.is_alive %}disabled{% endif %}">
+
+                    {% if mon.image %}
+                        <img src="{{ mon.image.url }}" alt="{{ mon.name }}" />
+                    {% else %}
+                        <img src="{% static 'assets/img/monsters/default_monster.gif' %}" alt="Imagem padrão de {{ mon.name }}" />
+                    {% endif %}
+
+                    <div class="monster-info">
+                        <h5>🐉 Lv {{ mon.level }} - {{ mon.name }}</h5>
+                        <p>{% trans "Requer arma" %} +{{ mon.required_weapon_level }}</p>
+                        <p>{% trans "Recompensa" %}: <strong class="text-warning">{{ mon.fragment_reward }}</strong> {% trans "fragmentos" %}</p>
+
+                        {% if mon.strength or mon.defense or mon.speed %}
+                        <div class="monster-attrs">
+                            {% if mon.strength %}💪 {% trans "Força" %}: {{ mon.strength }} &nbsp;{% endif %}
+                            {% if mon.defense %}🛡️ {% trans "Defesa" %}: {{ mon.defense }} &nbsp;{% endif %}
+                            {% if mon.speed %}⚡ {% trans "Velocidade" %}: {{ mon.speed }}{% endif %}
+                        </div>
+                        {% endif %}
+
+                        {% if not mon.is_alive and mon.respawn_timestamp %}
+                          <p class="text-warning fw-bold">
+                              {% trans "Respawn em" %}
+                              <span class="countdown" data-respawn="{{ mon.respawn_timestamp|unlocalize }}"></span>
+                          </p>
+                        {% endif %}
+                    </div>
+
+                    <form method="post" action="{% url 'games:fight-monster' mon.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-primary btn-action"
+                            {% if weapon.level < mon.required_weapon_level or not mon.is_alive or request.user.fichas < 1 %}
+                            disabled
+                            {% endif %}>
+                            ⚔️ {% trans "Atacar" %}
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="enchant-section mt-5">
+            <h3>✨ {% trans "Encantar Arma" %}</h3>
+            <p>{% trans "Gasta 10 fragmentos para tentar aumentar o nível da arma." %}</p>
+            <form method="post" action="{% url 'games:enchant-weapon' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning btn-action" {% if weapon.fragments < 10 %}disabled{% endif %}>
+                    🔮 {% trans "Tentar Encantar" %}
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Compra -->
+<div class="modal fade" id="buyTokensModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content text-center p-4">
+      <h5 class="modal-title mb-3">Comprar Fichas</h5>
+      <p class="text-white">Escolha a quantidade de fichas que deseja comprar. Valor: R$0,10 por ficha.</p>
+      <input type="number" id="buyQuantity" class="form-control mb-3" min="1" value="1">
+      <button class="btn btn-success" onclick="buyFichas()">Confirmar Compra</button>
+    </div>
+  </div>
+</div>
+
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+<script>
+const FICHAS_URL = "{% url 'games:comprar_fichas' %}";
+
+document.addEventListener("DOMContentLoaded", function() {
+    function updateCountdown() {
+        const now = Math.floor(Date.now() / 1000);  // timestamp atual em segundos
+        document.querySelectorAll(".countdown").forEach(function(span) {
+            const respawnTimeStr = span.getAttribute("data-respawn").replace(/\./g, "");
+            const respawnTime = parseInt(respawnTimeStr);
+            if (isNaN(respawnTime) || respawnTime <= 0) {
+                span.textContent = "";
+                return;
+            }
+
+            const diff = respawnTime - now;
+            if (diff > 0) {
+                const minutes = Math.floor(diff / 60);
+                const seconds = diff % 60;
+                span.textContent = `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
+            } else {
+                span.textContent = "0:00";
+
+                // 🧠 Localiza o .monster-card pai
+                const monsterCard = span.closest(".monster-card");
+                if (monsterCard) {
+                    monsterCard.classList.remove("disabled");
+                    const button = monsterCard.querySelector("button[type='submit']");
+                    if (button) button.disabled = false;
+
+                    // 🧙‍♂️ Partícula mágica ao reviver
+                    spawnMagicParticles(monsterCard);
+                }
+            }
+        });
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+});
+
+function spawnMagicParticles(element) {
+    const particle = document.createElement("div");
+    particle.className = "respawn-particle";
+
+    const rect = element.getBoundingClientRect();
+    particle.style.left = (rect.width / 2 - 20) + "px";
+    particle.style.top = (rect.height / 2 - 20) + "px";
+
+    element.style.position = "relative";
+    element.appendChild(particle);
+
+    setTimeout(() => particle.remove(), 1000);
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function buyFichas() {
+    const quantity = parseInt(document.getElementById("buyQuantity").value);
+    const csrfToken = getCookie('csrftoken');
+
+    fetch(FICHAS_URL, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+        },
+        body: `quantidade=${quantity}`
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Compra realizada! Você agora tem ${data.fichas} ficha(s).`);
+            location.reload(); // Atualiza para refletir no contador de fichas
+        } else {
+            alert(data.error || "Erro ao processar a compra.");
+        }
+    })
+    .catch(error => {
+        alert("Erro de conexão com o servidor.");
+        console.error(error);
+    });
+}
+</script>
+
+{% endblock %}

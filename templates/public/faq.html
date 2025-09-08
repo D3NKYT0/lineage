@@ -1,0 +1,409 @@
+{% extends 'layouts/public.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans 'Perguntas Frequentes' %}{% endblock title %}
+
+{% block extrahead %}
+<link type="text/css" href="{% static 'public/css/faq.css' %}" rel="stylesheet">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .faq-container {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .faq-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInDown 0.8s ease-out;
+  }
+
+  .faq-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #ffd700, #ffed4e, #ffb347);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    margin-bottom: 1rem;
+  }
+
+  .faq-subtitle {
+    color: #a8a8a8;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .faq-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 179, 71, 0.2);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    animation: slideInUp 0.6s ease-out;
+  }
+
+  .faq-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #ffd700, #ffed4e, #ffb347);
+    border-radius: 20px;
+    padding: 2px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+  }
+
+  .faq-card-header {
+    background: linear-gradient(135deg, #ffd700, #ffb347);
+    color: #333;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .faq-card-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .faq-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+
+  .faq-card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .faq-card-description {
+    font-size: 1rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  .faq-card-body {
+    padding: 2rem;
+  }
+
+  .faq-accordion {
+    border: none;
+  }
+
+  .faq-item {
+    background: transparent;
+    border: none;
+    margin-bottom: 1rem;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .faq-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+  }
+
+  .faq-item-header {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: none;
+    padding: 0;
+  }
+
+  .faq-button {
+    width: 100%;
+    text-align: left;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .faq-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .faq-button:hover::before {
+    left: 100%;
+  }
+
+  .faq-button:hover {
+    background: linear-gradient(135deg, #ffd700, #ffb347);
+    color: #333;
+    transform: translateX(5px);
+  }
+
+  .faq-button:not(.collapsed) {
+    background: linear-gradient(135deg, #ffd700, #ffb347);
+    color: #333;
+  }
+
+  .faq-button::after {
+    content: '\f107';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+    color: #ffd700;
+  }
+
+  .faq-button:hover::after,
+  .faq-button:not(.collapsed)::after {
+    color: #333;
+    transform: translateY(-50%) rotate(180deg);
+  }
+
+  .faq-collapse {
+    background: white;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .faq-collapse-body {
+    padding: 2rem;
+    color: #495057;
+    line-height: 1.7;
+    font-size: 1rem;
+  }
+
+  .faq-empty {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #6c757d;
+    font-size: 1.1rem;
+  }
+
+  .faq-empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #dee2e6;
+  }
+
+  @keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .faq-title {
+      font-size: 2rem;
+    }
+    
+    .faq-card-header {
+      padding: 1.5rem;
+    }
+    
+    .faq-card-body {
+      padding: 1.5rem;
+    }
+    
+    .faq-button {
+      padding: 1.25rem 1.5rem;
+      font-size: 1rem;
+    }
+    
+    .faq-collapse-body {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="faq-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <!-- Header da FAQ -->
+        <div class="faq-header">
+          <h1 class="faq-title">
+            <i class="fas fa-question-circle me-3"></i>
+            {% trans 'Perguntas Frequentes' %}
+          </h1>
+          <p class="faq-subtitle">
+            {% trans 'Veja abaixo as dúvidas mais comuns da comunidade. Nossa equipe está sempre pronta para ajudar!' %}
+          </p>
+        </div>
+
+        <!-- Card Principal -->
+        <div class="faq-card">
+          <div class="faq-card-header">
+            <i class="fas fa-lightbulb faq-icon"></i>
+            <h2 class="faq-card-title">{% trans "Central de Ajuda" %}</h2>
+            <p class="faq-card-description">
+              {% trans "Explore as seções abaixo para encontrar as informações que você precisa" %}
+            </p>
+          </div>
+          
+          <div class="faq-card-body">
+            {% if public_faqs %}
+              <div class="accordion faq-accordion" id="faqAccordionPublic">
+                {% for faq in public_faqs %}
+                  <div class="faq-item">
+                    <div class="faq-item-header" id="heading{{ forloop.counter }}">
+                      <button class="faq-button {% if not forloop.first %}collapsed{% endif %}" 
+                              type="button" 
+                              data-bs-toggle="collapse" 
+                              data-bs-target="#collapse{{ forloop.counter }}" 
+                              aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" 
+                              aria-controls="collapse{{ forloop.counter }}">
+                        <i class="fas fa-chevron-right me-3"></i>
+                        {{ faq.question }}
+                      </button>
+                    </div>
+                    <div id="collapse{{ forloop.counter }}" 
+                         class="collapse faq-collapse {% if forloop.first %}show{% endif %}" 
+                         aria-labelledby="heading{{ forloop.counter }}" 
+                         data-bs-parent="#faqAccordionPublic">
+                      <div class="faq-collapse-body">
+                        <i class="fas fa-info-circle text-warning me-2"></i>
+                        {{ faq.answer|safe }}
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="faq-empty">
+                <i class="fas fa-inbox faq-empty-icon"></i>
+                <h4>{% trans "Nenhuma pergunta disponível" %}</h4>
+                <p>{% trans "Não há perguntas frequentes disponíveis no momento. Entre em contato conosco se precisar de ajuda!" %}</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Adiciona efeitos de interação aos itens da FAQ
+  const faqItems = document.querySelectorAll('.faq-item');
+  
+  faqItems.forEach(item => {
+    const button = item.querySelector('.faq-button');
+    
+    // Adiciona classe active quando expandido
+    button.addEventListener('click', function() {
+      if (this.classList.contains('collapsed')) {
+        item.classList.remove('active');
+      } else {
+        item.classList.add('active');
+      }
+    });
+    
+    // Efeito de entrada para cada item
+    item.style.opacity = '0';
+    item.style.transform = 'translateY(20px)';
+    
+    setTimeout(() => {
+      item.style.transition = 'all 0.6s ease';
+      item.style.opacity = '1';
+      item.style.transform = 'translateY(0)';
+    }, 100 + (Array.from(faqItems).indexOf(item) * 100));
+  });
+  
+  // Efeito de parallax suave no fundo
+  window.addEventListener('scroll', function() {
+    const scrolled = window.pageYOffset;
+    const parallax = document.querySelector('.faq-container');
+    const speed = scrolled * 0.5;
+    
+    if (parallax) {
+      parallax.style.transform = `translateY(${speed}px)`;
+    }
+  });
+  
+  // Adiciona efeito de destaque ao hover nos botões
+  const faqButtons = document.querySelectorAll('.faq-button');
+  
+  faqButtons.forEach(button => {
+    button.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateX(5px) scale(1.02)';
+    });
+    
+    button.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateX(0) scale(1)';
+    });
+  });
+  
+  // Animação do ícone principal
+  const faqIcon = document.querySelector('.faq-icon');
+  if (faqIcon) {
+    setInterval(() => {
+      faqIcon.style.transform = 'rotate(5deg)';
+      setTimeout(() => {
+        faqIcon.style.transform = 'rotate(-5deg)';
+        setTimeout(() => {
+          faqIcon.style.transform = 'rotate(0deg)';
+        }, 200);
+      }, 200);
+    }, 5000);
+  }
+});
+</script>
+{% endblock content %}

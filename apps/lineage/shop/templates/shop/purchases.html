@@ -1,0 +1,186 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="reports-header">
+      <h1 class="reports-title">
+        <i class="fas fa-shopping-cart me-3"></i>{% trans "Histórico de Compras" %}
+      </h1>
+      <p class="reports-subtitle">
+        {% trans "Acompanhe todas as suas compras realizadas na loja do servidor" %}
+      </p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" class="text-decoration-none">
+            <i class="fas fa-home me-1"></i>{% trans "Dashboard" %}
+          </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          {% trans "Histórico de Compras" %}
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Voltar ao Dashboard Principal -->
+    <div class="text-start mb-4">
+      <a href="{% url 'dashboard' %}" class="report-back-button">
+        <i class="fas fa-arrow-left me-2"></i>{% trans "Voltar ao Dashboard Principal" %}
+      </a>
+    </div>
+
+    {% if purchases %}
+      <div class="reports-card">
+        <div class="reports-card-header">
+          <i class="fas fa-receipt reports-icon"></i>
+          <h2 class="reports-card-title">{% trans "Suas Compras" %}</h2>
+          <p class="reports-card-description">
+            {% trans "Total de" %} {{ purchases.count }} {% trans "compra(s) realizada(s)" %}
+          </p>
+        </div>
+        
+        <div class="reports-card-body">
+          <div class="purchase-list">
+            {% for purchase in purchases %}
+            <div class="purchase-item">
+              <div class="purchase-header">
+                <div class="purchase-info">
+                  <h3 class="purchase-title">
+                    <i class="fas fa-user me-2"></i>{{ purchase.character_name }}
+                  </h3>
+                  <div class="purchase-meta">
+                    <span class="purchase-date">
+                      <i class="fas fa-calendar me-1"></i>
+                      {{ purchase.data_compra|date:"d/m/Y H:i" }}
+                    </span>
+                    <span class="purchase-id">
+                      <i class="fas fa-hashtag me-1"></i>
+                      #{{ purchase.id }}
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="purchase-total">
+                  <div class="total-amount">
+                    <span class="currency">R$</span>
+                    <span class="amount">{{ purchase.total_pago|floatformat:2 }}</span>
+                  </div>
+                  
+                  {% if purchase.valor_bonus_usado > 0 %}
+                  <div class="payment-breakdown">
+                    <div class="bonus-amount">
+                      <i class="fas fa-gift me-1"></i>
+                      Bônus: R$ {{ purchase.valor_bonus_usado|floatformat:2 }}
+                    </div>
+                    <div class="money-amount">
+                      <i class="fas fa-money-bill me-1"></i>
+                      Dinheiro: R$ {{ purchase.valor_dinheiro_usado|floatformat:2 }}
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if purchase.promocao_aplicada %}
+              <div class="promotion-info">
+                <i class="fas fa-tag me-2"></i>
+                <strong>{% trans "Promoção Aplicada:" %}</strong>
+                {{ purchase.promocao_aplicada.codigo }} 
+                ({{ purchase.promocao_aplicada.desconto_percentual }}% {% trans "de desconto" %})
+              </div>
+              {% endif %}
+
+              {% if purchase.apoiador %}
+              <div class="supporter-info">
+                <i class="fas fa-heart me-2"></i>
+                <strong>{% trans "Apoiador:" %}</strong>
+                {{ purchase.apoiador.nome }}
+              </div>
+              {% endif %}
+
+              <div class="purchase-items">
+                <h4 class="items-title">
+                  <i class="fas fa-boxes me-2"></i>{% trans "Itens Comprados" %}
+                </h4>
+                
+                <div class="items-grid">
+                  {% for item in purchase.items.all %}
+                  <div class="item-card">
+                    <div class="item-header">
+                      <span class="item-name">{{ item.item_name }}</span>
+                      <span class="item-type-badge {{ item.tipo_compra }}">
+                        {% if item.tipo_compra == 'pacote' %}
+                          <i class="fas fa-box me-1"></i>{% trans "Pacote" %}
+                        {% else %}
+                          <i class="fas fa-cube me-1"></i>{% trans "Item" %}
+                        {% endif %}
+                      </span>
+                    </div>
+                    
+                    <div class="item-details">
+                      <div class="item-quantity">
+                        <i class="fas fa-layer-group me-1"></i>
+                        <strong>{% trans "Quantidade:" %}</strong> {{ item.quantidade }}
+                      </div>
+                      
+                      <div class="item-price">
+                        <i class="fas fa-tag me-1"></i>
+                        <strong>{% trans "Preço Unitário:" %}</strong> R$ {{ item.preco_unitario|floatformat:2 }}
+                      </div>
+                      
+                      <div class="item-total">
+                        <i class="fas fa-calculator me-1"></i>
+                        <strong>{% trans "Total:" %}</strong> R$ {{ item.preco_total|floatformat:2 }}
+                      </div>
+                      
+                      {% if item.tipo_compra == 'pacote' and item.nome_pacote %}
+                      <div class="package-name">
+                        <i class="fas fa-box-open me-1"></i>
+                        <strong>{% trans "Pacote:" %}</strong> {{ item.nome_pacote }}
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="reports-card">
+        <div class="reports-card-header">
+          <i class="fas fa-shopping-cart reports-icon"></i>
+          <h2 class="reports-card-title">{% trans "Nenhuma Compra Encontrada" %}</h2>
+          <p class="reports-card-description">
+            {% trans "Você ainda não realizou nenhuma compra na loja" %}
+          </p>
+        </div>
+        
+        <div class="reports-card-body">
+          <div class="empty-state">
+            <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
+            <p class="text-muted">{% trans "Faça sua primeira compra na loja para ver o histórico aqui!" %}</p>
+            <a href="{% url 'shop:shop_home' %}" class="reports-button">
+              <i class="fas fa-store me-2"></i>{% trans "Ir para a Loja" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,246 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="notifications-page">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="header-icon">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="header-text">
+        <h1>{% trans "Notificações" %}</h1>
+        <p>{% trans "Gerencie suas notificações privadas e públicas" %}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb-container">
+    <nav class="breadcrumb-nav">
+      <a href="{% url 'dashboard' %}" class="breadcrumb-link">
+        <i class="fas fa-home"></i>
+        <span>{% trans "Dashboard" %}</span>
+      </a>
+      <span class="breadcrumb-separator">/</span>
+      <span class="breadcrumb-current">{% trans "Notificações" %}</span>
+    </nav>
+  </div>
+
+  <!-- Actions Section -->
+  <div class="actions-section">
+    <div class="actions-container">
+      <button id="mark-all-as-read" class="action-btn primary">
+        <i class="fas fa-check-double"></i>
+        <span>{% trans "Marcar todas como lidas" %}</span>
+      </button>
+      <button id="delete-all-read" class="action-btn danger">
+        <i class="fas fa-trash"></i>
+        <span>{% trans "Excluir lidas" %}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Notifications Content -->
+  <div class="notifications-content">
+    <!-- Private Notifications -->
+    <div class="notifications-section">
+      <div class="section-header">
+        <div class="section-icon private">
+          <i class="fas fa-user-shield"></i>
+        </div>
+        <div class="section-info">
+          <h2>{% trans "Notificações Privadas" %}</h2>
+          <p>{% trans "Suas notificações pessoais" %}</p>
+        </div>
+      </div>
+
+      <div class="notifications-list">
+        {% if private_notifications %}
+          {% for notification in private_notifications %}
+          <div class="notification-card {% if not notification.read %}unread{% else %}read{% endif %}" 
+               data-notification-id="{{ notification.id }}">
+            <div class="notification-icon">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-header">
+                <h3 class="notification-title">{{ notification.title }}</h3>
+                <div class="notification-meta">
+                  <span class="notification-date">{{ notification.created_at|date:"d/m/Y H:i" }}</span>
+                  {% if not notification.read %}
+                  <span class="notification-badge">{% trans "Nova" %}</span>
+                  {% endif %}
+                </div>
+              </div>
+              <p class="notification-message">{{ notification.message|truncatewords:20 }}</p>
+            </div>
+            <div class="notification-actions">
+              <button class="view-btn" onclick="viewNotification({{ notification.id }})">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-inbox"></i>
+            </div>
+            <h3>{% trans "Nenhuma notificação privada" %}</h3>
+            <p>{% trans "Você não tem notificações privadas no momento" %}</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Public Notifications -->
+    <div class="notifications-section">
+      <div class="section-header">
+        <div class="section-icon public">
+          <i class="fas fa-broadcast-tower"></i>
+        </div>
+        <div class="section-info">
+          <h2>{% trans "Notificações Públicas" %}</h2>
+          <p>{% trans "Notificações gerais do sistema" %}</p>
+        </div>
+      </div>
+
+      <div class="notifications-list">
+        {% if public_notifications %}
+          {% for notification in public_notifications %}
+          <div class="notification-card {% if not notification.read %}unread{% else %}read{% endif %}" 
+               data-notification-id="{{ notification.id }}">
+            <div class="notification-icon public">
+              <i class="fas fa-broadcast-tower"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-header">
+                <h3 class="notification-title">{{ notification.title }}</h3>
+                <div class="notification-meta">
+                  <span class="notification-date">{{ notification.created_at|date:"d/m/Y H:i" }}</span>
+                  {% if not notification.read %}
+                  <span class="notification-badge">{% trans "Nova" %}</span>
+                  {% endif %}
+                </div>
+              </div>
+              <p class="notification-message">{{ notification.message|truncatewords:20 }}</p>
+            </div>
+            <div class="notification-actions">
+              <button class="view-btn" onclick="viewNotification({{ notification.id }})">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="fas fa-broadcast-tower"></i>
+            </div>
+            <h3>{% trans "Nenhuma notificação pública" %}</h3>
+            <p>{% trans "Não há notificações públicas no momento" %}</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Return Button -->
+  <div class="return-section">
+    <a href="{% url 'dashboard' %}" class="return-btn">
+      <i class="fas fa-arrow-left"></i>
+      <span>{% trans "Voltar ao Dashboard" %}</span>
+    </a>
+  </div>
+</div>
+
+<!-- Notification Modal -->
+<div id="notificationModal" class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <div class="modal-title">
+        <i class="fas fa-bell"></i>
+        <span>{% trans "Detalhes da Notificação" %}</span>
+      </div>
+      <button class="modal-close" onclick="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="notification-details">
+        <div class="detail-group">
+          <label>{% trans "Título" %}</label>
+          <div class="detail-value" id="modalTitle"></div>
+        </div>
+        <div class="detail-group">
+          <label>{% trans "Mensagem" %}</label>
+          <div class="detail-value" id="modalMessage"></div>
+        </div>
+        <div class="detail-group">
+          <label>{% trans "Data" %}</label>
+          <div class="detail-value" id="modalDate"></div>
+        </div>
+        <div class="detail-group">
+          <label>{% trans "Tipo" %}</label>
+          <div class="detail-value" id="modalType"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn secondary" onclick="closeModal()">
+        {% trans "Fechar" %}
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+function viewNotification(id) {
+  // Simular dados da notificação (em produção, isso viria de uma requisição AJAX)
+  const modal = document.getElementById('notificationModal');
+  const title = document.getElementById('modalTitle');
+  const message = document.getElementById('modalMessage');
+  const date = document.getElementById('modalDate');
+  const type = document.getElementById('modalType');
+  
+  // Aqui você faria uma requisição AJAX para buscar os dados da notificação
+  // Por enquanto, vamos usar dados simulados
+  title.textContent = 'Notificação #' + id;
+  message.textContent = 'Esta é uma mensagem de exemplo para a notificação #' + id + '. Aqui você pode ver todos os detalhes da notificação.';
+  date.textContent = new Date().toLocaleString('pt-BR');
+  type.textContent = id % 2 === 0 ? 'Privada' : 'Pública';
+  
+  modal.classList.add('active');
+}
+
+function closeModal() {
+  const modal = document.getElementById('notificationModal');
+  modal.classList.remove('active');
+}
+
+// Fechar modal ao clicar fora dele
+document.getElementById('notificationModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeModal();
+  }
+});
+
+// Marcar todas como lidas
+document.getElementById('mark-all-as-read').addEventListener('click', function() {
+  // Implementar lógica para marcar todas como lidas
+  console.log('Marcar todas como lidas');
+});
+
+// Excluir notificações lidas
+document.getElementById('delete-all-read').addEventListener('click', function() {
+  // Implementar lógica para excluir notificações lidas
+  console.log('Excluir notificações lidas');
+});
+</script>
+{% endblock %}

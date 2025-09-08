@@ -1,0 +1,290 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% trans "Wiki" %} - {{ PROJECT_TITLE }}{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Base CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{% static 'default/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'default/css/media.css' %}">
+    <link rel="stylesheet" href="{% static 'default/css/font.css' %}">
+    <link rel="stylesheet" href="{% static 'default/css/wiki.css' %}">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link type="text/css" href="{% static 'public/css/layout.css' %}" rel="stylesheet">
+
+    <style>
+      body {
+          background: url({% static 'default/images/bg/5.jpg' %}) top fixed no-repeat;
+          background-position-y: 0;
+          background-color: black;
+          min-height: 100vh;
+          position: relative;
+          margin: 0;
+          padding: 0;
+      }
+
+      /* Wiki Header */
+      .wiki-header {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          background: rgba(53, 47, 35, 0.95);
+          backdrop-filter: blur(15px);
+          border-bottom: 1px solid rgba(230, 199, 125, 0.2);
+          z-index: 1000;
+          padding: 15px 30px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+      }
+
+      .wiki-header-left {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+      }
+
+      .wiki-logo {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+      }
+
+      .wiki-logo img {
+          height: 40px;
+          width: auto;
+      }
+
+      .wiki-logo h1 {
+          color: #e6c77d;
+          font-size: 24px;
+          margin: 0;
+          text-shadow: 0px 0px 10px rgba(230, 199, 125, 0.3);
+      }
+
+      .wiki-header-right {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+      }
+
+      /* Language Selector */
+      .wiki-language {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: rgba(255, 255, 255, 0.8);
+          font-size: 14px;
+          cursor: pointer;
+          padding: 8px 12px;
+          border-radius: 20px;
+          background: rgba(230, 199, 125, 0.1);
+          border: 1px solid rgba(230, 199, 125, 0.2);
+          transition: all 0.3s ease;
+      }
+
+      .wiki-language:hover {
+          background: rgba(230, 199, 125, 0.2);
+          border-color: rgba(230, 199, 125, 0.4);
+      }
+
+      .wiki-language img {
+          width: 16px;
+          height: 16px;
+      }
+
+      .wiki-language-dropdown {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          background: rgba(53, 47, 35, 0.95);
+          backdrop-filter: blur(15px);
+          border: 1px solid rgba(230, 199, 125, 0.2);
+          border-radius: 8px;
+          padding: 10px 0;
+          min-width: 120px;
+          display: none;
+          z-index: 1001;
+          margin-top: 5px;
+      }
+
+      .wiki-language:hover .wiki-language-dropdown {
+          display: block;
+      }
+
+      .wiki-language-dropdown a {
+          display: block;
+          padding: 8px 15px;
+          color: rgba(255, 255, 255, 0.8);
+          text-decoration: none;
+          transition: all 0.3s ease;
+      }
+
+      .wiki-language-dropdown a:hover {
+          background: rgba(230, 199, 125, 0.1);
+          color: #e6c77d;
+      }
+
+      .back-to-site {
+          background: linear-gradient(135deg, #9b7530, #d1a44f);
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 25px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          box-shadow: 0 4px 15px rgba(155, 117, 48, 0.3);
+      }
+
+      .back-to-site:hover {
+          background: linear-gradient(135deg, #d1a44f, #e6c77d);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(155, 117, 48, 0.4);
+          color: white;
+          text-decoration: none;
+      }
+
+      .back-to-site i {
+          font-size: 12px;
+      }
+
+      /* Main Content Adjustment */
+      .wiki-main-content {
+          padding-top: 80px;
+          min-height: calc(100vh - 80px);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+          .wiki-header {
+              padding: 10px 15px;
+          }
+
+          .wiki-logo h1 {
+              font-size: 18px;
+          }
+
+          .wiki-header-right {
+              gap: 10px;
+          }
+
+          .back-to-site {
+              padding: 8px 15px;
+              font-size: 12px;
+          }
+
+          .wiki-language {
+              padding: 6px 10px;
+              font-size: 12px;
+          }
+
+          .wiki-header-left {
+              gap: 10px;
+          }
+      }
+
+      @media (max-width: 480px) {
+          .wiki-logo h1 {
+              display: none;
+          }
+
+          .back-to-site span {
+              display: none;
+          }
+
+          .wiki-language span {
+              display: none;
+          }
+      }
+    </style>
+
+    {% block extrahead %}{% endblock %}
+  </head>
+  <body>
+    <!-- Wiki Header -->
+    <header class="wiki-header">
+      <div class="wiki-header-left">
+        <div class="wiki-logo">
+          {% if site_logo %}
+            <img src="{{ site_logo.image.url }}" alt="{{ site_logo.name }}">
+          {% else %}
+            <img src="{% static 'default/images/logo.png' %}" alt="{% trans 'Logo do Lineage2' %}">
+          {% endif %}
+          <h1>{% trans "Wiki" %}</h1>
+        </div>
+      </div>
+
+      <div class="wiki-header-right">
+        <div class="wiki-language">
+          <img src="{% static 'default/images/icons/world.png' %}" alt="{% trans 'Idioma' %}">
+          <span>
+            {% if LANGUAGE_CODE == 'pt' %}{% trans "Português" %}
+            {% elif LANGUAGE_CODE == 'en' %}{% trans "English" %}
+            {% elif LANGUAGE_CODE == 'es' %}{% trans "Español" %}
+            {% endif %}
+          </span>
+          <img src="{% static 'default/images/icons/downcursor.png' %}" alt="{% trans 'Expandir' %}">
+          
+          <div class="wiki-language-dropdown">
+            <form method="post" action="{% url 'set_language' %}">
+              {% csrf_token %}
+              <input type="hidden" name="language" value="es">
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <a href="#" onclick="this.closest('form').submit(); return false;">{% trans "Español" %}</a>
+            </form>
+            <form method="post" action="{% url 'set_language' %}">
+              {% csrf_token %}
+              <input type="hidden" name="language" value="pt">
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <a href="#" onclick="this.closest('form').submit(); return false;">{% trans "Português" %}</a>
+            </form>
+            <form method="post" action="{% url 'set_language' %}">
+              {% csrf_token %}
+              <input type="hidden" name="language" value="en">
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <a href="#" onclick="this.closest('form').submit(); return false;">{% trans "English" %}</a>
+            </form>
+          </div>
+        </div>
+
+        <a href="{% url 'index' %}" class="back-to-site">
+          <i class="fas fa-arrow-left"></i>
+          <span>{% trans "Voltar ao Site" %}</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="wiki-main-content">
+      {% block content %}{% endblock %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'default/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="{% static 'default/js/main.js' %}"></script>
+    <script>
+      // Initialize AOS
+      AOS.init();
+    </script>
+    {% block extrascripts %}{% endblock %}
+  </body>
+</html> 

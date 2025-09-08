@@ -1,0 +1,128 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'roulette/style.css' %}">
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="roulette-bg py-5">
+
+  <div class="user-panel my-4 mx-3">
+    <div class="info-block">
+      <strong>🎫 Fichas</strong>
+      <span id="userFichas">{{ fichas }}</span>
+    </div>
+    <div class="info-block">
+      <strong>🔁 Giros</strong>
+      <span id="userSpins">{{ total_spins }}</span>
+    </div>
+    <div class="info-block" id="lastPrizeInfo" {% if not last_spin %}style="display: none;"{% endif %}>
+      <strong>🏆 Último prêmio</strong>
+      <span id="lastPrizeName">{% if last_spin %}{{ last_spin.prize.name }}{% endif %}</span>
+    </div>
+  </div>    
+
+  <!-- Botão de Comprar Fichas -->
+  <div class="text-center mt-4 mb-4">
+    <button class="btn btn-warning btn-lg rounded-pill" data-bs-toggle="modal" data-bs-target="#buyTokensModal">
+      <i class="bi bi-cart-plus me-2"></i> Comprar Fichas
+    </button>
+  </div>
+
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold text-glow text-white">
+        <i class="bi bi-stars me-2 text-white"></i> Roleta de Prêmios
+      </h2>
+      <p class="text-white">Gire a roleta e conquiste itens lendários!</p>
+    </div>
+
+    <div class="roulette-wrapper d-flex justify-content-center position-relative">
+
+      <!-- GIF esquerdo -->
+      <img src="{% static 'assets/movies/chest.webp' %}" alt="Efeito esquerdo" class="position-absolute start-0 top-50 translate-middle-y d-none d-md-block" style="max-width: 150px; z-index: 2;">
+
+      <div class="roulette-card shadow-lg rounded-4 p-4 text-center border border-secondary position-relative overflow-hidden">
+        
+        <!-- Vídeo de fundo -->
+        <video id="bg-video" autoplay loop muted playsinline>
+          <source src="{% static 'assets/movies/bg_roulette.mp4' %}" type="video/mp4">
+          Seu navegador não suporta vídeos.
+        </video>
+    
+        <!-- Conteúdo do card -->
+        <div class="roulette-window position-relative mb-3">
+          <ul id="rouletteList" class="roulette-list"></ul>
+        </div>
+    
+        <button id="spinBtn" class="btn btn-primary btn-lg rounded-pill px-5 mt-3 glow-button pulse">
+          <i class="bi bi-arrow-clockwise me-2"></i> Girar
+        </button>
+    
+        <div id="result" class="mt-4 fs-5 text-info fw-semibold"></div>
+      </div>
+
+      <!-- GIF direito -->
+      <img src="{% static 'assets/movies/fake-chest.webp' %}" alt="Efeito direito" class="position-absolute end-0 top-50 translate-middle-y d-none d-md-block" style="max-width: 150px; z-index: 2;">      
+    
+    </div>    
+
+  </div>
+</div>
+
+<!-- Modal de Prêmio -->
+<div id="rewardModal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center bg-dark text-white border border-purple shadow-lg rounded-4">
+      <div class="modal-header border-0">
+        <h5 class="modal-title w-100 fw-bold text-glow">🎉 Parabéns! 🎉</h5>
+      </div>
+      <div class="modal-body">
+        <img id="modalPrizeImg" src="" alt="Prêmio" class="img-fluid mb-3" style="max-height: 100px;">
+        <h4 id="modalPrizeName" class="text-info fw-bold mb-1"></h4>
+        <p id="modalPrizeMsg" class="mb-0"></p>
+        <p id="modalPrizeRarity" class="mb-0"></p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button type="button" class="btn btn-glow text-white px-4 py-2 rounded-pill" data-bs-dismiss="modal">
+          Fechar
+        </button>
+      </div>      
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Falha -->
+<div class="modal fade" id="failModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content text-center p-4">
+      <h5 class="modal-title">Que pena!</h5>
+      <p class="text-white">Você não ganhou nenhum prêmio desta vez. Tente novamente!</p>
+      <button class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Compra -->
+<div class="modal fade" id="buyTokensModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content text-center p-4">
+      <h5 class="modal-title mb-3">Comprar Fichas</h5>
+      <p class="text-white">Escolha a quantidade de fichas que deseja comprar. Valor: R$0,10 por ficha.</p>
+      <input type="number" id="buyQuantity" class="form-control mb-3" min="1" value="1">
+      <button class="btn btn-success" onclick="buyFichas()">Confirmar Compra</button>
+    </div>
+  </div>
+</div>
+
+<meta name="csrf-token" content="{{ csrf_token }}">
+
+<script>
+  const prizes = {{ prizes|safe }};
+  const SPIN_URL = "{% url 'games:spin_ajax' %}";
+  const FICHAS_URL = "{% url 'games:comprar_fichas' %}";
+</script>
+
+<script src="{% static 'roulette/script.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Status da Verificação" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <i class="bi bi-patch-check-fill text-primary"></i>
+                        {% trans "Status da Verificação de Conta" %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if is_verified %}
+                        <!-- Conta já verificada -->
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <i class="bi bi-patch-check-fill text-success" style="font-size: 4rem;"></i>
+                            </div>
+                            <h3 class="text-success mb-3">{% trans "Conta Verificada!" %}</h3>
+                            <p class="text-muted mb-4">
+                                {% trans "Parabéns! Sua conta foi verificada com sucesso. Agora você tem acesso a recursos exclusivos e maior credibilidade na comunidade." %}
+                            </p>
+                            <div class="alert alert-success">
+                                <i class="bi bi-info-circle"></i>
+                                <strong>{% trans "Benefícios da verificação:" %}</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li>{% trans "Badge de verificação no perfil" %}</li>
+                                    <li>{% trans "Maior visibilidade nos posts" %}</li>
+                                    <li>{% trans "Acesso a recursos exclusivos" %}</li>
+                                    <li>{% trans "Maior credibilidade na comunidade" %}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    {% elif verification_request %}
+                        <!-- Solicitação existente -->
+                        <div class="verification-status">
+                            {% if verification_request.status == 'pending' %}
+                                <div class="text-center mb-4">
+                                    <i class="bi bi-hourglass-split text-warning" style="font-size: 4rem;"></i>
+                                </div>
+                                <h3 class="text-warning text-center mb-3">{% trans "Solicitação em Análise" %}</h3>
+                                <div class="alert alert-warning">
+                                    <i class="bi bi-info-circle"></i>
+                                    <strong>{% trans "Status:" %}</strong>
+                                    {% trans "Sua solicitação está sendo analisada pela nossa equipe. O processo pode levar de 1 a 3 dias úteis." %}
+                                </div>
+                                
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="mb-0"><i class="bi bi-calendar-event"></i> {% trans "Detalhes da Solicitação" %}</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>{% trans "Data de Envio:" %}</strong><br>
+                                                {{ verification_request.created_at|date:"d/m/Y H:i" }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>{% trans "Status:" %}</strong><br>
+                                                <span class="badge bg-warning">{{ verification_request.get_status_display }}</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center">
+                                    <a href="{% url 'social:verification_cancel' verification_request.id %}" 
+                                       class="btn btn-outline-danger"
+                                       onclick="return confirm('{% trans 'Tem certeza que deseja cancelar sua solicitação?' %}')">
+                                        <i class="bi bi-x-circle"></i>
+                                        {% trans "Cancelar Solicitação" %}
+                                    </a>
+                                </div>
+                                
+                            {% elif verification_request.status == 'approved' %}
+                                <div class="text-center mb-4">
+                                    <i class="bi bi-patch-check-fill text-success" style="font-size: 4rem;"></i>
+                                </div>
+                                <h3 class="text-success text-center mb-3">{% trans "Solicitação Aprovada!" %}</h3>
+                                <div class="alert alert-success">
+                                    <i class="bi bi-check-circle"></i>
+                                    <strong>{% trans "Parabéns!" %}</strong>
+                                    {% trans "Sua solicitação foi aprovada e sua conta foi verificada com sucesso." %}
+                                </div>
+                                
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="mb-0"><i class="bi bi-calendar-event"></i> {% trans "Detalhes da Aprovação" %}</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>{% trans "Data de Aprovação:" %}</strong><br>
+                                                {{ verification_request.reviewed_at|date:"d/m/Y H:i" }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p><strong>{% trans "Aprovado por:" %}</strong><br>
+                                                {{ verification_request.reviewed_by.username }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            {% elif verification_request.status == 'rejected' %}
+                                <div class="text-center mb-4">
+                                    <i class="bi bi-x-circle text-danger" style="font-size: 4rem;"></i>
+                                </div>
+                                <h3 class="text-danger text-center mb-3">{% trans "Solicitação Rejeitada" %}</h3>
+                                <div class="alert alert-danger">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    <strong>{% trans "Motivo da rejeição:" %}</strong>
+                                    {{ verification_request.get_rejection_reason_display }}
+                                </div>
+                                
+                                {% if verification_request.admin_notes %}
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="mb-0"><i class="bi bi-chat-text"></i> {% trans "Observações" %}</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="mb-0">{{ verification_request.admin_notes }}</p>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                <div class="text-center">
+                                    <a href="{% url 'social:verification_request' %}" class="btn btn-primary">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                        {% trans "Nova Solicitação" %}
+                                    </a>
+                                </div>
+                                
+                            {% elif verification_request.status == 'cancelled' %}
+                                <div class="text-center mb-4">
+                                    <i class="bi bi-x-circle text-secondary" style="font-size: 4rem;"></i>
+                                </div>
+                                <h3 class="text-secondary text-center mb-3">{% trans "Solicitação Cancelada" %}</h3>
+                                <div class="alert alert-secondary">
+                                    <i class="bi bi-info-circle"></i>
+                                    {% trans "Sua solicitação foi cancelada. Você pode enviar uma nova solicitação quando desejar." %}
+                                </div>
+                                
+                                <div class="text-center">
+                                    <a href="{% url 'social:verification_request' %}" class="btn btn-primary">
+                                        <i class="bi bi-plus-circle"></i>
+                                        {% trans "Nova Solicitação" %}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <!-- Sem solicitação -->
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <i class="bi bi-patch-question text-muted" style="font-size: 4rem;"></i>
+                            </div>
+                            <h3 class="text-muted mb-3">{% trans "Nenhuma Solicitação Encontrada" %}</h3>
+                            <p class="text-muted mb-4">
+                                {% trans "Você ainda não enviou uma solicitação de verificação. Clique no botão abaixo para começar o processo." %}
+                            </p>
+                            
+                            <a href="{% url 'social:verification_request' %}" class="btn btn-primary btn-lg">
+                                <i class="bi bi-patch-check"></i>
+                                {% trans "Solicitar Verificação" %}
+                            </a>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mt-4 text-center">
+                        <a href="{% url 'social:feed' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i>
+                            {% trans "Voltar ao Feed" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

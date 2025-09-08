@@ -1,0 +1,121 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Requisitos para Verificação" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <i class="bi bi-patch-check-fill text-primary"></i>
+                        {% trans "Requisitos para Verificação de Conta" %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>{% trans "Informação:" %}</strong>
+                        {% trans "Para solicitar a verificação da sua conta, você precisa atender aos seguintes requisitos:" %}
+                    </div>
+
+                    <div class="row">
+                        {% for key, requirement in requirements.items %}
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 {% if requirement.status %}border-success{% else %}border-warning{% endif %}">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3">
+                                            <i class="bi {{ requirement.icon }} fs-2 {% if requirement.status %}text-success{% else %}text-warning{% endif %}"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="card-title mb-1 {% if requirement.status %}text-success{% else %}text-warning{% endif %}">
+                                                {{ requirement.label }}
+                                            </h6>
+                                            <p class="card-text small text-muted mb-0">
+                                                {{ requirement.description }}
+                                            </p>
+                                        </div>
+                                        <div class="ms-2">
+                                            {% if requirement.status %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle"></i>
+                                                    {% trans "Concluído" %}
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-warning">
+                                                    <i class="bi bi-exclamation-circle"></i>
+                                                    {% trans "Pendente" %}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-4">
+                        <h5>{% trans "Como completar os requisitos:" %}</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6><i class="bi bi-envelope-check text-primary"></i> {% trans "Verificar E-mail" %}</h6>
+                                        <p class="small text-muted">
+                                            {% trans "Acesse seu e-mail e clique no link de verificação enviado durante o cadastro." %}
+                                        </p>
+                                        <a href="{% url 'profile' %}" class="btn btn-sm btn-outline-primary">
+                                            {% trans "Ir para Perfil" %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6><i class="bi bi-shield-check text-primary"></i> {% trans "Habilitar 2FA" %}</h6>
+                                        <p class="small text-muted">
+                                            {% trans "Configure a autenticação de dois fatores para maior segurança." %}
+                                        </p>
+                                        <a href="{% url 'profile' %}" class="btn btn-sm btn-outline-primary">
+                                            {% trans "Configurar 2FA" %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <a href="{% url 'social:feed' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i>
+                            {% trans "Voltar ao Feed" %}
+                        </a>
+                        <a href="{% url 'social:verification_request' %}" class="btn btn-primary" id="request-btn" style="display: none;">
+                            <i class="bi bi-patch-check"></i>
+                            {% trans "Solicitar Verificação" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar se todos os requisitos foram atendidos
+    const requirements = {{ requirements|safe }};
+    const allMet = Object.values(requirements).every(req => req.status);
+    
+    if (allMet) {
+        document.getElementById('request-btn').style.display = 'inline-block';
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ api_info.name }} v{{ api_info.version }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'api/css/landing.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <i class="fas fa-gamepad"></i>
+                {{ api_info.name }}
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#features"><i class="fas fa-star"></i> Recursos</a></li>
+                    <li><a href="#endpoints"><i class="fas fa-link"></i> Endpoints</a></li>
+                    <li><a href="#docs"><i class="fas fa-book"></i> Documentação</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Hero Section -->
+        <section id="docs" class="hero" >
+            <h1>
+                {{ api_info.name }}
+                <span class="version-badge">{{ api_info.version }}</span>
+            </h1>
+            <p>{{ api_info.description }}</p>
+            
+            <div class="status-badge">
+                <i class="fas fa-circle"></i>
+                {{ api_info.status|upper }}
+            </div>
+
+            <div class="action-buttons">
+                <a href="{{ api_info.documentation.swagger_ui }}" class="btn btn-primary">
+                    <i class="fas fa-book-open"></i>
+                    Documentação Swagger
+                </a>
+                <a href="{{ api_info.documentation.openapi_schema }}" class="btn btn-secondary">
+                    <i class="fas fa-code"></i>
+                    Schema OpenAPI
+                </a>
+                <a href="{{ api_info.documentation.redoc }}" class="btn btn-secondary">
+                    <i class="fas fa-file-alt"></i>
+                    ReDoc
+                </a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="feature-card">
+                <h3><i class="fas fa-rocket"></i> Performance</h3>
+                <ul>
+                    <li>Cache inteligente com Redis</li>
+                    <li>Paginação otimizada</li>
+                    <li>Rate limiting avançado</li>
+                    <li>Compressão automática</li>
+                    <li>CDN integrado</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3><i class="fas fa-tools"></i> Desenvolvimento</h3>
+                <ul>
+                    <li>Documentação automática</li>
+                    <li>Versionamento da API</li>
+                    <li>Filtros avançados</li>
+                    <li>Tratamento de erros</li>
+                    <li>Validação robusta</li>
+                </ul>
+            </div>
+            
+            <div class="feature-card">
+                <h3><i class="fas fa-chart-line"></i> Monitoramento</h3>
+                <ul>
+                    <li>Health checks em tempo real</li>
+                    <li>Métricas detalhadas</li>
+                    <li>Logs estruturados</li>
+                    <li>Alertas automáticos</li>
+                    <li>Dashboard de performance</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <h3><i class="fas fa-chart-bar"></i> Estatísticas da API</h3>
+            <div class="stats-grid">
+                {% with public_count=api_info.endpoints.public|length authenticated_count=api_info.endpoints.authenticated|length %}
+                <div class="stat-item">
+                    <div class="stat-number">{{ public_count|add:authenticated_count }}</div>
+                    <div class="stat-label">Endpoints</div>
+                </div>
+                {% endwith %}
+                <div class="stat-item">
+                    <div class="stat-number">{{ api_info.rate_limits.anonymous }}</div>
+                    <div class="stat-label">Rate Limit Anônimo</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ api_info.rate_limits.authenticated }}</div>
+                    <div class="stat-label">Rate Limit Autenticado</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ api_info.features|length }}</div>
+                    <div class="stat-label">Recursos</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Endpoints Section -->
+        <section id="endpoints" class="endpoints-section">
+            <h3><i class="fas fa-link"></i> Endpoints Principais</h3>
+            <div class="endpoints-grid">
+                <div class="endpoint-category">
+                    <h4><i class="fas fa-globe"></i> Públicos</h4>
+                    <ul class="endpoint-list">
+                        {% for endpoint in api_info.endpoints.public %}
+                        <li>{{ endpoint }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="endpoint-category">
+                    <h4><i class="fas fa-lock"></i> Autenticados</h4>
+                    <ul class="endpoint-list">
+                        {% for endpoint in api_info.endpoints.authenticated %}
+                        <li>{{ endpoint }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="endpoint-category">
+                    <h4><i class="fas fa-shield-alt"></i> Administradores</h4>
+                    <ul class="endpoint-list">
+                        {% for endpoint in api_info.endpoints.admin_only %}
+                        <li>{{ endpoint }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="rate-limits">
+                <div class="rate-limit-item">
+                    <div class="rate-limit-label">Anônimos</div>
+                    <div class="rate-limit-value">{{ api_info.rate_limits.anonymous }}</div>
+                </div>
+                <div class="rate-limit-item">
+                    <div class="rate-limit-label">Autenticados</div>
+                    <div class="rate-limit-value">{{ api_info.rate_limits.authenticated }}</div>
+                </div>
+            </div>
+            <p class="footer-text">
+                <i class="fas fa-heart"></i> 
+                Desenvolvido com Django REST Framework e muito ❤️
+            </p>
+        </footer>
+    </main>
+
+    <!-- Smooth Scrolling -->
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.15)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.1)';
+            }
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all feature cards and sections
+        document.querySelectorAll('.feature-card, .endpoint-category, .stat-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html> 

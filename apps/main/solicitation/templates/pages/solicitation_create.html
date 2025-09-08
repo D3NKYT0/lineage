@@ -1,0 +1,369 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Criar Solicitação" %}{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .solicitation-create-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .header-card {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border: 2px solid #6f42c1;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .header-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .info-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+    margin-bottom: 2rem;
+  }
+
+  .form-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+  }
+
+  .form-label {
+    color: #f8f9fa;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control, .form-select {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border: 1px solid #6f42c1;
+    border-radius: 8px;
+    color: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus, .form-select:focus {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border-color: #00d9ff;
+    box-shadow: 0 0 10px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+  }
+
+  .form-control::placeholder {
+    color: #aaa;
+  }
+
+  /* Estilização das opções do select */
+  .form-select option,
+  select option {
+    background: #2a2a3e !important;
+    color: #ffffff !important;
+    border: none;
+    padding: 8px 12px;
+  }
+
+  .form-select option:hover,
+  select option:hover {
+    background: #6f42c1 !important;
+    color: white !important;
+  }
+
+  .form-select option:checked,
+  select option:checked {
+    background: #6f42c1 !important;
+    color: white !important;
+  }
+
+  /* Estilização específica para selects do Django */
+  select[id*="category"],
+  select[id*="priority"] {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230) !important;
+    border: 1px solid #6f42c1 !important;
+    border-radius: 8px !important;
+    color: #f8f9fa !important;
+  }
+
+  select[id*="category"] option,
+  select[id*="priority"] option {
+    background: #2a2a3e !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 8px 12px !important;
+  }
+
+  select[id*="category"] option:hover,
+  select[id*="priority"] option:hover {
+    background: #6f42c1 !important;
+    color: white !important;
+  }
+
+  select[id*="category"] option:checked,
+  select[id*="priority"] option:checked {
+    background: #6f42c1 !important;
+    color: white !important;
+  }
+
+  /* Estilização específica para o dropdown aberto */
+  .form-select:focus option,
+  select:focus option {
+    background-color: #2a2a3e !important;
+    color: #ffffff !important;
+  }
+
+  /* Estilização para diferentes navegadores */
+  .form-select option:first-child,
+  select option:first-child {
+    background-color: #2a2a3e !important;
+    color: #ffffff !important;
+  }
+
+  /* Estilização específica para selects do Django quando focados */
+  select[id*="category"]:focus option,
+  select[id*="priority"]:focus option {
+    background-color: #2a2a3e !important;
+    color: #ffffff !important;
+  }
+
+  select[id*="category"] option:first-child,
+  select[id*="priority"] option:first-child {
+    background-color: #2a2a3e !important;
+    color: #ffffff !important;
+  }
+
+  /* Estilização para Firefox */
+  .form-select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #f8f9fa;
+  }
+
+  /* Estilização para Chrome/Safari */
+  .form-select::-ms-expand {
+    display: none;
+  }
+
+  /* Forçar estilo para todos os selects do Django */
+  select {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230) !important;
+    border: 1px solid #6f42c1 !important;
+    border-radius: 8px !important;
+    color: #f8f9fa !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23f8f9fa' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e") !important;
+  }
+
+  /* Forçar estilo para todas as opções */
+  select option {
+    background-color: #2a2a3e !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 8px 12px !important;
+  }
+
+  /* Forçar estilo para opções quando o select está aberto */
+  select:focus option {
+    background-color: #2a2a3e !important;
+    color: #ffffff !important;
+  }
+
+  /* Forçar estilo para opções selecionadas */
+  select option:checked,
+  select option:selected {
+    background-color: #6f42c1 !important;
+    color: white !important;
+  }
+
+  /* Forçar estilo para opções no hover */
+  select option:hover {
+    background-color: #6f42c1 !important;
+    color: white !important;
+  }
+
+  .btn-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 25px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    color: white;
+  }
+
+  .btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 25px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+    color: white;
+  }
+
+  .text-danger {
+    color: #e83e8c !important;
+  }
+
+  .info-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .info-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(111, 66, 193, 0.3);
+    color: #f8f9fa;
+  }
+
+  .info-list li:last-child {
+    border-bottom: none;
+  }
+
+  .info-list li::before {
+    content: '•';
+    color: #00d9ff;
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="solicitation-create-bg">
+  <div class="container">
+    <!-- Header -->
+    <div class="header-card">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <div class="d-flex align-items-center">
+            <div class="me-4">
+              <i class="fas fa-plus-circle fa-3x text-white" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);"></i>
+            </div>
+            <div>
+              <h1 class="header-title">{% trans "Criar Nova Solicitação" %}</h1>
+              <p class="text-white-50">{% trans "Abra um ticket de suporte para iniciar o atendimento" %}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Informações Importantes -->
+    <div class="info-card p-4">
+      <h4 class="text-white mb-3">
+        <i class="fas fa-info-circle text-info me-2"></i>
+        {% trans "Informações Importantes:" %}
+      </h4>
+      <ul class="info-list">
+        <li>{% trans "As solicitações são tickets de suporte para iniciar um chat com a administração." %}</li>
+        <li>{% trans "Enquanto o status da solicitação estiver como Aberto ou Em Andamento, o chat permanecerá ativo." %}</li>
+        <li>{% trans "Após a solicitação ser resolvida ou fechada, o chat será desabilitado e o atendimento encerrado." %}</li>
+        <li>{% trans "Você pode criar múltiplas solicitações conforme necessário." %}</li>
+        <li>{% trans "Seja claro e objetivo ao abrir uma solicitação para que a equipe possa ajudá-lo de forma mais eficaz." %}</li>
+        <li>{% trans "Após criar a solicitação, acesse o dashboard e clique em Chat para iniciar o atendimento." %}</li>
+        <li>{% trans "O atendimento não é em tempo real, ou seja, você criará a solicitação e aguardará a resposta da equipe." %}</li>
+      </ul>
+    </div>
+
+    <!-- Formulário -->
+    <div class="form-card p-4">
+      <form method="post">
+        {% csrf_token %}
+        
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label for="{{ form.title.id_for_label }}" class="form-label">{% trans "Título" %} *</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+              <div class="text-danger mt-1">{{ form.title.errors }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="{{ form.category.id_for_label }}" class="form-label">{% trans "Categoria" %} *</label>
+            {{ form.category }}
+            {% if form.category.errors %}
+              <div class="text-danger mt-1">{{ form.category.errors }}</div>
+            {% endif %}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="{{ form.priority.id_for_label }}" class="form-label">{% trans "Prioridade" %} *</label>
+            {{ form.priority }}
+            {% if form.priority.errors %}
+              <div class="text-danger mt-1">{{ form.priority.errors }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mb-4">
+            <label for="{{ form.description.id_for_label }}" class="form-label">{% trans "Descrição" %} *</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+              <div class="text-danger mt-1">{{ form.description.errors }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="d-flex gap-3">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-check me-2"></i>{% trans "Criar Solicitação" %}
+          </button>
+          <a href="{% url 'solicitation:solicitation_list' %}" class="btn btn-secondary">
+            <i class="fas fa-times me-2"></i>{% trans "Cancelar" %}
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

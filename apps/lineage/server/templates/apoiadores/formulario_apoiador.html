@@ -1,0 +1,236 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Solicitar Acesso como Apoiador" %}{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .supporter-form-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .supporter-form-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .supporter-form-header h1 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .supporter-form-header p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .supporter-form-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .form-label {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .form-control-custom {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+
+  .form-control-custom:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.1);
+  }
+
+  .form-control-custom::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .form-control-custom[type="file"] {
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .form-control-custom[type="file"]::-webkit-file-upload-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .form-control-custom[type="file"]::-webkit-file-upload-button:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  }
+
+  textarea.form-control-custom {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(72, 187, 120, 0.4);
+    color: white;
+  }
+
+  .field-info {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .required-field::after {
+    content: " *";
+    color: #f56565;
+  }
+
+  @media (max-width: 768px) {
+    .supporter-form-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="supporter-form-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="supporter-form-header">
+      <h1>
+        <i class="fas fa-handshake me-3"></i>{% trans "Torne-se um Apoiador" %}
+      </h1>
+      <p>{% trans "Preencha o formulário abaixo para solicitar acesso aos benefícios exclusivos" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" style="color: #a0aec0;">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: white;">{% trans "Solicitar Acesso" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Form Card -->
+    <div class="supporter-form-card">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="nome_publico" class="form-label required-field">
+            <i class="fas fa-user me-2"></i>{% trans "Nome Público" %}
+          </label>
+          <input type="text" 
+                 id="nome_publico" 
+                 name="nome_publico" 
+                 required 
+                 class="form-control-custom"
+                 placeholder="{% trans 'Seu nome público como apoiador' %}">
+          <div class="field-info">{% trans "Este será o nome exibido publicamente" %}</div>
+        </div>
+
+        <div class="form-group">
+          <label for="descricao" class="form-label">
+            <i class="fas fa-align-left me-2"></i>{% trans "Descrição" %}
+          </label>
+          <textarea id="descricao" 
+                    name="descricao" 
+                    rows="4" 
+                    class="form-control-custom"
+                    placeholder="{% trans 'Conte um pouco sobre você e seu conteúdo...' %}"></textarea>
+          <div class="field-info">{% trans "Descreva seu conteúdo e público" %}</div>
+        </div>
+
+        <div class="form-group">
+          <label for="link_twitch" class="form-label">
+            <i class="fab fa-twitch me-2"></i>{% trans "Link do Twitch" %}
+          </label>
+          <input type="url" 
+                 id="link_twitch" 
+                 name="link_twitch" 
+                 placeholder="https://twitch.tv/seu-canal" 
+                 class="form-control-custom">
+        </div>
+
+        <div class="form-group">
+          <label for="link_youtube" class="form-label">
+            <i class="fab fa-youtube me-2"></i>{% trans "Link do YouTube" %}
+          </label>
+          <input type="url" 
+                 id="link_youtube" 
+                 name="link_youtube" 
+                 placeholder="https://youtube.com/seu-canal" 
+                 class="form-control-custom">
+        </div>
+
+        <div class="form-group">
+          <label for="imagem" class="form-label">
+            <i class="fas fa-image me-2"></i>{% trans "Imagem / Avatar" %}
+          </label>
+          <input type="file" 
+                 id="imagem" 
+                 name="imagem" 
+                 accept="image/*" 
+                 class="form-control-custom">
+          <div class="field-info">{% trans "Formatos aceitos: JPG, PNG, GIF (máx. 5MB)" %}</div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+          <i class="fas fa-paper-plane me-2"></i>{% trans "Enviar Solicitação" %}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

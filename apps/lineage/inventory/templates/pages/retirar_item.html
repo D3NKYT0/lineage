@@ -1,0 +1,252 @@
+{% extends "layouts/base.html" %}
+{% load i18n l10n %}
+{% load static %}
+{% load itens_extras %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="reports-header">
+      <h1 class="reports-title">
+        <i class="fas fa-download me-3"></i>{% trans "Retirar Item do Servidor" %}
+      </h1>
+      <p class="reports-subtitle">
+        {% trans "Selecione um personagem e retire itens do seu inventário" %}
+      </p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'inventory:inventario_dashboard' %}">{% trans "Inventário" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Retirar Item" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Seletor de Personagem -->
+    <div class="reports-card">
+      <div class="reports-card-header">
+        <i class="fas fa-user reports-icon"></i>
+        <h2 class="reports-card-title">{% trans "Selecionar Personagem" %}</h2>
+        <p class="reports-card-description">{% trans "Escolha o personagem para visualizar o inventário" %}</p>
+      </div>
+      <div class="reports-card-body">
+        <form method="get" class="mb-4">
+          <div class="mb-3">
+            <label class="form-label fw-semibold" for="char_id">{% trans "Personagem" %}</label>
+            <select class="form-select" id="char_id" name="char_id" required onchange="this.form.submit()">
+              <option value="">{% trans "Selecione um personagem" %}</option>
+              {% for p in personagens %}
+                <option value="{{ p.obj_Id|stringformat:'s' }}" {% if p.obj_Id|stringformat:"s" == char_id %}selected{% endif %}>
+                  {{ p.char_name }} (Lv.{{ p.base_level }})
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% if char_id %}
+      {% if items %}
+        <!-- Inventário do Personagem -->
+        <div class="reports-card">
+          <div class="reports-card-header">
+            <i class="fas fa-boxes reports-icon"></i>
+            <h2 class="reports-card-title">{% trans "Inventário de" %} {{ personagem.char_name }}</h2>
+            <p class="reports-card-description">{% trans "Clique em um item para selecioná-lo" %}</p>
+          </div>
+          <div class="reports-card-body">
+            <!-- Lista de itens -->
+            <div class="items-grid">
+              {% for item in items %}
+                <div class="item-card clickable-row" 
+                     data-item-id="{{ item.item_type }}" 
+                     data-item-amount="{{ item.amount }}"
+                     data-item-name="{{ item.name }}">
+                  <div class="item-header">
+                    <img src="{% item_image_url item.item_type %}" 
+                         alt="{{ item.item_name }}"
+                         class="item-image">
+                  </div>
+                  <div class="item-info">
+                    <h6 class="item-name">{{ item.name }}</h6>
+                    <div class="item-details">
+                      <div class="item-detail">
+                        <strong>{% trans "Encantamento" %}:</strong>
+                        <span>{{ item.enchant }}</span>
+                      </div>
+                      <div class="item-detail">
+                        <strong>{% trans "Quantidade" %}:</strong>
+                        <span>{{ item.amount }}</span>
+                      </div>
+                      <div class="item-detail">
+                        <strong>{% trans "Localização" %}:</strong>
+                        <span>{{ item.location }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            <!-- Paginação -->
+            {% if items.has_other_pages %}
+              <nav aria-label="Navegação de itens" class="mt-4">
+                <ul class="pagination justify-content-center">
+                  {% if items.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link" href="?char_id={{ char_id }}&page={{ items.previous_page_number }}">{% trans "Anterior" %}</a>
+                    </li>
+                  {% else %}
+                    <li class="page-item disabled"><span class="page-link">{% trans "Anterior" %}</span></li>
+                  {% endif %}
+
+                  <li class="page-item disabled"><span class="page-link">{{ items.number }} / {{ items.paginator.num_pages }}</span></li>
+
+                  {% if items.has_next %}
+                    <li class="page-item">
+                      <a class="page-link" href="?char_id={{ char_id }}&page={{ items.next_page_number }}">{% trans "Próxima" %}</a>
+                    </li>
+                  {% else %}
+                    <li class="page-item disabled"><span class="page-link">{% trans "Próxima" %}</span></li>
+                  {% endif %}
+                </ul>
+              </nav>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Form de Retirada -->
+        <div class="reports-card">
+          <div class="reports-card-header">
+            <i class="fas fa-hand-holding-usd reports-icon"></i>
+            <h2 class="reports-card-title">{% trans "Retirar Item" %}</h2>
+            <p class="reports-card-description">{% trans "Preencha os dados para retirar o item selecionado" %}</p>
+          </div>
+          <div class="reports-card-body">
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="char_id" value="{{ char_id }}">
+
+              <!-- Nome do Item -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="item_name">{% trans "Item Selecionado" %}</label>
+                <input type="text" class="form-control" id="item_name" readonly>
+              </div>
+
+              <!-- ID do Item (interno) -->
+              <input type="hidden" id="item_id" name="item_id" required>
+
+              <!-- Quantidade -->
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="quantity">{% trans "Quantidade" %}</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+              </div>
+
+              <!-- Senha -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold" for="senha">{% trans "Sua senha" %}</label>
+                <input type="password" class="form-control" id="senha" name="senha" required>
+              </div>
+
+              <div class="text-end">
+                <button type="submit" class="reports-button">
+                  <i class="fas fa-check-circle me-2"></i>{% trans "Retirar Item" %}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      {% else %}
+        <!-- Estado vazio -->
+        <div class="reports-card">
+          <div class="reports-card-header">
+            <i class="fas fa-box-open reports-icon"></i>
+            <h2 class="reports-card-title">{% trans "Inventário Vazio" %}</h2>
+            <p class="reports-card-description">{% trans "Este personagem não possui itens no inventário" %}</p>
+          </div>
+          <div class="reports-card-body">
+            <div class="empty-state">
+              <i class="fas fa-box-open"></i>
+              <h3>{% trans "Nenhum item encontrado" %}</h3>
+              <p>{% trans "Nenhum item encontrado no inventário deste personagem." %}</p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
+
+    <!-- Return Button -->
+    <div class="text-center mt-4">
+      <a href="{% url 'inventory:inventario_dashboard' %}" class="report-back-button">
+        <i class="fas fa-arrow-left me-2"></i>{% trans "Voltar ao Inventário" %}
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- JS para capturar clique e preencher form -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const rows = document.querySelectorAll(".clickable-row");
+    const itemIdInput = document.getElementById("item_id");
+    const quantityInput = document.getElementById("quantity");
+    const itemNameInput = document.getElementById("item_name");
+  
+    rows.forEach(row => {
+      row.addEventListener("click", () => {
+        // Remove seleção anterior
+        document.querySelectorAll(".clickable-row").forEach(r => r.classList.remove("selected"));
+        
+        // Adiciona seleção ao item clicado
+        row.classList.add("selected");
+        
+        const itemId = row.getAttribute("data-item-id");
+        let itemAmount = row.getAttribute("data-item-amount");
+        const itemName = row.getAttribute("data-item-name");
+  
+        // Garante que itemAmount é string, depois remove tudo que não for número
+        itemAmount = String(itemAmount).replace(/[^\d]/g, '');
+  
+        itemIdInput.value = itemId;
+        quantityInput.value = itemAmount;
+        quantityInput.max = itemAmount;
+        itemNameInput.value = itemName;
+      });
+    });
+  });  
+</script>
+
+<style>
+  .clickable-row {
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .clickable-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  
+  .clickable-row.selected {
+    border: 2px solid #007bff;
+    box-shadow: 0 0 15px rgba(0,123,255,0.3);
+  }
+  
+  .item-card {
+    cursor: pointer;
+  }
+</style>
+{% endblock %}

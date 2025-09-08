@@ -1,0 +1,354 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load social_tags %}
+
+{% block title %} #{{ hashtag.name }} - {% trans "Hashtag" %} {% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <!-- Coluna principal -->
+    <div class="col-lg-8 mx-auto">
+      
+      <!-- Header da hashtag -->
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <h1 class="h3 mb-3">
+            <i class="bi bi-hash text-primary"></i>
+            #{{ hashtag.name }}
+          </h1>
+          
+          {% if hashtag.description %}
+            <p class="text-muted mb-3">{{ hashtag.description }}</p>
+          {% endif %}
+          
+          <div class="row text-center">
+            <div class="col-md-4">
+              <div class="h4 text-primary">{{ hashtag.posts_count }}</div>
+              <small class="text-muted">{% trans "Posts" %}</small>
+            </div>
+            <div class="col-md-4">
+              <div class="h4 text-success">{{ hashtag.created_at|date:"d/m/Y" }}</div>
+              <small class="text-muted">{% trans "Criada em" %}</small>
+            </div>
+            <div class="col-md-4">
+              <div class="h4 text-info">{{ page_obj.paginator.count }}</div>
+              <small class="text-muted">{% trans "Resultados" %}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts da hashtag -->
+      {% if page_obj %}
+        {% for post in page_obj %}
+          <div class="card mb-4 post-card" data-post-id="{{ post.id }}">
+            <div class="card-header bg-transparent">
+              <div class="d-flex align-items-center">
+                <div class="avatar-container me-3" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                  {% if post.author.avatar %}
+                    <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' post.author.uuid timestamp %}" 
+                         alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                  {% else %}
+                    <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                         alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                  {% endif %}
+                </div>
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center">
+                    <h6 class="mb-0">
+                      <a href="{% url 'social:user_profile' post.author.username %}" class="text-decoration-none">
+                        {{ post.author.get_full_name|default:post.author.username }}{% verified_badge post.author "14px" %}
+                      </a>
+                    </h6>
+                    {% if not post.is_public %}
+                      <span class="badge bg-secondary ms-2">
+                        <i class="bi bi-lock"></i> {% trans "Privado" %}
+                      </span>
+                    {% endif %}
+                    {% if post.is_pinned %}
+                      <span class="badge bg-warning ms-2">
+                        <i class="bi bi-pin-angle"></i> {% trans "Fixado" %}
+                      </span>
+                    {% endif %}
+                  </div>
+                  <small class="text-muted">
+                    {{ post.created_at|timesince }} {% trans "atrás" %}
+                    {% if post.is_edited %}
+                      <i class="bi bi-pencil-square text-muted"></i>
+                    {% endif %}
+                  </small>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-link text-muted" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'social:post_detail' post.id %}">
+                      <i class="bi bi-eye"></i> {% trans "Ver post" %}
+                    </a></li>
+                    {% if post.author == user %}
+                      <li><a class="dropdown-item" href="{% url 'social:post_edit' post.id %}">
+                        <i class="bi bi-pencil"></i> {% trans "Editar" %}
+                      </a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item text-danger" href="{% url 'social:post_delete' post.id %}">
+                        <i class="bi bi-trash"></i> {% trans "Deletar" %}
+                      </a></li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <!-- Conteúdo do post -->
+              <div class="post-content mb-3">
+                {{ post.content|process_content|linebreaks }}
+              </div>
+              
+              <!-- Mídia do post -->
+              {% if post.has_media %}
+                {% if post.image %}
+                  <div class="post-media mb-3">
+                    <img src="{{ post.image.url }}" alt="Post image" class="img-fluid rounded">
+                  </div>
+                {% endif %}
+                {% if post.video %}
+                  <div class="post-media mb-3">
+                    <video controls class="w-100 rounded">
+                      <source src="{{ post.video.url }}" type="video/mp4">
+                      {% trans "Seu navegador não suporta vídeos." %}
+                    </video>
+                  </div>
+                {% endif %}
+              {% endif %}
+              
+              <!-- Link compartilhado -->
+              {% if post.has_link %}
+                <div class="shared-link mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      {% if post.link_image %}
+                        <img src="{{ post.link_image }}" alt="Link preview" class="img-fluid rounded mb-2">
+                      {% endif %}
+                      <h6 class="card-title">{{ post.link_title|default:post.link }}</h6>
+                      {% if post.link_description %}
+                        <p class="card-text text-muted">{{ post.link_description }}</p>
+                      {% endif %}
+                      <a href="{{ post.link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-box-arrow-up-right"></i> {% trans "Abrir link" %}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+              
+              <!-- Hashtags -->
+              {% if post.hashtags.all %}
+                <div class="hashtags mb-3">
+                  {% for post_hashtag in post.hashtags.all %}
+                    <a href="{% url 'social:hashtag_detail' post_hashtag.hashtag.name %}" 
+                       class="badge bg-primary text-decoration-none me-1">
+                      #{{ post_hashtag.hashtag.name }}
+                    </a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              
+              <!-- Estatísticas do post -->
+              <div class="post-stats d-flex justify-content-between align-items-center text-muted small mb-3">
+                <div>
+                  <i class="bi bi-eye"></i> {{ post.views_count }} {% trans "visualizações" %}
+                </div>
+                <div>
+                  <i class="bi bi-share"></i> {{ post.shares_count }} {% trans "compartilhamentos" %}
+                </div>
+                <div>
+                  <i class="bi bi-graph-up"></i> {{ post.engagement_rate|floatformat:1 }}% {% trans "engajamento" %}
+                </div>
+              </div>
+              
+              <!-- Ações do post -->
+              <div class="post-actions d-flex justify-content-between align-items-center">
+                <div class="d-flex gap-2">
+                  <!-- Botão de curtir -->
+                  <button class="btn btn-outline-primary btn-sm like-btn" 
+                          data-post-id="{{ post.id }}"
+                          data-liked="{% if post.is_liked_by_current_user %}true{% else %}false{% endif %}">
+                    <i class="bi {% if post.is_liked_by_current_user %}bi-heart-fill text-danger{% else %}bi-heart{% endif %}"></i>
+                    <span class="likes-count">{{ post.likes_count }}</span>
+                  </button>
+                  
+                  <!-- Botão de comentar -->
+                  <a href="{% url 'social:post_detail' post.id %}" class="btn btn-outline-secondary btn-sm" title="{% trans 'Ver comentários' %}">
+                    <i class="bi bi-chat"></i>
+                    <span>{{ post.comments_count }}</span>
+                  </a>
+                  
+                  <!-- Botão de compartilhar -->
+                  <button class="btn btn-outline-success btn-sm share-btn" data-post-id="{{ post.id }}">
+                    <i class="bi bi-share"></i>
+                  </button>
+                </div>
+                
+                <div class="dropdown">
+                  <button class="btn btn-outline-secondary btn-sm" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots"></i>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'social:post_detail' post.id %}">
+                      <i class="bi bi-eye"></i> {% trans "Ver detalhes" %}
+                    </a></li>
+                    <li><a class="dropdown-item" href="{% url 'social:user_profile' post.author.username %}">
+                      <i class="bi bi-person"></i> {% trans "Ver perfil" %}
+                    </a></li>
+                    {% if post.author != user %}
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item follow-btn" href="#" data-user-id="{{ post.author.id }}">
+                        <i class="bi bi-person-plus"></i> {% trans "Seguir" %}
+                      </a></li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        
+        <!-- Paginação -->
+        {% if page_obj.has_other_pages %}
+          <nav aria-label="{% trans 'Navegação de páginas' %}">
+            <ul class="pagination justify-content-center">
+              {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Anterior" %}</a>
+                </li>
+              {% endif %}
+              
+              {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                  <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                  </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+              
+              {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Próxima" %}</a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+        
+      {% else %}
+        <div class="card">
+          <div class="card-body text-center py-5">
+            <i class="bi bi-hash text-muted" style="font-size: 3rem;"></i>
+            <h4 class="mt-3">{% trans "Nenhum post encontrado" %}</h4>
+            <p class="text-muted">{% trans "Ainda não há posts com esta hashtag." %}</p>
+            <a href="{% url 'social:feed' %}" class="btn btn-primary">
+              <i class="bi bi-arrow-left"></i> {% trans "Voltar ao feed" %}
+            </a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Modal de compartilhamento -->
+<div class="modal fade" id="shareModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Compartilhar post" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="shareForm" method="post">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="shareComment" class="form-label">{% trans "Adicione um comentário (opcional)" %}</label>
+            <textarea class="form-control" id="shareComment" name="comment" rows="3" maxlength="500"></textarea>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="sharePublic" name="is_public" checked>
+            <label class="form-check-label" for="sharePublic">
+              {% trans "Compartilhar publicamente" %}
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancelar" %}</button>
+          <button type="submit" class="btn btn-primary">{% trans "Compartilhar" %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// JavaScript para interações
+document.addEventListener('DOMContentLoaded', function() {
+  // Like/Unlike posts
+  const likeBtns = document.querySelectorAll('.like-btn');
+  likeBtns.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const postId = this.dataset.postId;
+      const icon = this.querySelector('i');
+      const countSpan = this.querySelector('.likes-count');
+      
+      fetch(`/social/post/${postId}/like/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.liked) {
+          icon.className = 'bi bi-heart-fill text-danger';
+        } else {
+          icon.className = 'bi bi-heart';
+        }
+        countSpan.textContent = data.likes_count;
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+      });
+    });
+  });
+  
+  // Compartilhamento
+  const shareBtns = document.querySelectorAll('.share-btn');
+  const shareModal = new bootstrap.Modal(document.getElementById('shareModal'));
+  const shareForm = document.getElementById('shareForm');
+  
+  shareBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const postId = this.dataset.postId;
+      shareForm.action = `/social/post/${postId}/share/`;
+      shareModal.show();
+    });
+  });
+  
+  // Contador de caracteres
+  const shareComment = document.getElementById('shareComment');
+  if (shareComment) {
+    shareComment.addEventListener('input', function() {
+      const remaining = 500 - this.value.length;
+      // Você pode adicionar um contador visual aqui
+    });
+  }
+});
+</script>
+{% endblock content %}

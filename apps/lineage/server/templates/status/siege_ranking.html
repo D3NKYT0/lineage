@@ -1,0 +1,125 @@
+{% extends "layouts/base.html" %}
+{% load humanize %}
+{% load static %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style>
+  .clan-name-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .crest-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .top-clan-crest {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    border-radius: 3px;
+    background: #fff;
+    padding: 2px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .castle-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-top-left-radius: .5rem;
+    border-bottom-left-radius: .5rem;
+  }
+
+  @media (max-width: 768px) {
+    .castle-image {
+      border-top-left-radius: .5rem;
+      border-top-right-radius: .5rem;
+      border-bottom-left-radius: 0;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="text-center mb-5">
+    <h2 class="display-5 fw-bold">{% trans "Castle & Siege Ranking" %}</h2>
+    <p class="text-muted">{% trans "Informações atualizadas sobre as guerras dos castelos." %}</p>
+  </div>
+
+  {% if castles %}
+    {% for castle in castles %}
+    <div class="card mb-5 shadow-lg border-0 rounded-4 bg-light">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img src="{% static castle.image_path %}" class="img-fluid rounded-start h-100 object-fit-cover" alt="{{ castle.name }}">
+        </div>
+        <div class="col-md-8 p-4">
+          <div class="card-body">
+            <h3 class="card-title mb-3">
+              🏰 {{ castle.name }} {% trans "Castle" %}
+            </h3>
+
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <strong>{% trans "Clan Proprietário" %}:</strong>
+                <div class="clan-name-container">
+                  <div class="crest-group">
+                    {% if clan.ally_crest_image_base64 %}
+                      <img src="data:image/png;base64,{{ castle.ally_crest_image_base64 }}" alt="Crest da Aliança" class="top-clan-crest">
+                    {% endif %}
+                    <img src="data:image/png;base64,{{ castle.clan_crest_image_base64 }}" alt="Crest do Clã" class="top-clan-crest">
+                  </div>
+                  {{ castle.clan_name|default:"-" }}
+                </div>
+              </div>
+              <div class="col-md-6 mb-2">
+                <strong>{% trans "Líder" %}:</strong>
+                <span class="text-muted">{{ castle.char_name }}</span>
+              </div>
+              <div class="col-md-6 mb-2">
+                <strong>{% trans "Aliança" %}:</strong>
+                <span class="text-muted">{{ castle.ally_name }}</span>
+              </div>
+              <div class="col-md-6 mb-2">
+                <strong>{% trans "Taxa" %}:</strong>
+                <span class="text-muted">{{ castle.stax }}%</span>
+              </div>
+              <div class="col-md-6 mb-2">
+                <strong>{% trans "Próxima Guerra" %}:</strong>
+                <span class="text-muted">{{ castle.sdate|date:"d M, Y H:i" }}</span>
+              </div>
+              <div class="col-md-6 mb-2">
+                <strong>{% trans "Atacantes" %}:</strong>
+                <span class="text-muted">{{ castle.attackers|length }}</span>
+                &nbsp;&nbsp;
+                <strong>{% trans "Defensores" %}:</strong>
+                <span class="text-muted">{{ castle.defenders|length }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="alert alert-warning text-center">
+    ⚠️ {% trans "Nenhum dado encontrado." %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

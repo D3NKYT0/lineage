@@ -1,0 +1,408 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+/* === BASE === */
+body {
+  font-family: 'Orbitron', sans-serif;
+  position: relative;
+}
+
+/* === BACKGROUND === */
+.roulette-bg {
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+  min-height: 100vh;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+/* === TEXTO === */
+.text-glow {
+  text-shadow: 0 0 8px #6f42c1, 0 0 20px #0dcaf0;
+}
+
+/* === WRAPPER === */
+.roulette-wrapper {
+  position: relative;
+}
+
+/* === CARD === */
+.roulette-card {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  z-index: 1;
+  border: 1px solid #333;
+  color: #fff;
+  width: 400px;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(111, 66, 193, 0.5);
+}
+
+/* === VIDEO BACKGROUND === */
+#bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  opacity: 0.50;
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+/* === JANELA DA ROLETA === */
+.roulette-window {
+  height: 420px;
+  overflow: hidden;
+  border: 2px solid #6f42c1;
+  border-radius: 12px;
+  position: relative;
+  background-color: #161625;
+}
+
+/* === ITENS DA ROLETA === */
+.roulette-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  transition: transform 4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.roulette-list li {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border-bottom: 1px solid #2d2d44;
+  background: #1e1e30;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.roulette-list img {
+  height: 48px;
+  margin-right: 10px;
+}
+
+/* === BOTÃO GIRAR === */
+.glow-button {
+  background: linear-gradient(to right, #0dcaf0, #6f42c1);
+  box-shadow: 0 0 10px #6f42c1, 0 0 20px #0dcaf0;
+  border: none;
+  color: white;
+  text-shadow: 0 0 5px #000;
+  transition: all 0.3s ease;
+}
+
+.glow-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #6f42c1, 0 0 25px #0dcaf0;
+}
+
+.pulse {
+  animation: pulseAnimation 1s infinite;
+}
+
+@keyframes pulseAnimation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* === PARTÍCULAS === */
+.particles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  background-color: #6f42c1;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: particles 1s ease-out forwards;
+  transform-origin: center;
+  opacity: 0;
+}
+
+@keyframes particles {
+  0% {
+    transform: scale(0) translate(0, 0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5) translate(var(--x), var(--y));
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0) translate(var(--x), var(--y));
+    opacity: 0;
+  }
+}
+
+/* === ANIMAÇÃO DE PARTÍCULAS === */
+.particle {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation: particleAnimation 1.5s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes particleAnimation {
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5) translate(var(--x), var(--y));
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0) translate(var(--x), var(--y));
+    opacity: 0;
+  }
+}
+
+/* === FOGOS DE ARTIFÍCIO === */
+.fireworks {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 223, 0, 1);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(255, 223, 0, 1), 0 0 30px rgba(255, 223, 0, 1);
+  animation: fireworksAnimation 2s ease-in-out forwards;
+}
+
+@keyframes fireworksAnimation {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0;
+  }
+}
+
+.border-purple {
+  border: 2px solid #6f42c1;
+}
+
+.modal-content {
+  background: linear-gradient(to bottom right, #1a1a2e, #121220);
+  animation: pop-in 0.4s ease-out;
+}
+
+@keyframes pop-in {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.btn-glow {
+  background: linear-gradient(to right, #0dcaf0, #6f42c1);
+  border: none;
+  box-shadow: 0 0 12px #6f42c1, 0 0 24px #0dcaf0;
+  transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 18px #6f42c1, 0 0 36px #0dcaf0;
+  transform: scale(1.05);
+}
+
+/* === PAINEL DO JOGADOR HORIZONTAL === */
+.user-panel {
+  background: linear-gradient(to bottom right, #1a1a2e, #121220);
+  border: 2px solid #6f42c1;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+  padding: 15px 25px;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.user-panel .info-block {
+  text-align: center;
+}
+
+.user-panel .info-block strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #ffc107;
+  margin-bottom: 5px;
+  text-shadow: 0 0 6px #6f42c1;
+}
+
+.user-panel .info-block span {
+  font-size: 1rem;
+  color: #0dcaf0;
+  text-shadow: 0 0 3px #000;
+}
+
+/* === MODAL DE FALHA === */
+#failModal .modal-content {
+  background: linear-gradient(to bottom right, #1a1a2e, #121220);
+  border: 2px solid #6f42c1;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(111, 66, 193, 0.5), 0 0 30px rgba(13, 202, 240, 0.3);
+  animation: pop-in 0.4s ease-out;
+}
+
+#failModal .modal-header {
+  border-bottom: 2px solid #6f42c1;
+}
+
+#failModal .modal-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 0 0 6px #6f42c1;
+}
+
+#failModal .modal-body {
+  padding: 30px 20px;
+}
+
+#failModal .modal-body p {
+  font-size: 1.2rem;
+  color: #fff;
+  text-shadow: 0 0 3px #000;
+}
+
+#failModal .btn-secondary {
+  background: linear-gradient(to right, #0dcaf0, #6f42c1);
+  border: none;
+  box-shadow: 0 0 10px #6f42c1, 0 0 20px #0dcaf0;
+  color: white;
+  text-shadow: 0 0 5px #000;
+  transition: all 0.3s ease;
+}
+
+#failModal .btn-secondary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #6f42c1, 0 0 25px #0dcaf0;
+}
+
+/* === ANIMAÇÃO POP-IN DO MODAL === */
+@keyframes pop-in {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* === MODAL DE COMPRA DE FICHAS === */
+#buyTokensModal .modal-content {
+  background: linear-gradient(to bottom right, #1a1a2e, #121220);
+  border: 2px solid #6f42c1;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(111, 66, 193, 0.5), 0 0 30px rgba(13, 202, 240, 0.3);
+  animation: pop-in 0.4s ease-out;
+}
+
+#buyTokensModal .modal-header {
+  border-bottom: 2px solid #6f42c1;
+}
+
+#buyTokensModal .modal-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 0 0 6px #6f42c1;
+}
+
+#buyTokensModal .modal-body {
+  padding: 30px 20px;
+}
+
+#buyTokensModal .modal-body p {
+  font-size: 1.2rem;
+  color: #fff;
+  text-shadow: 0 0 3px #000;
+}
+
+#buyTokensModal .form-control {
+  background: #1e1e30;
+  color: #fff;
+  border: 2px solid #6f42c1;
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 1.1rem;
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+#buyTokensModal .form-control:focus {
+  border-color: #0dcaf0;
+  box-shadow: 0 0 10px #6f42c1, 0 0 20px #0dcaf0;
+}
+
+#buyTokensModal .btn-success {
+  background: linear-gradient(to right, #0dcaf0, #6f42c1);
+  border: none;
+  box-shadow: 0 0 10px #6f42c1, 0 0 20px #0dcaf0;
+  color: white;
+  text-shadow: 0 0 5px #000;
+  transition: all 0.3s ease;
+}
+
+#buyTokensModal .btn-success:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #6f42c1, 0 0 25px #0dcaf0;
+}
+
+#buyTokensModal .btn-secondary {
+  background: transparent;
+  border: 2px solid #6f42c1;
+  color: #fff;
+  text-shadow: 0 0 3px #000;
+  transition: all 0.3s ease;
+}
+
+#buyTokensModal .btn-secondary:hover {
+  background: #6f42c1;
+  box-shadow: 0 0 15px #6f42c1, 0 0 25px #0dcaf0;
+}
+
+/* === ANIMAÇÃO POP-IN DO MODAL === */
+@keyframes pop-in {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,659 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% load social_tags %}
+
+{% block title %} {% trans "Meus Posts" %} {% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/social.css' %}">
+{% endblock extrastyle %}
+
+{% block extra_js %}
+<script src="{% static 'js/social.js' %}"></script>
+{% endblock extra_js %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="mb-1">
+            <i class="bi bi-collection"></i> {% trans "Meus Posts" %}
+          </h2>
+          <p class="text-muted mb-0">{% trans "Gerencie e visualize todos os seus posts" %}</p>
+        </div>
+        <a href="{% url 'social:post_create' %}" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> {% trans "Novo Post" %}
+        </a>
+      </div>
+      
+      <!-- Posts -->
+      {% if page_obj %}
+        {% for post in page_obj %}
+          <div class="card mb-4 post-card" data-post-id="{{ post.id }}">
+            <div class="card-header bg-transparent">
+                <div class="d-flex align-items-center">
+                  <div class="avatar-container me-3" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                    {% if post.author.avatar %}
+                      <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' post.author.uuid timestamp %}" 
+                           alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                    {% else %}
+                      <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                           alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                    {% endif %}
+                  </div>
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center">
+                    <h6 class="mb-0">
+                      <a href="{% url 'social:user_profile' post.author.username %}" class="text-decoration-none">
+                        {{ post.author.get_full_name|default:post.author.username }}{% verified_badge post.author "14px" %}
+                      </a>
+                    </h6>
+                      {% if not post.is_public %}
+                        <span class="badge bg-secondary ms-2">
+                          <i class="bi bi-lock"></i> {% trans "Privado" %}
+                        </span>
+                      {% endif %}
+                    {% if post.is_pinned %}
+                      <span class="badge bg-warning ms-2">
+                        <i class="bi bi-pin-angle"></i> {% trans "Fixado" %}
+                      </span>
+                    {% endif %}
+                    {% if post.is_edited %}
+                      <span class="badge bg-info ms-2">
+                        <i class="bi bi-pencil-square"></i> {% trans "Editado" %}
+                      </span>
+                    {% endif %}
+                    {% if post.is_flagged %}
+                      <span class="badge bg-danger ms-2">
+                        <i class="bi bi-flag"></i> {% trans "Denunciado" %}
+                      </span>
+                    {% endif %}
+                    {% if post.is_hidden %}
+                      <span class="badge bg-dark ms-2">
+                        <i class="bi bi-eye-slash"></i> {% trans "Oculto" %}
+                      </span>
+                    {% endif %}
+                  </div>
+                  <small class="text-muted">
+                    {{ post.created_at|timesince }} {% trans "atrás" %}
+                    {% if post.is_edited %}
+                      <i class="bi bi-pencil-square text-muted"></i>
+                    {% endif %}
+                  </small>
+                </div>
+                <div class="dropdown">
+                  <button class="btn btn-link text-muted" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-three-dots-vertical"></i>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'social:post_detail' post.id %}">
+                      <i class="bi bi-eye"></i> {% trans "Ver post" %}
+                    </a></li>
+                    <li><a class="dropdown-item" href="{% url 'social:post_edit' post.id %}">
+                      <i class="bi bi-pencil"></i> {% trans "Editar" %}
+                    </a></li>
+                    <li><a class="dropdown-item pin-btn" href="#" data-post-id="{{ post.id }}">
+                      <i class="bi bi-pin-angle{% if post.is_pinned %}-fill{% endif %}"></i> 
+                      {% if post.is_pinned %}{% trans "Desfixar" %}{% else %}{% trans "Fixar" %}{% endif %}
+                    </a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="{% url 'social:post_delete' post.id %}">
+                      <i class="bi bi-trash"></i> {% trans "Deletar" %}
+                    </a></li>
+                    {% if can_moderate %}
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item text-info" href="{% url 'social:moderation_dashboard' %}">
+                        <i class="bi bi-shield-check"></i> {% trans "Moderação" %}
+                      </a></li>
+                    {% endif %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <!-- Aviso de conteúdo denunciado (apenas para moderadores) -->
+              {% if post.is_flagged and can_moderate %}
+                <div class="alert alert-warning alert-dismissible fade show mb-3">
+                  <i class="bi bi-exclamation-triangle"></i>
+                  <strong>{% trans "Conteúdo Denunciado" %}</strong>
+                  <small class="d-block">{% trans "Este post foi denunciado e está aguardando revisão." %}</small>
+                  <a href="{% url 'social:moderation_dashboard' %}" class="btn btn-sm btn-outline-warning mt-2">
+                    <i class="bi bi-eye"></i> {% trans "Ver Denúncias" %}
+                  </a>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+              {% endif %}
+              
+              <!-- Aviso de conteúdo oculto (apenas para moderadores) -->
+              {% if post.is_hidden and can_moderate %}
+                <div class="alert alert-dark alert-dismissible fade show mb-3">
+                  <i class="bi bi-eye-slash"></i>
+                  <strong>{% trans "Conteúdo Oculto" %}</strong>
+                  <small class="d-block">{% trans "Este post foi oculto por moderação." %}</small>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+              {% endif %}
+              
+              <!-- Conteúdo do post -->
+              <div class="post-content mb-3">
+                {{ post.content|process_content|linebreaks }}
+              </div>
+              
+              <!-- Mídia do post -->
+              {% if post.has_media %}
+              {% if post.image %}
+                  <div class="post-media mb-3">
+                    <img src="{{ post.image.url }}" alt="Post image" class="img-fluid rounded">
+                  </div>
+                {% endif %}
+                {% if post.video %}
+                  <div class="post-media mb-3">
+                    <video controls class="w-100 rounded">
+                      <source src="{{ post.video.url }}" type="video/mp4">
+                      {% trans "Seu navegador não suporta vídeos." %}
+                    </video>
+                  </div>
+                {% endif %}
+              {% endif %}
+              
+              <!-- Link compartilhado -->
+              {% if post.has_link %}
+                <div class="shared-link mb-3">
+                  <div class="card">
+                    <div class="card-body">
+                      {% if post.link_image %}
+                        <img src="{{ post.link_image }}" alt="Link preview" class="img-fluid rounded mb-2">
+                      {% endif %}
+                      <h6 class="card-title">{{ post.link_title|default:post.link }}</h6>
+                      {% if post.link_description %}
+                        <p class="card-text text-muted">{{ post.link_description }}</p>
+                      {% endif %}
+                      <a href="{{ post.link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-box-arrow-up-right"></i> {% trans "Abrir link" %}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+              
+              <!-- Hashtags -->
+              {% if post.hashtags.all %}
+                <div class="hashtags mb-3">
+                  {% for post_hashtag in post.hashtags.all %}
+                    <a href="{% url 'social:hashtag_detail' post_hashtag.hashtag.name %}" 
+                       class="badge bg-primary text-decoration-none me-1">
+                      #{{ post_hashtag.hashtag.name }}
+                    </a>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              
+              <!-- Estatísticas do post -->
+              <div class="post-stats d-flex justify-content-between align-items-center text-muted small mb-3">
+                <div>
+                  <i class="bi bi-eye"></i> {{ post.views_count }} {% trans "visualizações" %}
+                </div>
+                <div>
+                  <i class="bi bi-share"></i> {{ post.shares_count }} {% trans "compartilhamentos" %}
+                </div>
+                <div>
+                  <i class="bi bi-graph-up"></i> {{ post.engagement_rate|floatformat:1 }}% {% trans "engajamento" %}
+                </div>
+              </div>
+              
+              <!-- Ações do post -->
+              <div class="post-actions d-flex justify-content-between align-items-center">
+                <div class="d-flex gap-2">
+                  <!-- Botão de curtir com reações -->
+                  <div class="dropdown">
+                    <button class="btn btn-outline-primary btn-sm like-btn dropdown-toggle" 
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            data-post-id="{{ post.id }}"
+                            data-liked="{% if post.is_liked_by_current_user %}true{% else %}false{% endif %}"
+                            data-current-reaction="{% if post.current_user_reaction %}{{ post.current_user_reaction }}{% endif %}">
+                      {% if post.current_user_reaction %}
+                        <span class="reaction-emoji">
+                          {% if post.current_user_reaction == 'like' %}👍{% elif post.current_user_reaction == 'love' %}❤️{% elif post.current_user_reaction == 'haha' %}😂{% elif post.current_user_reaction == 'wow' %}😮{% elif post.current_user_reaction == 'sad' %}😢{% elif post.current_user_reaction == 'angry' %}😠{% endif %}
+                        </span>
+                      {% else %}
+                        <i class="bi bi-heart" id="heart-{{ post.id }}"></i>
+                      {% endif %}
+                    <span class="likes-count">{{ post.likes_count }}</span>
+                  </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item reaction-btn" href="#" data-reaction="like" data-post-id="{{ post.id }}">
+                        👍 {% trans "Curtir" %}
+                      </a></li>
+                      <li><a class="dropdown-item reaction-btn" href="#" data-reaction="love" data-post-id="{{ post.id }}">
+                        ❤️ {% trans "Amar" %}
+                      </a></li>
+                      <li><a class="dropdown-item reaction-btn" href="#" data-reaction="haha" data-post-id="{{ post.id }}">
+                        😂 {% trans "Haha" %}
+                      </a></li>
+                      <li><a class="dropdown-item reaction-btn" href="#" data-reaction="wow" data-post-id="{{ post.id }}">
+                        😮 {% trans "Uau" %}
+                      </a></li>
+                      <li><a class="dropdown-item reaction-btn" href="#" data-reaction="sad" data-post-id="{{ post.id }}">
+                        😢 {% trans "Triste" %}
+                      </a></li>
+                      <li><a class="dropdown-item reaction-btn" href="#" data-reaction="angry" data-post-id="{{ post.id }}">
+                        😠 {% trans "Bravo" %}
+                      </a></li>
+                    </ul>
+                  </div>
+                  
+                  <!-- Botão de comentar -->
+                  <a href="{% url 'social:post_detail' post.id %}" class="btn btn-outline-secondary btn-sm" title="{% trans 'Ver comentários' %}">
+                    <i class="bi bi-chat"></i>
+                    <span>{{ post.comments_count }}</span>
+                  </a>
+                  
+                  <!-- Botão de compartilhar -->
+                  <button class="btn btn-outline-success btn-sm share-btn" data-post-id="{{ post.id }}">
+                    <i class="bi bi-share"></i>
+                  </button>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                  <a href="{% url 'social:post_detail' post.id %}" class="btn btn-outline-primary btn-sm me-2">
+                    <i class="bi bi-eye"></i> {% trans "Ver detalhes" %}
+                  </a>
+                  <a href="{% url 'social:post_edit' post.id %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-pencil"></i> {% trans "Editar" %}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        
+        <!-- Paginação -->
+        {% if page_obj.has_other_pages %}
+          <nav aria-label="{% trans 'Navegação de páginas' %}">
+            <ul class="pagination justify-content-center">
+              {% if page_obj.has_previous %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Anterior" %}</a>
+                </li>
+              {% endif %}
+              
+              {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                  <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                  </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+              
+              {% if page_obj.has_next %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Próximo" %}</a>
+                </li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+        
+      {% else %}
+        <div class="card">
+          <div class="card-body text-center py-5">
+            <i class="bi bi-collection display-1 text-muted"></i>
+            <h4 class="mt-3">{% trans "Você ainda não fez nenhum post" %}</h4>
+            <p class="text-muted">{% trans "Comece compartilhando algo interessante com a comunidade!" %}</p>
+            <a href="{% url 'social:post_create' %}" class="btn btn-primary">
+              <i class="bi bi-plus-circle"></i> {% trans "Criar primeiro post" %}
+            </a>
+          </div>
+        </div>
+      {% endif %}
+      
+    </div>
+  </div>
+</div>
+
+<!-- Token CSRF para JavaScript -->
+{% csrf_token %}
+
+<!-- Modal de compartilhamento -->
+<div class="modal fade" id="shareModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Compartilhar post" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="shareForm" method="post">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="shareComment" class="form-label">{% trans "Adicione um comentário (opcional)" %}</label>
+            <textarea class="form-control" id="shareComment" name="comment" rows="3" maxlength="500"></textarea>
+            <small class="text-muted">
+              <span id="shareCharCount">0</span>/500 {% trans "caracteres" %}
+            </small>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="sharePublic" name="is_public" checked>
+            <label class="form-check-label" for="sharePublic">
+              {% trans "Compartilhar publicamente" %}
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancelar" %}</button>
+          <button type="submit" class="btn btn-primary">{% trans "Compartilhar" %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de denúncia -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Denunciar Conteúdo" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <form id="reportForm" method="post">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="reportReason" class="form-label">{% trans "Motivo da denúncia" %}</label>
+            <select class="form-select" id="reportReason" name="report_type" required>
+              <option value="">{% trans "Selecione um motivo" %}</option>
+              <option value="spam">{% trans "Spam ou conteúdo comercial não autorizado" %}</option>
+              <option value="inappropriate">{% trans "Conteúdo inadequado ou ofensivo" %}</option>
+              <option value="harassment">{% trans "Assédio ou bullying" %}</option>
+              <option value="violence">{% trans "Violência ou ameaças" %}</option>
+              <option value="fake_news">{% trans "Fake news ou desinformação" %}</option>
+              <option value="copyright">{% trans "Violação de direitos autorais" %}</option>
+              <option value="other">{% trans "Outro" %}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="reportDescription" class="form-label">{% trans "Descrição detalhada (opcional)" %}</label>
+            <textarea class="form-control" id="reportDescription" name="description" rows="3" maxlength="1000" placeholder="{% trans 'Forneça mais detalhes sobre a denúncia...' %}"></textarea>
+            <small class="text-muted">
+              <span id="reportCharCount">0</span>/1000 {% trans "caracteres" %}
+            </small>
+          </div>
+          <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            <small>{% trans "Sua denúncia será analisada pela equipe de moderação. Obrigado por ajudar a manter nossa comunidade segura." %}</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancelar" %}</button>
+          <button type="submit" class="btn btn-warning">{% trans "Enviar Denúncia" %}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// JavaScript para interações
+document.addEventListener('DOMContentLoaded', function() {
+  // Compartilhamento
+  const shareBtns = document.querySelectorAll('.share-btn');
+  const shareModalElement = document.getElementById('shareModal');
+  const shareForm = document.getElementById('shareForm');
+  const shareComment = document.getElementById('shareComment');
+  const shareCharCount = document.getElementById('shareCharCount');
+  
+  if (shareBtns.length > 0 && shareModalElement && shareForm) {
+    const shareModal = new bootstrap.Modal(shareModalElement);
+    
+    shareBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const postId = this.dataset.postId;
+        if (postId && shareForm) {
+          shareForm.action = `/social/post/${postId}/share/`;
+          if (shareModal) {
+            shareModal.show();
+          }
+        }
+      });
+    });
+  }
+  
+  if (shareComment && shareCharCount) {
+    shareComment.addEventListener('input', function() {
+      if (shareCharCount) {
+        shareCharCount.textContent = this.value.length;
+      }
+    });
+  }
+  
+  // Reações
+  const reactionBtns = document.querySelectorAll('.reaction-btn');
+  if (reactionBtns.length > 0) {
+    reactionBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const postId = this.dataset.postId;
+        const reaction = this.dataset.reaction;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        
+        if (!postId || !reaction || !csrfToken) {
+          console.error('Elementos necessários não encontrados para reação');
+          return;
+        }
+        
+        fetch(`/social/post/${postId}/react/`, {
+                method: 'POST',
+                headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken.value
+                },
+          body: `reaction_type=${reaction}`
+            })
+            .then(response => response.json())
+            .then(data => {
+          if (data.success) {
+            // Mapeamento de reações para emojis
+            const reactionEmojis = {
+              'like': '👍',
+              'love': '❤️',
+              'haha': '😂',
+              'wow': '😮',
+              'sad': '😢',
+              'angry': '😠'
+            };
+            
+            // Atualizar contador de likes e ícone
+            const likeBtn = document.querySelector(`[data-post-id="${postId}"].like-btn`);
+            if (likeBtn) {
+              const likesCount = likeBtn.querySelector('.likes-count');
+              const iconElement = likeBtn.querySelector('i, .reaction-emoji');
+              
+              if (likesCount && iconElement) {
+                likesCount.textContent = data.likes_count;
+                
+                if (data.removed) {
+                  // Reação removida - voltar ao coração vazio
+                  iconElement.outerHTML = `<i class="bi bi-heart"></i>`;
+                  likeBtn.dataset.liked = 'false';
+                  likeBtn.dataset.currentReaction = '';
+                } else {
+                  // Reação adicionada/alterada - mostrar emoji
+                  const emoji = reactionEmojis[data.reaction_type] || '👍';
+                  iconElement.outerHTML = `<span class="reaction-emoji">${emoji}</span>`;
+                  likeBtn.dataset.liked = 'true';
+                  likeBtn.dataset.currentReaction = data.reaction_type;
+                }
+                
+                // Fechar o dropdown após a seleção
+                const dropdownElement = bootstrap.Dropdown.getInstance(likeBtn);
+                if (dropdownElement) {
+                  dropdownElement.hide();
+                }
+              }
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+        });
+      });
+    });
+  }
+  
+  // Fixar/desfixar posts
+  const pinBtns = document.querySelectorAll('.pin-btn');
+  if (pinBtns.length > 0) {
+    pinBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const postId = this.dataset.postId;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        
+        if (!postId || !csrfToken) {
+          console.error('Elementos necessários não encontrados para pin');
+          return;
+        }
+        
+        fetch(`/social/post/${postId}/pin/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken.value
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.pinned) {
+            this.innerHTML = '<i class="bi bi-pin-angle-fill"></i> {% trans "Desfixar" %}';
+          } else {
+            this.innerHTML = '<i class="bi bi-pin-angle"></i> {% trans "Fixar" %}';
+          }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+        });
+    });
+  }
+  
+  // Sistema de denúncias
+  const reportBtns = document.querySelectorAll('.report-btn');
+  const reportModal = document.getElementById('reportModal');
+  const reportForm = document.getElementById('reportForm');
+  
+  // Verificar se os elementos existem antes de usar
+  if (reportBtns.length > 0 && reportModal && reportForm) {
+    const reportModalInstance = new bootstrap.Modal(reportModal);
+    const reportDescription = document.getElementById('reportDescription');
+    const reportCharCount = document.getElementById('reportCharCount');
+    
+    reportBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const contentType = this.dataset.contentType;
+        const contentId = this.dataset.contentId;
+        
+        if (contentType && contentId && reportForm) {
+          // Configurar o formulário para a denúncia específica
+          reportForm.action = `/social/report/${contentType}/${contentId}/`;
+          if (reportModalInstance) {
+            reportModalInstance.show();
+          }
+        }
+      });
+    });
+    
+    // Contador de caracteres para descrição
+    if (reportDescription && reportCharCount) {
+      reportDescription.addEventListener('input', function() {
+        if (reportCharCount) {
+          reportCharCount.textContent = this.value.length;
+        }
+      });
+    }
+    
+    // Envio do formulário de denúncia
+    reportForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+      
+      if (!csrfToken) {
+        console.error('CSRF token não encontrado');
+        return;
+      }
+      
+      fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrfToken.value
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success) {
+          if (reportModalInstance) {
+            reportModalInstance.hide();
+          }
+          // Mostrar mensagem de sucesso
+          showAlert('success', data.message);
+        } else {
+          // Mostrar erro
+          showAlert('danger', data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+        // Mostrar erro genérico
+        showAlert('danger', 'Erro ao enviar denúncia. Tente novamente.');
+      });
+    });
+  }
+  
+  // Função para mostrar alertas de forma segura
+  function showAlert(type, message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+      <i class="bi bi-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    // Tentar inserir no topo da página de forma segura
+    const container = document.querySelector('.container-fluid');
+    if (container) {
+      container.insertBefore(alertDiv, container.firstChild);
+    } else {
+      // Fallback: inserir no body
+      document.body.insertBefore(alertDiv, document.body.firstChild);
+    }
+    
+    // Auto-remover após 5 segundos
+    setTimeout(() => {
+      if (alertDiv.parentNode) {
+        alertDiv.remove();
+      }
+    }, 5000);
+  }
+});
+</script>
+{% endblock content %}

@@ -1,0 +1,757 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %} {% trans "Lista de Denúncias" %} {% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Cabeçalho -->
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">
+            <i class="bi bi-flag text-primary"></i> {% trans "Lista de Denúncias" %}
+          </h4>
+          <div>
+            <a href="{% url 'social:moderation_dashboard' %}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-arrow-left"></i> {% trans "Voltar ao Dashboard" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros e busca -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-funnel"></i> {% trans "Filtros e Busca" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          <form method="get" class="row g-3">
+            <div class="col-md-3">
+              {{ search_form.q.label_tag }}
+              {{ search_form.q }}
+            </div>
+            <div class="col-md-2">
+              {{ search_form.report_type.label_tag }}
+              {{ search_form.report_type }}
+            </div>
+            <div class="col-md-2">
+              {{ search_form.status.label_tag }}
+              {{ search_form.status }}
+            </div>
+            <div class="col-md-2">
+              {{ search_form.priority.label_tag }}
+              {{ search_form.priority }}
+            </div>
+            <div class="col-md-3">
+              {{ search_form.assigned_moderator.label_tag }}
+              {{ search_form.assigned_moderator }}
+            </div>
+            <div class="col-md-2">
+              {{ search_form.date_from.label_tag }}
+              {{ search_form.date_from }}
+            </div>
+            <div class="col-md-2">
+              {{ search_form.date_to.label_tag }}
+              {{ search_form.date_to }}
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> {% trans "Buscar" %}
+              </button>
+              <a href="{% url 'social:reports_list' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-x-circle"></i> {% trans "Limpar" %}
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estatísticas rápidas -->
+  <div class="row mb-4">
+    <div class="col-md-2">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                {% trans "Total" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_reports }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-flag fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card border-left-info shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                {% trans "Ativas" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ unresolved_count }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-hourglass fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                {% trans "Pendentes" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pending_count }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card border-left-danger shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                {% trans "Urgentes" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ urgent_count }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-exclamation-triangle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                {% trans "Resolvidas" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ resolved_count }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-check-circle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ações em massa -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-gear"></i> {% trans "Ações em Massa" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          <form method="post" action="{% url 'social:bulk_moderation_action' %}" id="bulk-action-form">
+            {% csrf_token %}
+            <div class="row align-items-end">
+              <div class="col-md-3">
+                {{ bulk_form.action_type.label_tag }}
+                {{ bulk_form.action_type }}
+              </div>
+              <div class="col-md-3">
+                {{ bulk_form.assigned_moderator.label_tag }}
+                {{ bulk_form.assigned_moderator }}
+              </div>
+              <div class="col-md-4">
+                {{ bulk_form.reason.label_tag }}
+                {{ bulk_form.reason }}
+              </div>
+              <div class="col-md-2">
+                <button type="submit" class="btn btn-warning" id="bulk-action-btn" disabled>
+                  <i class="bi bi-play"></i> {% trans "Aplicar" %}
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Denúncias Ativas/Não Resolvidas -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="bi bi-hourglass text-info"></i> {% trans "Denúncias Ativas" %} ({{ page_obj.paginator.count }})
+          </h6>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="select-all">
+            <label class="form-check-label" for="select-all">
+              {% trans "Selecionar Todos" %}
+            </label>
+          </div>
+        </div>
+        <div class="card-body">
+          {% if page_obj %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th width="30">
+                      <input type="checkbox" class="form-check-input" id="select-all-table">
+                    </th>
+                    <th>{% trans "Tipo" %}</th>
+                    <th>{% trans "Conteúdo" %}</th>
+                    <th>{% trans "Denunciante" %}</th>
+                    <th>{% trans "Prioridade" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Moderador" %}</th>
+                    <th>{% trans "Data" %}</th>
+                    <th>{% trans "Ações" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for report in page_obj %}
+                  <tr class="{% if report.priority == 'urgent' %}table-danger{% elif report.priority == 'high' %}table-warning{% endif %}">
+                    <td>
+                      <input type="checkbox" class="form-check-input report-checkbox" name="report_ids" value="{{ report.id }}">
+                    </td>
+                    <td>
+                      <span class="badge bg-{% if report.report_type == 'spam' %}secondary{% elif report.report_type == 'inappropriate' %}warning{% elif report.report_type == 'harassment' %}danger{% elif report.report_type == 'violence' %}danger{% elif report.report_type == 'hate_speech' %}danger{% else %}info{% endif %}">
+                        {{ report.get_report_type_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                          {% if report.reported_post %}
+                            <i class="bi bi-file-text text-primary"></i>
+                          {% elif report.reported_comment %}
+                            <i class="bi bi-chat text-info"></i>
+                          {% elif report.reported_user %}
+                            <i class="bi bi-person text-warning"></i>
+                          {% endif %}
+                        </div>
+                        <div class="flex-grow-1 ms-2">
+                          <div class="fw-bold">
+                            {% if report.reported_post %}
+                              {{ report.reported_post.content|truncatechars:50 }}
+                            {% elif report.reported_comment %}
+                              {{ report.reported_comment.content|truncatechars:50 }}
+                            {% elif report.reported_user %}
+                              {{ report.reported_user.username }}
+                            {% endif %}
+                          </div>
+                          <small class="text-muted">
+                            {% if report.reported_post %}
+                              Post por {{ report.reported_post.author.username }}
+                            {% elif report.reported_comment %}
+                              Comentário por {{ report.reported_comment.author.username }}
+                            {% elif report.reported_user %}
+                              Usuário reportado
+                            {% endif %}
+                          </small>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <small>{{ report.reporter.username }}</small>
+                    </td>
+                    <td>
+                      <span class="badge bg-{% if report.priority == 'urgent' %}danger{% elif report.priority == 'high' %}warning{% elif report.priority == 'medium' %}info{% else %}secondary{% endif %}">
+                        {{ report.get_priority_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge bg-{% if report.status == 'pending' %}warning{% elif report.status == 'reviewing' %}info{% elif report.status == 'resolved' %}success{% else %}secondary{% endif %}">
+                        {{ report.get_status_display }}
+                      </span>
+                    </td>
+                    <td>
+                      {% if report.assigned_moderator %}
+                        <small>{{ report.assigned_moderator.username }}</small>
+                      {% else %}
+                        <span class="text-muted">-</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <small class="text-muted">{{ report.created_at|date:"d/m/Y H:i" }}</small>
+                    </td>
+                    <td>
+                      <div class="btn-group btn-group-sm" role="group">
+                        <a href="{% url 'social:report_detail' report.id %}" class="btn btn-outline-primary" title="{% trans 'Ver Detalhes' %}">
+                          <i class="bi bi-eye"></i>
+                        </a>
+                        {% if report.status == 'pending' %}
+                          <button type="button" class="btn btn-outline-warning" title="{% trans 'Marcar como Revisando' %}" onclick="updateStatus({{ report.id }}, 'reviewing')">
+                            <i class="bi bi-clock"></i>
+                          </button>
+                        {% endif %}
+                        {% if report.status in 'pending,reviewing' %}
+                          <button type="button" class="btn btn-outline-success" title="{% trans 'Marcar como Resolvida' %}" onclick="updateStatus({{ report.id }}, 'resolved')">
+                            <i class="bi bi-check"></i>
+                          </button>
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginação -->
+            {% if page_obj.has_other_pages %}
+              <nav aria-label="{% trans 'Navegação de páginas' %}">
+                <ul class="pagination justify-content-center">
+                  {% if page_obj.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.report_type %}&report_type={{ request.GET.report_type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}">
+                        <i class="bi bi-chevron-double-left"></i>
+                      </a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.report_type %}&report_type={{ request.GET.report_type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}">
+                        <i class="bi bi-chevron-left"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+
+                  {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                      <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                      </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                      <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.report_type %}&report_type={{ request.GET.report_type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}">{{ num }}</a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if page_obj.has_next %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.report_type %}&report_type={{ request.GET.report_type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}">
+                        <i class="bi bi-chevron-right"></i>
+                      </a>
+                    </li>
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.report_type %}&report_type={{ request.GET.report_type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}">
+                        <i class="bi bi-chevron-double-right"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </nav>
+            {% endif %}
+
+          {% else %}
+            <div class="text-center py-5">
+              <i class="bi bi-flag fa-3x text-muted mb-3"></i>
+              <h5 class="text-muted">{% trans "Nenhuma denúncia ativa encontrada" %}</h5>
+              <p class="text-muted">{% trans "Não há denúncias ativas que correspondam aos filtros aplicados." %}</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Denúncias Resolvidas -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center bg-light">
+          <h6 class="m-0 font-weight-bold text-success">
+            <i class="bi bi-check-circle text-success"></i> {% trans "Denúncias Resolvidas" %} ({{ resolved_page_obj.paginator.count }})
+          </h6>
+          <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#resolvedReports" aria-expanded="false" aria-controls="resolvedReports">
+            <i class="bi bi-chevron-down"></i> {% trans "Mostrar/Ocultar" %}
+          </button>
+        </div>
+        <div class="collapse" id="resolvedReports">
+          <div class="card-body">
+            {% if resolved_page_obj %}
+              <div class="table-responsive">
+                <table class="table table-hover table-sm">
+                  <thead class="table-light">
+                    <tr>
+                      <th>{% trans "Tipo" %}</th>
+                      <th>{% trans "Conteúdo" %}</th>
+                      <th>{% trans "Denunciante" %}</th>
+                      <th>{% trans "Status" %}</th>
+                      <th>{% trans "Moderador" %}</th>
+                      <th>{% trans "Resolvida em" %}</th>
+                      <th>{% trans "Ações" %}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for report in resolved_page_obj %}
+                    <tr class="table-light">
+                      <td>
+                        <span class="badge bg-{% if report.report_type == 'spam' %}secondary{% elif report.report_type == 'inappropriate' %}warning{% elif report.report_type == 'harassment' %}danger{% elif report.report_type == 'violence' %}danger{% elif report.report_type == 'hate_speech' %}danger{% else %}info{% endif %}">
+                          {{ report.get_report_type_display }}
+                        </span>
+                      </td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <div class="flex-shrink-0">
+                            {% if report.reported_post %}
+                              <i class="bi bi-file-text text-primary"></i>
+                            {% elif report.reported_comment %}
+                              <i class="bi bi-chat text-info"></i>
+                            {% elif report.reported_user %}
+                              <i class="bi bi-person text-warning"></i>
+                            {% endif %}
+                          </div>
+                          <div class="flex-grow-1 ms-2">
+                            <div class="fw-bold">
+                              {% if report.reported_post %}
+                                {{ report.reported_post.content|truncatechars:40 }}
+                              {% elif report.reported_comment %}
+                                {{ report.reported_comment.content|truncatechars:40 }}
+                              {% elif report.reported_user %}
+                                {{ report.reported_user.username }}
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <small>{{ report.reporter.username }}</small>
+                      </td>
+                      <td>
+                        <span class="badge bg-{% if report.status == 'resolved' %}success{% else %}secondary{% endif %}">
+                          {{ report.get_status_display }}
+                        </span>
+                      </td>
+                      <td>
+                        {% if report.assigned_moderator %}
+                          <small>{{ report.assigned_moderator.username }}</small>
+                        {% else %}
+                          <span class="text-muted">-</span>
+                        {% endif %}
+                      </td>
+                      <td>
+                        <small class="text-muted">
+                          {% if report.resolved_at %}
+                            {{ report.resolved_at|date:"d/m/Y H:i" }}
+                          {% else %}
+                            {{ report.updated_at|date:"d/m/Y H:i" }}
+                          {% endif %}
+                        </small>
+                      </td>
+                      <td>
+                        <div class="btn-group btn-group-sm" role="group">
+                          <a href="{% url 'social:report_detail' report.id %}" class="btn btn-outline-primary" title="{% trans 'Ver Detalhes' %}">
+                            <i class="bi bi-eye"></i>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Paginação Resolvidas -->
+              {% if resolved_page_obj.has_other_pages %}
+                <nav aria-label="{% trans 'Navegação de páginas - Resolvidas' %}">
+                  <ul class="pagination justify-content-center">
+                    {% if resolved_page_obj.has_previous %}
+                      <li class="page-item">
+                        <a class="page-link" href="?resolved_page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.report_type %}&report_type={{ request.GET.report_type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}">
+                          <i class="bi bi-chevron-double-left"></i>
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="?resolved_page={{ resolved_page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.report_type %}&report_type={{ request.GET.report_type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}">
+                          <i class="bi bi-chevron-left"></i>
+                        </a>
+                      </li>
+                    {% endif %}
+
+                    {% for num in resolved_page_obj.paginator.page_range %}
+                      {% if resolved_page_obj.number == num %}
+                        <li class="page-item active">
+                          <span class="page-link">{{ num }}</span>
+                        </li>
+                      {% elif num > resolved_page_obj.number|add:'-3' and num < resolved_page_obj.number|add:'3' %}
+                        <li class="page-item">
+                          <a class="page-link" href="?resolved_page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.report_type %}&report_type={{ request.GET.report_type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}">{{ num }}</a>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+
+                    {% if resolved_page_obj.has_next %}
+                      <li class="page-item">
+                        <a class="page-link" href="?resolved_page={{ resolved_page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.report_type %}&report_type={{ request.GET.report_type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}">
+                          <i class="bi bi-chevron-right"></i>
+                        </a>
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="?resolved_page={{ resolved_page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.report_type %}&report_type={{ request.GET.report_type }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.priority %}&priority={{ request.GET.priority }}{% endif %}">
+                          <i class="bi bi-chevron-double-right"></i>
+                        </a>
+                      </li>
+                    {% endif %}
+                  </ul>
+                </nav>
+              {% endif %}
+
+            {% else %}
+              <div class="text-center py-3">
+                <i class="bi bi-check-circle fa-2x text-muted mb-2"></i>
+                <h6 class="text-muted">{% trans "Nenhuma denúncia resolvida encontrada" %}</h6>
+                <p class="text-muted small">{% trans "Não há denúncias resolvidas que correspondam aos filtros aplicados." %}</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmação -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Confirmar Ação" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancelar" %}</button>
+        <button type="button" class="btn btn-primary" id="confirmAction">{% trans "Confirmar" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Seleção de todos os checkboxes
+    const selectAllCheckbox = document.getElementById('select-all');
+    const selectAllTableCheckbox = document.getElementById('select-all-table');
+    const reportCheckboxes = document.querySelectorAll('.report-checkbox');
+    const bulkActionBtn = document.getElementById('bulk-action-btn');
+    const bulkActionForm = document.getElementById('bulk-action-form');
+
+    function updateBulkActionButton() {
+        // Apenas considerar checkboxes das denúncias ativas (não resolvidas)
+        const checkedBoxes = document.querySelectorAll('.report-checkbox:checked');
+        bulkActionBtn.disabled = checkedBoxes.length === 0;
+    }
+
+    function selectAll(checked) {
+        // Apenas selecionar checkboxes das denúncias ativas (não resolvidas)
+        reportCheckboxes.forEach(checkbox => {
+            checkbox.checked = checked;
+        });
+        selectAllCheckbox.checked = checked;
+        selectAllTableCheckbox.checked = checked;
+        updateBulkActionButton();
+    }
+
+    selectAllCheckbox.addEventListener('change', function() {
+        selectAll(this.checked);
+    });
+
+    selectAllTableCheckbox.addEventListener('change', function() {
+        selectAll(this.checked);
+    });
+
+    reportCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateBulkActionButton);
+    });
+
+    // Confirmação de ação em massa
+    bulkActionForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const checkedBoxes = document.querySelectorAll('.report-checkbox:checked');
+        const actionType = document.getElementById('bulk-action-type').value;
+        
+        if (checkedBoxes.length === 0) {
+            alert('{% trans "Selecione pelo menos uma denúncia." %}');
+            return;
+        }
+
+        if (!actionType) {
+            alert('{% trans "Selecione uma ação." %}');
+            return;
+        }
+
+        const confirmMessage = `{% trans "Tem certeza que deseja aplicar a ação" %} "${actionType}" {% trans "em" %} ${checkedBoxes.length} {% trans "denúncia(s)?" %}`;
+        
+        if (!confirm(confirmMessage)) {
+            return;
+        }
+
+        // Limpar inputs anteriores de report_ids
+        const existingInputs = bulkActionForm.querySelectorAll('input[name="report_ids"]');
+        existingInputs.forEach(input => input.remove());
+
+        // Adicionar IDs dos relatórios selecionados ao formulário (apenas relatórios ativos)
+        checkedBoxes.forEach(checkbox => {
+            // Verificar se o checkbox está na seção de relatórios ativos
+            const isActiveReport = checkbox.closest('.card').querySelector('.text-primary .bi-hourglass');
+            if (isActiveReport) {
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'report_ids';
+                hiddenInput.value = checkbox.value;
+                bulkActionForm.appendChild(hiddenInput);
+            }
+        });
+
+        // Submeter o formulário via AJAX para melhor feedback
+        fetch(bulkActionForm.action, {
+            method: 'POST',
+            body: new FormData(bulkActionForm)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                let message = data.message;
+                if (data.errors && data.errors.length > 0) {
+                    message += '\n\nErros encontrados:\n' + data.errors.join('\n');
+                }
+                alert(message);
+                location.reload();
+            } else {
+                alert('Erro: ' + (data.error || 'Erro desconhecido'));
+            }
+        })
+        .catch(error => {
+            alert('Erro de conexão: ' + error.message);
+        });
+    });
+});
+
+// Função para atualizar status via AJAX
+function updateStatus(reportId, status) {
+    const statusText = status === 'reviewing' ? '{% trans "revisando" %}' : '{% trans "resolvida" %}';
+    
+    if (confirm(`{% trans "Tem certeza que deseja marcar esta denúncia como" %} ${statusText}?`)) {
+        fetch(`/social/moderation/reports/${reportId}/update-status/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ status: status })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('{% trans "Erro ao atualizar status:" %} ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('{% trans "Erro ao processar a requisição." %}');
+        });
+    }
+}
+</script>
+
+<style>
+.table-hover tbody tr:hover {
+    background-color: rgba(0,0,0,.075);
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+.btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.border-left-primary {
+    border-left: 0.25rem solid #007bff !important;
+}
+
+.border-left-warning {
+    border-left: 0.25rem solid #ffc107 !important;
+}
+
+.border-left-danger {
+    border-left: 0.25rem solid #dc3545 !important;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid #28a745 !important;
+}
+
+.border-left-info {
+    border-left: 0.25rem solid #17a2b8 !important;
+}
+
+/* Estilo para a seção de relatórios resolvidos */
+#resolvedReports .table {
+    opacity: 0.8;
+}
+
+#resolvedReports .table-light {
+    background-color: #f8f9fa !important;
+}
+
+/* Destacar a diferença entre seções ativas e resolvidas */
+.active-reports-section {
+    border: 2px solid #007bff;
+    border-radius: 8px;
+}
+
+.resolved-reports-section {
+    border: 2px solid #28a745;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+/* Animação para a expansão da seção resolvida */
+.collapse {
+    transition: all 0.3s ease-in-out;
+}
+</style>
+{% endblock content %}

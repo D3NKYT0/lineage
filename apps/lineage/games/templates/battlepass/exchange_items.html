@@ -1,0 +1,212 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load l10n %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2 class="text-center mb-4">{% trans "Trocar Itens por XP" %}</h2>
+            <div class="progress-container">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span>{% trans "Nível" %} {{ current_level }}{% if next_level %} → {{ next_level }}{% endif %}</span>
+                    <span>{{ current_xp }}/{{ xp_for_next_level }} XP</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar bg-primary" role="progressbar" 
+                         style="width: {{ progress_percentage }}%"
+                         aria-valuenow="{{ progress_percentage }}" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                </div>
+                {% if not next_level %}
+                <div class="text-center mt-2">
+                    <span class="badge bg-success">{% trans "Nível Máximo Atingido!" %}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for exchange in exchanges %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 {% if not exchange.has_item %}bg-light{% endif %}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ exchange.item_name }}</h5>
+                    {% if exchange.item_enchant > 0 %}
+                    <span class="badge bg-info">+{{ exchange.item_enchant }}</span>
+                    {% endif %}
+                    
+                    <div class="mt-3">
+                        <p class="mb-2">
+                            <strong>{% trans "XP por item" %}:</strong> {{ exchange.xp_amount }}
+                        </p>
+                        {% if exchange.has_item %}
+                        <p class="mb-2">
+                            <strong>{% trans "Quantidade disponível" %}:</strong> {{ exchange.item_quantity }}
+                        </p>
+                        {% endif %}
+                        {% if exchange.max_exchanges > 0 %}
+                        <p class="mb-2">
+                            <strong>{% trans "Trocas restantes" %}:</strong> 
+                            {{ exchange.max_exchanges|default:"0"|add:"-"|add:exchange.current_exchanges|stringformat:"i" }}
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    {% if exchange.has_item and exchange.can_exchange and next_level %}
+                    <form method="post" action="{% url 'games:exchange_item' exchange.id %}" class="mt-3">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="quantity-{{ exchange.id }}" class="form-label">{% trans "Quantidade para trocar" %}:</label>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-outline-secondary quantity-btn" data-action="decrease">-</button>
+                                <input type="number" class="form-control text-center" id="quantity-{{ exchange.id }}" 
+                                       name="quantity" value="1" min="1" max="{{ exchange.item_quantity|unlocalize }}"
+                                       data-max="{{ exchange.item_quantity|unlocalize }}">
+                                <button type="button" class="btn btn-outline-secondary quantity-btn" data-action="increase">+</button>
+                            </div>
+                            <div class="form-text">
+                                {% trans "XP total" %}: <span class="total-xp">{{ exchange.xp_amount }}</span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            {% trans "Trocar por XP" %}
+                        </button>
+                    </form>
+                    {% elif not exchange.has_item %}
+                    <div class="alert alert-warning mt-3 mb-0">
+                        {% trans "Você não possui este item" %}
+                    </div>
+                    {% elif not exchange.can_exchange %}
+                    <div class="alert alert-warning mt-3 mb-0">
+                        {% trans "Limite de trocas atingido" %}
+                    </div>
+                    {% elif not next_level %}
+                    <div class="alert alert-info mt-3 mb-0">
+                        {% trans "Você já atingiu o nível máximo do Battle Pass!" %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <div class="alert alert-info">
+                {% trans "Não há itens disponíveis para troca no momento." %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.progress-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.1);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress {
+    height: 20px;
+    background-color: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(45deg, #4a90e2, #67b26f);
+    transition: width 0.3s ease;
+}
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #4a90e2, #67b26f);
+    border: none;
+    transition: transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: scale(1.02);
+    background: linear-gradient(45deg, #357abd, #5ca15f);
+}
+
+.badge {
+    font-size: 0.9em;
+    padding: 0.4em 0.8em;
+}
+
+.input-group {
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.quantity-btn {
+    width: 40px;
+}
+
+.form-control[type="number"] {
+    text-align: center;
+}
+
+.form-control[type="number"]::-webkit-inner-spin-button,
+.form-control[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Função para atualizar o XP total
+    function updateTotalXP(input) {
+        const xpPerItem = parseInt(input.closest('.card-body').querySelector('strong').textContent.match(/\d+/)[0]);
+        const quantity = parseInt(input.value);
+        const totalXP = xpPerItem * quantity;
+        input.closest('.mb-3').querySelector('.total-xp').textContent = totalXP;
+    }
+
+    // Adiciona eventos aos botões de quantidade
+    document.querySelectorAll('.quantity-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const input = this.parentElement.querySelector('input');
+            const currentValue = parseInt(input.value);
+            const maxValue = parseInt(input.dataset.max);
+            
+            if (this.dataset.action === 'increase' && currentValue < maxValue) {
+                input.value = currentValue + 1;
+            } else if (this.dataset.action === 'decrease' && currentValue > 1) {
+                input.value = currentValue - 1;
+            }
+            
+            updateTotalXP(input);
+        });
+    });
+
+    // Adiciona evento de mudança aos inputs de quantidade
+    document.querySelectorAll('input[name="quantity"]').forEach(input => {
+        input.addEventListener('change', function() {
+            const maxValue = parseInt(this.dataset.max);
+            if (this.value < 1) this.value = 1;
+            if (this.value > maxValue) this.value = maxValue;
+            updateTotalXP(this);
+        });
+    });
+});
+</script>
+{% endblock %} 

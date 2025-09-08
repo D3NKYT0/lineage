@@ -1,0 +1,650 @@
+{% extends 'tops/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Tops" %}{% endblock %}
+
+{% block tops_content %}
+<div class="tops-home">
+    <!-- Hero Section -->
+    <div class="hero-section" data-aos="fade-up" data-aos-duration="1000">
+        <div class="hero-content text-center">
+            <h1 class="hero-title">{% trans "Rankings do Servidor" %}</h1>
+            <p class="hero-subtitle">{% trans "Descubra os melhores jogadores e clãs que dominam nosso mundo" %}</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">7</span>
+                    <span class="stat-label">{% trans "Categorias" %}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">{% trans "Atualizado" %}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">{% trans "Preciso" %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories Grid -->
+    <div class="categories-section" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="200">
+        <div class="section-header text-center mb-5">
+            <h2 class="section-title">{% trans "Explore os Rankings" %}</h2>
+            <p class="section-subtitle">{% trans "Escolha uma categoria para ver os melhores do servidor" %}</p>
+        </div>
+
+        <div class="categories-grid">
+            <!-- PvP Ranking -->
+            <div class="category-card" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="100">
+                <a href="{% url 'tops:pvp' %}" class="category-link">
+                    <div class="category-icon">
+                        <i class="fas fa-khanda"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-title">{% trans "Ranking PvP" %}</h3>
+                        <p class="category-description">{% trans "Os guerreiros mais temidos do servidor" %}</p>
+                        <div class="category-meta">
+                            <span class="category-badge">{% trans "Combat" %}</span>
+                        </div>
+                    </div>
+                    <div class="category-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- PK Ranking -->
+            <div class="category-card" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="200">
+                <a href="{% url 'tops:pk' %}" class="category-link">
+                    <div class="category-icon pk-icon">
+                        <i class="fas fa-skull"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-title">{% trans "Ranking PK" %}</h3>
+                        <p class="category-description">{% trans "Os caçadores mais implacáveis" %}</p>
+                        <div class="category-meta">
+                            <span class="category-badge pk-badge">{% trans "Killer" %}</span>
+                        </div>
+                    </div>
+                    <div class="category-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Adena Ranking -->
+            <div class="category-card" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="300">
+                <a href="{% url 'tops:adena' %}" class="category-link">
+                    <div class="category-icon adena-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-title">{% trans "Ranking Adena" %}</h3>
+                        <p class="category-description">{% trans "Os magnatas mais ricos do servidor" %}</p>
+                        <div class="category-meta">
+                            <span class="category-badge adena-badge">{% trans "Wealth" %}</span>
+                        </div>
+                    </div>
+                    <div class="category-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Clans Ranking -->
+            <div class="category-card" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="400">
+                <a href="{% url 'tops:clans' %}" class="category-link">
+                    <div class="category-icon clan-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-title">{% trans "Ranking Clans" %}</h3>
+                        <p class="category-description">{% trans "As guildas mais poderosas" %}</p>
+                        <div class="category-meta">
+                            <span class="category-badge clan-badge">{% trans "Guild" %}</span>
+                        </div>
+                    </div>
+                    <div class="category-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Level Ranking -->
+            <div class="category-card" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="500">
+                <a href="{% url 'tops:level' %}" class="category-link">
+                    <div class="category-icon level-icon">
+                        <i class="fas fa-level-up-alt"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-title">{% trans "Ranking Nível" %}</h3>
+                        <p class="category-description">{% trans "Os jogadores de maior nível" %}</p>
+                        <div class="category-meta">
+                            <span class="category-badge level-badge">{% trans "Level" %}</span>
+                        </div>
+                    </div>
+                    <div class="category-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Online Ranking -->
+            <div class="category-card" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="600">
+                <a href="{% url 'tops:online' %}" class="category-link">
+                    <div class="category-icon online-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-title">{% trans "Top Online" %}</h3>
+                        <p class="category-description">{% trans "Quem está online agora" %}</p>
+                        <div class="category-meta">
+                            <span class="category-badge online-badge">{% trans "Live" %}</span>
+                        </div>
+                    </div>
+                    <div class="category-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Olympiad Ranking -->
+            <div class="category-card" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="700">
+                <a href="{% url 'tops:olympiad' %}" class="category-link">
+                    <div class="category-icon olympiad-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-title">{% trans "Ranking Olimpíada" %}</h3>
+                        <p class="category-description">{% trans "Os campeões da arena" %}</p>
+                        <div class="category-meta">
+                            <span class="category-badge olympiad-badge">{% trans "Champion" %}</span>
+                        </div>
+                    </div>
+                    <div class="category-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Castle & Siege -->
+            <div class="category-card" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="800">
+                <a href="{% url 'tops:siege' %}" class="category-link">
+                    <div class="category-icon siege-icon">
+                        <i class="fas fa-chess-rook"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-title">{% trans "Castle & Siege" %}</h3>
+                        <p class="category-description">{% trans "Status dos castelos e cerco" %}</p>
+                        <div class="category-meta">
+                            <span class="category-badge siege-badge">{% trans "War" %}</span>
+                        </div>
+                    </div>
+                    <div class="category-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="info-section" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h4>{% trans "Atualização Automática" %}</h4>
+                <p>{% trans "Os rankings são atualizados automaticamente a cada hora" %}</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4>{% trans "Dados Seguros" %}</h4>
+                <p>{% trans "Todas as informações são extraídas diretamente do servidor" %}</p>
+            </div>
+            <div class="info-card">
+                <div class="info-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h4>{% trans "Totalmente Responsivo" %}</h4>
+                <p>{% trans "Acesse os rankings de qualquer dispositivo" %}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, rgba(53, 47, 35, 0.95), rgba(40, 35, 25, 0.95));
+    border-radius: 20px;
+    padding: 60px 40px;
+    margin-bottom: 50px;
+    border: 1px solid rgba(230, 199, 125, 0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(15px);
+}
+
+.hero-icon {
+    margin-bottom: 30px;
+}
+
+.hero-icon i {
+    background: linear-gradient(135deg, #e6c77d, #d1a44f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(230, 199, 125, 0.5));
+}
+
+.hero-title {
+    color: #e6c77d;
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(230, 199, 125, 0.3);
+    text-align: center;
+}
+
+.hero-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 40px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    color: #e6c77d;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Section Headers */
+.section-header {
+    margin-bottom: 50px;
+}
+
+.section-title {
+    color: #e6c77d;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 0 0 15px rgba(230, 199, 125, 0.3);
+    text-align: center;
+}
+
+.section-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Categories Grid */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 60px;
+}
+
+.category-card {
+    background: linear-gradient(135deg, rgba(53, 47, 35, 0.95), rgba(40, 35, 25, 0.95));
+    border-radius: 15px;
+    border: 1px solid rgba(230, 199, 125, 0.2);
+    overflow: hidden;
+    transition: all 0.4s ease;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.category-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(230, 199, 125, 0.4);
+    box-shadow: 0 15px 40px rgba(230, 199, 125, 0.2);
+}
+
+.category-link {
+    display: flex;
+    align-items: center;
+    padding: 25px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+}
+
+.category-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(230, 199, 125, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.category-card:hover .category-link::before {
+    left: 100%;
+}
+
+.category-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    background: linear-gradient(135deg, rgba(230, 199, 125, 0.2), rgba(209, 164, 79, 0.2));
+    border: 1px solid rgba(230, 199, 125, 0.3);
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+    background: linear-gradient(135deg, rgba(230, 199, 125, 0.3), rgba(209, 164, 79, 0.3));
+    transform: scale(1.1);
+}
+
+.category-icon i {
+    font-size: 1.5rem;
+    color: #e6c77d;
+}
+
+/* Category-specific icons */
+.pk-icon {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.2), rgba(200, 35, 51, 0.2));
+    border-color: rgba(220, 53, 69, 0.3);
+}
+
+.pk-icon i {
+    color: #dc3545;
+}
+
+.adena-icon {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(28, 148, 58, 0.2));
+    border-color: rgba(40, 167, 69, 0.3);
+}
+
+.adena-icon i {
+    color: #28a745;
+}
+
+.clan-icon {
+    background: linear-gradient(135deg, rgba(0, 123, 255, 0.2), rgba(0, 105, 217, 0.2));
+    border-color: rgba(0, 123, 255, 0.3);
+}
+
+.clan-icon i {
+    color: #007bff;
+}
+
+.level-icon {
+    background: linear-gradient(135deg, rgba(23, 162, 184, 0.2), rgba(17, 122, 139, 0.2));
+    border-color: rgba(23, 162, 184, 0.3);
+}
+
+.level-icon i {
+    color: #17a2b8;
+}
+
+.online-icon {
+    background: linear-gradient(135deg, rgba(108, 117, 125, 0.2), rgba(90, 98, 104, 0.2));
+    border-color: rgba(108, 117, 125, 0.3);
+}
+
+.online-icon i {
+    color: #6c757d;
+}
+
+.olympiad-icon {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(230, 173, 7, 0.2));
+    border-color: rgba(255, 193, 7, 0.3);
+}
+
+.olympiad-icon i {
+    color: #ffc107;
+}
+
+.siege-icon {
+    background: linear-gradient(135deg, rgba(111, 66, 193, 0.2), rgba(88, 53, 153, 0.2));
+    border-color: rgba(111, 66, 193, 0.3);
+}
+
+.siege-icon i {
+    color: #6f42c1;
+}
+
+.category-content {
+    flex: 1;
+}
+
+.category-title {
+    color: #e6c77d;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+}
+
+.category-description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.category-meta {
+    display: flex;
+    gap: 8px;
+}
+
+.category-badge {
+    background: rgba(230, 199, 125, 0.1);
+    color: #e6c77d;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid rgba(230, 199, 125, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pk-badge {
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border-color: rgba(220, 53, 69, 0.2);
+}
+
+.adena-badge {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border-color: rgba(40, 167, 69, 0.2);
+}
+
+.clan-badge {
+    background: rgba(0, 123, 255, 0.1);
+    color: #007bff;
+    border-color: rgba(0, 123, 255, 0.2);
+}
+
+.level-badge {
+    background: rgba(23, 162, 184, 0.1);
+    color: #17a2b8;
+    border-color: rgba(23, 162, 184, 0.2);
+}
+
+.online-badge {
+    background: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+    border-color: rgba(108, 117, 125, 0.2);
+}
+
+.olympiad-badge {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border-color: rgba(255, 193, 7, 0.2);
+}
+
+.siege-badge {
+    background: rgba(111, 66, 193, 0.1);
+    color: #6f42c1;
+    border-color: rgba(111, 66, 193, 0.2);
+}
+
+.category-arrow {
+    color: rgba(230, 199, 125, 0.5);
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-arrow {
+    color: #e6c77d;
+    transform: translateX(5px);
+}
+
+/* Info Section */
+.info-section {
+    background: linear-gradient(135deg, rgba(53, 47, 35, 0.95), rgba(40, 35, 25, 0.95));
+    border-radius: 20px;
+    padding: 50px 40px;
+    border: 1px solid rgba(230, 199, 125, 0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(15px);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.info-card {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+.info-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(230, 199, 125, 0.2), rgba(209, 164, 79, 0.2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    border: 2px solid rgba(230, 199, 125, 0.3);
+}
+
+.info-icon i {
+    font-size: 2rem;
+    color: #e6c77d;
+}
+
+.info-card h4 {
+    color: #e6c77d;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.info-card p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 40px 20px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-stats {
+        gap: 30px;
+    }
+    
+    .categories-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .category-link {
+        padding: 20px;
+    }
+    
+    .category-icon {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+    }
+    
+    .category-icon i {
+        font-size: 1.2rem;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-stats {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .category-link {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .category-icon {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    
+    .category-arrow {
+        display: none;
+    }
+}
+</style>
+{% endblock %} 

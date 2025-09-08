@@ -1,0 +1,624 @@
+{% extends "layouts/base.html" %}
+{% load i18n static %}
+{% load banner_extras %}
+
+{% block extrastyle %}
+<style>
+  .reports-container {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+    color: #ffffff;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Particle effect background */
+  .reports-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.1), transparent),
+      radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.1), transparent),
+      radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.1), transparent),
+      radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.1), transparent),
+      radial-gradient(2px 2px at 160px 30px, rgba(255,255,255,0.1), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: sparkle 20s linear infinite;
+    z-index: -1;
+  }
+
+  @keyframes sparkle {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-100px); }
+  }
+
+  .dashboard-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .epic-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    border-radius: 25px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+    position: relative;
+    overflow: hidden;
+    animation: headerGlow 3s ease-in-out infinite alternate;
+  }
+
+  .epic-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes headerGlow {
+    0% { box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4); }
+    100% { box-shadow: 0 15px 50px rgba(102, 126, 234, 0.6); }
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+  }
+
+  .epic-header h1 {
+    color: #ffffff;
+    margin: 0;
+    font-weight: 800;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .epic-header p {
+    color: rgba(255,255,255,0.9);
+    margin: 1rem 0 0 0;
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .fancy-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.8s ease-out;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fancy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+  }
+
+  .fancy-card:hover::before {
+    left: 100%;
+  }
+
+  .card-header-epic {
+    background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.3);
+    position: relative;
+  }
+
+  .card-header-epic h5 {
+    color: #ffffff;
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.4rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .info-item {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+  }
+
+  .info-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+
+  .info-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .info-value {
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .status-active {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+  }
+
+  .status-blocked {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    color: white;
+  }
+
+  .banner-container {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+  }
+
+  .banner-container:hover {
+    transform: scale(1.02);
+  }
+
+  .banner-container img {
+    width: 100%;
+    height: 291px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .character-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .character-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    position: relative;
+  }
+
+  .character-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+  }
+
+  .character-header {
+    background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .character-name {
+    color: #6f42c1;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  }
+
+  .character-avatar {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin: 1rem auto;
+    display: block;
+    border: 3px solid rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+  }
+
+  .character-card:hover .character-avatar {
+    border-color: #6f42c1;
+    transform: scale(1.05);
+  }
+
+  .character-stats {
+    padding: 1rem;
+  }
+
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .stat-item:last-child {
+    border-bottom: none;
+  }
+
+  .stat-label {
+    color: rgba(255,255,255,0.8);
+    font-weight: 600;
+  }
+
+  .stat-value {
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .online-status {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+  }
+
+  .online-yes {
+    background: #28a745;
+    box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+  }
+
+  .online-no {
+    background: #dc3545;
+  }
+
+  .character-actions {
+    padding: 1rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 0.75rem;
+    color: #ffffff;
+    text-decoration: none;
+    text-align: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+  }
+
+  .action-btn:hover {
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+    transform: translateY(-2px);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .action-btn.success:hover {
+    border-color: #28a745;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  }
+
+  .action-btn.warning:hover {
+    border-color: #ffc107;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+  }
+
+  .action-btn.info:hover {
+    border-color: #17a2b8;
+    box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+  }
+
+  .services-section {
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(220, 53, 69, 0.05) 100%);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+  }
+
+  .service-btn {
+    background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    border: none;
+    border-radius: 15px;
+    padding: 1rem 2rem;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    text-align: center;
+    display: block;
+  }
+
+  .service-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.4);
+    background: linear-gradient(135deg, #c82333 0%, #e55a00 100%);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.1rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .reports-container {
+      padding: 1rem 0;
+    }
+    
+    .epic-header {
+      padding: 1.5rem;
+      margin: 1rem;
+    }
+    
+    .epic-header h1 {
+      font-size: 2rem;
+    }
+    
+    .fancy-card {
+      padding: 1.5rem;
+      margin: 1rem;
+    }
+    
+    .character-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="dashboard-content">
+    <div class="container">
+      
+      <!-- Header Épico -->
+      <div class="epic-header">
+        <h1>
+          <i class="fas fa-crown me-3"></i>
+          {% trans "Dashboard da Conta Lineage" %}
+        </h1>
+        <p>
+          <i class="fas fa-star me-2"></i>
+          {% trans "Bem-vindo ao seu centro de controle do jogo" %}
+        </p>
+      </div>
+
+      <!-- Informações da Conta -->
+      <div class="fancy-card">
+        <div class="card-header-epic">
+          <h5>
+            <i class="fas fa-info-circle me-2"></i>
+            {% trans "Informações da Conta" %}
+          </h5>
+        </div>
+        
+        <div class="row align-items-center">
+          <div class="col-lg-4">
+            <div class="info-grid">
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="fas fa-user me-2"></i>
+                  {% trans "Login" %}
+                </div>
+                <div class="info-value">{{ account.login }}</div>
+              </div>
+              
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="fas fa-envelope me-2"></i>
+                  {% trans "Email" %}
+                </div>
+                <div class="info-value">{{ account.email }}</div>
+              </div>
+              
+
+              
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="fas fa-network-wired me-2"></i>
+                  {% trans "Último IP" %}
+                </div>
+                <div class="info-value">{{ lastIP|default:"-" }}</div>
+              </div>
+              
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="fas fa-shield-alt me-2"></i>
+                  {% trans "Status" %}
+                </div>
+                <div class="info-value">
+                  <span class="status-badge {% if account.status == 'Ativa' %}status-active{% else %}status-blocked{% endif %}">
+                    {{ account.status }}
+                  </span>
+                </div>
+              </div>
+              
+              <div class="info-item">
+                <div class="info-label">
+                  <i class="fas fa-users me-2"></i>
+                  {% trans "Total de Personagens" %}
+                </div>
+                <div class="info-value">{{ char_count|default:"0" }}</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-8">
+            <div class="banner-container">
+              {% get_banner_url as banner_url %}
+              {% if banner_url %}
+                <img src="{{ banner_url }}" alt="{% trans 'Logo Lineage 2' %}">
+              {% else %}
+                <img src="{% static 'assets/img/banner-pdl.jpeg' %}" alt="{% trans 'Logo Lineage 2' %}">
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Personagens -->
+      <div class="fancy-card">
+        <div class="card-header-epic">
+          <h5>
+            <i class="fas fa-users me-2"></i>
+            {% trans "Seus Personagens" %}
+          </h5>
+        </div>
+        
+        {% if characters %}
+        <div class="character-grid">
+          {% for char in characters %}
+          <div class="character-card">
+            <div class="character-header">
+              <h6 class="character-name">{{ char.nome }}</h6>
+            </div>
+            
+            <div class="text-center">
+              <img src="{% static 'assets/img/l2/avatar/' %}{{ char.avatar }}" 
+                   class="character-avatar" 
+                   alt="Avatar de {{ char.nome }}">
+            </div>
+            
+            <div class="character-stats">
+              <div class="stat-item">
+                <span class="stat-label">
+                  <i class="fas fa-medal me-2"></i>
+                  {% trans "Título" %}
+                </span>
+                <span class="stat-value">{{ char.title|default:"-" }}</span>
+              </div>
+              
+              <div class="stat-item">
+                <span class="stat-label">
+                  <i class="fas fa-level-up-alt me-2"></i>
+                  {% trans "Nível" %}
+                </span>
+                <span class="stat-value">{{ char.level }}</span>
+              </div>
+              
+              <div class="stat-item">
+                <span class="stat-label">
+                  <i class="fas fa-user-shield me-2"></i>
+                  {% trans "Classe Base" %}
+                </span>
+                <span class="stat-value">{{ char.base_class }}</span>
+              </div>
+              
+              <div class="stat-item">
+                <span class="stat-label">
+                  <i class="fas fa-circle me-2"></i>
+                  {% trans "Online" %}
+                </span>
+                <span class="stat-value">
+                  <span class="online-status {% if char.online == 'Sim' %}online-yes{% else %}online-no{% endif %}"></span>
+                  {{ char.online }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="character-actions">
+              <a href="{% url 'server:change_sex' char.id %}" class="action-btn success">
+                <i class="fas fa-male me-2"></i>
+                {% trans "Alterar Sexo" %}
+              </a>
+              <a href="{% url 'server:unstuck' char.id %}" class="action-btn warning">
+                <i class="fas fa-undo-alt me-2"></i>
+                {% trans "Destravar" %}
+              </a>
+              <a href="{% url 'server:change_nickname' char.id %}" class="action-btn info">
+                <i class="fas fa-pencil-alt me-2"></i>
+                {% trans "Alterar Nickname" %}
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-user-slash fa-3x mb-3"></i>
+          <p>{% trans "Nenhum personagem encontrado." %}</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Serviços -->
+      <div class="fancy-card services-section">
+        <div class="card-header-epic">
+          <h5>
+            <i class="fas fa-cogs me-2"></i>
+            {% trans "Serviços da Conta" %}
+          </h5>
+        </div>
+        
+        <div class="d-grid">
+          <a href="{% url 'server:update_password' %}" class="service-btn">
+            <i class="fas fa-lock me-2"></i>
+            {% trans "Alterar Senha" %}
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

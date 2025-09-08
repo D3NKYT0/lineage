@@ -1,0 +1,121 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/accountancy.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'accountancy:dashboard' %}">{% trans "Contabilidade" %}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{% trans "Fluxo de Caixa" %}</li>
+{% endblock breadcrumbs %}
+
+{% block page_header %}
+<h5 class="display-5">{% trans "Relatório de Fluxo de Caixa Diário" %}</h5>
+{% endblock page_header %}
+
+{% block content %}
+<div class="accountancy-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="report-container">
+          <div class="report-header">
+            <h1 class="report-title">
+              <i class="fas fa-chart-area me-3"></i>
+              {% trans "Relatório de Fluxo de Caixa Diário" %}
+            </h1>
+            <p class="accountancy-subtitle">
+              {% trans "Acompanhe o movimento financeiro diário e identifique tendências de receitas e despesas" %}
+            </p>
+          </div>
+          
+          <div class="report-body">
+            <div class="table-responsive">
+              <table class="table report-table">
+                <thead>
+                  <tr>
+                    <th><i class="fas fa-calendar me-2"></i>{% trans "Data" %}</th>
+                    <th><i class="fas fa-arrow-up me-2"></i>{% trans "Entradas" %}</th>
+                    <th><i class="fas fa-arrow-down me-2"></i>{% trans "Saídas" %}</th>
+                    <th><i class="fas fa-balance-scale me-2"></i>{% trans "Saldo" %}</th>
+                    <th><i class="fas fa-chart-line me-2"></i>{% trans "Tendência" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in relatorio %}
+                  <tr>
+                    <td>
+                      <i class="fas fa-calendar-day me-2 text-primary"></i>
+                      {{ item.data }}
+                    </td>
+                    <td>
+                      <span class="badge bg-success">
+                        <i class="fas fa-plus me-1"></i>
+                        R$ {{ item.entradas }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge bg-danger">
+                        <i class="fas fa-minus me-1"></i>
+                        R$ {{ item.saidas }}
+                      </span>
+                    </td>
+                    <td>
+                      {% if item.saldo >= 0 %}
+                        <span class="badge bg-info">
+                          <i class="fas fa-dollar-sign me-1"></i>
+                          R$ {{ item.saldo }}
+                        </span>
+                      {% else %}
+                        <span class="badge bg-warning">
+                          <i class="fas fa-exclamation-triangle me-1"></i>
+                          R$ {{ item.saldo }}
+                        </span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if item.tendencia == 'positiva' %}
+                        <span class="badge bg-success">
+                          <i class="fas fa-arrow-up me-1"></i>
+                          {% trans "Positiva" %}
+                        </span>
+                      {% elif item.tendencia == 'negativa' %}
+                        <span class="badge bg-danger">
+                          <i class="fas fa-arrow-down me-1"></i>
+                          {% trans "Negativa" %}
+                        </span>
+                      {% else %}
+                        <span class="badge bg-secondary">
+                          <i class="fas fa-minus me-1"></i>
+                          {% trans "Estável" %}
+                        </span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="5" class="text-center py-4">
+                      <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+                      <p class="text-muted">{% trans "Nenhum dado de fluxo de caixa disponível" %}</p>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="text-center mt-4">
+              <a href="{% url 'accountancy:dashboard' %}" class="report-back-button">
+                <i class="fas fa-arrow-left me-2"></i>
+                {% trans "Voltar para o Dashboard" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

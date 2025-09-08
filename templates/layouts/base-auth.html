@@ -1,0 +1,73 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+
+<head> 
+  {% include 'includes/head.html' %}
+  {% block extrastyle %}{% endblock extrastyle %}
+</head>
+
+  <main>
+
+    {% block content %}{% endblock content %}
+
+  </main>
+
+  {% include 'includes/scripts.html' %}
+  {% block extra_js %}{% endblock extra_js %}
+  <script>
+    (function () {
+      const LOCK_URL = "{% url 'activate_lock' %}";
+      const LOCK_URL_ALT = "{% url 'lock' %}";
+      const INACTIVITY_MINUTES = 5;
+      const TIME_LIMIT = INACTIVITY_MINUTES * 60 * 1000; // 5 minutos em milissegundos
+
+      // Lista de caminhos permitidos (mesmos do middleware)
+      const ALLOWED_PATHS = [
+        "{{ settings.STATIC_URL }}",
+        "{{ settings.MEDIA_URL }}",
+        '/decrypted-file/',
+        '/public/',
+        '/wiki/',
+        '/pages/',
+        '/set-language/',
+        '/verify/',
+        '/components/',
+        '/accounts/',
+      ];
+
+      let inactivityTimer;
+
+      function isPathAllowed(path) {
+        return ALLOWED_PATHS.some(allowedPath => path.startsWith(allowedPath));
+      }
+
+      function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+          const currentPath = window.location.pathname;
+          
+          // Não redireciona se estiver em páginas de lock ou em caminhos permitidos
+          if (currentPath === LOCK_URL || 
+              currentPath === LOCK_URL_ALT || 
+              isPathAllowed(currentPath)) {
+            return;
+          }
+
+          // Usa o parâmetro next como Django faz
+          const fullPath = currentPath + window.location.search;
+          window.location.href = `${LOCK_URL}?next=${encodeURIComponent(fullPath)}`;
+        }, TIME_LIMIT);
+      }
+
+      // Atividade reinicia o timer
+      const activityEvents = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'];
+      activityEvents.forEach(event => {
+        document.addEventListener(event, resetInactivityTimer, true);
+      });
+
+      // Inicia o timer
+      resetInactivityTimer();
+    })();
+  </script>
+<body>

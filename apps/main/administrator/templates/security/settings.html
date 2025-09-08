@@ -1,0 +1,315 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .security-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .security-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .security-header h1 {
+    color: white;
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  .security-header p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0.5rem 0 0 0;
+    font-size: 1.1rem;
+  }
+
+  .breadcrumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .breadcrumb-item a {
+    color: #00d9ff;
+    text-decoration: none;
+  }
+
+  .breadcrumb-item.active {
+    color: white;
+  }
+
+  .security-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .security-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  }
+
+  .security-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: #00d9ff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+  }
+
+  .security-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .security-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .status-alert {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .status-alert.success {
+    border-left: 4px solid #28a745;
+  }
+
+  .status-alert.warning {
+    border-left: 4px solid #ffc107;
+  }
+
+  .status-icon {
+    font-size: 1.5rem;
+  }
+
+  .status-icon.success {
+    color: #28a745;
+  }
+
+  .status-icon.warning {
+    color: #ffc107;
+  }
+
+  .status-text {
+    color: white;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .btn-security {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .btn-security.primary {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+  }
+
+  .btn-security.primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .btn-security.danger {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    color: white;
+  }
+
+  .btn-security.danger:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(220, 53, 69, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .security-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .feature-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .feature-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .feature-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #00d9ff;
+  }
+
+  .feature-title {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-description {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    .security-features {
+      grid-template-columns: 1fr;
+    }
+    
+    .status-alert {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="security-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="security-header">
+      <h1>
+        <i class="fas fa-shield-alt me-3"></i>{% trans "Configurações de Segurança" %}
+      </h1>
+      <p>{% trans "Mantenha sua conta protegida com recursos avançados de segurança" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Segurança" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Main Security Card -->
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="security-card">
+          <div class="text-center">
+            <div class="security-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h2 class="security-title">{% trans "Autenticação em Duas Etapas (2FA)" %}</h2>
+            <p class="security-description">
+              {% trans "A autenticação em duas etapas adiciona uma camada extra de segurança à sua conta. 
+              Além da senha, você precisará de um código único gerado pelo seu dispositivo móvel." %}
+            </p>
+          </div>
+
+          {% if two_factor_enabled %}
+            <div class="status-alert success">
+              <div class="status-icon success">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <p class="status-text">{% trans "A autenticação em duas etapas está ativada em sua conta." %}</p>
+            </div>
+            <div class="text-center">
+              <form method="POST" action="{% url 'desativar_2fa' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-security danger">
+                  <i class="fas fa-lock-open"></i>{% trans "Desativar 2FA" %}
+                </button>
+              </form>
+            </div>
+          {% else %}
+            <div class="status-alert warning">
+              <div class="status-icon warning">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <p class="status-text">{% trans "A autenticação em duas etapas não está ativada. Recomendamos ativá-la para melhorar a segurança." %}</p>
+            </div>
+            <div class="text-center">
+              <a href="{% url 'ativar_2fa' %}" class="btn-security primary">
+                <i class="fas fa-lock"></i>{% trans "Ativar 2FA" %}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Features -->
+    <div class="security-features">
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h4 class="feature-title">{% trans "Códigos Únicos" %}</h4>
+        <p class="feature-description">
+          {% trans "Códigos temporários gerados a cada 30 segundos, válidos apenas uma vez." %}
+        </p>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-user-shield"></i>
+        </div>
+        <h4 class="feature-title">{% trans "Proteção Extra" %}</h4>
+        <p class="feature-description">
+          {% trans "Mesmo que alguém descubra sua senha, não conseguirá acessar sua conta sem o código 2FA." %}
+        </p>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h4 class="feature-title">{% trans "Acesso Rápido" %}</h4>
+        <p class="feature-description">
+          {% trans "Processo simples e rápido que adiciona apenas alguns segundos ao seu login." %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% load static i18n %}
+
+<nav
+  class="navbar navbar-dark px-4 col-12 d-lg-none"
+  style="background-color: #1F2937 !important"
+>
+  <a class="navbar-brand me-lg-5" href="{% url 'index' %}">
+    <img
+      class="navbar-brand-dark"
+      src="{% static 'assets/img/l2_logo.png' %}"
+      alt="{% trans 'Volt logo' %}"
+    />
+    <img
+      class="navbar-brand-light"
+      src="{% static 'assets/img/l2_logo.png' %}"
+      alt="{% trans 'Volt logo' %}"
+    />
+  </a>
+  <div class="d-flex align-items-center">
+    <button
+      class="navbar-toggler d-lg-none collapsed"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#sidebarMenu"
+      aria-controls="sidebarMenu"
+      aria-expanded="false"
+      aria-label="{% trans 'Toggle navigation' %}"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </div>
+</nav>

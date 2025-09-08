@@ -1,0 +1,148 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/accountancy.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'accountancy:dashboard' %}">{% trans "Contabilidade" %}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{% trans "Reconciliação de Carteiras" %}</li>
+{% endblock breadcrumbs %}
+
+{% block page_header %}
+<h5 class="display-5">{% trans "Relatório de Reconciliação de Carteiras" %}</h5>
+{% endblock page_header %}
+
+{% block content %}
+<div class="accountancy-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="report-container">
+          <div class="report-header">
+            <h1 class="report-title">
+              <i class="fas fa-balance-scale me-3"></i>
+              {% trans "Relatório de Reconciliação de Carteiras" %}
+            </h1>
+            <p class="accountancy-subtitle">
+              {% trans "Verifique a consistência entre as carteiras dos usuários e identifique possíveis discrepâncias" %}
+            </p>
+          </div>
+          
+          <div class="report-body">
+            <div class="table-responsive">
+              <table class="table report-table">
+                <thead>
+                  <tr>
+                    <th><i class="fas fa-user me-2"></i>{% trans "Usuário" %}</th>
+                    <th><i class="fas fa-wallet me-2"></i>{% trans "Saldo na Wallet" %}</th>
+                    <th><i class="fas fa-calculator me-2"></i>{% trans "Saldo Calculado" %}</th>
+                    <th><i class="fas fa-balance-scale me-2"></i>{% trans "Diferença" %}</th>
+                    <th><i class="fas fa-exchange-alt me-2"></i>{% trans "Transações" %}</th>
+                    <th><i class="fas fa-check-circle me-2"></i>{% trans "Status" %}</th>
+                    <th><i class="fas fa-calendar me-2"></i>{% trans "Última Verificação" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in relatorio %}
+                  <tr>
+                    <td>
+                      <i class="fas fa-user-circle me-2 text-primary"></i>
+                      {{ item.usuario }}
+                    </td>
+                    <td>
+                      <span class="badge bg-info">
+                        <i class="fas fa-dollar-sign me-1"></i>
+                        R$ {{ item.saldo_wallet }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge bg-secondary">
+                        <i class="fas fa-database me-1"></i>
+                        R$ {{ item.saldo_banco }}
+                      </span>
+                    </td>
+                    <td>
+                      {% if item.diferenca == 0 %}
+                        <span class="badge bg-success">
+                          <i class="fas fa-check me-1"></i>
+                          R$ {{ item.diferenca }}
+                        </span>
+                      {% elif item.diferenca > 0 %}
+                        <span class="badge bg-warning">
+                          <i class="fas fa-arrow-up me-1"></i>
+                          +R$ {{ item.diferenca }}
+                        </span>
+                      {% else %}
+                        <span class="badge bg-danger">
+                          <i class="fas fa-arrow-down me-1"></i>
+                          R$ {{ item.diferenca }}
+                        </span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <span class="badge bg-secondary">
+                        <i class="fas fa-exchange-alt me-1"></i>
+                        {{ item.num_transacoes }}
+                      </span>
+                    </td>
+                    <td>
+                      {% if item.status == 'reconciliado' %}
+                        <span class="badge bg-success">
+                          <i class="fas fa-check-circle me-1"></i>
+                          {% trans "Reconciliado" %}
+                        </span>
+                      {% elif item.status == 'discrepancia' %}
+                        <span class="badge bg-danger">
+                          <i class="fas fa-exclamation-triangle me-1"></i>
+                          {% trans "Discrepância" %}
+                        </span>
+                      {% elif item.status == 'pendente' %}
+                        <span class="badge bg-warning">
+                          <i class="fas fa-clock me-1"></i>
+                          {% trans "Pendente" %}
+                        </span>
+                      {% elif item.status == 'em_analise' %}
+                        <span class="badge bg-info">
+                          <i class="fas fa-search me-1"></i>
+                          {% trans "Em Análise" %}
+                        </span>
+                      {% else %}
+                        <span class="badge bg-secondary">
+                          <i class="fas fa-question me-1"></i>
+                          {{ item.status|title }}
+                        </span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <i class="fas fa-calendar-day me-2 text-info"></i>
+                      {{ item.ultima_verificacao|date:"d/m/Y H:i" }}
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="7" class="text-center py-4">
+                      <i class="fas fa-balance-scale fa-3x text-muted mb-3"></i>
+                      <p class="text-muted">{% trans "Nenhum dado de reconciliação disponível" %}</p>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="text-center mt-4">
+              <a href="{% url 'accountancy:dashboard' %}" class="report-back-button">
+                <i class="fas fa-arrow-left me-2"></i>
+                {% trans "Voltar para o Dashboard" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

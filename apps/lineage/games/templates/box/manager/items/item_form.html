@@ -1,0 +1,314 @@
+{% extends "layouts/base.html" %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .box-manager-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .box-manager-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #00d9ff;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(13, 217, 255, 0.5);
+  }
+
+  .box-manager-card {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #6f42c1;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(111, 66, 193, 0.3);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .box-manager-header {
+    background: linear-gradient(45deg, #6f42c1, #e83e8c);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .box-manager-header-title {
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .form-section {
+    padding: 2rem;
+  }
+
+  .form-label {
+    color: #f8f9fa;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .form-control, .form-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(111, 66, 193, 0.3);
+    border-radius: 10px;
+    color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus, .form-select:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #00d9ff;
+    box-shadow: 0 0 0 0.2rem rgba(13, 217, 255, 0.25);
+    color: #f8f9fa;
+  }
+
+  .form-control::placeholder {
+    color: #b8c2cc;
+  }
+
+  .error-message {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+  }
+
+  .field-error {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-weight: 600;
+  }
+
+  .action-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    cursor: pointer;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+    color: white;
+    text-decoration: none;
+  }
+
+  .cancel-btn {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+  }
+
+  .cancel-btn:hover {
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+  }
+
+  .back-btn {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+  }
+
+  .back-btn:hover {
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+  }
+
+  /* Estilização do select e options */
+  select {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(111, 66, 193, 0.3) !important;
+    border-radius: 10px !important;
+    color: #f8f9fa !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.3s ease !important;
+  }
+
+  select:focus {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #00d9ff !important;
+    box-shadow: 0 0 0 0.2rem rgba(13, 217, 255, 0.25) !important;
+    color: #f8f9fa !important;
+  }
+
+  select option {
+    background: #1a1a2e !important;
+    color: #f8f9fa !important;
+    border: none !important;
+    padding: 0.5rem !important;
+  }
+
+  select option:hover {
+    background: rgba(13, 217, 255, 0.2) !important;
+  }
+
+  select option:checked {
+    background: rgba(111, 66, 193, 0.5) !important;
+    color: #f8f9fa !important;
+  }
+
+  /* Estilização de campos específicos */
+  input[type="file"] {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(111, 66, 193, 0.3);
+    border-radius: 10px;
+    color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+  }
+
+  input[type="file"]:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #00d9ff;
+    box-shadow: 0 0 0 0.2rem rgba(13, 217, 255, 0.25);
+  }
+
+  input[type="number"] {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(111, 66, 193, 0.3);
+    border-radius: 10px;
+    color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+  }
+
+  input[type="number"]:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #00d9ff;
+    box-shadow: 0 0 0 0.2rem rgba(13, 217, 255, 0.25);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @media (max-width: 768px) {
+    .box-manager-title {
+      font-size: 2rem;
+    }
+    
+    .box-manager-header {
+      padding: 1.5rem;
+    }
+    
+    .form-section {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="box-manager-bg">
+  <div class="container">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+      <div>
+        <h1 class="box-manager-title">
+          <i class="fas fa-gem me-3"></i>
+          {% if form.instance.pk %}
+            {% trans "Editar Item" %}
+          {% else %}
+            {% trans "Novo Item" %}
+          {% endif %}
+        </h1>
+      </div>
+      <a href="{% url 'games:item_list' %}" class="action-btn back-btn">
+        <i class="fas fa-arrow-left me-2"></i>
+        {% trans "Voltar" %}
+      </a>
+    </div>
+
+    <!-- Formulário -->
+    <div class="box-manager-card fade-in-up">
+      <div class="box-manager-header">
+        <h4 class="box-manager-header-title">
+          <i class="fas fa-edit me-2"></i>
+          {% if form.instance.pk %}
+            {% trans "Editar Informações" %}
+          {% else %}
+            {% trans "Informações do Item" %}
+          {% endif %}
+        </h4>
+      </div>
+      <div class="form-section">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="error-message">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          {% for field in form %}
+            <div class="mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label">
+                <i class="fas fa-edit me-2"></i>
+                {{ field.label }}
+              </label>
+              {{ field }}
+              {% if field.errors %}
+                <div class="field-error">
+                  <i class="fas fa-exclamation-circle me-1"></i>
+                  {{ field.errors }}
+                </div>
+              {% endif %}
+              {% if field.help_text %}
+                <small class="text-muted">{{ field.help_text }}</small>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          <div class="d-flex gap-3 mt-4">
+            <button type="submit" class="action-btn">
+              <i class="fas fa-save me-2"></i>
+              {% if form.instance.pk %}
+                {% trans "Salvar Alterações" %}
+              {% else %}
+                {% trans "Criar Item" %}
+              {% endif %}
+            </button>
+            <a href="{% url 'games:item_list' %}" class="action-btn cancel-btn">
+              <i class="fas fa-times me-2"></i>
+              {% trans "Cancelar" %}
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

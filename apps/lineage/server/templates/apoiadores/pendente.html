@@ -1,0 +1,132 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Solicitação Pendente" %}{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .pending-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .pending-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .pending-card h1 {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-size: 2rem;
+  }
+
+  .pending-card p {
+    color: #a0aec0;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+
+  .status-badge {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 1rem;
+    display: inline-block;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(237, 137, 54, 0.3);
+  }
+
+  .icon-large {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .info-box {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .info-box h3 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .info-box p {
+    color: #a0aec0;
+    margin: 0;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pending-container">
+  <div class="container">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" style="color: #a0aec0;">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: white;">{% trans "Solicitação Pendente" %}</li>
+      </ol>
+    </nav>
+
+    <div class="pending-card">
+      <div class="icon-large">
+        <i class="fas fa-clock"></i>
+      </div>
+      
+      <div class="status-badge">
+        <i class="fas fa-hourglass-half me-2"></i>{% trans "Solicitação Pendente" %}
+      </div>
+      
+      <h1>{% trans "Aguarde a Análise" %}</h1>
+      
+      <p>
+        {% trans "Sua solicitação para se tornar um apoiador está sendo analisada pela nossa equipe. Você receberá uma notificação assim que a análise for concluída." %}
+      </p>
+
+      <div class="info-box">
+        <h3>
+          <i class="fas fa-info-circle me-2"></i>{% trans "O que acontece agora?" %}
+        </h3>
+        <p>
+          {% trans "Nossa equipe irá analisar suas informações e entrar em contato em breve. O processo geralmente leva de 24 a 48 horas." %}
+        </p>
+      </div>
+
+      <div class="info-box">
+        <h3>
+          <i class="fas fa-envelope me-2"></i>{% trans "Notificações" %}
+        </h3>
+        <p>
+          {% trans "Você receberá uma notificação por email assim que sua solicitação for aprovada ou se precisarmos de mais informações." %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

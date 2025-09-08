@@ -1,0 +1,377 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n status_tags %}
+
+{% block title %}{% trans "Lista de Solicitações" %}{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/solicitation.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .solicitation-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .solicitation-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s;
+    color: #f8f9fa;
+  }
+
+  .solicitation-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(111, 66, 193, 0.7), 0 0 30px rgba(13, 202, 240, 0.5);
+  }
+
+  .header-card {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border: 2px solid #6f42c1;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .header-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .action-btn {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    color: white;
+  }
+
+  .stats-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.2s ease-in-out;
+    color: #f8f9fa;
+  }
+
+  .stats-card:hover {
+    transform: scale(1.05);
+  }
+
+  .stats-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #00d9ff;
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .stats-label {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .table-custom {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    overflow: hidden;
+  }
+
+     .table-custom thead th {
+     background: #6f42c1;
+     border: none;
+     color: white;
+     font-weight: 600;
+     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+   }
+
+  .table-custom tbody tr {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    color: #f8f9fa;
+    transition: background 0.3s ease;
+  }
+
+  .table-custom tbody tr:hover {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+  }
+
+  .table-custom tbody td {
+    border-color: rgba(111, 66, 193, 0.3);
+    color: #f8f9fa;
+  }
+
+  .protocol-text {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: #00d9ff !important;
+    letter-spacing: 0.5px;
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .pagination-custom .page-link {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 1px solid #6f42c1;
+    color: #f8f9fa;
+  }
+
+  .pagination-custom .page-link:hover {
+    background: linear-gradient(to bottom right, #6f42c1, #e83e8c);
+    color: white;
+  }
+
+  .pagination-custom .page-item.active .page-link {
+    background: linear-gradient(45deg, #6f42c1, #e83e8c);
+    border-color: #6f42c1;
+  }
+
+  .alert-custom {
+    background: linear-gradient(135deg, rgba(13, 202, 240, 0.1), rgba(13, 202, 240, 0.05));
+    border: 1px solid rgba(13, 202, 240, 0.3);
+    border-radius: 12px;
+    color: #f8f9fa;
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="solicitation-bg">
+  <div class="container">
+    {% if messages %}
+    <div class="mt-3">
+      {% for message in messages %}
+      <div class="alert alert-custom">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Header -->
+    <div class="header-card">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <div class="d-flex align-items-center">
+            <div class="me-4">
+              <i class="fas fa-file-alt fa-3x text-white" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);"></i>
+            </div>
+            <div>
+              <h1 class="header-title">{% trans "Lista de Solicitações" %}</h1>
+              <p class="text-white-50">{% trans "Gerencie suas solicitações de suporte" %}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 text-end">
+          <a href="{% url 'solicitation:create' %}" class="action-btn">
+            <i class="fas fa-plus"></i>{% trans "Criar Solicitação" %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {% if user.is_staff %}
+    <!-- Estatísticas para Staff -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-3">
+        <div class="stats-card">
+          <div class="stats-value">{{ total_open }}</div>
+          <div class="stats-label">{% trans "Abertas" %}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-card">
+          <div class="stats-value">{{ total_in_progress }}</div>
+          <div class="stats-label">{% trans "Em Andamento" %}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-card">
+          <div class="stats-value">{{ total_waiting_user }}</div>
+          <div class="stats-label">{% trans "Aguardando Usuário" %}</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="stats-card">
+          <div class="stats-value">{{ total_resolved }}</div>
+          <div class="stats-label">{% trans "Resolvidas" %}</div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Tabela de Solicitações -->
+    <div class="table-responsive">
+      <table class="table table-custom">
+        <thead>
+          <tr>
+            <th>{% trans "Protocolo" %}</th>
+            <th>{% trans "Título" %}</th>
+            <th>{% trans "Categoria" %}</th>
+            <th>{% trans "Prioridade" %}</th>
+            <th>{% trans "Status" %}</th>
+            {% if user.is_staff %}
+            <th>{% trans "Usuário" %}</th>
+            <th>{% trans "Atribuído para" %}</th>
+            {% endif %}
+            <th>{% trans "Data da Solicitação" %}</th>
+            <th>{% trans "Ações" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for solicitation in solicitations %}
+          <tr>
+            <td>
+              {% if solicitation.get_display_protocol %}
+                <strong class="protocol-text">{{ solicitation.get_display_protocol }}</strong>
+              {% else %}
+                <span class="text-warning">
+                  <i class="fas fa-exclamation-triangle"></i> {% trans "Gerando..." %}
+                </span>
+              {% endif %}
+            </td>
+            <td>{{ solicitation.title|truncatechars:50 }}</td>
+            <td>
+              <span class="badge bg-secondary">{{ solicitation.get_category_display }}</span>
+            </td>
+            <td>
+              {% if solicitation.priority == 'low' %}
+                <span class="badge bg-success">{{ solicitation.get_priority_display }}</span>
+              {% elif solicitation.priority == 'medium' %}
+                <span class="badge bg-warning">{{ solicitation.get_priority_display }}</span>
+              {% elif solicitation.priority == 'high' %}
+                <span class="badge bg-danger">{{ solicitation.get_priority_display }}</span>
+              {% elif solicitation.priority == 'urgent' %}
+                <span class="badge bg-dark">{{ solicitation.get_priority_display }}</span>
+              {% elif solicitation.priority == 'critical' %}
+                <span class="badge bg-danger">{{ solicitation.get_priority_display }}</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if solicitation.status == 'open' %}
+                <span class="badge bg-primary">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'pending' %}
+                <span class="badge bg-secondary">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'in_progress' %}
+                <span class="badge bg-warning">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'waiting_user' %}
+                <span class="badge bg-info">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'waiting_third_party' %}
+                <span class="badge bg-secondary">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'resolved' %}
+                <span class="badge bg-success">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'closed' %}
+                <span class="badge bg-dark">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'cancelled' %}
+                <span class="badge bg-secondary">{{ solicitation.get_status_display }}</span>
+              {% elif solicitation.status == 'rejected' %}
+                <span class="badge bg-danger">{{ solicitation.get_status_display }}</span>
+              {% endif %}
+            </td>
+            {% if user.is_staff %}
+            <td>{{ solicitation.user.username|default:"-" }}</td>
+            <td>{{ solicitation.assigned_to.username|default:"-" }}</td>
+            {% endif %}
+            <td>{{ solicitation.created_at|date:"d/m/Y H:i" }}</td>
+            <td>
+              <a href="{% url 'solicitation:solicitation_dashboard' solicitation.protocol %}" class="action-btn" style="padding: 5px 10px; font-size: 0.8rem;">
+                <i class="fas fa-eye"></i>{% trans "Ver" %}
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="{% if user.is_staff %}9{% else %}7{% endif %}" class="text-center">{% trans "Nenhuma solicitação encontrada." %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginação -->
+    <nav aria-label="Page navigation" class="d-flex justify-content-center mt-4">
+      <ul class="pagination pagination-custom">
+                 {% if page_obj.has_previous %}
+           <li class="page-item">
+             <a class="page-link" href="?page=1" aria-label="{% trans 'Primeira' %}">
+               <span aria-hidden="true" class="text-white">&laquo;&laquo;</span>
+             </a>
+           </li>
+           <li class="page-item">
+             <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="{% trans 'Anterior' %}">
+               <span aria-hidden="true" class="text-white">&laquo;</span>
+             </a>
+           </li>
+         {% else %}
+           <li class="page-item disabled"><span class="page-link text-white">&laquo;&laquo;</span></li>
+           <li class="page-item disabled"><span class="page-link text-white">&laquo;</span></li>
+         {% endif %}
+
+                 <li class="page-item disabled">
+           <span class="page-link text-white">{% trans "Página" %} {{ page_obj.number }} {% trans "de" %} {{ page_obj.paginator.num_pages }}</span>
+         </li>
+
+                 {% if page_obj.has_next %}
+           <li class="page-item">
+             <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="{% trans 'Próxima' %}">
+               <span aria-hidden="true" class="text-white">&raquo;</span>
+             </a>
+           </li>
+           <li class="page-item">
+             <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="{% trans 'Última' %}">
+               <span aria-hidden="true" class="text-white">&raquo;&raquo;</span>
+             </a>
+           </li>
+         {% else %}
+           <li class="page-item disabled"><span class="page-link text-white">&raquo;</span></li>
+           <li class="page-item disabled"><span class="page-link text-white">&raquo;&raquo;</span></li>
+         {% endif %}
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<!-- Código JS adicional aqui, se necessário -->
+{% endblock extra_js %}

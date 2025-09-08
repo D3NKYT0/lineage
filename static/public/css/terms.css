@@ -1,0 +1,86 @@
+.terms-page {
+    --terms-bg: #1a1a1a;
+    --terms-text: #d4d4d4;
+    --terms-title: #facc15;
+    --terms-subtitle: #fde68a;
+    --terms-border: #a16207;
+    --terms-glow: 0 0 8px #facc15;
+  
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--terms-text);
+  }
+  
+  .terms-page .bg-dark {
+    background-color: var(--terms-bg) !important;
+    border-color: var(--terms-border);
+    box-shadow: 0 0 25px rgba(250, 204, 21, 0.15);
+    border-radius: 1.5rem;
+    padding: 3rem;
+  }
+  
+  .terms-page h1,
+  .terms-page h2 {
+    text-shadow: var(--terms-glow);
+  }
+  
+  .terms-page h1 {
+    font-size: 2.25rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--terms-title);
+  }
+  
+  .terms-page h2 {
+    font-size: 1.25rem;
+    color: var(--terms-subtitle);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .terms-page p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+  
+  .terms-page ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .terms-page ul li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .terms-page strong {
+    color: var(--terms-subtitle);
+  }
+  
+  .terms-page .text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .terms-page .text-end {
+    text-align: right;
+  }
+  
+  .terms-page .text-center {
+    text-align: center;
+  }
+  
+  .terms-page .text-gray-400 {
+    color: #9ca3af;
+  }
+  
+  .terms-page .italic {
+    font-style: italic;
+  }
+  
+  .terms-page .text-yellow-400 {
+    color: var(--terms-title);
+  }
+  
+  .terms-page .text-yellow-300 {
+    color: var(--terms-subtitle);
+  }
+  

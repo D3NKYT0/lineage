@@ -1,0 +1,377 @@
+{% extends "layouts/base.html" %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .shop-manager-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .shop-manager-card {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #6f42c1;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(111, 66, 193, 0.3);
+    transition: all 0.3s ease;
+    color: #f8f9fa;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .shop-manager-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(111, 66, 193, 0.5);
+    border-color: #00d9ff;
+  }
+
+  .shop-manager-card .card-title {
+    color: #f8f9fa;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .shop-manager-card .card-text {
+    color: #b8c2cc;
+    line-height: 1.6;
+  }
+
+  .shop-manager-header {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 30px rgba(111, 66, 193, 0.4);
+  }
+
+  .shop-manager-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .shop-manager-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+
+  .action-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, #6f42c1, #e83e8c);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(111, 66, 193, 0.6);
+    color: white;
+    text-decoration: none;
+  }
+
+  .action-btn.items-btn {
+    background: linear-gradient(45deg, #28a745, #20c997);
+  }
+
+  .action-btn.packages-btn {
+    background: linear-gradient(45deg, #007bff, #6610f2);
+  }
+
+  .action-btn.promotions-btn {
+    background: linear-gradient(45deg, #fd7e14, #e83e8c);
+  }
+
+  .action-btn.ver-shop-btn {
+    background: linear-gradient(45deg, #17a2b8, #20c997);
+  }
+
+  .icon-container {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    background: linear-gradient(135deg, rgba(111, 66, 193, 0.2), rgba(232, 62, 140, 0.2));
+    border: 3px solid rgba(111, 66, 193, 0.4);
+    transition: all 0.3s ease;
+  }
+
+  .shop-manager-card:hover .icon-container {
+    border-color: #00d9ff;
+    transform: scale(1.1);
+  }
+
+  .icon-container i {
+    font-size: 2.2rem;
+    color: #00d9ff;
+  }
+
+  .stats-card {
+    background: linear-gradient(135deg, rgba(111, 66, 193, 0.1), rgba(232, 62, 140, 0.1));
+    border: 1px solid rgba(111, 66, 193, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+  }
+
+  .stats-card:hover {
+    transform: translateY(-3px);
+    border-color: #00d9ff;
+    box-shadow: 0 8px 25px rgba(13, 217, 255, 0.2);
+  }
+
+  .stats-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #00d9ff;
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 0.5rem;
+  }
+
+  .stats-label {
+    color: #b8c2cc;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+  }
+
+  .tips-section {
+    background: linear-gradient(135deg, rgba(111, 66, 193, 0.05), rgba(232, 62, 140, 0.05));
+    border: 1px solid rgba(111, 66, 193, 0.2);
+    border-radius: 15px;
+    padding: 2rem;
+  }
+
+  .tips-section .card-title {
+    color: #00d9ff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tip-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(111, 66, 193, 0.1);
+  }
+
+  .tip-item:last-child {
+    border-bottom: none;
+  }
+
+  .tip-item strong {
+    color: #f8f9fa;
+    font-weight: 600;
+  }
+
+  .tip-item p {
+    color: #b8c2cc;
+    margin: 0.5rem 0 0 0;
+    font-size: 0.9rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .fade-in-up:nth-child(1) { animation-delay: 0.1s; }
+  .fade-in-up:nth-child(2) { animation-delay: 0.2s; }
+  .fade-in-up:nth-child(3) { animation-delay: 0.3s; }
+  .fade-in-up:nth-child(4) { animation-delay: 0.4s; }
+
+  @media (max-width: 768px) {
+    .shop-manager-title {
+      font-size: 1.5rem;
+    }
+    
+    .shop-manager-header {
+      padding: 1.5rem;
+    }
+    
+    .stats-number {
+      font-size: 2.5rem;
+    }
+    
+    .icon-container {
+      width: 70px;
+      height: 70px;
+    }
+    
+    .icon-container i {
+      font-size: 1.8rem;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="shop-manager-bg">
+  <div class="container">
+    <!-- Header -->
+    <div class="shop-manager-header fade-in-up">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <h1 class="shop-manager-title">
+            <i class="fas fa-store me-3"></i>
+            {% trans "Painel de Gerenciamento do Shop" %}
+          </h1>
+          <p class="shop-manager-subtitle">
+            {% trans "Gerencie itens, pacotes e promoções do seu shop de forma eficiente e intuitiva" %}
+          </p>
+        </div>
+        <div class="col-lg-4 text-end">
+          <a href="{% url 'shop:shop_home' %}" class="action-btn ver-shop-btn">
+            <i class="fas fa-external-link-alt me-2"></i>
+            {% trans "Ver Shop" %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estatísticas Rápidas -->
+    <div class="row mb-5 fade-in-up">
+      <div class="col-md-4">
+        <div class="stats-card">
+          <div class="stats-number">{{ items_count|default:"0" }}</div>
+          <div class="stats-label">{% trans "Itens Ativos" %}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stats-card">
+          <div class="stats-number">{{ packages_count|default:"0" }}</div>
+          <div class="stats-label">{% trans "Pacotes" %}</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stats-card">
+          <div class="stats-number">{{ promotions_count|default:"0" }}</div>
+          <div class="stats-label">{% trans "Promoções" %}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cards de Ação -->
+    <div class="row g-4 mb-5">
+      <div class="col-lg-4 col-md-6 fade-in-up">
+        <div class="shop-manager-card">
+          <div class="card-body text-center p-4">
+            <div class="icon-container">
+              <i class="bi bi-box-seam"></i>
+            </div>
+            <h5 class="card-title">{% trans "Gerenciar Itens" %}</h5>
+            <p class="card-text mb-4">
+              {% trans "Adicione, edite ou desative itens disponíveis no shop. Controle preços, estoques e categorias de forma simples." %}
+            </p>
+            <a href="{% url 'shop:items' %}" class="action-btn items-btn w-100">
+              <i class="fas fa-cogs me-2"></i>
+              {% trans "Gerenciar Itens" %}
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6 fade-in-up">
+        <div class="shop-manager-card">
+          <div class="card-body text-center p-4">
+            <div class="icon-container">
+              <i class="bi bi-gift"></i>
+            </div>
+            <h5 class="card-title">{% trans "Gerenciar Pacotes" %}</h5>
+            <p class="card-text mb-4">
+              {% trans "Monte pacotes personalizados com itens e promoções. Crie ofertas especiais para aumentar as vendas." %}
+            </p>
+            <a href="{% url 'shop:packages' %}" class="action-btn packages-btn w-100">
+              <i class="fas fa-box-open me-2"></i>
+              {% trans "Gerenciar Pacotes" %}
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 col-md-6 fade-in-up">
+        <div class="shop-manager-card">
+          <div class="card-body text-center p-4">
+            <div class="icon-container">
+              <i class="bi bi-percent"></i>
+            </div>
+            <h5 class="card-title">{% trans "Gerenciar Promoções" %}</h5>
+            <p class="card-text mb-4">
+              {% trans "Crie e gerencie códigos promocionais para o shop. Aumente as vendas com descontos e ofertas especiais." %}
+            </p>
+            <a href="{% url 'shop:promotions' %}" class="action-btn promotions-btn w-100">
+              <i class="fas fa-tags me-2"></i>
+              {% trans "Gerenciar Promoções" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dicas de Gerenciamento -->
+    <div class="row fade-in-up">
+      <div class="col-12">
+        <div class="tips-section">
+          <h5 class="card-title">
+            <i class="fas fa-lightbulb me-2"></i>
+            {% trans "Dicas de Gerenciamento" %}
+          </h5>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="tip-item">
+                <i class="fas fa-check-circle text-success me-2"></i>
+                <strong>{% trans "Itens Populares" %}</strong>
+                <p>{% trans "Mantenha os itens mais vendidos sempre em estoque" %}</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="tip-item">
+                <i class="fas fa-star text-warning me-2"></i>
+                <strong>{% trans "Pacotes Especiais" %}</strong>
+                <p>{% trans "Crie pacotes com desconto para aumentar as vendas" %}</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="tip-item">
+                <i class="fas fa-clock text-info me-2"></i>
+                <strong>{% trans "Promoções Temporárias" %}</strong>
+                <p>{% trans "Use promoções com prazo para criar urgência" %}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

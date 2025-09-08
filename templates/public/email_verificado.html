@@ -1,0 +1,88 @@
+{% extends 'layouts/base-auth.html' %}
+{% load static i18n %}
+
+{% block content %}
+<style>
+  body {
+    background: url("{{ background_url }}") no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  .verification-panel {
+    background-color: rgba(20, 20, 20, 0.95);
+    color: #f0e6d2;
+    border-radius: 1rem;
+    border: 1px solid #e0c36b;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.85);
+    font-family: 'Cinzel', serif;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .verification-panel h3 {
+    color: #e0c36b;
+    font-size: 1.4rem;
+    text-shadow: 0 0 8px rgba(255, 215, 100, 0.4);
+  }
+
+  .verification-panel p {
+    color: #f5deb3;
+    font-size: 0.95rem;
+  }
+
+  .btn-golden {
+    background: linear-gradient(to right, #b89b56, #d5c170);
+    color: #000;
+    font-weight: bold;
+    text-shadow: 0 0 5px #fff8dc;
+    border: none;
+  }
+
+  .btn-golden:hover {
+    background: linear-gradient(to right, #d5c170, #b89b56);
+    color: #000;
+  }
+
+  .icon-success, .icon-error {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .icon-success {
+    color: #28a745;
+  }
+
+  .icon-error {
+    color: #dc3545;
+  }
+</style>
+
+<section class="vh-100 d-flex align-items-center justify-content-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="verification-panel">
+          {% if erro %}
+            <div class="icon-error">
+              <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <h3>{% trans 'Link inválido ou expirado.' %}</h3>
+            <p>{% trans 'Por favor, solicite um novo e-mail de verificação ou entre em contato com o suporte.' %}</p>
+            <a href="{% url 'register' %}" class="btn btn-golden mt-3">{% trans 'Voltar ao registro' %}</a>
+          {% else %}
+            <div class="icon-success">
+              <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h3>{% trans 'Conta verificada com sucesso!' %}</h3>
+            <p>{% trans 'Agora você pode acessar sua conta com segurança.' %}</p>
+            <a href="{% url 'dashboard' %}" class="btn btn-golden mt-3">{% trans 'Entrar' %}</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}

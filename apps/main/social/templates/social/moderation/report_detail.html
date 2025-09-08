@@ -1,0 +1,876 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load social_tags %}
+
+{% block title %} {% trans "Detalhes da Denúncia" %} #{{ report.id }} {% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Cabeçalho -->
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">
+            <i class="bi bi-flag text-primary"></i> {% trans "Denúncia" %} #{{ report.id }}
+          </h4>
+          <div>
+            <a href="{% url 'social:reports_list' %}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-arrow-left"></i> {% trans "Voltar à Lista" %}
+            </a>
+            <a href="{% url 'social:moderation_dashboard' %}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-house"></i> {% trans "Dashboard" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Informações da denúncia -->
+    <div class="col-lg-8">
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-info-circle"></i> {% trans "Informações da Denúncia" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <p><strong>{% trans "Tipo" %}:</strong> 
+                <span class="badge bg-{% if report.report_type == 'spam' %}secondary{% elif report.report_type == 'inappropriate' %}warning{% elif report.report_type == 'harassment' %}danger{% elif report.report_type == 'violence' %}danger{% elif report.report_type == 'hate_speech' %}danger{% else %}info{% endif %}">
+                  {{ report.get_report_type_display }}
+                </span>
+              </p>
+              <p><strong>{% trans "Status" %}:</strong> 
+                <span class="badge bg-{% if report.status == 'pending' %}warning{% elif report.status == 'reviewing' %}info{% elif report.status == 'resolved' %}success{% else %}secondary{% endif %}">
+                  {{ report.get_status_display }}
+                </span>
+              </p>
+              <p><strong>{% trans "Prioridade" %}:</strong> 
+                <span class="badge bg-{% if report.priority == 'urgent' %}danger{% elif report.priority == 'high' %}warning{% elif report.priority == 'medium' %}info{% else %}secondary{% endif %}">
+                  {{ report.get_priority_display }}
+                </span>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>{% trans "Denunciante" %}:</strong> {{ report.reporter.username }}</p>
+              <p><strong>{% trans "Data da Denúncia" %}:</strong> {{ report.created_at|date:"d/m/Y H:i" }}</p>
+              <p><strong>{% trans "Moderador Responsável" %}:</strong> 
+                {% if report.assigned_moderator %}
+                  {{ report.assigned_moderator.username }}
+                {% else %}
+                  <span class="text-muted">{% trans "Não atribuído" %}</span>
+                {% endif %}
+              </p>
+            </div>
+          </div>
+          
+          <hr>
+          
+          <div class="mb-3">
+            <strong>{% trans "Descrição da Denúncia" %}:</strong>
+            <div class="mt-2 p-3 bg-light rounded">
+              {{ report.description|linebreaks }}
+            </div>
+          </div>
+
+          {% if report.moderator_notes %}
+            <div class="mb-3">
+              <strong>{% trans "Notas do Moderador" %}:</strong>
+              <div class="mt-2 p-3 bg-warning bg-opacity-10 rounded">
+                {{ report.moderator_notes|linebreaks }}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if report.resolved_at %}
+            <div class="mb-3">
+              <strong>{% trans "Resolvida em" %}:</strong> {{ report.resolved_at|date:"d/m/Y H:i" }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Filtros Acionados -->
+      {% if filter_flags %}
+        <div class="card mb-4">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="bi bi-funnel text-info"></i> {% trans "Filtros Automáticos Acionados" %} ({{ filter_flags.count }})
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-info d-flex align-items-center" role="alert">
+              <i class="bi bi-info-circle me-2"></i>
+              <div>
+                <strong>{% trans "Detecção Automática" %}</strong><br>
+                <small>{% trans "Esta denúncia foi gerada automaticamente pelo sistema de filtros. Os filtros abaixo detectaram conteúdo que viola nossas diretrizes." %}</small>
+              </div>
+            </div>
+            
+            <div class="row">
+              {% for flag in filter_flags %}
+                <div class="col-md-6 mb-3">
+                  <div class="card border-{% if flag.confidence_score >= 0.8 %}success{% elif flag.confidence_score >= 0.5 %}warning{% else %}danger{% endif %}">
+                    <div class="card-header d-flex justify-content-between align-items-center py-2">
+                      <div>
+                        <strong>{{ flag.content_filter.name }}</strong>
+                        <span class="badge bg-{% if flag.content_filter.filter_type == 'keyword' %}primary{% elif flag.content_filter.filter_type == 'regex' %}info{% elif flag.content_filter.filter_type == 'spam_pattern' %}warning{% else %}secondary{% endif %} ms-1">
+                          {{ flag.content_filter.get_filter_type_display }}
+                        </span>
+                      </div>
+                      <div class="text-end">
+                        <span class="badge bg-{% if flag.confidence_score >= 0.8 %}success{% elif flag.confidence_score >= 0.5 %}warning{% else %}danger{% endif %}">
+                          {{ flag.confidence_score|floatformat:0 }}%
+                        </span>
+                      </div>
+                    </div>
+                    <div class="card-body py-2">
+                      <div class="mb-2">
+                        <small class="text-muted">{% trans "Ação do Filtro" %}:</small><br>
+                        <span class="badge bg-{% if flag.content_filter.action == 'flag' %}info{% elif flag.content_filter.action == 'auto_hide' %}warning{% elif flag.content_filter.action == 'auto_delete' %}danger{% else %}secondary{% endif %}">
+                          {{ flag.content_filter.get_action_display }}
+                        </span>
+                      </div>
+                      
+                      {% if flag.content_filter.description %}
+                        <div class="mb-2">
+                          <small class="text-muted">{% trans "Descrição" %}:</small><br>
+                          <small>{{ flag.content_filter.description|truncatechars:100 }}</small>
+                        </div>
+                      {% endif %}
+                      
+                      {% if flag.matched_pattern %}
+                        <div class="mb-2">
+                          <small class="text-muted">{% trans "Padrão Detectado" %}:</small><br>
+                          <code class="small bg-light p-1 rounded">{{ flag.matched_pattern|truncatechars:80 }}</code>
+                        </div>
+                      {% endif %}
+                      
+                      <div>
+                        <small class="text-muted">{% trans "Detectado em" %}: {{ flag.created_at|date:"d/m/Y H:i" }}</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+            
+            <div class="mt-3 p-3 bg-light rounded">
+              <h6 class="mb-2"><i class="bi bi-graph-up me-1"></i> {% trans "Resumo da Detecção" %}</h6>
+              <div class="row">
+                <div class="col-md-3">
+                  <strong class="text-info">{{ filter_flags.count }}</strong><br>
+                  <small class="text-muted">{% trans "Filtros Acionados" %}</small>
+                </div>
+                <div class="col-md-3">
+                  <strong class="text-success">
+                    {% if max_confidence > 0 %}
+                      {{ max_confidence|floatformat:0 }}%
+                    {% else %}
+                      N/A
+                    {% endif %}
+                  </strong><br>
+                  <small class="text-muted">{% trans "Maior Confiança" %}</small>
+                </div>
+                <div class="col-md-3">
+                  <strong class="text-warning">
+                    {{ report.priority|capfirst }}
+                  </strong><br>
+                  <small class="text-muted">{% trans "Prioridade" %}</small>
+                </div>
+                <div class="col-md-3">
+                  <strong class="text-primary">{% trans "Automático" %}</strong><br>
+                  <small class="text-muted">{% trans "Tipo de Report" %}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <!-- Indicador de denúncia manual -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="bi bi-person text-primary"></i> {% trans "Denúncia Manual" %}
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-primary d-flex align-items-center" role="alert">
+              <i class="bi bi-person-check me-2"></i>
+              <div>
+                <strong>{% trans "Reportada por Usuário" %}</strong><br>
+                <small>{% trans "Esta denúncia foi feita manualmente pelo usuário" %} <strong>{{ report.reporter.username }}</strong> {% trans "e não foi gerada por filtros automáticos." %}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Conteúdo reportado -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-file-text"></i> {% trans "Conteúdo Reportado" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          {% if report.reported_post %}
+            <div class="border rounded p-3">
+              <div class="d-flex align-items-center mb-2">
+                {% if report.reported_post.author.avatar %}
+                  <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' report.reported_post.author.uuid timestamp %}" 
+                       class="rounded-circle me-2" width="32" height="32" alt="Avatar">
+                {% else %}
+                  <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                       class="rounded-circle me-2" width="32" height="32" alt="Avatar">
+                {% endif %}
+                <div>
+                  <strong>{{ report.reported_post.author.username }}</strong>
+                  <small class="text-muted d-block">{{ report.reported_post.created_at|date:"d/m/Y H:i" }}</small>
+                </div>
+              </div>
+              
+              <div class="mb-2">
+                {{ report.reported_post.content|process_content|linebreaks }}
+              </div>
+              
+              {% if report.reported_post.image %}
+                <img src="{{ report.reported_post.image.url }}" class="img-fluid rounded mb-2" alt="Imagem do post">
+              {% endif %}
+              
+              {% if report.reported_post.link %}
+                <div class="mb-2">
+                  <a href="{{ report.reported_post.link }}" target="_blank" class="text-decoration-none">
+                    <i class="bi bi-link-45deg"></i> {{ report.reported_post.link_title|default:report.reported_post.link }}
+                  </a>
+                </div>
+              {% endif %}
+              
+              <div class="d-flex gap-2">
+                <a href="{% url 'social:post_detail' report.reported_post.id %}" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-eye"></i> {% trans "Ver Post Original" %}
+                </a>
+                <a href="{% url 'social:report_content' 'post' report.reported_post.id %}" class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-flag"></i> {% trans "Denunciar" %}
+                </a>
+              </div>
+            </div>
+          {% elif report.reported_comment %}
+            <div class="border rounded p-3">
+              <div class="d-flex align-items-center mb-2">
+                {% if report.reported_comment.author.avatar %}
+                  <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' report.reported_comment.author.uuid timestamp %}" 
+                       class="rounded-circle me-2" width="32" height="32" alt="Avatar">
+                {% else %}
+                  <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                       class="rounded-circle me-2" width="32" height="32" alt="Avatar">
+                {% endif %}
+                <div>
+                  <strong>{{ report.reported_comment.author.username }}</strong>
+                  <small class="text-muted d-block">{{ report.reported_comment.created_at|date:"d/m/Y H:i" }}</small>
+                </div>
+              </div>
+              
+              <div class="mb-2">
+                {{ report.reported_comment.content|process_content|linebreaks }}
+              </div>
+              
+              <div class="d-flex gap-2">
+                <a href="{% url 'social:post_detail' report.reported_comment.post.id %}" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-eye"></i> {% trans "Ver Post Original" %}
+                </a>
+                <a href="{% url 'social:report_content' 'comment' report.reported_comment.id %}" class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-flag"></i> {% trans "Denunciar" %}
+                </a>
+              </div>
+            </div>
+          {% elif report.reported_user %}
+            <div class="border rounded p-3">
+              <div class="d-flex align-items-center mb-2">
+                {% if report.reported_user.avatar %}
+                  <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' report.reported_user.uuid timestamp %}" 
+                       class="rounded-circle me-2" width="32" height="32" alt="Avatar">
+                {% else %}
+                  <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                       class="rounded-circle me-2" width="32" height="32" alt="Avatar">
+                {% endif %}
+                <div>
+                  <strong>{{ report.reported_user.username }}</strong>
+                  <small class="text-muted d-block">{% trans "Usuário reportado" %}</small>
+                </div>
+              </div>
+              
+              <div class="mb-2">
+                <p><strong>{% trans "Email" %}:</strong> {{ report.reported_user.email }}</p>
+                <p><strong>{% trans "Data de Registro" %}:</strong> {{ report.reported_user.date_joined|date:"d/m/Y" }}</p>
+                <p><strong>{% trans "Último Login" %}:</strong> {{ report.reported_user.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</p>
+              </div>
+              
+              <div class="d-flex gap-2">
+                <a href="{% url 'social:user_profile' report.reported_user.username %}" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-eye"></i> {% trans "Ver Perfil" %}
+                </a>
+                <a href="{% url 'social:report_content' 'user' report.reported_user.id %}" class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-flag"></i> {% trans "Denunciar" %}
+                </a>
+              </div>
+            </div>
+          {% else %}
+            <p class="text-muted">{% trans "Conteúdo não disponível" %}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Denúncias similares -->
+      {% if similar_reports %}
+        <div class="card mb-4">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="bi bi-exclamation-triangle text-warning"></i> {% trans "Denúncias Similares" %} ({{ similar_reports.count }})
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>{% trans "ID" %}</th>
+                    <th>{% trans "Tipo" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Data" %}</th>
+                    <th>{% trans "Ação" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for similar in similar_reports %}
+                  <tr>
+                    <td>#{{ similar.id }}</td>
+                    <td>
+                      <span class="badge bg-{% if similar.report_type == 'spam' %}secondary{% elif similar.report_type == 'inappropriate' %}warning{% elif similar.report_type == 'harassment' %}danger{% else %}info{% endif %}">
+                        {{ similar.get_report_type_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge bg-{% if similar.status == 'pending' %}warning{% elif similar.status == 'reviewing' %}info{% elif similar.status == 'resolved' %}success{% else %}secondary{% endif %}">
+                        {{ similar.get_status_display }}
+                      </span>
+                    </td>
+                    <td>{{ similar.created_at|date:"d/m/Y" }}</td>
+                    <td>
+                      <a href="{% url 'social:report_detail' similar.id %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Painel lateral -->
+    <div class="col-lg-4">
+      
+      <!-- Debug Info (apenas em desenvolvimento) -->
+      {% if debug_info and settings.DEBUG %}
+        <div class="card mb-4 border-info">
+          <div class="card-header bg-info text-white">
+            <h6 class="mb-0">
+              <i class="bi bi-bug"></i> {% trans "Informações de Debug" %}
+            </h6>
+          </div>
+          <div class="card-body">
+            <small>
+              <strong>Dados do Report:</strong><br>
+              - Post: {% if debug_info.report_has_post %}✅ Sim{% else %}❌ Não{% endif %}<br>
+              - Comentário: {% if debug_info.report_has_comment %}✅ Sim{% else %}❌ Não{% endif %}<br>
+              - Usuário: {% if debug_info.report_has_user %}✅ Sim{% else %}❌ Não{% endif %}<br>
+              
+              {% if debug_info.post_author %}
+                <strong>Autor do Post:</strong> {{ debug_info.post_author.username }}<br>
+              {% endif %}
+              
+              {% if debug_info.comment_author %}
+                <strong>Autor do Comentário:</strong> {{ debug_info.comment_author.username }}<br>
+              {% endif %}
+              
+              <strong>Formulário:</strong><br>
+              - Bound: {% if debug_info.form_is_bound %}✅ Sim{% else %}❌ Não{% endif %}<br>
+              - Erros: {% if debug_info.form_errors %}❌ {{ debug_info.form_errors|length }}{% else %}✅ Nenhum{% endif %}<br>
+              
+              {% if debug_info.form_errors %}
+                <strong>Detalhes dos Erros:</strong><br>
+                {% for field, errors in debug_info.form_errors.items %}
+                  - {{ field }}: {{ errors|join:", " }}<br>
+                {% endfor %}
+              {% endif %}
+              
+              {% if request.method == 'POST' %}
+                <hr>
+                <strong>Dados POST Recebidos:</strong><br>
+                {% for key, value in request.POST.items %}
+                  - {{ key }}: {{ value }}<br>
+                {% endfor %}
+              {% endif %}
+            </small>
+          </div>
+        </div>
+      {% endif %}
+      <!-- Ação de moderação -->
+      {% if report.status != 'resolved' %}
+        <div class="card mb-4">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="bi bi-gear"></i> {% trans "Ação de Moderação" %}
+            </h6>
+          </div>
+          <div class="card-body">
+            <form method="post">
+              {% csrf_token %}
+              
+              {% if action_form.non_field_errors %}
+                <div class="alert alert-danger">
+                  <strong>{% trans "Erros gerais:" %}</strong>
+                  <ul class="mb-0">
+                    {% for error in action_form.non_field_errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+              
+              {% if action_form.errors %}
+                <div class="alert alert-warning">
+                  <strong>{% trans "Erros de validação encontrados:" %}</strong>
+                  <ul class="mb-0">
+                    {% for field, errors in action_form.errors.items %}
+                      {% if field != '__all__' %}
+                        <li><strong>{{ field }}:</strong>
+                          <ul>
+                            {% for error in errors %}
+                              <li>{{ error }}</li>
+                            {% endfor %}
+                          </ul>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+              
+              <div class="mb-3">
+                {{ action_form.action_type.label_tag }}
+                {{ action_form.action_type }}
+                {% if action_form.action_type.errors %}
+                  <div class="text-danger small">
+                    {% for error in action_form.action_type.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="mb-3">
+                {{ action_form.reason.label_tag }}
+                {{ action_form.reason }}
+                {% if action_form.reason.errors %}
+                  <div class="text-danger small">
+                    {% for error in action_form.reason.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+
+              <!-- Campos para Suspensão/Banimento -->
+              <div class="mb-3" id="suspension-fields" style="display: {% if action_form.action_type.value == 'suspend_user' or action_form.action_type.value == 'ban_user' or action_form.action_type.value == 'restrict_user' %}block{% else %}none{% endif %};">
+                <div class="alert alert-info">
+                  <small><strong>{% trans "Campos obrigatórios para suspensão/banimento:" %}</strong><br>
+                  {% trans "Preencha a duração (ex: 7 para 7 dias) e selecione o tipo de suspensão." %}</small>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    {{ action_form.suspension_duration.label_tag }}
+                    {{ action_form.suspension_duration }}
+                    <small class="text-muted">{{ action_form.suspension_duration.help_text }}</small>
+                    {% if action_form.suspension_duration.errors %}
+                      <div class="text-danger small">
+                        {% for error in action_form.suspension_duration.errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-6">
+                    {{ action_form.suspension_type.label_tag }}
+                    {{ action_form.suspension_type }}
+                    {% if action_form.suspension_type.errors %}
+                      <div class="text-danger small">
+                        {% for error in action_form.suspension_type.errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Campos para Ações de Usuário -->
+              <div class="mb-3" id="user-action-fields" style="display: {% if action_form.action_type.value == 'suspend_user' or action_form.action_type.value == 'ban_user' or action_form.action_type.value == 'warn' %}block{% else %}none{% endif %};">
+                <div class="alert alert-warning">
+                  <small><strong>{% trans "Campos obrigatórios para ações de usuário:" %}</strong><br>
+                  {% trans "Forneça um motivo público que será mostrado ao usuário." %}</small>
+                </div>
+                <div class="mb-3">
+                  {{ action_form.public_reason.label_tag }}
+                  {{ action_form.public_reason }}
+                  <small class="text-muted">{{ action_form.public_reason.help_text }}</small>
+                  {% if action_form.public_reason.errors %}
+                    <div class="text-danger small">
+                      {% for error in action_form.public_reason.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Campos para Usuário Específico -->
+              <div class="mb-3" id="target-user-fields" style="display: none;">
+                <div class="alert alert-secondary">
+                  <small><strong>{% trans "Usuário específico:" %}</strong><br>
+                  {% trans "Se necessário, especifique um usuário diferente do autor do conteúdo." %}</small>
+                </div>
+                <div class="mb-3">
+                  {{ action_form.target_username.label_tag }}
+                  {{ action_form.target_username }}
+                  <small class="text-muted">{{ action_form.target_username.help_text }}</small>
+                  {% if action_form.target_username.errors %}
+                    <div class="text-danger small">
+                      {% for error in action_form.target_username.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Campos para Data Personalizada -->
+              <div class="mb-3" id="custom-expiry-fields" style="display: none;">
+                <div class="alert alert-primary">
+                  <small><strong>{% trans "Data de expiração personalizada:" %}</strong><br>
+                  {% trans "Defina uma data específica para expiração da ação." %}</small>
+                </div>
+                <div class="mb-3">
+                  {{ action_form.custom_expiry_date.label_tag }}
+                  {{ action_form.custom_expiry_date }}
+                  <small class="text-muted">{{ action_form.custom_expiry_date.help_text }}</small>
+                  {% if action_form.custom_expiry_date.errors %}
+                    <div class="text-danger small">
+                      {% for error in action_form.custom_expiry_date.errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="form-check">
+                  {{ action_form.notify_user }}
+                  {{ action_form.notify_user.label_tag }}
+                </div>
+              </div>
+
+              <div class="mb-3" id="notification-message-field" style="display: none;">
+                {{ action_form.notification_message.label_tag }}
+                {{ action_form.notification_message }}
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="bi bi-check-circle"></i> {% trans "Aplicar Ação" %}
+              </button>
+            </form>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Histórico de ações do usuário -->
+      {% if user_actions %}
+        <div class="card mb-4">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="bi bi-clock-history"></i> {% trans "Histórico de Ações" %}
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="list-group list-group-flush">
+              {% for action in user_actions %}
+                <div class="list-group-item px-0">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <strong>{{ action.get_action_type_display }}</strong>
+                      <small class="text-muted d-block">{{ action.created_at|date:"d/m/Y H:i" }}</small>
+                    </div>
+                    <span class="badge bg-{% if action.action_type == 'delete_content' %}danger{% elif action.action_type == 'hide_content' %}warning{% elif action.action_type == 'suspend_user' %}danger{% else %}info{% endif %}">
+                      {{ action.get_action_type_display }}
+                    </span>
+                  </div>
+                  {% if action.reason %}
+                    <small class="text-muted">{{ action.reason|truncatechars:100 }}</small>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Buscar o campo action_type de forma mais robusta
+    let actionTypeSelect = document.getElementById('id_action_type');
+    
+    // Se não encontrou, tentar outras possibilidades
+    if (!actionTypeSelect) {
+        actionTypeSelect = document.querySelector('select[name="action_type"]');
+    }
+    if (!actionTypeSelect) {
+        actionTypeSelect = document.querySelector('#action-type');
+    }
+    if (!actionTypeSelect) {
+        actionTypeSelect = document.querySelector('select[id*="action"]');
+    }
+    
+    const suspensionFields = document.getElementById('suspension-fields');
+    const userActionFields = document.getElementById('user-action-fields');
+    const targetUserFields = document.getElementById('target-user-fields');
+    const customExpiryFields = document.getElementById('custom-expiry-fields');
+    const notifyUserCheckbox = document.getElementById('id_notify_user');
+    const notificationMessageField = document.getElementById('notification-message-field');
+
+    // Definir quais ações precisam de quais campos
+    const fieldMappings = {
+        'suspend_user': ['suspension-fields', 'user-action-fields'],
+        'ban_user': ['suspension-fields', 'user-action-fields'],
+        'restrict_user': ['suspension-fields', 'user-action-fields'],
+        'warn': ['user-action-fields'],
+        'hide_content': [],
+        'delete_content': [],
+        'approve_content': [],
+        'feature_content': []
+    };
+    
+    // Debug: Mostrar mapeamentos
+    console.log('Field mappings loaded:', fieldMappings);
+
+    // Mostrar/ocultar campos baseado na ação selecionada
+    function toggleActionFields() {
+        if (!actionTypeSelect) {
+            console.error('actionTypeSelect not found!');
+            return;
+        }
+        
+        const selectedValue = actionTypeSelect.value;
+        console.log('=== TOGGLE ACTION FIELDS ===');
+        console.log('Action type selected:', selectedValue);
+        console.log('Available mappings:', Object.keys(fieldMappings));
+        
+        // Ocultar todos os campos primeiro
+        hideAllFields();
+        
+        // Mostrar campos necessários para a ação selecionada
+        const requiredFields = fieldMappings[selectedValue] || [];
+        console.log('Required fields for', selectedValue + ':', requiredFields);
+        
+        if (requiredFields.length === 0) {
+            console.log('No special fields required for this action');
+        } else {
+            requiredFields.forEach(fieldId => {
+                console.log('Showing field:', fieldId);
+                showField(fieldId);
+            });
+        }
+        
+        console.log('=== END TOGGLE ===');
+    }
+
+    function hideAllFields() {
+        console.log('Hiding all fields...');
+        const allFields = [suspensionFields, userActionFields, targetUserFields, customExpiryFields];
+        const fieldNames = ['suspension-fields', 'user-action-fields', 'target-user-fields', 'custom-expiry-fields'];
+        
+        allFields.forEach((field, index) => {
+            if (field) {
+                field.style.display = 'none';
+                console.log(`Hidden: ${fieldNames[index]}`);
+                // Remover obrigatoriedade dos campos
+                const inputs = field.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.required = false;
+                    // Remover asteriscos de obrigatório
+                    const label = input.closest('.mb-3')?.querySelector('label');
+                    if (label) {
+                        label.innerHTML = label.innerHTML.replace(/ <span class="text-danger">\*<\/span>/g, '');
+                    }
+                });
+            } else {
+                console.warn(`Field not found: ${fieldNames[index]}`);
+            }
+        });
+    }
+
+    function showField(fieldId) {
+        console.log(`Attempting to show field: ${fieldId}`);
+        
+        const fieldMap = {
+            'suspension-fields': suspensionFields,
+            'user-action-fields': userActionFields,
+            'target-user-fields': targetUserFields,
+            'custom-expiry-fields': customExpiryFields
+        };
+        
+        const field = fieldMap[fieldId];
+        if (field) {
+            field.style.display = 'block';
+            console.log(`✅ Successfully showed: ${fieldId}`);
+            
+            // Marcar campos específicos como obrigatórios
+            if (fieldId === 'suspension-fields') {
+                console.log('Marking suspension fields as required...');
+                markRequired('id_suspension_duration');
+                markRequired('id_suspension_type');
+            } else if (fieldId === 'user-action-fields') {
+                console.log('Marking user action fields as required...');
+                markRequired('id_public_reason');
+            }
+        } else {
+            console.error(`❌ Field not found: ${fieldId}`);
+            console.log('Available fields:', Object.keys(fieldMap));
+        }
+    }
+
+    function markRequired(fieldId) {
+        console.log(`Marking field as required: ${fieldId}`);
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.required = true;
+            const container = field.closest('.mb-3') || field.closest('.col-md-6');
+            const label = container?.querySelector('label');
+            if (label) {
+                if (!label.innerHTML.includes('*')) {
+                    label.innerHTML += ' <span class="text-danger">*</span>';
+                    console.log(`✅ Added asterisk to ${fieldId}`);
+                } else {
+                    console.log(`Asterisk already present for ${fieldId}`);
+                }
+            } else {
+                console.warn(`Label not found for ${fieldId}`);
+            }
+            console.log(`✅ Field ${fieldId} marked as required`);
+        } else {
+            console.error(`❌ Field not found: ${fieldId}`);
+        }
+    }
+
+    // Mostrar/ocultar campo de mensagem de notificação
+    function toggleNotificationField() {
+        if (notifyUserCheckbox && notificationMessageField) {
+            if (notifyUserCheckbox.checked) {
+                notificationMessageField.style.display = 'block';
+            } else {
+                notificationMessageField.style.display = 'none';
+            }
+        }
+    }
+
+    // Debug inicial
+    console.log('=== INITIALIZATION ===');
+    console.log('actionTypeSelect found:', !!actionTypeSelect);
+    if (actionTypeSelect) {
+        console.log('✅ Found actionTypeSelect:', actionTypeSelect);
+        console.log('Element ID:', actionTypeSelect.id);
+        console.log('Element name:', actionTypeSelect.name);
+        console.log('Current value:', actionTypeSelect.value);
+    } else {
+        console.error('❌ actionTypeSelect not found with any method!');
+    }
+    console.log('suspensionFields found:', !!suspensionFields);
+    console.log('userActionFields found:', !!userActionFields);
+    
+    // Debug: Mostrar todos os selects na página
+    const allSelects = document.querySelectorAll('select');
+    console.log('All select elements on page:', allSelects);
+    allSelects.forEach((select, index) => {
+        console.log(`Select ${index}: id="${select.id}", name="${select.name}", class="${select.className}"`);
+    });
+    
+    // Adicionar event listeners
+    if (actionTypeSelect) {
+        actionTypeSelect.addEventListener('change', function() {
+            console.log('Action type changed by user');
+            toggleActionFields();
+        });
+        console.log('✅ Event listener added to action type select');
+    } else {
+        console.error('❌ actionTypeSelect not found! Cannot add event listener.');
+    }
+    
+    if (notifyUserCheckbox) {
+        notifyUserCheckbox.addEventListener('change', toggleNotificationField);
+    }
+
+    // Inicializar após um pequeno delay para garantir que tudo carregou
+    setTimeout(() => {
+        console.log('=== INITIAL SETUP ===');
+        toggleActionFields();
+        toggleNotificationField();
+        console.log('=== SETUP COMPLETE ===');
+    }, 100);
+});
+
+
+</script>
+
+<style>
+.badge {
+    font-size: 0.75em;
+}
+
+.list-group-item {
+    border-left: none;
+    border-right: none;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+</style>
+{% endblock content %}

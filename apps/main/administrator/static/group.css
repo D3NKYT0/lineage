@@ -1,0 +1,161 @@
+#chat-log {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    height: 400px;
+    overflow-y: auto;
+    background-color: #f0f0f0;
+    margin-bottom: 20px;
+}
+
+.chat-message {
+    display: flex;
+    align-items: flex-start;
+    margin: 10px 0;
+    max-width: 75%;
+    gap: 10px;
+}
+
+.chat-message.sent {
+    margin-left: auto;
+    flex-direction: row-reverse; /* Inverte o avatar e a mensagem para o lado direito */
+    text-align: right;
+}
+
+.chat-message.received {
+    margin-right: auto; /* Mantém as mensagens recebidas à esquerda */
+    text-align: left;
+    flex-direction: row; /* Garante que o avatar e o texto fiquem à esquerda */
+}
+
+.message-avatar {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.message-content {
+    background-color: #fff;
+    padding: 8px 12px;
+    border-radius: 18px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+    max-width: 60%;
+    word-wrap: break-word;
+}
+
+.chat-message.sent .message-content {
+    background-color: #dcf8c6;
+}
+
+.message-header {
+    display: flex;
+    flex-direction: column; /* Alinhar nome e hora em uma coluna */
+    margin-bottom: 5px;
+    font-size: 14px;
+    text-align: right; /* Nome e hora alinhados à direita para mensagens enviadas */
+}
+
+.chat-message.received .message-header {
+    text-align: left; /* Nome e hora alinhados à esquerda para mensagens recebidas */
+}
+
+.sender-name {
+    font-weight: bold; 
+    color: #000;
+}
+
+.message-time {
+    font-size: 12px; 
+    color: #bbb;
+    margin-top: 2px;
+}
+
+.message-text {
+    font-size: 14px;
+    word-wrap: break-word;
+    text-align: left;
+}
+
+/* Mensagens recebidas */
+.chat-message.received .message-content {
+    border-radius: 0 18px 18px 18px; /* Remove o arredondamento da borda superior esquerda */
+}
+
+/* Mensagens enviadas */
+.chat-message.sent .message-content {
+    border-radius: 18px 0 18px 18px; /* Remove o arredondamento da borda superior direita */
+}
+
+.chat-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Alinha itens à esquerda */
+    background-color: #f0f0f0; /* Fundo suave */
+    border-bottom: 1px solid #ccc; /* Linha inferior */
+    padding: 10px;
+}
+
+.chat-title {
+    font-size: 24px; /* Tamanho maior para o título */
+    font-weight: bold; /* Negrito para destacar */
+    color: #333; /* Cor escura para contraste */
+    margin: 0; /* Remove margens padrão */
+    text-align: left; /* Alinha o texto à esquerda */
+}
+
+.chat-info {
+    font-size: 14px;
+    color: #555; /* Cor para as informações do chat */
+    margin: 5px 0;
+}
+
+.chat-protocol {
+    font-weight: bold; /* Destaca o protocolo */
+}
+
+.chat-description {
+    font-style: italic; /* Itálico para a descrição */
+}
+
+.chat-participants {
+    display: flex; /* Alinha os ícones dos participantes */
+    gap: 10px; /* Espaçamento entre os ícones */
+}
+
+.participant-avatar {
+    width: 30px; /* Tamanho do ícone */
+    height: 30px; /* Tamanho do ícone */
+    border-radius: 50%; /* Ícone redondo */
+    border: 1px solid #ccc; /* Borda leve */
+}
+
+.chat-agent {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.participant-avatar {
+    border-radius: 50%; /* Tornar a imagem arredondada */
+    width: 40px; /* Ajustar o tamanho da imagem */
+    height: 40px; /* Ajustar o tamanho da imagem */
+    margin-right: 10px; /* Espaço entre a imagem e o nome */
+}
+
+.agent-name {
+    font-weight: bold; /* Para destacar o nome do agente */
+    font-size: 14px; /* Ajustar o tamanho da fonte */
+}
+
+#emoji-button {
+    font-size: 24px;
+    padding: 0 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+#emoji-button:hover {
+    background-color: #f0f0f0;
+    border-radius: 50%;
+}

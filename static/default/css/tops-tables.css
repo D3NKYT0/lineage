@@ -1,0 +1,1000 @@
+/* ===== TABELAS TOPS - CSS LIMPO E ESPECÍFICO ===== */
+
+/* Container da tabela */
+.tops-table-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 30px;
+    border: 1px solid rgba(230, 199, 125, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.tops-table-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #e6c77d, #d1a44f, #9b7530, #e6c77d);
+    border-radius: 17px;
+    z-index: -1;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+.tops-table-container:hover::before {
+    opacity: 0.5;
+}
+
+/* Estado vazio */
+.tops-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #fff;
+}
+
+.tops-empty-state i {
+    font-size: 48px;
+    color: #e6c77d;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.tops-empty-state h3 {
+    color: #e6c77d;
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-shadow: 0px 0px 10px rgba(230, 199, 125, 0.3);
+}
+
+.tops-empty-state p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Tabela responsiva */
+.tops-table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, rgba(53, 47, 35, 0.95), rgba(40, 35, 25, 0.95));
+    border: 1px solid rgba(230, 199, 125, 0.3);
+}
+
+/* Tabela base */
+.tops-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+    font-size: 14px;
+    table-layout: fixed;
+}
+
+/* Cabeçalho da tabela */
+.tops-table thead {
+    background: linear-gradient(135deg, rgba(230, 199, 125, 0.15), rgba(155, 117, 48, 0.15));
+    backdrop-filter: blur(10px);
+}
+
+.tops-table thead th {
+    color: #e6c77d;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 20px 15px;
+    border: none;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.tops-table thead th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #e6c77d, transparent);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.tops-table thead th:hover::after {
+    transform: scaleX(1);
+}
+
+/* Larguras específicas das colunas com alinhamento correto */
+.tops-table thead th:nth-child(1),
+.tops-table tbody td:nth-child(1) {
+    width: 80px;
+    text-align: center;
+}
+
+.tops-table thead th:nth-child(2),
+.tops-table tbody td:nth-child(2) {
+    width: 25%;
+    text-align: left;
+}
+
+.tops-table thead th:nth-child(3),
+.tops-table tbody td:nth-child(3) {
+    width: 20%;
+    text-align: left;
+}
+
+.tops-table thead th:nth-child(4),
+.tops-table tbody td:nth-child(4) {
+    width: 15%;
+    text-align: center;
+}
+
+.tops-table thead th:nth-child(5),
+.tops-table tbody td:nth-child(5) {
+    width: 15%;
+    text-align: center;
+}
+
+.tops-table thead th:nth-child(6),
+.tops-table tbody td:nth-child(6) {
+    width: 15%;
+    text-align: center;
+}
+
+/* Linhas do corpo da tabela */
+.tops-table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(230, 199, 125, 0.1);
+}
+
+.tops-table tbody tr:hover {
+    background: linear-gradient(135deg, rgba(230, 199, 125, 0.15), rgba(155, 117, 48, 0.15));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(230, 199, 125, 0.3);
+    border-left: 3px solid rgba(230, 199, 125, 0.6);
+}
+
+/* Células da tabela */
+.tops-table td {
+    padding: 18px 15px;
+    vertical-align: middle;
+    border: none;
+    background: transparent;
+}
+
+/* Efeito de destaque para top 3 */
+.tops-table tbody tr:nth-child(1) {
+    position: relative;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 193, 7, 0.15));
+    border-left: 4px solid #ffd700;
+    transform: none !important;
+}
+
+.tops-table tbody tr:nth-child(1) td {
+    vertical-align: middle !important;
+    position: relative;
+}
+
+.tops-table tbody tr:nth-child(1) td:nth-child(1) {
+    text-align: center !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tops-table tbody tr:nth-child(1) td:nth-child(1) .tops-badge {
+    display: inline-block;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.tops-table tbody tr:nth-child(1) td:nth-child(2) {
+    text-align: left !important;
+}
+
+.tops-table tbody tr:nth-child(1) td:nth-child(2) .tops-flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+}
+
+.tops-table tbody tr:nth-child(1) td:nth-child(3) {
+    text-align: left !important;
+}
+
+.tops-table tbody tr:nth-child(1) td:nth-child(3) .tops-flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-align: left;
+}
+
+.tops-table tbody tr:nth-child(1) td:nth-child(4),
+.tops-table tbody tr:nth-child(1) td:nth-child(5),
+.tops-table tbody tr:nth-child(1) td:nth-child(6) {
+    text-align: center !important;
+}
+
+.tops-table tbody tr:nth-child(1) td:nth-child(4) .tops-badge,
+.tops-table tbody tr:nth-child(1) td:nth-child(5) .tops-badge,
+.tops-table tbody tr:nth-child(1) td:nth-child(6) .tops-text-muted {
+    display: inline-block;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.tops-table tbody tr:nth-child(1):hover {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(255, 193, 7, 0.25));
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+    border-left: 4px solid #ffd700;
+    transform: translateY(-1px);
+}
+
+.tops-table tbody tr:nth-child(2) {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.15), rgba(169, 169, 169, 0.15));
+    border-left: 4px solid #c0c0c0;
+}
+
+.tops-table tbody tr:nth-child(2):hover {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.3), rgba(169, 169, 169, 0.3));
+    box-shadow: 0 10px 30px rgba(192, 192, 192, 0.4);
+    border-left: 4px solid #c0c0c0;
+}
+
+.tops-table tbody tr:nth-child(3) {
+    background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(184, 115, 51, 0.15));
+    border-left: 4px solid #cd7f32;
+}
+
+.tops-table tbody tr:nth-child(3):hover {
+    background: linear-gradient(135deg, rgba(205, 127, 50, 0.3), rgba(184, 115, 51, 0.3));
+    box-shadow: 0 10px 30px rgba(205, 127, 50, 0.4);
+    border-left: 4px solid #cd7f32;
+}
+
+/* Badges */
+.tops-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+}
+
+.tops-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.tops-badge:hover::before {
+    left: 100%;
+}
+
+.tops-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.tops-badge.gold {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #000;
+    font-size: 16px;
+    padding: 10px 15px;
+}
+
+.tops-badge.silver {
+    background: linear-gradient(135deg, #c0c0c0, #e5e5e5);
+    color: #000;
+    font-size: 16px;
+    padding: 10px 15px;
+}
+
+.tops-badge.bronze {
+    background: linear-gradient(135deg, #cd7f32, #daa520);
+    color: #fff;
+    font-size: 16px;
+    padding: 10px 15px;
+}
+
+.tops-badge.danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.tops-badge.info {
+    background: linear-gradient(135deg, #17a2b8, #138496);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.tops-badge.success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.tops-badge.warning {
+    background: linear-gradient(135deg, #ff8a00, #ff4d00);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.tops-badge.primary {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.tops-badge.secondary {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: #fff;
+}
+
+/* Nomes dos jogadores */
+.tops-player-name {
+    color: #e6c77d;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tops-table tbody tr:hover .tops-player-name {
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(230, 199, 125, 0.5);
+}
+
+.tops-player-name::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #e6c77d, #d1a44f);
+    transition: width 0.3s ease;
+}
+
+.tops-table tbody tr:hover .tops-player-name::after {
+    width: 100%;
+}
+
+/* Crests */
+.tops-crest {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tops-table tbody tr:hover .tops-crest {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.tops-crest::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tops-table tbody tr:hover .tops-crest::after {
+    opacity: 1;
+}
+
+/* Flexbox para crests e nomes */
+.tops-flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tops-flex img {
+    flex-shrink: 0;
+}
+
+.tops-flex span {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Texto muted */
+.tops-text-muted {
+    color: rgba(255, 255, 255, 0.5) !important;
+    font-style: italic;
+}
+
+/* Animações */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tops-table tbody tr {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.tops-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.tops-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.tops-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+.tops-table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+.tops-table tbody tr:nth-child(5) { animation-delay: 0.5s; }
+.tops-table tbody tr:nth-child(6) { animation-delay: 0.6s; }
+.tops-table tbody tr:nth-child(7) { animation-delay: 0.7s; }
+.tops-table tbody tr:nth-child(8) { animation-delay: 0.8s; }
+.tops-table tbody tr:nth-child(9) { animation-delay: 0.9s; }
+.tops-table tbody tr:nth-child(10) { animation-delay: 1.0s; }
+
+/* Scrollbar customizada */
+.tops-table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.tops-table-responsive::-webkit-scrollbar-track {
+    background: rgba(53, 47, 35, 0.5);
+    border-radius: 4px;
+}
+
+.tops-table-responsive::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #9b7530, #d1a44f);
+    border-radius: 4px;
+}
+
+.tops-table-responsive::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #d1a44f, #e6c77d);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .tops-table-container {
+        padding: 20px;
+    }
+    
+    .tops-table {
+        font-size: 12px;
+    }
+    
+    .tops-table thead th,
+    .tops-table tbody td {
+        padding: 12px 8px;
+    }
+    
+    /* Manter alinhamento em mobile */
+    .tops-table thead th:nth-child(1),
+    .tops-table tbody td:nth-child(1) {
+        text-align: center;
+    }
+    
+    .tops-table thead th:nth-child(2),
+    .tops-table tbody td:nth-child(2) {
+        text-align: left;
+    }
+    
+    .tops-table thead th:nth-child(3),
+    .tops-table tbody td:nth-child(3) {
+        text-align: left;
+    }
+    
+    .tops-table thead th:nth-child(4),
+    .tops-table tbody td:nth-child(4) {
+        text-align: center;
+    }
+    
+    .tops-table thead th:nth-child(5),
+    .tops-table tbody td:nth-child(5) {
+        text-align: center;
+    }
+    
+    .tops-table thead th:nth-child(6),
+    .tops-table tbody td:nth-child(6) {
+        text-align: center;
+    }
+    
+    .tops-badge {
+        font-size: 10px;
+        padding: 6px 8px;
+    }
+    
+    .tops-badge.gold,
+    .tops-badge.silver,
+    .tops-badge.bronze {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    
+    .tops-empty-state {
+        padding: 40px 20px;
+    }
+    
+    .tops-empty-state i {
+        font-size: 36px;
+    }
+    
+    .tops-empty-state h3 {
+        font-size: 20px;
+    }
+    
+    .tops-empty-state p {
+        font-size: 14px;
+    }
+    
+    /* Ajustar efeitos visuais para mobile */
+    .tops-table tbody tr:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(230, 199, 125, 0.2);
+    }
+    
+    .tops-badge:hover {
+        transform: translateY(-1px);
+    }
+}
+
+@media (max-width: 576px) {
+    .tops-table {
+        font-size: 11px;
+    }
+    
+    .tops-table thead th,
+    .tops-table tbody td {
+        padding: 8px 5px;
+    }
+    
+    /* Manter alinhamento em telas muito pequenas */
+    .tops-table thead th:nth-child(1),
+    .tops-table tbody td:nth-child(1) {
+        text-align: center;
+    }
+    
+    .tops-table thead th:nth-child(2),
+    .tops-table tbody td:nth-child(2) {
+        text-align: left;
+    }
+    
+    .tops-table thead th:nth-child(3),
+    .tops-table tbody td:nth-child(3) {
+        text-align: left;
+    }
+    
+    .tops-table thead th:nth-child(4),
+    .tops-table tbody td:nth-child(4) {
+        text-align: center;
+    }
+    
+    .tops-table thead th:nth-child(5),
+    .tops-table tbody td:nth-child(5) {
+        text-align: center;
+    }
+    
+    .tops-table thead th:nth-child(6),
+    .tops-table tbody td:nth-child(6) {
+        text-align: center;
+    }
+    
+    .tops-badge {
+        font-size: 9px;
+        padding: 4px 6px;
+    }
+    
+    .tops-crest {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .tops-empty-state {
+        padding: 30px 15px;
+    }
+    
+    .tops-empty-state i {
+        font-size: 32px;
+    }
+    
+    .tops-empty-state h3 {
+        font-size: 18px;
+    }
+    
+    .tops-empty-state p {
+        font-size: 13px;
+    }
+    
+    /* Desabilitar alguns efeitos em telas muito pequenas */
+    .tops-table tbody tr:hover {
+        transform: none;
+    }
+    
+    .tops-badge:hover {
+        transform: none;
+    }
+    
+    .tops-badge.gold,
+    .tops-badge.silver,
+    .tops-badge.bronze {
+        animation: none;
+    }
+}
+
+/* ===== ALINHAMENTO ESPECÍFICO DAS COLUNAS ===== */
+
+/* Forçar alinhamento específico para cada coluna */
+.tops-table thead th:nth-child(1) {
+    text-align: center !important;
+}
+
+.tops-table thead th:nth-child(2) {
+    text-align: left !important;
+}
+
+.tops-table thead th:nth-child(3) {
+    text-align: left !important;
+}
+
+.tops-table thead th:nth-child(4) {
+    text-align: center !important;
+}
+
+.tops-table thead th:nth-child(5) {
+    text-align: center !important;
+}
+
+.tops-table thead th:nth-child(6) {
+    text-align: center !important;
+}
+
+/* Garantir que o conteúdo das células também siga o alinhamento */
+.tops-table tbody td:nth-child(1) {
+    text-align: center !important;
+}
+
+.tops-table tbody td:nth-child(2) {
+    text-align: left !important;
+}
+
+.tops-table tbody td:nth-child(3) {
+    text-align: left !important;
+}
+
+.tops-table tbody td:nth-child(4) {
+    text-align: center !important;
+}
+
+.tops-table tbody td:nth-child(5) {
+    text-align: center !important;
+}
+
+.tops-table tbody td:nth-child(6) {
+    text-align: center !important;
+}
+
+/* Garantir que elementos dentro das células sigam o alinhamento */
+.tops-table tbody td:nth-child(1) .tops-badge,
+.tops-table tbody td:nth-child(1) .tops-text-muted {
+    display: inline-block;
+    text-align: center;
+}
+
+.tops-table tbody td:nth-child(4) .tops-badge,
+.tops-table tbody td:nth-child(5) .tops-badge,
+.tops-table tbody td:nth-child(6) .tops-text-muted {
+    display: inline-block;
+    text-align: center;
+}
+
+/* Efeito de pulso para badges especiais */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.tops-badge.gold,
+.tops-badge.silver,
+.tops-badge.bronze {
+    animation: pulse 2s infinite;
+}
+
+/* Efeito de brilho no cabeçalho */
+.tops-table thead th {
+    position: relative;
+    overflow: hidden;
+}
+
+.tops-table thead th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #e6c77d, transparent);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.tops-table thead th:hover::after {
+    transform: scaleX(1);
+}
+
+/* Efeito de texto brilhante */
+.tops-player-name {
+    position: relative;
+}
+
+.tops-player-name::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #e6c77d, #d1a44f);
+    transition: width 0.3s ease;
+}
+
+.tops-table tbody tr:hover .tops-player-name::after {
+    width: 100%;
+}
+
+/* ===== EFEITOS VISUAIS ADICIONAIS ===== */
+
+/* Efeito de brilho no hover */
+.tops-table tbody tr:hover {
+    background: linear-gradient(135deg, rgba(230, 199, 125, 0.15), rgba(155, 117, 48, 0.15));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(230, 199, 125, 0.3);
+    border-left: 3px solid rgba(230, 199, 125, 0.6);
+}
+
+/* Efeito especial para top 3 no hover */
+.tops-table tbody tr:nth-child(1):hover {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 193, 7, 0.3));
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+    border-left: 4px solid #ffd700;
+}
+
+.tops-table tbody tr:nth-child(2):hover {
+    background: linear-gradient(135deg, rgba(192, 192, 192, 0.3), rgba(169, 169, 169, 0.3));
+    box-shadow: 0 10px 30px rgba(192, 192, 192, 0.4);
+    border-left: 4px solid #c0c0c0;
+}
+
+.tops-table tbody tr:nth-child(3):hover {
+    background: linear-gradient(135deg, rgba(205, 127, 50, 0.3), rgba(184, 115, 51, 0.3));
+    box-shadow: 0 10px 30px rgba(205, 127, 50, 0.4);
+    border-left: 4px solid #cd7f32;
+}
+
+/* Efeito de brilho nos badges */
+.tops-badge {
+    position: relative;
+    overflow: hidden;
+}
+
+.tops-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.tops-badge:hover::before {
+    left: 100%;
+}
+
+/* Efeito de pulso para badges especiais */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.tops-badge.gold,
+.tops-badge.silver,
+.tops-badge.bronze {
+    animation: pulse 2s infinite;
+}
+
+/* Efeito de brilho no cabeçalho */
+.tops-table thead th {
+    position: relative;
+    overflow: hidden;
+}
+
+.tops-table thead th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #e6c77d, transparent);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.tops-table thead th:hover::after {
+    transform: scaleX(1);
+}
+
+/* Efeito de sombra no container */
+.tops-table-container {
+    position: relative;
+}
+
+.tops-table-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #e6c77d, #d1a44f, #9b7530, #e6c77d);
+    border-radius: 17px;
+    z-index: -1;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+.tops-table-container:hover::before {
+    opacity: 0.5;
+}
+
+/* Efeito de brilho nas imagens */
+.tops-crest {
+    position: relative;
+}
+
+.tops-crest::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tops-table tbody tr:hover .tops-crest::after {
+    opacity: 1;
+}
+
+/* Efeito de texto brilhante */
+.tops-player-name {
+    position: relative;
+}
+
+.tops-player-name::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #e6c77d, #d1a44f);
+    transition: width 0.3s ease;
+}
+
+.tops-table tbody tr:hover .tops-player-name::after {
+    width: 100%;
+}
+
+/* ===== EFEITOS ESPECIAIS ===== */
+
+/* Partículas flutuantes no fundo */
+.tops-table-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(230, 199, 125, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 80% 40%, rgba(230, 199, 125, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 40% 80%, rgba(230, 199, 125, 0.1) 1px, transparent 1px),
+        radial-gradient(circle at 90% 90%, rgba(230, 199, 125, 0.1) 1px, transparent 1px);
+    background-size: 100px 100px, 150px 150px, 80px 80px, 120px 120px;
+    background-position: 0 0, 50px 50px, 25px 25px, 75px 75px;
+    animation: float 20s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    25% { transform: translateY(-10px) rotate(1deg); }
+    50% { transform: translateY(-5px) rotate(-1deg); }
+    75% { transform: translateY(-15px) rotate(0.5deg); }
+}
+
+/* Efeito de brilho no scroll */
+.tops-table-responsive::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #9b7530, #d1a44f, #e6c77d, #d1a44f, #9b7530);
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Efeito de loading para dados */
+.tops-table tbody tr {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.tops-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.tops-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.tops-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+.tops-table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+.tops-table tbody tr:nth-child(5) { animation-delay: 0.5s; }
+.tops-table tbody tr:nth-child(6) { animation-delay: 0.6s; }
+.tops-table tbody tr:nth-child(7) { animation-delay: 0.7s; }
+.tops-table tbody tr:nth-child(8) { animation-delay: 0.8s; }
+.tops-table tbody tr:nth-child(9) { animation-delay: 0.9s; }
+.tops-table tbody tr:nth-child(10) { animation-delay: 1.0s; }
+
+/* Efeito de destaque para primeira linha */
+.tops-table tbody tr:nth-child(1) {
+    position: relative;
+}
+
+/* Removido o efeito da coroa que estava causando desalinhamento */
+
+/* Efeito de brilho no texto dos títulos */
+.tops-header-section h1 {
+    background: linear-gradient(45deg, #e6c77d, #d1a44f, #9b7530, #e6c77d);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+} 

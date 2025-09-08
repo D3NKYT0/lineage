@@ -1,0 +1,99 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<style>
+  /* Estilos para o ícone de olho */
+  .password-field {
+    position: relative;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+    z-index: 10;
+  }
+
+  .password-toggle:hover {
+    color: #495057;
+  }
+
+  .password-toggle:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .password-field .form-control {
+    padding-right: 40px; /* Espaço para o ícone */
+  }
+</style>
+
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h2 class="text-center mb-4">{% trans "Criar Conta L2" %}</h2>
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">{% trans "Login" %}</label>
+        <input type="text" class="form-control" value="{{ login }}" disabled>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">{% trans "E-mail" %}</label>
+        <input type="email" class="form-control" value="{{ email }}" disabled>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">{% trans "Senha" %}</label>
+        <div class="password-field">
+          <input type="password" name="password" class="form-control" id="password" required>
+          <button type="button" class="password-toggle" onclick="togglePassword('password')">
+            <i class="bi bi-eye" id="eye-icon-password"></i>
+          </button>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">{% trans "Confirmar Senha" %}</label>
+        <div class="password-field">
+          <input type="password" name="confirm" class="form-control" id="confirm" required>
+          <button type="button" class="password-toggle" onclick="togglePassword('confirm')">
+            <i class="bi bi-eye" id="eye-icon-confirm"></i>
+          </button>
+        </div>
+      </div>
+      <div class="d-grid">
+        <button type="submit" class="btn btn-success btn-lg">{% trans "Criar Conta" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function togglePassword(inputId) {
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById('eye-icon-' + inputId);
+  
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.remove('bi-eye');
+    icon.classList.add('bi-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.remove('bi-eye-slash');
+    icon.classList.add('bi-eye');
+  }
+}
+</script>
+{% endblock %}

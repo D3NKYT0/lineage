@@ -1,0 +1,390 @@
+/* Dashboard Custom Styles - Complemento ao novo padrão */
+
+/* Animações suaves */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(111, 66, 193, 0.8), 0 0 35px rgba(13, 202, 240, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+  }
+}
+
+/* Aplicar animações */
+.dashboard-bg {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.stats-card {
+  animation: fadeInUp 0.8s ease-out;
+  animation-delay: calc(var(--animation-order) * 0.1s);
+}
+
+.stats-card:nth-child(1) { --animation-order: 1; }
+.stats-card:nth-child(2) { --animation-order: 2; }
+.stats-card:nth-child(3) { --animation-order: 3; }
+.stats-card:nth-child(4) { --animation-order: 4; }
+
+/* Efeitos hover aprimorados */
+.user-header-card:hover {
+  animation: pulse 2s infinite;
+}
+
+.action-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.action-btn:hover::before {
+  left: 100%;
+}
+
+/* Melhorias nos cards de estatísticas */
+.stats-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stats-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(111, 66, 193, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.stats-card:hover::before {
+  opacity: 1;
+}
+
+/* Melhorias na paginação */
+.pagination-custom .page-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.pagination-custom .page-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.3s;
+}
+
+.pagination-custom .page-link:hover::before {
+  left: 100%;
+}
+
+/* Melhorias nos cards de conquistas */
+.conquista-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.conquista-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(111, 66, 193, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.conquista-card:hover::after {
+  transform: translateX(100%);
+}
+
+/* Melhorias nos itens de inventário */
+.inventory-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.inventory-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6f42c1, #e83e8c, #6f42c1);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.inventory-item:hover::before {
+  transform: scaleX(1);
+}
+
+/* Melhorias nos alertas */
+.alert-custom, .alert-info-custom {
+  position: relative;
+  overflow: hidden;
+}
+
+.alert-custom::before, .alert-info-custom::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #ffc107, #fd7e14);
+  animation: slideDown 2s ease-in-out infinite;
+}
+
+.alert-info-custom::before {
+  background: linear-gradient(180deg, #17a2b8, #20c997);
+}
+
+@keyframes slideDown {
+  0%, 100% {
+    transform: translateY(-100%);
+  }
+  50% {
+    transform: translateY(100%);
+  }
+}
+
+/* Melhorias no progresso */
+.progress-custom {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-custom .progress-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-custom .progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Responsividade aprimorada */
+@media (max-width: 768px) {
+  .user-header-card {
+    padding: 1.5rem;
+  }
+  
+  .user-name {
+    font-size: 1.5rem;
+  }
+  
+  .stats-card {
+    margin-bottom: 1rem;
+  }
+  
+  .action-btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+  
+  .section-title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .dashboard-bg {
+    padding: 30px 0;
+  }
+  
+  .user-header-card {
+    padding: 1rem;
+  }
+  
+  .user-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .user-name {
+    font-size: 1.3rem;
+  }
+  
+  .stats-value {
+    font-size: 1.2rem;
+  }
+  
+  .conquista-card {
+    padding: 0.8rem;
+  }
+}
+
+/* Melhorias de acessibilidade */
+.action-btn:focus,
+.stats-card:focus,
+.conquista-card:focus,
+.inventory-item:focus {
+  outline: 2px solid #00d9ff;
+  outline-offset: 2px;
+}
+
+/* Efeitos de loading */
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Melhorias nos ícones */
+.stats-icon i {
+  transition: transform 0.3s ease;
+}
+
+.stats-card:hover .stats-icon i {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Efeitos de partículas no fundo */
+.dashboard-bg::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(111, 66, 193, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(13, 202, 240, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(232, 62, 140, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Melhorias nos títulos das seções */
+.section-title {
+  position: relative;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #6f42c1, #e83e8c);
+  transition: width 0.3s ease;
+}
+
+.section-title:hover::after {
+  width: 100%;
+}
+
+/* Efeitos de glassmorphism */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Melhorias nos botões de ação */
+.action-btn.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+/* Efeitos de hover nos links */
+a.text-info:hover {
+  color: #00d9ff !important;
+  text-shadow: 0 0 8px rgba(0, 217, 255, 0.5);
+}
+
+/* Melhorias na responsividade dos cards */
+@media (max-width: 992px) {
+  .col-lg-3 {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Efeitos de transição suaves */
+* {
+  transition: all 0.3s ease;
+}
+
+/* Melhorias nos estados de hover */
+.dashboard-card:hover,
+.stats-card:hover,
+.conquista-card:hover,
+.inventory-item:hover {
+  transform: translateY(-5px);
+}
+
+/* Efeitos de sombra dinâmicos */
+.dashboard-card,
+.stats-card,
+.conquista-card,
+.inventory-item {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.dashboard-card:hover,
+.stats-card:hover,
+.conquista-card:hover,
+.inventory-item:hover {
+  box-shadow: 0 8px 25px rgba(111, 66, 193, 0.3);
+} 

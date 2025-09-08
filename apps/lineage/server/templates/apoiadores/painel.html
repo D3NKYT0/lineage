@@ -1,0 +1,388 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load apoiador_extras %}
+{% load static %}
+
+{% block title %}{% trans "Painel do Apoiador" %}{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .supporter-panel-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .supporter-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .supporter-header h1 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .supporter-header p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .coupon-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .supporter-image {
+    width: 100%;
+    max-height: 250px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .supporter-image:hover {
+    transform: scale(1.02);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .coupon-info {
+    text-align: center;
+    color: white;
+  }
+
+  .coupon-info h3 {
+    color: #a0aec0;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .coupon-code {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 1rem 0;
+    display: inline-block;
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.3);
+  }
+
+  .coupon-details {
+    color: #a0aec0;
+    margin: 0.5rem 0;
+  }
+
+  .coupon-details strong {
+    color: white;
+  }
+
+  .no-coupon {
+    text-align: center;
+    color: #a0aec0;
+    padding: 2rem;
+  }
+
+  .no-coupon h3 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+  }
+
+  .stat-card h3 {
+    color: #a0aec0;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+  }
+
+  .stat-value {
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .stat-value.sales {
+    color: #48bb78;
+  }
+
+  .stat-value.users {
+    color: #667eea;
+  }
+
+  .actions-section {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .action-btn {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+    text-decoration: none;
+    display: inline-block;
+    margin: 0 0.5rem;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(72, 187, 120, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .action-btn.secondary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .action-btn.secondary:hover {
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+  }
+
+  .purchases-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .purchases-card h3 {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .table-custom {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .table-custom thead th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem;
+    font-weight: 600;
+  }
+
+  .table-custom tbody tr {
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.3s ease;
+  }
+
+  .table-custom tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .table-custom tbody td {
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .table-custom tbody td:last-child {
+    border-bottom: none;
+  }
+
+  .amount-value {
+    color: #48bb78;
+    font-weight: 600;
+  }
+
+  .empty-purchases {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #a0aec0;
+  }
+
+  .empty-purchases i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .empty-purchases h4 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .empty-purchases p {
+    color: #a0aec0;
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .action-btn {
+      display: block;
+      margin: 0.5rem 0;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="supporter-panel-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="supporter-header">
+      <h1>
+        <i class="fas fa-star me-3"></i>{% trans "Painel do Apoiador" %}
+      </h1>
+      <p>{{ apoiador.nome_publico }}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" style="color: #a0aec0;">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: white;">{% trans "Painel do Apoiador" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Cupom Ativo -->
+    {% if cupom %}
+      <div class="coupon-card">
+        <div class="row align-items-center">
+          <div class="col-md-6 text-center mb-4 mb-md-0">
+            <img src="{% apoiador_image_url apoiador %}" 
+                 alt="{{ apoiador.nome_publico }}" 
+                 class="supporter-image">
+          </div>
+
+          <div class="col-md-6">
+            <div class="coupon-info">
+              <h3>{% trans "Seu Cupom Ativo" %}</h3>
+              <div class="coupon-code">{{ cupom.codigo }}</div>
+              <p class="coupon-details">
+                {% trans "Desconto" %}: <strong>{{ cupom.desconto_percentual }}%</strong>
+              </p>
+              <p class="coupon-details">
+                {% trans "Válido até" %}: <strong>{{ cupom.validade|date:"d/m/Y" }}</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="coupon-card">
+        <div class="no-coupon">
+          <h3>{% trans "Ainda não há cupom ativo." %}</h3>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- Estatísticas -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>{% trans "Total de Vendas" %}</h3>
+        <p class="stat-value sales">R$ {{ total_vendas|floatformat:2 }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>{% trans "Usuários Impactados" %}</h3>
+        <p class="stat-value users">{{ total_usuarios }}</p>
+      </div>
+    </div>
+
+    <!-- Ações -->
+    <div class="actions-section">
+      <a href="{% url 'server:solicitar_comissao' %}" class="action-btn">
+        <i class="fas fa-money-bill-wave me-2"></i>{% trans "Solicitar Comissão" %}
+      </a>
+      <a href="{% url 'server:editar_imagem_apoiador' %}" class="action-btn secondary">
+        <i class="fas fa-image me-2"></i>{% trans "Editar Imagem" %}
+      </a>
+    </div>
+
+    <!-- Tabela de Compras -->
+    <div class="purchases-card">
+      <h3>
+        <i class="fas fa-shopping-cart me-2"></i>{% trans "Histórico de Compras" %}
+      </h3>
+      
+      {% if compras %}
+        <div class="table-responsive">
+          <table class="table table-custom">
+            <thead>
+              <tr>
+                <th>{% trans "Usuário" %}</th>
+                <th>{% trans "Personagem" %}</th>
+                <th>{% trans "Total" %}</th>
+                <th>{% trans "Data" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for compra in compras %}
+                <tr>
+                  <td>{{ compra.user.username }}</td>
+                  <td>{{ compra.character_name }}</td>
+                  <td class="amount-value">R$ {{ compra.total_pago }}</td>
+                  <td>{{ compra.data_compra|date:"d/m/Y H:i" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-purchases">
+          <i class="fas fa-shopping-bag"></i>
+          <h4>{% trans "Nenhuma compra registrada" %}</h4>
+          <p>{% trans "Nenhuma compra registrada ainda." %}</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

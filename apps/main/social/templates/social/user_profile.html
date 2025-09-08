@@ -1,0 +1,672 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% load social_tags %}
+
+{% block title %} {{ profile_user.get_full_name|default:profile_user.username }} - {% trans "Perfil" %} {% endblock title %}
+
+{% block extrahead %}
+<script>
+// Aplicar classe CSS no body baseada no tipo de perfil imediatamente
+(function() {
+  const profileType = '{{ profile_user.profile_type }}';
+  if (profileType !== 'regular') {
+    // Aplicar imediatamente se o body já existe
+    if (document.body) {
+      document.body.classList.add('profile-' + profileType + '-page');
+    } else {
+      // Se o body ainda não existe, aplicar quando o DOM estiver pronto
+      document.addEventListener('DOMContentLoaded', function() {
+        document.body.classList.add('profile-' + profileType + '-page');
+      });
+    }
+  }
+})();
+</script>
+{% endblock extrahead %}
+
+{% block content %}
+{% csrf_token %}
+<!-- Barra de navegação móvel -->
+<div class="d-lg-none">
+  <div class="bg-white shadow-sm border-bottom mb-3">
+    <div class="container-fluid px-3 py-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <a href="{% url 'social:feed' %}" class="btn btn-outline-secondary btn-sm me-2">
+            <i class="bi bi-arrow-left"></i>
+          </a>
+                      <span class="fw-bold">{{ profile_user.get_full_name|default:profile_user.username }}{% verified_badge profile_user "14px" %}</span>
+        </div>
+        <div class="d-flex gap-2">
+          {% if user == profile_user %}
+            <a href="{% url 'social:edit_profile' %}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-pencil"></i>
+            </a>
+          {% endif %}
+          <a href="{% url 'social:search' %}?q={{ profile_user.username }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-search"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid py-lg-4 py-2">
+  <div class="row">
+    <div class="col-12 col-lg-8 mx-auto">
+      
+      <!-- Header do perfil -->
+      <div class="card mb-4 profile-container {{ profile_user.profile_color_class }}">
+        <div class="card-body p-0">
+          <!-- Imagem de capa -->
+          {% if profile_user.social_profile.cover_image %}
+            <div class="profile-cover {{ profile_user.profile_color_class }}" style="height: 200px; background-image: url('{{ profile_user.social_profile.cover_image.url }}'); background-size: cover; background-position: center;"></div>
+          {% else %}
+            <div class="profile-cover {{ profile_user.profile_color_class }}" style="height: 200px;"></div>
+          {% endif %}
+          
+          <!-- Informações do perfil -->
+          <div class="profile-info p-4">
+            <div class="d-flex align-items-end">
+                             <!-- Avatar -->
+               <div class="profile-avatar-container me-4 d-none d-lg-block {{ profile_user.profile_color_class }}" style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin-top: -60px; position: relative;">
+                {% if profile_user.avatar %}
+                  <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' profile_user.uuid timestamp %}" 
+                       alt="Avatar" class="w-100 h-100 profile-avatar-image" style="object-fit: cover;">
+                {% else %}
+                  <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                       alt="Avatar" class="w-100 h-100 profile-avatar-image" style="object-fit: cover;">
+                {% endif %}
+                {% if profile_user.profile_type != 'regular' %}
+                  <div class="avatar-glow {{ profile_user.profile_color_class }}"></div>
+                {% endif %}
+              </div>
+              
+              <div class="flex-grow-1">
+                            <h3 class="mb-1 profile-name {{ profile_user.profile_color_class }}">{{ profile_user.get_full_name|default:profile_user.username }}{% profile_badge profile_user "20px" %}{% verified_badge profile_user "20px" %}</h3>
+            <p class="text-muted mb-2">@{{ profile_user.username }}{% profile_badge profile_user "16px" %}{% verified_badge profile_user "16px" %}</p>
+                
+                {% if profile_user.social_profile.bio %}
+                  <p class="mb-3">{{ profile_user.social_profile.bio }}</p>
+                {% endif %}
+                
+                <!-- Tipo de perfil -->
+                {% if profile_user.profile_type != 'regular' %}
+                  <div class="mb-3">
+                    <div class="profile-status-display {{ profile_user.profile_color_class }}">
+                      <div class="status-icon">
+                        <i class="bi {{ profile_user.profile_icon }}"></i>
+                      </div>
+                      <div class="status-info">
+                        <div class="status-title">{% profile_type_display profile_user %}</div>
+                        <div class="status-description">
+                          {% if profile_user.profile_type == 'superadmin' %}
+                            Acesso total ao sistema e controle absoluto
+                          {% elif profile_user.profile_type == 'staff' %}
+                            Membro da equipe com privilégios administrativos
+                          {% elif profile_user.profile_type == 'moderator' %}
+                            Moderador da comunidade com poderes especiais
+                          {% elif profile_user.profile_type == 'verified' %}
+                            Conta verificada e confiável
+                          {% elif profile_user.profile_type == 'supporter' %}
+                            Apoiador da comunidade com benefícios especiais
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+                
+                <!-- Informações de contato e localização -->
+                <div class="d-flex flex-wrap align-items-center mb-3">
+                  {% if profile_user.social_profile.location %}
+                    <span class="me-3 mb-1">
+                      <i class="bi bi-geo-alt text-muted"></i>
+                      {{ profile_user.social_profile.location }}
+                    </span>
+                  {% endif %}
+                  
+                                     {% if profile_user.social_profile.phone and profile_user.social_profile.show_phone %}
+                     <span class="me-3 mb-1">
+                       <i class="bi bi-phone text-muted"></i>
+                       {{ profile_user.social_profile.phone }}
+                     </span>
+                   {% endif %}
+                   
+                   {% if profile_user.social_profile.show_email %}
+                     <span class="me-3 mb-1">
+                       <i class="bi bi-envelope text-muted"></i>
+                       {{ profile_user.email }}
+                     </span>
+                   {% endif %}
+                  
+                  {% if profile_user.social_profile.birth_date %}
+                    <span class="me-3 mb-1">
+                      <i class="bi bi-calendar text-muted"></i>
+                      {{ profile_user.social_profile.birth_date|date:"d/m/Y" }}
+                    </span>
+                  {% endif %}
+                  
+                  {% if profile_user.social_profile.gender %}
+                    <span class="me-3 mb-1">
+                      <i class="bi bi-person text-muted"></i>
+                      {{ profile_user.social_profile.get_gender_display }}
+                    </span>
+                  {% endif %}
+                </div>
+                
+                <!-- Website -->
+                {% if profile_user.social_profile.website %}
+                  <div class="mb-3">
+                    <a href="{{ profile_user.social_profile.website }}" target="_blank" 
+                       class="btn btn-outline-primary btn-sm" title="{{ profile_user.social_profile.website }}">
+                      <i class="bi bi-globe me-1"></i>
+                      {% with clean_url=profile_user.social_profile.website|cut:"https://"|cut:"http://"|cut:"www." %}
+                        {{ clean_url|slice:":40" }}{% if clean_url|length > 40 %}...{% endif %}
+                      {% endwith %}
+                    </a>
+                  </div>
+                {% endif %}
+                
+                <!-- Interesses -->
+                {% if profile_user.social_profile.interests %}
+                  <div class="mb-3">
+                    <small class="text-muted">
+                      <i class="bi bi-heart me-1"></i>
+                      <strong>{% trans "Interesses" %}:</strong> {{ profile_user.social_profile.interests }}
+                    </small>
+                  </div>
+                {% endif %}
+                
+                <!-- Estatísticas -->
+                <div class="d-flex align-items-center mb-3">
+                  <a href="{% url 'social:user_profile' profile_user.username %}" class="text-decoration-none me-4">
+                    <strong>{{ posts.count }}</strong> {% trans "posts" %}
+                  </a>
+                  <a href="{% url 'social:followers_list' profile_user.username %}" class="text-decoration-none me-4">
+                    <strong class="followers-count">{{ profile_user.followers_count }}</strong> {% trans "seguidores" %}
+                  </a>
+                  <a href="{% url 'social:following_list' profile_user.username %}" class="text-decoration-none">
+                    <strong class="following-count">{{ profile_user.following_count }}</strong> {% trans "seguindo" %}
+                  </a>
+                </div>
+                
+                <!-- Botões de ação -->
+                {% if user != profile_user %}
+                  <div class="d-flex align-items-center">
+                    <button class="btn btn-primary me-2 follow-btn" data-user-id="{% localize off %}{{ profile_user.id }}{% endlocalize %}">
+                      {% if is_following %}
+                        <i class="bi bi-person-check"></i> {% trans "Seguindo" %}
+                      {% else %}
+                        <i class="bi bi-person-plus"></i> {% trans "Seguir" %}
+                      {% endif %}
+                    </button>
+                    
+                    {% if profile_user.social_profile.allow_messages %}
+                      <a href="/app/message/index/" class="btn btn-outline-primary me-2">
+                        <i class="bi bi-chat"></i> {% trans "Mensagem" %}
+                      </a>
+                    {% endif %}
+                    <a href="{% url 'social:search' %}?q={{ profile_user.username }}" class="btn btn-outline-secondary me-2">
+                      <i class="bi bi-search"></i> {% trans "Buscar posts" %}
+                    </a>
+                    <a href="{% url 'social:feed' %}" class="btn btn-success">
+                      <i class="bi bi-house"></i> {% trans "Feed" %}
+                    </a>
+                  </div>
+                {% else %}
+                  <div class="d-flex align-items-center">
+                    <a href="{% url 'social:edit_profile' %}" class="btn btn-primary me-2">
+                      <i class="bi bi-pencil"></i> {% trans "Editar perfil" %}
+                    </a>
+                    
+                    <!-- Botão de verificação -->
+                    {% if not profile_user.social_verified %}
+                      <a href="{% url 'social:verification_status' %}" class="btn btn-warning me-2">
+                        <i class="bi bi-shield-check"></i> {% trans "Solicitar Verificação" %}
+                      </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'social:feed' %}" class="btn btn-success">
+                      <i class="bi bi-house"></i> {% trans "Feed" %}
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Posts do usuário -->
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">
+            {% if user == profile_user %}
+              {% trans "Meus Posts" %}
+            {% else %}
+              {% trans "Posts de" %} {{ profile_user.get_full_name|default:profile_user.username }}
+            {% endif %}
+          </h5>
+        </div>
+        <div class="card-body p-lg-3 p-2">
+          {% if posts %}
+            {% for post in posts %}
+              <!-- Post -->
+              <div class="card mb-3 post-card" data-post-id="{{ post.id }}">
+                <div class="card-header bg-transparent">
+                  <div class="d-flex align-items-center">
+                    <div class="avatar-container me-3" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden;">
+                      {% if post.author.avatar %}
+                        <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' post.author.uuid timestamp %}" 
+                             alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                      {% else %}
+                        <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                             alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                      {% endif %}
+                    </div>
+                    <div class="flex-grow-1">
+                      <div class="d-flex align-items-center">
+                        <h6 class="mb-0">
+                                                <a href="{% url 'social:user_profile' post.author.username %}" class="text-decoration-none">
+                        {{ post.author.get_full_name|default:post.author.username }}{% profile_badge post.author "14px" %}{% verified_badge post.author "14px" %}
+                      </a>
+                        </h6>
+                        {% if post.is_pinned %}
+                          <span class="badge bg-warning ms-2">
+                            <i class="bi bi-pin-angle"></i> {% trans "Fixado" %}
+                          </span>
+                        {% endif %}
+                      </div>
+                      <small class="text-muted">
+                        {{ post.created_at|timesince }} {% trans "atrás" %}
+                        {% if post.is_edited %}
+                          <i class="bi bi-pencil-square ms-1" title="{% trans 'Editado' %}"></i>
+                        {% endif %}
+                      </small>
+                    </div>
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-three-dots"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{% url 'social:post_detail' post.id %}">
+                          <i class="bi bi-eye"></i> {% trans "Ver post" %}
+                        </a></li>
+                        {% if user == post.author %}
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" href="{% url 'social:post_edit' post.id %}">
+                            <i class="bi bi-pencil"></i> {% trans "Editar" %}
+                          </a></li>
+                          <li><a class="dropdown-item pin-post-btn" href="#" data-post-id="{{ post.id }}">
+                            {% if post.is_pinned %}
+                              <i class="bi bi-pin-angle-fill"></i> {% trans "Desfixar" %}
+                            {% else %}
+                              <i class="bi bi-pin-angle"></i> {% trans "Fixar" %}
+                            {% endif %}
+                          </a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item text-danger" href="{% url 'social:post_delete' post.id %}">
+                            <i class="bi bi-trash"></i> {% trans "Excluir" %}
+                          </a></li>
+                        {% else %}
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" href="{% url 'social:user_profile' post.author.username %}">
+                            <i class="bi bi-person"></i> {% trans "Ver perfil" %}
+                          </a></li>
+                          <li><a class="dropdown-item text-warning report-btn" href="#" data-content-type="post" data-content-id="{{ post.id }}">
+                            <i class="bi bi-flag"></i> {% trans "Denunciar" %}
+                          </a></li>
+                        {% endif %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="card-body">
+                  <!-- Conteúdo do post -->
+                  <p class="card-text">{{ post.content|process_content|linebreaks }}</p>
+                  
+                  <!-- Imagem do post -->
+                  {% if post.image %}
+                    <img src="{{ post.image.url }}" class="img-fluid rounded mb-3" alt="Post image">
+                  {% endif %}
+                  
+                  <!-- Vídeo do post -->
+                  {% if post.video %}
+                    <video controls class="w-100 rounded mb-3">
+                      <source src="{{ post.video.url }}" type="video/mp4">
+                      {% trans "Seu navegador não suporta vídeos." %}
+                    </video>
+                  {% endif %}
+                  
+                  <!-- Link do post -->
+                  {% if post.link %}
+                    <div class="card mb-3">
+                      <div class="card-body">
+                        {% if post.link_image %}
+                          <img src="{{ post.link_image }}" class="img-fluid rounded mb-2" alt="Link preview">
+                        {% endif %}
+                        {% if post.link_title %}
+                          <h6 class="card-title">{{ post.link_title }}</h6>
+                        {% endif %}
+                        {% if post.link_description %}
+                          <p class="card-text small">{{ post.link_description }}</p>
+                        {% endif %}
+                        <a href="{{ post.link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                          <i class="bi bi-box-arrow-up-right"></i> {% trans "Abrir link" %}
+                        </a>
+                      </div>
+                    </div>
+                  {% endif %}
+                  
+                  <!-- Hashtags -->
+                  {% if post.hashtags.all %}
+                    <div class="mb-3">
+                      {% for hashtag in post.hashtags.all %}
+                        <a href="{% url 'social:hashtag_detail' hashtag.hashtag.name %}" class="badge bg-primary text-decoration-none me-1">
+                          #{{ hashtag.hashtag.name }}
+                        </a>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  
+                  <!-- Ações do post -->
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                      <!-- Like -->
+                      <button class="btn btn-sm btn-outline-primary me-2 like-btn" data-post-id="{{ post.id }}">
+                        <i class="bi {% if post.is_liked_by_current_user %}bi-heart-fill text-danger{% else %}bi-heart{% endif %}"></i>
+                        <span class="like-count">{{ post.likes_count }}</span>
+                      </button>
+                      
+                      <!-- Comentários -->
+                      <a href="{% url 'social:post_detail' post.id %}" class="btn btn-sm btn-outline-secondary me-2" title="{% trans 'Ver comentários' %}">
+                        <i class="bi bi-chat"></i>
+                        <span class="comment-count">{{ post.comments_count }}</span>
+                      </a>
+                      
+                      <!-- Compartilhar -->
+                      <button class="btn btn-sm btn-outline-success me-2 share-btn" data-post-id="{{ post.id }}">
+                        <i class="bi bi-share"></i>
+                        <span class="share-count">{{ post.shares_count }}</span>
+                      </button>
+                    </div>
+                    
+                    <small class="text-muted">
+                      <i class="bi bi-eye"></i> {{ post.views_count }} {% trans "visualizações" %}
+                    </small>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="text-center py-5">
+              <i class="bi bi-chat-quote display-1 text-muted"></i>
+              <h5 class="mt-3">{% trans "Nenhum post ainda" %}</h5>
+              <p class="text-muted">
+                {% if user == profile_user %}
+                  {% trans "Comece a compartilhar suas ideias!" %}
+                {% else %}
+                  {% trans "Este usuário ainda não fez nenhum post." %}
+                {% endif %}
+              </p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript para interações -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM carregado, inicializando botões de seguir...');
+    
+    // Teste para verificar se o botão existe
+    const followButtons = document.querySelectorAll('.follow-btn');
+    console.log('Número de botões de seguir encontrados:', followButtons.length);
+    
+    if (followButtons.length === 0) {
+        console.error('Nenhum botão de seguir encontrado!');
+        return;
+    }
+    
+    // Follow/Unfollow
+    followButtons.forEach((btn, index) => {
+        console.log(`Botão de seguir ${index + 1} encontrado:`, btn);
+        console.log('ID do usuário:', btn.dataset.userId);
+        console.log('Classes do botão:', btn.className);
+        
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const userId = parseInt(this.dataset.userId);
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            
+            console.log('Clicou no botão de seguir para usuário:', userId);
+            console.log('Token CSRF encontrado:', !!csrfToken);
+            
+            if (!userId || isNaN(userId)) {
+                console.error('ID do usuário inválido:', this.dataset.userId);
+                return;
+            }
+            
+            if (!csrfToken) {
+                console.error('Token CSRF não encontrado');
+                return;
+            }
+            
+            // Desabilitar o botão temporariamente para evitar cliques duplos
+            this.disabled = true;
+            this.style.opacity = '0.6';
+            
+            fetch(`/social/user/${userId}/follow/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken.value,
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                console.log('Resposta recebida:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Dados recebidos:', data);
+                if (data.following !== undefined) {
+                    if (data.following) {
+                        this.innerHTML = '<i class="bi bi-person-check"></i> {% trans "Seguindo" %}';
+                        this.classList.remove('btn-primary');
+                        this.classList.add('btn-success');
+                        console.log('Agora seguindo o usuário');
+                    } else {
+                        this.innerHTML = '<i class="bi bi-person-plus"></i> {% trans "Seguir" %}';
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-primary');
+                        console.log('Deixou de seguir o usuário');
+                    }
+                    
+                    // Atualizar contadores se existirem
+                    const followersCount = document.querySelector('.followers-count');
+                    const followingCount = document.querySelector('.following-count');
+                    
+                    if (followersCount && data.followers_count !== undefined) {
+                        followersCount.textContent = data.followers_count;
+                        console.log('Contador de seguidores atualizado:', data.followers_count);
+                    }
+                    if (followingCount && data.following_count !== undefined) {
+                        followingCount.textContent = data.following_count;
+                        console.log('Contador de seguindo atualizado:', data.following_count);
+                    }
+                } else {
+                    console.error('Resposta não contém campo "following":', data);
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao seguir/deixar de seguir:', error);
+                alert('Erro ao processar a ação. Tente novamente.');
+            })
+            .finally(() => {
+                // Reabilitar o botão
+                this.disabled = false;
+                this.style.opacity = '1';
+            });
+        });
+        
+        // Adicionar evento de teste para verificar se o botão responde
+        btn.addEventListener('mouseenter', function() {
+            console.log('Mouse entrou no botão de seguir');
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            console.log('Mouse saiu do botão de seguir');
+        });
+    });
+    
+    // Like/Unlike
+    document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const postId = this.dataset.postId;
+            fetch(`/social/post/${postId}/like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const icon = this.querySelector('i');
+                    const count = this.querySelector('.like-count');
+                    
+                    if (data.is_liked) {
+                        icon.className = 'bi bi-heart-fill text-danger';
+                    } else {
+                        icon.className = 'bi bi-heart';
+                    }
+                    
+                    count.textContent = data.likes_count;
+                }
+            });
+        });
+    });
+});
+</script>
+
+   <!-- CSS para responsividade -->
+  <style>
+  /* Avatar principal do perfil sempre redondo */
+  .profile-info .profile-avatar-container {
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+  
+  .profile-info .profile-avatar-container img {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+  }
+  
+  /* Estilos específicos para o botão de seguir */
+  .follow-btn {
+    position: relative !important;
+    z-index: 1000 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+  }
+  
+  .follow-btn:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+  }
+  
+  .follow-btn:active {
+    transform: translateY(0) !important;
+  }
+  
+  /* Garantir que o botão seja visível e clicável */
+  .btn {
+    position: relative !important;
+    z-index: 1 !important;
+    pointer-events: auto !important;
+  }
+  
+  /* Garantir que os contadores sejam atualizáveis */
+  .followers-count,
+  .following-count {
+    transition: all 0.3s ease !important;
+  }
+ 
+   /* Responsividade */
+  @media (max-width: 991.98px) {
+    .profile-cover {
+      height: 120px !important;
+    }
+    
+    .profile-info .profile-avatar-container {
+      width: 80px !important;
+      height: 80px !important;
+      margin-top: -40px !important;
+      border-radius: 50% !important;
+    }
+    
+    .profile-info {
+      padding: 1rem !important;
+    }
+    
+    .post-card {
+      margin-bottom: 1rem !important;
+    }
+    
+    /* Garantir que o botão de seguir seja clicável no mobile */
+    .follow-btn {
+      min-height: 38px !important;
+      padding: 0.375rem 0.75rem !important;
+      font-size: 0.875rem !important;
+      line-height: 1.5 !important;
+      border-radius: 0.25rem !important;
+    }
+  }
+  
+  /* Mobile extra pequeno */
+  @media (max-width: 575.98px) {
+    .profile-info .profile-avatar-container {
+      width: 70px !important;
+      height: 70px !important;
+      margin-top: -35px !important;
+      border-radius: 50% !important;
+    }
+  }
+ 
+ .profile-cover {
+   background-size: cover;
+   background-position: center;
+ }
+ 
+ .post-card {
+   transition: box-shadow 0.2s ease;
+ }
+ 
+ .post-card:hover {
+   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+ }
+ </style>
+{% endblock content %}
+
+

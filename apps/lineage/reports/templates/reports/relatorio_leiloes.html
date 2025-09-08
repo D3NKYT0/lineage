@@ -1,0 +1,311 @@
+{% extends "layouts/base.html" %}
+{% load humanize i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'reports:dashboard' %}">{% trans "Relatórios" %}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{% trans "Relatório de Leilões" %}</li>
+{% endblock breadcrumbs %}
+
+{% block page_header %}
+<h5 class="display-5">{% trans "Relatório de Leilões" %}</h5>
+{% endblock page_header %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="report-container">
+          <div class="report-header">
+            <h1 class="report-title">
+              <i class="fas fa-gavel me-3"></i>
+              {% trans "Relatório de Leilões" %}
+            </h1>
+            <p class="reports-subtitle">
+              {% trans "Acompanhe todos os leilões ativos, histórico de lances e estatísticas detalhadas do sistema de leilões." %}
+            </p>
+          </div>
+          
+          <div class="report-body">
+            <!-- Gráfico de Status dos Leilões -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <div class="chart-container">
+                  <canvas id="graficoStatusLeiloes"></canvas>
+                </div>
+              </div>
+              
+              <!-- Resumo dos Status -->
+              <div class="col-md-6">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="status-block bg-danger text-white p-3 rounded shadow">
+                      <i class="fas fa-hourglass-start fa-2x mb-2"></i>
+                      <h5>{% trans "Pendentes" %}</h5>
+                      <h4>{{ leiloes_pendentes }}</h4>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="status-block bg-primary text-white p-3 rounded shadow">
+                      <i class="fas fa-check-circle fa-2x mb-2"></i>
+                      <h5>{% trans "Finalizados" %}</h5>
+                      <h4>{{ leiloes_fechados }}</h4>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="status-block bg-warning text-white p-3 rounded shadow">
+                      <i class="fas fa-clock fa-2x mb-2"></i>
+                      <h5>{% trans "Expirados" %}</h5>
+                      <h4>{{ leiloes_expirados }}</h4>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="status-block bg-success text-white p-3 rounded shadow">
+                      <i class="fas fa-ban fa-2x mb-2"></i>
+                      <h5>{% trans "Cancelados" %}</h5>
+                      <h4>{{ leiloes_cancelados }}</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Leilões Ativos -->
+            <div class="reports-card">
+              <div class="reports-card-header">
+                <i class="fas fa-gavel reports-icon"></i>
+                <h2 class="reports-card-title">{% trans "Leilões Ativos" %}</h2>
+                <p class="reports-card-description">
+                  {% trans "Leilões em andamento com informações detalhadas" %}
+                </p>
+              </div>
+              <div class="reports-card-body">
+                <div class="table-responsive">
+                  <table class="table report-table">
+                    <thead>
+                      <tr>
+                        <th><i class="fas fa-box me-2"></i>{% trans "Item" %}</th>
+                        <th><i class="fas fa-dollar-sign me-2"></i>{% trans "Lance Inicial" %}</th>
+                        <th><i class="fas fa-trophy me-2"></i>{% trans "Maior Lance" %}</th>
+                        <th><i class="fas fa-clock me-2"></i>{% trans "Tempo Restante" %}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for leilao in leiloes_ativos %}
+                        <tr>
+                          <td>
+                            <i class="fas fa-box text-primary me-2"></i>
+                            {{ leilao.item_name }}
+                          </td>
+                          <td>
+                            <span class="badge bg-info">
+                              <i class="fas fa-dollar-sign me-1"></i>
+                              R$ {{ leilao.starting_bid|floatformat:2 }}
+                            </span>
+                          </td>
+                          <td>
+                            {% if leilao.current_bid %}
+                              <span class="badge bg-success">
+                                <i class="fas fa-trophy me-1"></i>
+                                R$ {{ leilao.current_bid|floatformat:2 }}
+                              </span>
+                            {% else %}
+                              <span class="badge bg-warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                {% trans "Sem lance" %}
+                              </span>
+                            {% endif %}
+                          </td>
+                          <td>
+                            <span class="badge bg-primary">
+                              <i class="fas fa-clock me-1"></i>
+                              {{ leilao.end_time|timesince }} {% trans "restante" %}
+                            </span>
+                          </td>
+                        </tr>
+                      {% empty %}
+                        <tr>
+                          <td colspan="4" class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">{% trans "Nenhum leilão ativo no momento." %}</p>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Histórico de Lances -->
+            <div class="reports-card">
+              <div class="reports-card-header">
+                <i class="fas fa-history reports-icon"></i>
+                <h2 class="reports-card-title">{% trans "Histórico de Lances" %}</h2>
+                <p class="reports-card-description">
+                  {% trans "Registro de todos os lances realizados no sistema" %}
+                </p>
+              </div>
+              <div class="reports-card-body">
+                <div class="table-responsive">
+                  <table class="table report-table">
+                    <thead>
+                      <tr>
+                        <th><i class="fas fa-user me-2"></i>{% trans "Jogador" %}</th>
+                        <th><i class="fas fa-box me-2"></i>{% trans "Item" %}</th>
+                        <th><i class="fas fa-dollar-sign me-2"></i>{% trans "Valor do Lance" %}</th>
+                        <th><i class="fas fa-calendar me-2"></i>{% trans "Data do Lance" %}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for lance in lances %}
+                        <tr>
+                          <td>
+                            <i class="fas fa-user-circle text-primary me-2"></i>
+                            {{ lance.bidder.username }}
+                          </td>
+                          <td>
+                            <i class="fas fa-box text-success me-2"></i>
+                            {{ lance.auction.item_name }}
+                          </td>
+                          <td>
+                            <span class="badge bg-success">
+                              <i class="fas fa-dollar-sign me-1"></i>
+                              R$ {{ lance.amount|floatformat:2 }}
+                            </span>
+                          </td>
+                          <td>
+                            <span class="badge bg-info">
+                              <i class="fas fa-calendar me-1"></i>
+                              {{ lance.created_at|date:"d/m/Y H:i" }}
+                            </span>
+                          </td>
+                        </tr>
+                      {% empty %}
+                        <tr>
+                          <td colspan="4" class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">{% trans "Nenhum lance registrado." %}</p>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Leilões Mais Populares -->
+            <div class="reports-card">
+              <div class="reports-card-header">
+                <i class="fas fa-star reports-icon"></i>
+                <h2 class="reports-card-title">{% trans "Leilões Mais Populares" %}</h2>
+                <p class="reports-card-description">
+                  {% trans "Itens que receberam mais lances" %}
+                </p>
+              </div>
+              <div class="reports-card-body">
+                <div class="table-responsive">
+                  <table class="table report-table">
+                    <thead>
+                      <tr>
+                        <th><i class="fas fa-box me-2"></i>{% trans "Item" %}</th>
+                        <th><i class="fas fa-chart-line me-2"></i>{% trans "Total de Lances" %}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for leilao in leiloes_populares %}
+                        <tr>
+                          <td>
+                            <i class="fas fa-box text-warning me-2"></i>
+                            {{ leilao.item_name }}
+                          </td>
+                          <td>
+                            <span class="badge bg-warning">
+                              <i class="fas fa-chart-line me-1"></i>
+                              {{ leilao.num_lances }}
+                            </span>
+                          </td>
+                        </tr>
+                      {% empty %}
+                        <tr>
+                          <td colspan="2" class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">{% trans "Nenhum leilão popular no momento." %}</p>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botão de Volta -->
+            <div class="text-center mt-5">
+              <a href="{% url 'reports:dashboard' %}" class="report-back-button">
+                <i class="fas fa-arrow-left me-2"></i>
+                {% trans "Voltar ao Dashboard de Relatórios" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Dados para o gráfico de status dos leilões
+  const statusLabels = {{ status_labels|safe }};
+  const statusValues = {{ status_values|safe }};
+  const statusColors = ['rgba(244, 67, 54, 0.8)', 'rgba(33, 150, 243, 0.8)', 'rgba(255, 165, 0, 0.8)', 'rgba(0, 200, 83, 0.8)'];
+
+  const ctxStatus = document.getElementById('graficoStatusLeiloes').getContext('2d');
+  new Chart(ctxStatus, {
+    type: 'doughnut',
+    data: {
+      labels: statusLabels,
+      datasets: [{
+        label: '{% trans "Status dos Leilões" %}',
+        data: statusValues,
+        backgroundColor: statusColors,
+        borderColor: statusColors.map(color => color.replace('0.8', '1')),
+        borderWidth: 2,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: '{% trans "Status dos Leilões" %}',
+          color: '#333',
+          font: {
+            size: 18,
+            family: 'Orbitron, sans-serif'
+          }
+        },
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: {
+            color: '#333',
+            font: {
+              size: 14
+            },
+            usePointStyle: true
+          }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

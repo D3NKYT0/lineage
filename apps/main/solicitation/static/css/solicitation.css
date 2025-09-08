@@ -1,0 +1,52 @@
+.icon-title {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon-title i {
+    font-size: 1.5rem; /* Tamanho do ícone */
+    margin-right: 10px; /* Espaço entre o ícone e o título */
+  }
+  
+  h3 {
+    margin: 0; /* Remove margens padrão */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Adiciona sombra ao texto */
+    color: aliceblue;
+  }
+  
+  /* Estilo do fundo do header */
+  .header-bg {
+    background-color: #3f4d67; /* Altere a cor para a desejada */
+    color: white;
+  }
+  
+  .header-bg .btn {
+    border-color: white; /* Cor da borda do botão */
+  }
+
+/* Alinha verticalmente o conteúdo ao centro em todas as células */
+.table td, .table th {
+  vertical-align: middle; /* Centraliza o conteúdo verticalmente */
+}
+
+.table td {
+  padding: 12px;
+}
+
+/* Define uma largura fixa para a coluna de ações */
+.table td:last-child, .table th:last-child {
+  width: 150px; /* Ajuste conforme necessário */
+  text-align: center; /* Centraliza o conteúdo */
+}
+
+/* Estiliza o botão para ser responsivo */
+.btn_custom {
+  width: 100%;
+  margin: auto;
+  padding: 5px 10px; /* Define um padding fixo */
+  font-size: 0.9rem; /* Ajusta o tamanho da fonte */
+  white-space: nowrap; /* Impede quebra de linha no texto */
+  display: inline-flex; /* Garante alinhamento uniforme */
+  align-items: center; /* Centraliza verticalmente o ícone e o texto */
+  justify-content: center; /* Centraliza o conteúdo */
+}

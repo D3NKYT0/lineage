@@ -1,0 +1,71 @@
+{% load static i18n %}
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<!-- Primary Meta Tags -->
+<title>{{ PROJECT_TITLE }}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="title" content="{{ PROJECT_TITLE }}">
+<meta name="author" content="{{ PROJECT_AUTHOR }}">
+<meta name="description" content="{{ PROJECT_DESCRIPTION }}">
+<meta name="keywords" content="{{ PROJECT_KEYWORDS }}">
+<link rel="canonical" href="{{ PROJECT_URL }}">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ PROJECT_URL }}">
+<meta property="og:title" content="{{ PROJECT_TITLE }}">
+<meta property="og:description" content="{{ PROJECT_DESCRIPTION }}">
+<meta property="og:image" content="{{ PROJECT_LOGO_URL }}">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{ PROJECT_URL }}">
+<meta property="twitter:title" content="{{ PROJECT_TITLE }}">
+<meta property="twitter:description" content="{{ PROJECT_DESCRIPTION }}">
+<meta property="twitter:image" content="{{ PROJECT_LOGO_URL }}">
+
+<!-- Favicon -->
+<link rel="apple-touch-icon" sizes="120x120" href="{{ PROJECT_FAVICON_ICO }}">
+<link rel="icon" type="image/jpg" sizes="32x32" href="{{ PROJECT_FAVICON_ICO }}">
+<link rel="icon" type="image/jpg" sizes="16x16" href="{{ PROJECT_FAVICON_ICO }}">
+<link rel="manifest" href="{{ PROJECT_FAVICON_MANIFEST }}">
+<link rel="mask-icon" href="{{ PROJECT_FAVICON_ICO }}" color="{{ PROJECT_THEME_COLOR }}">
+<meta name="msapplication-TileColor" content="{{ PROJECT_THEME_COLOR }}">
+<meta name="theme-color" content="{{ PROJECT_THEME_COLOR }}">
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<!-- Sweet Alert -->
+<link type="text/css" href="{% static 'vendor/sweetalert2/dist/sweetalert2.min.css' %}" rel="stylesheet">
+
+<!-- Notyf -->
+<link type="text/css" href="{% static 'vendor/notyf/notyf.min.css' %}" rel="stylesheet">
+
+<!-- Full Calendar  -->
+<link type="text/css" href="{% static 'vendor/fullcalendar/main.min.css' %}" rel="stylesheet">
+
+<!-- Apex Charts -->
+<link type="text/css" href="{% static 'vendor/apexcharts/dist/apexcharts.css' %}" rel="stylesheet">
+
+<!-- Dropzone -->
+<link type="text/css" href="{% static 'vendor/dropzone/dist/min/dropzone.min.css' %}" rel="stylesheet">
+
+<!-- Choices  -->
+<link type="text/css" href="{% static 'vendor/choices.js/public/assets/styles/choices.min.css' %}" rel="stylesheet">
+
+<!-- Leaflet JS -->
+<link type="text/css" href="{% static 'vendor/leaflet/dist/leaflet.css' %}" rel="stylesheet">
+
+<!-- Volt CSS -->
+<link type="text/css" href="{% static 'css/volt.css' %}" rel="stylesheet">
+
+<!-- fontawesome icon -->
+<link rel="stylesheet" href="{% static 'fonts/fontawesome/css/fontawesome-all.min.css' %}">
+
+<!-- Profile Effects CSS -->
+<link type="text/css" href="{% static 'css/profile-effects.css' %}" rel="stylesheet">
+
+<!-- Floating Notifications CSS -->
+<link type="text/css" href="{% static 'css/floating-notifications.css' %}" rel="stylesheet">

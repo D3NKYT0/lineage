@@ -1,0 +1,372 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Hub de Downloads" %}{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .downloads-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .header-card {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border: 2px solid #6f42c1;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .header-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .category-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+    margin-bottom: 2rem;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .category-card:hover {
+    transform: scale(1.02);
+  }
+
+  .category-header {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border: none;
+    color: white;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    padding: 1.5rem;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .category-body {
+    padding: 1.5rem;
+  }
+
+  .download-item {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border: 1px solid #6f42c1;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .download-item:hover {
+    border-color: #00d9ff;
+    box-shadow: 0 0 10px rgba(13, 202, 240, 0.3);
+  }
+
+  .download-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .download-title {
+    color: #00d9ff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .download-description {
+    color: #f8f9fa;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .download-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .download-info {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .download-badge {
+    background: linear-gradient(45deg, #6f42c1, #e83e8c);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .download-count {
+    color: #aaa;
+    font-size: 0.9rem;
+  }
+
+  .download-button {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 25px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .download-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    color: white;
+  }
+
+  .download-button:active {
+    transform: translateY(0);
+  }
+
+  .no-downloads {
+    text-align: center;
+    padding: 3rem;
+    color: #aaa;
+  }
+
+  .no-downloads i {
+    font-size: 4rem;
+    color: #6f42c1;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .stats-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+  }
+
+  .stats-header {
+    color: #00d9ff;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .stat-item {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border: 1px solid #6f42c1;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .stat-number {
+    color: #00d9ff;
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .stat-label {
+    color: #f8f9fa;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .download-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .download-info {
+      justify-content: flex-start;
+    }
+    
+    .download-button {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="downloads-bg">
+  <div class="container">
+    <!-- Header da página -->
+    <div class="header-card">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <div class="d-flex align-items-center">
+            <div class="me-4">
+              <i class="fas fa-download fa-3x text-white" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);"></i>
+            </div>
+            <div>
+              <h1 class="header-title">{% trans "Hub de Downloads" %}</h1>
+              <p class="text-white-50">{% trans "Acesse todos os arquivos e recursos disponíveis para download" %}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 text-end">
+          <div class="d-flex align-items-center justify-content-end">
+            <div class="me-3">
+              <span class="text-white-50">{% trans "Total de Downloads:" %}</span>
+              <span class="badge bg-info">{{ total_downloads|default:"0" }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="stats-card">
+      <h4 class="stats-header">
+        <i class="fas fa-chart-bar me-2"></i>{% trans "Estatísticas" %}
+      </h4>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">{{ categories.count|default:"0" }}</div>
+          <div class="stat-label">{% trans "Categorias" %}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">{{ total_files|default:"0" }}</div>
+          <div class="stat-label">{% trans "Arquivos" %}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">{{ total_downloads|default:"0" }}</div>
+          <div class="stat-label">{% trans "Downloads Totais" %}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">{{ active_downloads|default:"0" }}</div>
+          <div class="stat-label">{% trans "Downloads Ativos" %}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categorias de Downloads -->
+    {% if categories %}
+      {% for category in categories %}
+        <div class="category-card">
+          <div class="category-header">
+            <h5 class="mb-0">
+              <i class="fas fa-folder me-2"></i>{{ category.name }}
+            </h5>
+          </div>
+          <div class="category-body">
+            {% if category.description %}
+              <p class="text-white-50 mb-3">{{ category.description }}</p>
+            {% endif %}
+            
+            {% if category.downloads.all %}
+              {% for download in category.downloads.all %}
+                <div class="download-item">
+                  <h6 class="download-title">{{ download.title }}</h6>
+                  {% if download.description %}
+                    <p class="download-description">{{ download.description }}</p>
+                  {% endif %}
+                  
+                  <div class="download-meta">
+                    <div class="download-info">
+                      {% if download.version %}
+                        <span class="download-badge">
+                          <i class="fas fa-tag me-1"></i>{{ download.version }}
+                        </span>
+                      {% endif %}
+                      {% if download.file_size %}
+                        <span class="download-badge">
+                          <i class="fas fa-hdd me-1"></i>{{ download.file_size }}
+                        </span>
+                      {% endif %}
+                      <span class="download-count">
+                        <i class="fas fa-download me-1"></i>{{ download.download_count }} {% trans "downloads" %}
+                      </span>
+                    </div>
+                    
+                    <a href="{% url 'downloads:download_redirect' download.pk %}" class="download-button" target="_blank">
+                      <i class="fas fa-download"></i>{% trans "Baixar" %}
+                    </a>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="no-downloads">
+                <i class="fas fa-inbox"></i>
+                <p>{% trans "Nenhum download disponível nesta categoria." %}</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="category-card">
+        <div class="category-header">
+          <h5 class="mb-0">
+            <i class="fas fa-exclamation-triangle me-2"></i>{% trans "Nenhuma Categoria" %}
+          </h5>
+        </div>
+        <div class="category-body">
+          <div class="no-downloads">
+            <i class="fas fa-folder-open"></i>
+            <p>{% trans "Nenhuma categoria de downloads disponível no momento." %}</p>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<!-- JS adicional se necessário -->
+{% endblock extra_js %} 

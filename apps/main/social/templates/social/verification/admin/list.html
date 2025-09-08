@@ -1,0 +1,297 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Gerenciar Solicitações de Verificação" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="card-title">
+                            <i class="bi bi-patch-check-fill text-primary"></i>
+                            {% trans "Solicitações de Verificação" %}
+                        </h4>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'social:moderation_dashboard' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i>
+                                {% trans "Voltar" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Filtros -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <form method="get" class="d-flex gap-2">
+                                <input type="text" name="search" class="form-control" placeholder="{% trans 'Buscar por usuário, e-mail ou nome...' %}" value="{{ search }}">
+                                <select name="status" class="form-select" style="width: auto;">
+                                    <option value="">{% trans "Todos os status" %}</option>
+                                    {% for status_code, status_name in status_choices %}
+                                        <option value="{{ status_code }}" {% if status_filter == status_code %}selected{% endif %}>
+                                            {{ status_name }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-search"></i>
+                                    {% trans "Filtrar" %}
+                                </button>
+                                {% if search or status_filter %}
+                                    <a href="{% url 'social:verification_admin_list' %}" class="btn btn-outline-secondary">
+                                        <i class="bi bi-x-circle"></i>
+                                        {% trans "Limpar" %}
+                                    </a>
+                                {% endif %}
+                            </form>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <span class="badge bg-primary">{{ page_obj.paginator.count }} {% trans "solicitações" %}</span>
+                        </div>
+                    </div>
+
+                    <!-- Ações em lote -->
+                    <form method="post" action="{% url 'social:verification_admin_bulk_action' %}" id="bulk-form">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="d-flex gap-2">
+                                    <select name="action" class="form-select" style="width: auto;">
+                                        <option value="">{% trans "Ações em lote" %}</option>
+                                        <option value="approve">{% trans "Aprovar selecionadas" %}</option>
+                                        <option value="reject">{% trans "Rejeitar selecionadas" %}</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-primary" id="bulk-submit" disabled>
+                                        <i class="bi bi-check2-all"></i>
+                                        {% trans "Aplicar" %}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="select-all">
+                                    <label class="form-check-label" for="select-all">
+                                        {% trans "Selecionar todas" %}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lista de solicitações -->
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="30">
+                                            <input type="checkbox" id="select-all-checkbox">
+                                        </th>
+                                        <th>{% trans "Usuário" %}</th>
+                                        <th>{% trans "Nome Completo" %}</th>
+                                        <th>{% trans "Status" %}</th>
+                                        <th>{% trans "Data de Envio" %}</th>
+                                        <th>{% trans "Revisado por" %}</th>
+                                        <th width="120">{% trans "Ações" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in page_obj %}
+                                    <tr>
+                                        <td>
+                                            {% if request.status == 'pending' %}
+                                                <input type="checkbox" name="request_ids" value="{{ request.id }}" class="request-checkbox">
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% if request.user.avatar %}
+                                                    <img src="{{ request.user.avatar.url }}" class="rounded-circle me-2" width="32" height="32" alt="{{ request.user.username }}">
+                                                {% else %}
+                                                    <div class="bg-secondary rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                                                        <i class="bi bi-person text-white"></i>
+                                                    </div>
+                                                {% endif %}
+                                                <div>
+                                                    <strong>{{ request.user.username }}</strong>
+                                                    <br>
+                                                    <small class="text-muted">{{ request.user.email }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ request.full_name }}</td>
+                                        <td>
+                                            {% if request.status == 'pending' %}
+                                                <span class="badge bg-warning">
+                                                    <i class="bi bi-hourglass-split"></i>
+                                                    {{ request.get_status_display }}
+                                                </span>
+                                            {% elif request.status == 'approved' %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle"></i>
+                                                    {{ request.get_status_display }}
+                                                </span>
+                                            {% elif request.status == 'rejected' %}
+                                                <span class="badge bg-danger">
+                                                    <i class="bi bi-x-circle"></i>
+                                                    {{ request.get_status_display }}
+                                                </span>
+                                            {% elif request.status == 'cancelled' %}
+                                                <span class="badge bg-secondary">
+                                                    <i class="bi bi-x-circle"></i>
+                                                    {{ request.get_status_display }}
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <small>{{ request.created_at|date:"d/m/Y H:i" }}</small>
+                                        </td>
+                                        <td>
+                                            {% if request.reviewed_by %}
+                                                <small>{{ request.reviewed_by.username }}</small>
+                                                <br>
+                                                <small class="text-muted">{{ request.reviewed_at|date:"d/m/Y H:i" }}</small>
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{% url 'social:verification_admin_detail' request.id %}" 
+                                                   class="btn btn-outline-primary" 
+                                                   title="{% trans 'Ver detalhes' %}">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                {% if request.status == 'pending' %}
+                                                    <a href="{% url 'social:verification_admin_detail' request.id %}" 
+                                                       class="btn btn-outline-success" 
+                                                       title="{% trans 'Aprovar' %}">
+                                                        <i class="bi bi-check"></i>
+                                                    </a>
+                                                    <a href="{% url 'social:verification_admin_detail' request.id %}" 
+                                                       class="btn btn-outline-danger" 
+                                                       title="{% trans 'Rejeitar' %}">
+                                                        <i class="bi bi-x"></i>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted py-4">
+                                            <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                                            <p class="mt-2">{% trans "Nenhuma solicitação encontrada." %}</p>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Paginação -->
+                        {% if page_obj.has_other_pages %}
+                        <nav aria-label="{% trans 'Navegação de páginas' %}">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1{% if search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                                            <i class="bi bi-chevron-double-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                                            <i class="bi bi-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for num in page_obj.paginator.page_range %}
+                                    {% if page_obj.number == num %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ num }}</span>
+                                        </li>
+                                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">{{ num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                                            <i class="bi bi-chevron-double-right"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    const requestCheckboxes = document.querySelectorAll('.request-checkbox');
+    const bulkSubmit = document.getElementById('bulk-submit');
+    
+    // Selecionar todas
+    selectAllCheckbox.addEventListener('change', function() {
+        requestCheckboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+        updateBulkSubmit();
+    });
+    
+    // Atualizar botão de ações em lote
+    requestCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateBulkSubmit);
+    });
+    
+    function updateBulkSubmit() {
+        const checkedBoxes = document.querySelectorAll('.request-checkbox:checked');
+        bulkSubmit.disabled = checkedBoxes.length === 0;
+    }
+    
+    // Confirmação para ações em lote
+    document.getElementById('bulk-form').addEventListener('submit', function(e) {
+        const action = document.querySelector('select[name="action"]').value;
+        const checkedBoxes = document.querySelectorAll('.request-checkbox:checked');
+        
+        if (!action) {
+            e.preventDefault();
+            alert('{% trans "Selecione uma ação para aplicar." %}');
+            return false;
+        }
+        
+        if (checkedBoxes.length === 0) {
+            e.preventDefault();
+            alert('{% trans "Selecione pelo menos uma solicitação." %}');
+            return false;
+        }
+        
+        const confirmMessage = action === 'approve' 
+            ? '{% trans "Tem certeza que deseja aprovar as solicitações selecionadas?" %}'
+            : '{% trans "Tem certeza que deseja rejeitar as solicitações selecionadas?" %}';
+        
+        if (!confirm(confirmMessage)) {
+            e.preventDefault();
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,225 @@
+{% extends "layouts/base.html" %}
+{% load i18n l10n %}
+{% load static %}
+{% load itens_extras %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="reports-header">
+      <h1 class="reports-title">
+        <i class="fas fa-globe me-3"></i>{% trans "Inventário Global" %}
+      </h1>
+      <p class="reports-subtitle">
+        {% trans "Visão geral de todos os itens em seus inventários" %}
+      </p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'inventory:inventario_dashboard' %}">{% trans "Inventário" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Inventário Global" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Estatísticas Gerais -->
+    <div class="reports-card">
+      <div class="reports-card-header">
+        <i class="fas fa-chart-bar reports-icon"></i>
+        <h2 class="reports-card-title">{% trans "Resumo Geral" %}</h2>
+        <p class="reports-card-description">{% trans "Estatísticas do seu inventário global" %}</p>
+      </div>
+      <div class="reports-card-body">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <div class="balance-card primary">
+              <div class="balance-icon">
+                <i class="fas fa-boxes"></i>
+              </div>
+              <div class="balance-info">
+                <h3 class="balance-title">{% trans "Total de Itens" %}</h3>
+                <div class="balance-amount">{{ itens_globais|length }}</div>
+                <p class="balance-description">{% trans "tipos diferentes" %}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="balance-card bonus">
+              <div class="balance-icon">
+                <i class="fas fa-layer-group"></i>
+              </div>
+              <div class="balance-info">
+                <h3 class="balance-title">{% trans "Quantidade Total" %}</h3>
+                <div class="balance-amount">
+                  {% with total_quantity=0 %}
+                    {% for item in itens_globais %}
+                      {% with total_quantity=total_quantity|add:item.total_quantity %}{% endwith %}
+                    {% endfor %}
+                    {{ total_quantity }}
+                  {% endwith %}
+                </div>
+                <p class="balance-description">{% trans "itens no total" %}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <div class="balance-card" style="background: linear-gradient(135deg, #28a745, #20c997);">
+              <div class="balance-icon">
+                <i class="fas fa-star"></i>
+              </div>
+              <div class="balance-info">
+                <h3 class="balance-title">{% trans "Item Mais Comum" %}</h3>
+                <div class="balance-amount">
+                  {% if itens_globais %}
+                    {{ itens_globais.0.total_quantity }}
+                  {% else %}
+                    0
+                  {% endif %}
+                </div>
+                <p class="balance-description">
+                  {% if itens_globais %}
+                    {{ itens_globais.0.item_name|truncatechars:15 }}
+                  {% else %}
+                    {% trans "Nenhum item" %}
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Itens -->
+    <div class="reports-card">
+      <div class="reports-card-header">
+        <i class="fas fa-list reports-icon"></i>
+        <h2 class="reports-card-title">{% trans "Itens do Inventário Global" %}</h2>
+        <p class="reports-card-description">{% trans "Todos os itens organizados por quantidade" %}</p>
+      </div>
+      <div class="reports-card-body">
+        {% if itens_globais %}
+          <div class="items-grid">
+            {% for item in itens_globais %}
+              <div class="item-card">
+                <div class="item-header">
+                  <img src="{% item_image_url item.item_id %}" 
+                       alt="{{ item.item_name }}"
+                       class="item-image">
+                  <div class="item-type-badge item">
+                    <i class="fas fa-box"></i>
+                  </div>
+                </div>
+                <div class="item-info">
+                  <h6 class="item-name">{{ item.item_name }}</h6>
+                  <div class="item-details">
+                    <div class="item-detail">
+                      <strong>{% trans "Quantidade Total" %}:</strong>
+                      <span class="text-success fw-bold">{{ item.total_quantity }}</span>
+                    </div>
+                    <div class="item-detail">
+                      <strong>{% trans "ID do Item" %}:</strong>
+                      <span class="text-muted">{{ item.item_id }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="item-actions">
+                  <button class="item-action-btn info" title="{% trans 'Ver detalhes' %}">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button class="item-action-btn success" title="{% trans 'Transferir para bag' %}">
+                    <i class="fas fa-exchange-alt"></i>
+                  </button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <i class="fas fa-box-open"></i>
+            <h3>{% trans "Nenhum item encontrado" %}</h3>
+            <p>{% trans "Você ainda não possui itens em seus inventários." %}</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="reports-card">
+      <div class="reports-card-header">
+        <i class="fas fa-bolt reports-icon"></i>
+        <h2 class="reports-card-title">{% trans "Ações Rápidas" %}</h2>
+        <p class="reports-card-description">{% trans "Operações frequentes" %}</p>
+      </div>
+      <div class="reports-card-body">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <a href="{% url 'inventory:inventario_dashboard' %}" class="quick-action-btn">
+              <div class="action-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <div class="action-content">
+                <h4>{% trans "Dashboard do Inventário" %}</h4>
+                <p>{% trans "Gerencie seus inventários por personagem" %}</p>
+              </div>
+              <div class="action-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </a>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <a href="{% url 'inventory:retirar_item' %}" class="quick-action-btn">
+              <div class="action-icon">
+                <i class="fas fa-download"></i>
+              </div>
+              <div class="action-content">
+                <h4>{% trans "Retirar Item" %}</h4>
+                <p>{% trans "Retire itens do servidor do jogo" %}</p>
+              </div>
+              <div class="action-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </a>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <a href="{% url 'inventory:trocar_item' %}" class="quick-action-btn">
+              <div class="action-icon">
+                <i class="fas fa-exchange-alt"></i>
+              </div>
+              <div class="action-content">
+                <h4>{% trans "Trocar Itens" %}</h4>
+                <p>{% trans "Troque itens com outros jogadores" %}</p>
+              </div>
+              <div class="action-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Return Button -->
+    <div class="text-center mt-4">
+      <a href="{% url 'inventory:inventario_dashboard' %}" class="report-back-button">
+        <i class="fas fa-arrow-left me-2"></i>{% trans "Voltar ao Dashboard do Inventário" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

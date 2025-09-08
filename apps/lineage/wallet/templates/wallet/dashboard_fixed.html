@@ -1,0 +1,233 @@
+{% extends "layouts/base.html" %}
+{% load humanize %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="reports-header">
+      <h1 class="reports-title">
+        <i class="fas fa-wallet me-3"></i>{% trans "Minha Carteira" %}
+      </h1>
+      <p class="reports-subtitle">
+        {% trans "Gerencie seus saldos e transações" %}
+      </p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Carteira" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Saldos -->
+    <div class="reports-card">
+      <div class="reports-card-header">
+        <i class="fas fa-coins reports-icon"></i>
+        <h2 class="reports-card-title">{% trans "Saldos Disponíveis" %}</h2>
+        <p class="reports-card-description">{% trans "Seus saldos atuais" %}</p>
+      </div>
+      <div class="reports-card-body">
+        <div class="row">
+          <!-- Saldo Principal -->
+          <div class="col-md-6 mb-4">
+            <div class="balance-card primary">
+              <div class="balance-icon">
+                <i class="fas fa-coins"></i>
+              </div>
+              <div class="balance-info">
+                <h3 class="balance-title">{% trans "Saldo Principal" %}</h3>
+                <div class="balance-amount">{{ wallet.saldo|floatformat:2 }}</div>
+                <p class="balance-description">{% trans "moedas disponíveis" %}</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Saldo Bônus -->
+          <div class="col-md-6 mb-4">
+            <div class="balance-card bonus">
+              <div class="balance-icon">
+                <i class="fas fa-gift"></i>
+              </div>
+              <div class="balance-info">
+                <h3 class="balance-title">{% trans "Saldo Bônus" %}</h3>
+                <div class="balance-amount">{{ wallet.saldo_bonus|floatformat:2 }}</div>
+                <p class="balance-description">{% trans "bônus disponíveis" %}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="reports-card">
+      <div class="reports-card-header">
+        <i class="fas fa-bolt reports-icon"></i>
+        <h2 class="reports-card-title">{% trans "Ações Rápidas" %}</h2>
+        <p class="reports-card-description">{% trans "Operações frequentes" %}</p>
+      </div>
+      <div class="reports-card-body">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <a href="{% url 'payment:purchase' %}" class="quick-action-btn">
+              <div class="action-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <div class="action-content">
+                <h4>{% trans "Comprar Moedas" %}</h4>
+                <p>{% trans "Adicione moedas à sua carteira" %}</p>
+              </div>
+              <div class="action-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </a>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <a href="{% url 'wallet:transfer_to_server' %}" class="quick-action-btn">
+              <div class="action-icon">
+                <i class="fas fa-server"></i>
+              </div>
+              <div class="action-content">
+                <h4>{% trans "Transferir para Servidor" %}</h4>
+                <p>{% trans "Envie moedas para o servidor do jogo" %}</p>
+              </div>
+              <div class="action-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </a>
+          </div>
+          
+          <div class="col-md-4 mb-3">
+            <a href="{% url 'wallet:transfer_to_player' %}" class="quick-action-btn">
+              <div class="action-icon">
+                <i class="fas fa-user-friends"></i>
+              </div>
+              <div class="action-content">
+                <h4>{% trans "Transferir para Jogador" %}</h4>
+                <p>{% trans "Envie moedas para outro jogador" %}</p>
+              </div>
+              <div class="action-arrow">
+                <i class="fas fa-chevron-right"></i>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Histórico de Transações -->
+    <div class="reports-card">
+      <div class="reports-card-header">
+        <i class="fas fa-history reports-icon"></i>
+        <h2 class="reports-card-title">{% trans "Histórico de Transações" %}</h2>
+        <p class="reports-card-description">{% trans "Suas transações recentes" %}</p>
+      </div>
+      <div class="reports-card-body">
+        {% if transactions %}
+        <div class="transactions-list">
+          {% for transaction in transactions %}
+          <div class="transaction-item">
+            <div class="transaction-icon">
+              {% if transaction.type == 'transfer_to_server' %}
+                <i class="fas fa-server"></i>
+              {% elif transaction.type == 'transfer_to_player' %}
+                <i class="fas fa-user-friends"></i>
+              {% elif transaction.type == 'purchase' %}
+                <i class="fas fa-shopping-cart"></i>
+              {% else %}
+                <i class="fas fa-exchange-alt"></i>
+              {% endif %}
+            </div>
+            <div class="transaction-content">
+              <div class="transaction-header">
+                <h5 class="transaction-title">{{ transaction.get_type_display }}</h5>
+                <div class="transaction-meta">
+                  <span class="transaction-date">{{ transaction.created_at|date:"d/m/Y H:i" }}</span>
+                  <span class="transaction-status {{ transaction.status }}">
+                    {{ transaction.get_status_display }}
+                  </span>
+                </div>
+              </div>
+              <p class="transaction-description">
+                {% if transaction.type == 'transfer_to_server' %}
+                  {% trans "Transferência para servidor" %}: {{ transaction.amount|floatformat:2 }}
+                {% elif transaction.type == 'transfer_to_player' %}
+                  {% trans "Transferência para" %} {{ transaction.recipient }}: {{ transaction.amount|floatformat:2 }}
+                {% elif transaction.type == 'purchase' %}
+                  {% trans "Compra na loja" %}: {{ transaction.amount|floatformat:2 }}
+                {% else %}
+                  {{ transaction.description }}
+                {% endif %}
+              </p>
+            </div>
+            <div class="transaction-amount">
+              <span class="amount-value {% if transaction.amount < 0 %}negative{% else %}positive{% endif %}">
+                {{ transaction.amount|floatformat:2 }}
+              </span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        
+        <!-- Paginação -->
+        {% if transactions.has_other_pages %}
+        <nav aria-label="Navegação de transações" class="mt-4">
+          <ul class="pagination justify-content-center">
+            {% if transactions.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ transactions.previous_page_number }}">{% trans "Anterior" %}</a>
+              </li>
+            {% endif %}
+            
+            {% for num in transactions.paginator.page_range %}
+              {% if transactions.number == num %}
+                <li class="page-item active">
+                  <span class="page-link">{{ num }}</span>
+                </li>
+              {% elif num > transactions.number|add:'-3' and num < transactions.number|add:'3' %}
+                <li class="page-item">
+                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            
+            {% if transactions.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ transactions.next_page_number }}">{% trans "Próximo" %}</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+        
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-history"></i>
+          <h3>{% trans "Nenhuma transação encontrada" %}</h3>
+          <p>{% trans "Você ainda não realizou nenhuma transação." %}</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Return Button -->
+    <div class="text-center mt-4">
+      <a href="{% url 'dashboard' %}" class="report-back-button">
+        <i class="fas fa-arrow-left me-2"></i>{% trans "Voltar ao Dashboard Principal" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock content %} 

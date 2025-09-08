@@ -1,0 +1,189 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style>
+  .reports-container {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+    color: #ffffff;
+  }
+
+  .fancy-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .fancy-header {
+    background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.3);
+  }
+
+  .fancy-header h2 {
+    color: #ffffff;
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
+
+  .info-alert {
+    background: linear-gradient(135deg, rgba(13, 202, 240, 0.1) 0%, rgba(13, 202, 240, 0.05) 100%);
+    border: 1px solid rgba(13, 202, 240, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    backdrop-filter: blur(5px);
+  }
+
+  .info-alert p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+  }
+
+  .form-control:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+    color: #ffffff;
+  }
+
+  .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    border: none;
+    border-radius: 15px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  }
+
+  .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+  }
+
+  .btn-success:active {
+    transform: translateY(0);
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .reports-container {
+      padding: 1rem 0;
+    }
+    
+    .fancy-card {
+      padding: 1.5rem;
+      margin: 1rem;
+    }
+    
+    .fancy-header {
+      padding: 1rem;
+    }
+    
+    .fancy-header h2 {
+      font-size: 1.5rem;
+    }
+    
+    .info-alert {
+      padding: 1rem;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-6 col-md-8">
+        <div class="fancy-card">
+          <div class="fancy-header">
+            <h2>
+              <i class="fas fa-envelope me-2"></i>
+              {% trans "Vincular Conta via E-mail" %}
+            </h2>
+          </div>
+
+          <div class="info-alert">
+            <p>
+              <i class="fas fa-info-circle me-2"></i>
+              {% trans "Se você não lembra sua senha do jogo, informe o e-mail cadastrado na conta Lineage." %}<br>
+              {% trans "Você receberá um link para confirmar a vinculação com seu usuário atual." %}
+            </p>
+          </div>
+
+          <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="email" class="form-label">
+                <i class="fas fa-at me-2"></i>
+                {% trans "E-mail da Conta Lineage" %}
+              </label>
+              <input type="email" name="email" class="form-control" required placeholder="{% trans 'exemplo@dominio.com' %}">
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success btn-lg">
+                <i class="fas fa-paper-plane me-2"></i>
+                {% trans "Enviar Link de Vinculação" %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

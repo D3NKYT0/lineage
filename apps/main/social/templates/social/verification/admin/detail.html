@@ -1,0 +1,345 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Detalhes da Solicitação" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="card-title">
+                            <i class="bi bi-patch-check-fill text-primary"></i>
+                            {% trans "Detalhes da Solicitação de Verificação" %}
+                        </h4>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'social:verification_admin_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i>
+                                {% trans "Voltar" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Status da solicitação -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-center">
+                                {% if verification_request.user.avatar %}
+                                    <img src="{{ verification_request.user.avatar.url }}" class="rounded-circle me-3" width="64" height="64" alt="{{ verification_request.user.username }}">
+                                {% else %}
+                                    <div class="bg-secondary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                                        <i class="bi bi-person text-white" style="font-size: 2rem;"></i>
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <h5 class="mb-1">{{ verification_request.user.username }}</h5>
+                                    <p class="text-muted mb-1">{{ verification_request.user.email }}</p>
+                                    <p class="text-muted mb-0">
+                                        {% trans "Membro desde" %} {{ verification_request.user.date_joined|date:"d/m/Y" }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            {% if verification_request.status == 'pending' %}
+                                <span class="badge bg-warning fs-6">
+                                    <i class="bi bi-hourglass-split"></i>
+                                    {{ verification_request.get_status_display }}
+                                </span>
+                            {% elif verification_request.status == 'approved' %}
+                                <span class="badge bg-success fs-6">
+                                    <i class="bi bi-check-circle"></i>
+                                    {{ verification_request.get_status_display }}
+                                </span>
+                            {% elif verification_request.status == 'rejected' %}
+                                <span class="badge bg-danger fs-6">
+                                    <i class="bi bi-x-circle"></i>
+                                    {{ verification_request.get_status_display }}
+                                </span>
+                            {% elif verification_request.status == 'cancelled' %}
+                                <span class="badge bg-secondary fs-6">
+                                    <i class="bi bi-x-circle"></i>
+                                    {{ verification_request.get_status_display }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Informações da solicitação -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="bi bi-person-badge"></i> {% trans "Informações Pessoais" %}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>{% trans "Nome Completo:" %}</strong></td>
+                                            <td>{{ verification_request.full_name }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>{% trans "CPF:" %}</strong></td>
+                                            <td>{{ verification_request.cpf|slice:":3" }}.{{ verification_request.cpf|slice:"3:6" }}.{{ verification_request.cpf|slice:"6:9" }}-{{ verification_request.cpf|slice:"9:" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>{% trans "Data de Nascimento:" %}</strong></td>
+                                            <td>{{ verification_request.birth_date|date:"d/m/Y" }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>{% trans "Telefone:" %}</strong></td>
+                                            <td>{{ verification_request.phone_number }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="bi bi-calendar-event"></i> {% trans "Informações da Solicitação" %}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>{% trans "Data de Envio:" %}</strong></td>
+                                            <td>{{ verification_request.created_at|date:"d/m/Y H:i" }}</td>
+                                        </tr>
+                                        {% if verification_request.reviewed_by %}
+                                        <tr>
+                                            <td><strong>{% trans "Revisado por:" %}</strong></td>
+                                            <td>{{ verification_request.reviewed_by.username }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>{% trans "Data da Revisão:" %}</strong></td>
+                                            <td>{{ verification_request.reviewed_at|date:"d/m/Y H:i" }}</td>
+                                        </tr>
+                                        {% endif %}
+                                        {% if verification_request.rejection_reason %}
+                                        <tr>
+                                            <td><strong>{% trans "Motivo da Rejeição:" %}</strong></td>
+                                            <td>{{ verification_request.get_rejection_reason_display }}</td>
+                                        </tr>
+                                        {% endif %}
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documento de identificação -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="bi bi-file-earmark-image"></i> {% trans "Documento de Identificação" %}</h6>
+                                </div>
+                                <div class="card-body text-center">
+                                    {% if verification_request.identity_document %}
+                                        <img src="{{ verification_request.identity_document.url }}" 
+                                             class="img-fluid rounded" 
+                                             style="max-height: 400px;" 
+                                             alt="{% trans 'Documento de identificação' %}">
+                                        <div class="mt-2">
+                                            <a href="{{ verification_request.identity_document.url }}" 
+                                               target="_blank" 
+                                               class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-download"></i>
+                                                {% trans "Baixar Documento" %}
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        <div class="text-muted">
+                                            <i class="bi bi-file-earmark-x" style="font-size: 3rem;"></i>
+                                            <p>{% trans "Documento não disponível" %}</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Motivo da solicitação -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="bi bi-chat-text"></i> {% trans "Motivo da Solicitação" %}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-0">{{ verification_request.reason|linebreaks }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Requisitos do usuário -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="bi bi-check-circle"></i> {% trans "Requisitos do Usuário" %}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="text-center">
+                                                <i class="bi {% if verification_request.user.is_email_verified %}bi-envelope-check text-success{% else %}bi-envelope-x text-danger{% endif %}" style="font-size: 2rem;"></i>
+                                                <p class="mt-2 mb-0">
+                                                    <strong>{% trans "E-mail Verificado" %}</strong><br>
+                                                    <small class="text-muted">
+                                                        {% if verification_request.user.is_email_verified %}
+                                                            {% trans "Sim" %}
+                                                        {% else %}
+                                                            {% trans "Não" %}
+                                                        {% endif %}
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center">
+                                                <i class="bi {% if verification_request.user.is_2fa_enabled %}bi-shield-check text-success{% else %}bi-shield-x text-danger{% endif %}" style="font-size: 2rem;"></i>
+                                                <p class="mt-2 mb-0">
+                                                    <strong>{% trans "2FA Habilitado" %}</strong><br>
+                                                    <small class="text-muted">
+                                                        {% if verification_request.user.is_2fa_enabled %}
+                                                            {% trans "Sim" %}
+                                                        {% else %}
+                                                            {% trans "Não" %}
+                                                        {% endif %}
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center">
+                                                <i class="bi bi-calendar-check text-success" style="font-size: 2rem;"></i>
+                                                <p class="mt-2 mb-0">
+                                                    <strong>{% trans "Idade da Conta" %}</strong><br>
+                                                    <small class="text-muted">
+                                                        {{ verification_request.user.date_joined|timesince }}
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-center">
+                                                <i class="bi bi-chat-dots text-success" style="font-size: 2rem;"></i>
+                                                <p class="mt-2 mb-0">
+                                                    <strong>{% trans "Posts" %}</strong><br>
+                                                    <small class="text-muted">
+                                                        {{ verification_request.user.social_posts.count }}
+                                                    </small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formulário de revisão -->
+                    {% if verification_request.status == 'pending' %}
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0"><i class="bi bi-gear"></i> {% trans "Revisar Solicitação" %}</h6>
+                                </div>
+                                <div class="card-body">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="{{ form.status.id_for_label }}" class="form-label">
+                                                        <strong>{% trans "Status" %}</strong>
+                                                    </label>
+                                                    {{ form.status }}
+                                                    {% if form.status.errors %}
+                                                        <div class="invalid-feedback d-block">
+                                                            {{ form.status.errors.0 }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3" id="rejection-reason-container">
+                                                    <label for="{{ form.rejection_reason.id_for_label }}" class="form-label">
+                                                        <strong>{% trans "Motivo da Rejeição" %}</strong>
+                                                    </label>
+                                                    {{ form.rejection_reason }}
+                                                    {% if form.rejection_reason.errors %}
+                                                        <div class="invalid-feedback d-block">
+                                                            {{ form.rejection_reason.errors.0 }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="{{ form.admin_notes.id_for_label }}" class="form-label">
+                                                <strong>{% trans "Observações" %}</strong>
+                                            </label>
+                                            {{ form.admin_notes }}
+                                            {% if form.admin_notes.errors %}
+                                                <div class="invalid-feedback d-block">
+                                                    {{ form.admin_notes.errors.0 }}
+                                                </div>
+                                            {% endif %}
+                                            <div class="form-text">
+                                                {% trans "Observações internas sobre a solicitação (opcional)" %}
+                                            </div>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="bi bi-check-circle"></i>
+                                                {% trans "Salvar Alterações" %}
+                                            </button>
+                                            <a href="{% url 'social:verification_admin_list' %}" class="btn btn-secondary">
+                                                <i class="bi bi-x-circle"></i>
+                                                {% trans "Cancelar" %}
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.getElementById('{{ form.status.id_for_label }}');
+    const rejectionReasonSelect = document.getElementById('{{ form.rejection_reason.id_for_label }}');
+    const rejectionReasonContainer = document.getElementById('rejection-reason-container');
+    
+    // Mostrar/ocultar campo de motivo da rejeição baseado no status
+    function toggleRejectionReason() {
+        if (statusSelect.value === 'rejected') {
+            rejectionReasonContainer.style.display = 'block';
+            rejectionReasonSelect.required = true;
+        } else {
+            rejectionReasonContainer.style.display = 'none';
+            rejectionReasonSelect.required = false;
+            rejectionReasonSelect.value = '';
+        }
+    }
+    
+    statusSelect.addEventListener('change', toggleRejectionReason);
+    toggleRejectionReason(); // Executar na carga inicial
+});
+</script>
+{% endblock %}

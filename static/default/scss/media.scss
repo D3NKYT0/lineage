@@ -1,0 +1,224 @@
+@media (max-width: 768px) {
+    h1 {
+        font-size: 40px;
+        line-height: 40px;
+    }
+
+    .loading {
+        .l-logo {
+            .letters {
+                img {
+                    width: 250px;
+                }
+            }
+
+            .circle {
+                top: -70px;
+                img {
+                    width: 200px;
+                }
+            }
+        }
+    }
+    
+    footer {
+        .c-link {
+            display: flex;
+            flex-direction: column;
+
+            a:not(:last-child) {
+                margin-bottom: 20px;
+            }
+            a {
+                margin: 0;
+            }
+        }
+    }
+    .c {
+        .c-link {
+            transform: scale(0.9);
+        }
+    }
+
+    .w {
+        .container {
+            width: 100%;
+        }
+
+        .w-list {
+            overflow-x: scroll;
+            padding-left: 20px;
+            padding-bottom: 30px;
+
+            .line {
+                width: 300px;
+            }
+
+            .wiki {
+                width: 300px;
+                margin-right: 20px;
+
+                div {
+                    width: 300px;
+
+                    
+                        ul {
+                            li {
+                                a {
+                                    font-size: 17px;
+                                }
+                            }
+                        }
+                 
+                }
+            }
+            a {
+                width: 300px;
+                margin-right: 20px;
+
+                div {
+                    width: 300px;
+                }
+            }
+        }
+    }
+
+    .f {
+
+        .title {
+            span {
+                font-size: 16px;
+            }
+            h1 {
+                font-size: 40px;
+                line-height: 40px;
+            }
+        }
+        .container {
+            width: 100%;
+        }
+
+        .f-list {
+            overflow-x: scroll;
+            padding-left: 20px;
+            padding-bottom: 30px;
+
+            a {
+                width: 300px;
+                margin-right: 20px;
+
+                div {
+                    width: 300px;
+                }
+            }
+        }
+    }
+
+    .h {
+        padding-top: 240px;
+        .h-logo {
+            margin-bottom: 90px;
+
+            .letters {
+                width: 300px;
+            }
+
+            .circle {
+                width: 230px;
+                top: -90px;
+            }
+        }
+
+        .h-link {
+            flex-direction: column;
+            transform: scale(0.9) !important;
+            margin-bottom: 30px;
+
+            a {
+                margin-bottom: 20px;
+            }
+        }
+    }
+
+    nav {
+        .open {
+            margin-left: 15px;
+            display: block;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 100%;
+            color: rgba(255, 255, 255, 0.39);
+            cursor: pointer;
+            background-color: transparent !important;
+        }
+
+        ul {
+            position: fixed;
+            width: 340px;
+            height: 100vh;
+            background: linear-gradient(rgb(22, 22, 22), rgba(15, 15, 15, 0.904));
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            top: 0;
+            left: -340px;
+            bottom: 0;
+            padding: 40px 0px 40px 0px;
+            transition: .5s;
+
+            .close {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px !important;
+                align-items: center;
+                justify-content: center;
+                border-radius: 100%;
+                color: rgba(255, 255, 255, 0.39);
+                cursor: pointer;
+                background-color: transparent !important;
+            }
+
+            &.active {
+                left: 0;
+            }
+
+            li:not(:last-child) {
+                margin-right: 0;
+            }
+
+            li {
+                height: auto;
+                margin-bottom: 30px;
+                padding-top: 30px;
+                border-top: 1px solid rgba(255, 255, 255, 0.02);
+                width: 100%;
+
+                &::before {
+                    display: none;
+                }
+            }
+
+            span {
+                margin-right: 0;
+                padding-right: 0;
+                margin-bottom: 50px;
+
+                &::before {
+                    display: none;
+                }
+            }
+        }
+
+        div {
+            .download {
+                display: none;
+            }
+        }
+    }
+}

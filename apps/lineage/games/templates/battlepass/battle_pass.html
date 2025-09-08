@@ -1,0 +1,389 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<style>
+  :root {
+    --primary-glow: #4b0082;
+    --secondary-glow: #8a2be2;
+    --accent-color: #ffd700;
+    --success-color: #00ff7f;
+    --text-glow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+
+  .battle-pass-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 2rem 0;
+    position: relative;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    -webkit-overflow-scrolling: touch; /* Melhor scroll no iOS */
+  }
+
+  .battle-pass-container::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .battle-pass-container::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+  }
+
+  .battle-pass-container::-webkit-scrollbar-thumb {
+    background: var(--primary-glow);
+    border-radius: 4px;
+  }
+
+  .battle-pass-level {
+    display: inline-block;
+    width: 320px;
+    min-height: 400px;
+    margin: 0 12px;
+    vertical-align: top;
+    border-radius: 1rem;
+    background: linear-gradient(145deg, #1e1e2f, #29293d);
+    box-shadow: 0 0 15px rgba(75,0,130,0.3);
+    color: white;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .battle-pass-level:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 25px rgba(75,0,130,0.5);
+  }
+
+  .battle-pass-level .card-header {
+    background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+    border-radius: 1rem 1rem 0 0;
+    padding: 1.5rem 1rem;
+    text-shadow: var(--text-glow);
+  }
+
+  .battle-pass-level .card-header h5 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0;
+    color: var(--accent-color);
+  }
+
+  .battle-pass-level .card-header .level-info {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .battle-pass-level .card-body {
+    padding: 1.5rem;
+    height: calc(100% - 100px);
+    overflow-y: auto;
+  }
+
+  .battle-pass-level .list-group-item {
+    background: rgba(255,255,255,0.05);
+    color: white;
+    border: none;
+    margin-bottom: 0.8rem;
+    border-radius: 0.5rem !important;
+    transition: background 0.3s ease;
+    padding: 1rem;
+    white-space: normal;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .battle-pass-level .list-group-item:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  .reward-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .reward-description {
+    font-size: 1rem;
+    line-height: 1.4;
+    word-break: break-word;
+    text-align: center;
+  }
+
+  .reward-badges {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .badge-premium {
+    background: linear-gradient(45deg, var(--accent-color), #ffa500);
+    color: #000;
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    box-shadow: 0 0 10px rgba(255,215,0,0.3);
+    white-space: nowrap;
+    text-align: center;
+    min-width: 80px;
+    margin-bottom: 0.5rem;
+  }
+
+  .badge-claimed {
+    background: linear-gradient(45deg, var(--success-color), #00ff00);
+    color: #000;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    box-shadow: 0 0 10px rgba(0,255,127,0.3);
+    white-space: nowrap;
+  }
+
+  .btn-outline-success {
+    border: 2px solid var(--success-color);
+    color: var(--success-color);
+    padding: 0.5rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+
+  .btn-outline-success:hover {
+    background: var(--success-color);
+    color: #000;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0,255,127,0.5);
+  }
+
+  .season-header {
+    background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 20px rgba(75,0,130,0.3);
+  }
+
+  .season-header h1 {
+    color: var(--accent-color);
+    text-shadow: var(--text-glow);
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  .season-header .lead {
+    color: white;
+    font-size: 1.2rem;
+    text-shadow: var(--text-glow);
+  }
+
+  .btn-warning {
+    background: linear-gradient(45deg, var(--accent-color), #ffa500);
+    border: none;
+    color: #000;
+    padding: 1rem 2rem;
+    border-radius: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255,215,0,0.3);
+  }
+
+  .btn-warning:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255,215,0,0.5);
+  }
+
+  .progress-info {
+    background: rgba(255,255,255,0.1);
+    padding: 1rem;
+    border-radius: 1rem;
+    margin: 1rem 0;
+  }
+
+  .progress-info strong {
+    color: var(--accent-color);
+  }
+
+  /* Media Queries para Responsividade */
+  @media (max-width: 768px) {
+    .battle-pass-level {
+      width: 280px;
+      min-height: 350px;
+    }
+
+    .battle-pass-level .card-header h5 {
+      font-size: 1.5rem;
+    }
+
+    .season-header {
+      padding: 1.5rem;
+    }
+
+    .season-header h1 {
+      font-size: 2rem;
+    }
+
+    .season-header .lead {
+      font-size: 1rem;
+    }
+
+    .btn-warning {
+      padding: 0.8rem 1.5rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .battle-pass-level {
+      width: 260px;
+      min-height: 320px;
+    }
+
+    .battle-pass-level .card-header {
+      padding: 1rem;
+    }
+
+    .battle-pass-level .card-header h5 {
+      font-size: 1.3rem;
+    }
+
+    .reward-description {
+      font-size: 0.9rem;
+    }
+  }
+
+  .progress-container {
+    max-width: 600px;
+    margin: 1.5rem auto;
+    background: rgba(255,255,255,0.1);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+
+  .progress {
+    height: 20px;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .progress-bar {
+    background: linear-gradient(45deg, #ffd700, #ffa500);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(255,215,0,0.3);
+  }
+
+  .level-info {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255,215,0,0.5);
+  }
+
+  .xp-info {
+    font-size: 1.1rem;
+    color: #ffa500;
+    text-shadow: 0 0 10px rgba(255,165,0,0.5);
+  }
+
+  .badge.bg-success {
+    background: linear-gradient(45deg, var(--success-color), #00ff00) !important;
+    color: #000;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    box-shadow: 0 0 10px rgba(0,255,127,0.3);
+  }
+</style>
+
+<div class="container mt-4">
+  <div class="season-header text-center">
+    <h1 class="display-5 fw-bold">{{ season.name }}</h1>
+    <div class="progress-container">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="level-info">
+                {% trans "Nível" %} {{ current_level }}{% if next_level %} → {{ next_level }}{% endif %}
+            </span>
+            <span class="xp-info">
+                {{ current_xp }}/{{ xp_for_next_level }} XP
+            </span>
+        </div>
+        <div class="progress">
+            <div class="progress-bar bg-primary" role="progressbar" 
+                 style="width: {{ progress_percentage }}%"
+                 aria-valuenow="{{ progress_percentage }}" 
+                 aria-valuemin="0" 
+                 aria-valuemax="100">
+            </div>
+        </div>
+        {% if not next_level %}
+        <div class="text-center mt-2">
+            <span class="badge bg-success">{% trans "Nível Máximo Atingido!" %}</span>
+        </div>
+        {% endif %}
+    </div>
+    <div class="battle-pass-actions">
+        <a href="{% url 'games:exchange_items' %}" class="btn btn-secondary">
+            <i class="fas fa-exchange-alt"></i> {% trans "Trocar Itens por XP" %}
+        </a>
+        {% if not user_battle_pass.is_premium %}
+            <a href="{% url 'games:buy_battle_pass_premium' %}" class="btn btn-primary">
+                <i class="fas fa-crown"></i> {% trans "Comprar Premium" %}
+            </a>
+        {% endif %}
+    </div>
+  </div>
+
+  <div class="battle-pass-container">
+    {% for level in levels %}
+      <div class="battle-pass-level">
+        <div class="card-header text-center">
+          <h5 class="mb-0">{% trans "Nível" %} {{ level.level }}</h5>
+          <div class="level-info">
+            <small>{% trans "XP" %}: {{ level.required_xp }}</small>
+          </div>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            {% for reward in level.battlepassreward_set.all %}
+              <li class="list-group-item">
+                <div class="reward-content">
+                  {% if reward.is_premium %}
+                    <span class="badge badge-premium">Premium</span>
+                  {% endif %}
+                  <div class="reward-description">
+                    {{ reward.description }}
+                  </div>
+                  <div class="reward-badges">
+                    {% if reward in progress.claimed_rewards.all %}
+                      <span class="badge badge-claimed">{% trans "Resgatado" %}</span>
+                    {% else %}
+                      <form action="{% url 'games:claim_reward' reward.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-success">{% trans "Resgatar" %}</button>
+                      </form>
+                    {% endif %}
+                  </div>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

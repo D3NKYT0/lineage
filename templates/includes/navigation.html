@@ -1,0 +1,513 @@
+{% load static %}
+{% load i18n %}
+
+<style>
+  /* Estilos para o botão Social */
+  .btn-social {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 25px;
+    padding: 8px 20px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    z-index: 99;
+  }
+
+  .btn-social::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn-social:hover::before {
+    left: 100%;
+  }
+
+  .btn-social:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    color: white;
+    text-decoration: none;
+  }
+
+  .btn-social:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+
+  .social-btn-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .social-icon {
+    width: 20px;
+    height: 20px;
+    color: white;
+    transition: transform 0.3s ease;
+  }
+
+  .btn-social:hover .social-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .social-text {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Animação de pulso para chamar atenção */
+  @keyframes socialPulse {
+    0% {
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    50% {
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.7), 0 0 30px rgba(102, 126, 234, 0.3);
+    }
+    100% {
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+  }
+
+  .btn-social {
+    animation: socialPulse 3s infinite;
+  }
+
+  .btn-social:hover {
+    animation: none;
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .btn-social {
+      min-width: 100px;
+      padding: 6px 16px;
+    }
+    
+    .social-text {
+      font-size: 12px;
+    }
+    
+    .social-icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  /* Efeito de brilho no hover */
+  .btn-social::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .btn-social:hover::after {
+    opacity: 1;
+  }
+
+  /* Centralização do botão Social na página */
+  .social-center-item {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99;
+  }
+
+  /* Ajuste do container da navbar para permitir posicionamento absoluto */
+  .navbar {
+    position: relative;
+    z-index: 1002;
+  }
+
+  /* Fundo #F2F4F6 transparente a 80% para a navbar */
+  .navbar-top {
+    background-color: rgba(242, 244, 246, 0.8) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Responsividade para o botão centralizado */
+  @media (max-width: 768px) {
+    .social-center-item {
+      position: relative;
+      left: auto;
+      top: auto;
+      transform: none;
+      margin: 0 auto;
+    }
+    
+    /* Estilos específicos para o botão social mobile */
+    .d-lg-none .btn-social {
+      min-width: 80px;
+      padding: 4px 12px;
+      font-size: 11px;
+    }
+    
+    .d-lg-none .social-text {
+      font-size: 11px;
+    }
+    
+    .d-lg-none .social-icon {
+      width: 16px;
+      height: 16px;
+    }
+    
+    /* Garantir que o botão Social seja o primeiro no mobile */
+    .navbar-nav {
+      display: flex;
+      align-items: center;
+    }
+    
+    .order-first {
+      order: -1 !important;
+    }
+    
+    /* Garantir que todos os elementos da navbar sejam clicáveis no mobile */
+    .navbar-nav .nav-item {
+      position: relative;
+      z-index: 99;
+    }
+    
+    .navbar-nav .nav-link {
+      position: relative;
+      z-index: 99;
+    }
+    
+    .navbar-nav .dropdown-menu {
+      z-index: 100;
+    }
+    
+    /* Garantir que a navbar tenha prioridade adequada, mas não sobreponha o sidebar */
+    .navbar-top {
+      z-index: 99 !important;
+      position: relative;
+    }
+    
+    .navbar-top .container-fluid {
+      z-index: 99 !important;
+      position: relative;
+    }
+    
+    .navbar-top .navbar-nav {
+      z-index: 99 !important;
+      position: relative;
+    }
+    
+    /* Garantir que todos os links sejam clicáveis */
+    .navbar-top a {
+      position: relative;
+      z-index: 100 !important;
+      pointer-events: auto !important;
+    }
+    
+    .navbar-top button {
+      position: relative;
+      z-index: 100 !important;
+      pointer-events: auto !important;
+    }
+    
+    /* Garantir que o sidebar tenha prioridade máxima quando aberto */
+    .sidebar.show {
+      z-index: 9999 !important;
+    }
+    
+    /* Quando o sidebar está aberto, reduzir o z-index da navbar */
+    body[style*="position: fixed"] .navbar-top {
+      z-index: 98 !important;
+    }
+    
+    body[style*="position: fixed"] .navbar-top .container-fluid {
+      z-index: 98 !important;
+    }
+    
+    body[style*="position: fixed"] .navbar-top .navbar-nav {
+      z-index: 98 !important;
+    }
+    
+    body[style*="position: fixed"] .navbar-top a {
+      z-index: 99 !important;
+    }
+    
+    body[style*="position: fixed"] .navbar-top button {
+      z-index: 99 !important;
+    }
+  }
+  
+  /* Garantir que o sidebar tenha prioridade sobre a navigation no mobile */
+  @media (max-width: 768px) {
+    #sidebarMenu {
+      z-index: 9999 !important;
+    }
+    
+    #sidebarMenu.show {
+      z-index: 9999 !important;
+    }
+    
+    /* Overlay do sidebar quando aberto */
+    #sidebarMenu::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+    
+    /* Garantir que o botão de toggle do sidebar tenha z-index adequado */
+    .navbar-toggler[data-bs-target="#sidebarMenu"] {
+      z-index: 10000 !important;
+      position: relative;
+    }
+    
+    /* Garantir que a navbar do nav.html não sobreponha o sidebar */
+    .navbar.navbar-dark.d-lg-none {
+      z-index: 98 !important;
+    }
+  }
+</style>
+
+<nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-0">
+  <div class="container-fluid px-0">
+    <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
+      <div class="d-flex align-items-center">
+        <!-- Botão de bloqueio -->
+        <a href="{% url 'activate_lock' %}" class="btn btn-link px-2 me-2" title="{% trans 'Bloquear Sessão' %}">
+          <svg class="icon icon-sm text-warning" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5 8V6a5 5 0 1110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V6a3 3 0 016 0z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </div>
+
+      <!-- Navbar links -->
+      <ul class="navbar-nav align-items-center">
+        {% if request.user.is_authenticated %}
+        
+        <!-- Botão Social Mobile - PRIMEIRO no modo mobile -->
+        <li class="nav-item d-lg-none me-2 order-first">
+          <a href="{% url 'social:feed' %}" class="btn btn-social" title="{% trans 'Rede Social' %}">
+            <div class="social-btn-content">
+              <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+              </svg>
+              <span class="social-text">{% trans "Social" %}</span>
+            </div>
+          </a>
+        </li>
+        
+        <!-- Botão Social Desktop - Centralizado -->
+        <li class="nav-item social-center-item d-none d-lg-block">
+          <a href="{% url 'social:feed' %}" class="btn btn-social" title="{% trans 'Rede Social' %}">
+            <div class="social-btn-content">
+              <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+              </svg>
+              <span class="social-text">{% trans "Social" %}</span>
+            </div>
+          </a>
+        </li>
+
+        <!-- Botão de Admin -->
+        {% if request.user.is_staff %}
+        <li class="nav-item">
+          <a href="{% url 'admin:index' %}" class="btn btn-link px-2 me-2" title="{% trans 'Acessar Admin' %}">
+            <svg class="icon icon-sm text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+            </svg>
+          </a>
+        </li>
+        {% endif %}
+        
+        <li class="nav-item dropdown">
+          <a class="nav-link text-dark notification-bell read dropdown-toggle" id="notificationToggle" data-unread-notifications="true" href="#" role="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+            <svg class="icon icon-sm text-gray-900" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
+            </svg>
+            <span id="notification-count" class="badge bg-danger rounded-circle" style="display: none;">0</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-start mt-2 py-0" id="notificationDropdown">
+            <div class="dropdown-header d-flex align-items-center justify-content-between">
+              <h5 class="m-0">{% trans "Notificações" %}</h5>
+              <div>
+                <a href="#" class="btn btn-link btn-sm" id="mark-as-read" data-bs-toggle="tooltip" data-bs-placement="top" title="{% trans 'Marcar como lidas' %}">
+                  <i class="bi bi-check-circle text-success"></i>
+                </a>
+                <a href="#" class="btn btn-link btn-sm text-danger" id="clear-all" data-bs-toggle="tooltip" data-bs-placement="top" title="{% trans 'Limpar todas as notificações' %}">
+                  <i class="bi bi-x-circle text-danger"></i>
+                </a>
+              </div>
+            </div>
+            <div class="list-group list-group-flush" id="notification-list" style="max-height: calc(100vh - 215px); overflow-y: auto;">
+              <p class="text-muted text-center mt-3">{% trans "Nenhuma notificação" %}</p>
+            </div>
+            <a href="{% url 'notification:all_notifications' %}" class="dropdown-item text-center fw-bold rounded-bottom py-3">
+              <svg class="icon icon-xxs text-gray-400 me-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
+                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
+              </svg>
+              {% trans "Ver todas as notificações" %}
+            </a>
+          </div>
+        </li>
+          
+          <li class="nav-item dropdown ms-lg-3">
+            <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <div class="media d-flex align-items-center">
+                <div class="avatar-container" style="width: 35px; height: 35px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(255, 255, 255, 0.3); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); position: relative;">
+                  {% if user.avatar %}
+                    <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                         alt="User-Profile-Image" 
+                         style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                  {% else %}
+                    <img alt="Image placeholder" 
+                         src="{% static 'assets/img/team/generic_user.png' %}"
+                         style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                  {% endif %}
+                </div>
+                <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
+                  <span class="mb-0 font-small fw-bold text-gray-900">{{ request.user }}</span>
+                </div>
+              </div>
+            </a>
+            <div class="dropdown-menu dashboard-dropdown dropdown-menu-end mt-2 py-1">
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'profile' %}">
+                <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                    clip-rule="evenodd"></path>
+                </svg>
+                {% trans "Meu Perfil" %}
+              </a>
+
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'password_change' %}">
+                <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.562-1.562C15.802 8.249 16 9.1 16 10zm-5.165 3.913l1.58 1.58A5.98 5.98 0 0110 16a5.976 5.976 0 01-2.516-.552l1.562-1.562a4.006 4.006 0 001.789.027zm-4.677-2.796a4.002 4.002 0 01-.041-2.08l-.08.08-1.53-1.533A5.98 5.98 0 004 10c0 .954.223 1.856.619 2.657l1.54-1.54zm1.088-6.45A5.974 5.974 0 0110 4c.954 0 1.856.223 2.657.619l-1.54 1.54a4.002 4.002 0 00-2.346.033L7.246 4.668zM12 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    clip-rule="evenodd"></path>
+                </svg>
+                {% trans "Mudar Senha" %}
+              </a>
+
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'administrator:security_settings' %}">
+                <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0 2a10 10 0 110-20 10 10 0 010 20zm1-13a3 3 0 00-2 0V7a2 2 0 10-2 0v2h-2a2 2 0 100 4h2v4a2 2 0 102 0v-4h2a2 2 0 100-4h-2V7a3 3 0 00-1-2z" clip-rule="evenodd"></path>
+                </svg>
+                {% trans "Segurança" %}
+              </a>
+
+              {% if request.user.is_staff %}
+              <div role="separator" class="dropdown-divider my-1"></div>
+              <div class="dropdown-submenu-manual">
+                <a class="dropdown-item d-flex align-items-center" href="#" id="configToggle">
+                  <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                      d="M11.3 1.046a1 1 0 011.4 0l1.8 1.8a1 1 0 010 1.4L6.207 12.54a1 1 0 01-.516.27l-3.286.657a.5.5 0 01-.588-.588l.657-3.286a1 1 0 01.27-.516L11.3 1.046zM4.5 13l2.5-.5.5-2.5-1.5-1.5-2.5.5-.5 2.5L4.5 13z"
+                      clip-rule="evenodd" />
+                  </svg>
+                  {% trans "Configurações" %}
+                </a>
+                <div class="submenu-items mt-1 ms-4 d-none" id="configSubmenu">
+                  <a class="dropdown-item" href="{% url 'api:api_config_panel' %}">{% trans "API" %}</a>
+                  <a class="dropdown-item" href="{% url 'wallet:coin_config_panel' %}">{% trans "Moedas" %}</a>
+                  <a class="dropdown-item" href="{% url 'shop:dashboard' %}">{% trans "Shop" %}</a>
+                  <a class="dropdown-item" href="{% url 'server:configure_service_prices' %}">{% trans "Services" %}</a>
+                  <a class="dropdown-item" href="{% url 'server:painel_staff' %}">{% trans "Apoiadores" %}</a>
+                  <a class="dropdown-item" href="{% url 'games:box_manager_dashboard' %}">{% trans "Box Manager" %}</a>
+                  <a class="dropdown-item" href="{% url 'licence:dashboard' %}">{% trans "Licenças" %}</a>
+                  <a class="dropdown-item" href="{% url 'notification:send_push' %}">{% trans "Enviar Push" %}</a>
+                  <a class="dropdown-item" href="{% url 'social:verification_admin_list' %}">{% trans "Verificações" %}</a>
+                </div>                
+              </div>
+            {% endif %}
+
+              <div role="separator" class="dropdown-divider my-1"></div>
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'server:account_dashboard' %}">
+                <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd"
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                {% trans "Conta L2" %}
+              </a>
+
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'wallet:dashboard' %}">
+                <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M21 7H3a1 1 0 00-1 1v8a1 1 0 001 1h18a1 1 0 001-1V8a1 1 0 00-1-1zM3 9h18v6H3V9zm16 2h-2a1 1 0 100 2h2a1 1 0 100-2z"/>
+                </svg>
+                <span>{% trans "Carteira" %}</span>
+              </a>
+
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'inventory:inventario_dashboard' %}">
+                <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M4 4h16v2H4V4zm0 4h16v2H4V8zm0 4h10v2H4v-2zm0 4h10v2H4v-2z"/>
+                </svg>
+                <span>{% trans "Inventário" %}</span>
+              </a>
+
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'auction:listar_leiloes' %}">
+                <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2L2 7v2c0 5.25 3.75 9.75 10 12 6.25-2.25 10-6.75 10-12V7l-10-5zm0 2.18l7.5 3.64v1.18c0 4.11-2.94 7.8-7.5 9.71-4.56-1.91-7.5-5.6-7.5-9.71V7l7.5-3.64zM11 10v5h2v-5h-2zm0-4v2h2V6h-2z"/>
+                </svg>
+                <span>{% trans "Leilões" %}</span>
+              </a>              
+            
+              <div role="separator" class="dropdown-divider my-1"></div>
+
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'server:painel_apoiador' %}">
+                <svg class="dropdown-icon text-gray-400 me-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2a5 5 0 0 0-5 5v1a5 5 0 0 0 2 4v2H7a2 2 0 0 0-2 2v4h14v-4a2 2 0 0 0-2-2h-2v-2a5 5 0 0 0 2-4V7a5 5 0 0 0-5-5zm0 2a3 3 0 0 1 3 3v1a3 3 0 0 1-6 0V7a3 3 0 0 1 3-3z"/>
+                </svg>
+                <span>{% trans "Apoiador" %}</span>
+              </a>              
+
+              <div role="separator" class="dropdown-divider my-1"></div>
+
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
+                <svg class="dropdown-icon text-danger me-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                  </path>
+                </svg>
+                {% trans "Sair" %}
+              </a>
+            </div>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

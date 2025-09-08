@@ -1,0 +1,57 @@
+/* Estilo geral da accordion */
+.accordion-item {
+    background-color: var(--bg-section);
+    border: 1px solid #444;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .accordion-button {
+    background-color: var(--bg-section);
+    color: var(--light);
+    font-weight: bold;
+    padding: 1rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .accordion-button:hover {
+    background-color: #2b2b2b;
+  }
+  
+  .accordion-button:focus {
+    box-shadow: none;
+    border-color: var(--gold);
+  }
+  
+  .accordion-button:not(.collapsed) {
+    color: var(--gold);
+    background-color: #2a2a2a;
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Ícone de seta */
+  .accordion-button::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23d4af37' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+  }
+  
+  .accordion-button:not(.collapsed)::after {
+    transform: rotate(180deg);
+  }
+  
+  /* Conteúdo da resposta */
+  .accordion-body {
+    background-color: #181818;
+    padding: 1.2rem;
+    color: var(--light);
+    font-size: 1rem;
+    line-height: 1.6;
+    border-top: 1px solid #333;
+  }
+
+  .accordion-button::after {
+    background-image: none !important;
+    content: none !important;
+  }

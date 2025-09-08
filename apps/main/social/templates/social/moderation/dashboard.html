@@ -1,0 +1,298 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %} {% trans "Painel de Moderação" %} {% endblock title %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Cabeçalho do painel -->
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h4 class="mb-0">
+            <i class="bi bi-shield-check text-primary"></i> {% trans "Painel de Moderação" %}
+          </h4>
+          <div>
+            <a href="{% url 'social:reports_list' %}" class="btn btn-primary btn-sm">
+              <i class="bi bi-list"></i> {% trans "Ver Todas as Denúncias" %}
+            </a>
+            <a href="{% url 'social:content_filters' %}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-funnel"></i> {% trans "Filtros" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estatísticas principais -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-primary shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                {% trans "Total de Denúncias" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_reports }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-flag fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-warning shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                {% trans "Pendentes" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pending_reports }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-clock fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-danger shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                {% trans "Urgentes" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ urgent_reports }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-exclamation-triangle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card border-left-success shadow h-100 py-2">
+        <div class="card-body">
+          <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                {% trans "Resolvidas Hoje" %}
+              </div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ resolved_today }}</div>
+            </div>
+            <div class="col-auto">
+              <i class="bi bi-check-circle fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Denúncias recentes -->
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="bi bi-flag"></i> {% trans "Denúncias Recentes" %}
+          </h6>
+          <a href="{% url 'social:reports_list' %}" class="btn btn-sm btn-outline-primary">
+            {% trans "Ver Todas" %}
+          </a>
+        </div>
+        <div class="card-body">
+          {% if recent_reports %}
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>{% trans "Tipo" %}</th>
+                    <th>{% trans "Prioridade" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Data" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for report in recent_reports %}
+                  <tr>
+                    <td>
+                      <span class="badge bg-{% if report.report_type == 'spam' %}secondary{% elif report.report_type == 'inappropriate' %}warning{% elif report.report_type == 'harassment' %}danger{% else %}info{% endif %}">
+                        {{ report.get_report_type_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge bg-{% if report.priority == 'urgent' %}danger{% elif report.priority == 'high' %}warning{% elif report.priority == 'medium' %}info{% else %}secondary{% endif %}">
+                        {{ report.get_priority_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge bg-{% if report.status == 'pending' %}warning{% elif report.status == 'reviewing' %}info{% elif report.status == 'resolved' %}success{% else %}secondary{% endif %}">
+                        {{ report.get_status_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <small class="text-muted">{{ report.created_at|date:"d/m H:i" }}</small>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p class="text-muted text-center mb-0">{% trans "Nenhuma denúncia recente" %}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Ações recentes -->
+    <div class="col-lg-6 mb-4">
+      <div class="card shadow">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="bi bi-gear"></i> {% trans "Ações Recentes" %}
+          </h6>
+          <a href="{% url 'social:moderation_logs' %}" class="btn btn-sm btn-outline-primary">
+            {% trans "Ver Logs" %}
+          </a>
+        </div>
+        <div class="card-body">
+          {% if recent_actions %}
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead>
+                  <tr>
+                    <th>{% trans "Ação" %}</th>
+                    <th>{% trans "Moderador" %}</th>
+                    <th>{% trans "Data" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for action in recent_actions %}
+                  <tr>
+                    <td>
+                      <span class="badge bg-{% if action.action_type == 'delete_content' %}danger{% elif action.action_type == 'hide_content' %}warning{% elif action.action_type == 'suspend_user' %}danger{% else %}info{% endif %}">
+                        {{ action.get_action_type_display }}
+                      </span>
+                    </td>
+                    <td>
+                      <small>{{ action.moderator.username }}</small>
+                    </td>
+                    <td>
+                      <small class="text-muted">{{ action.created_at|date:"d/m H:i" }}</small>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p class="text-muted text-center mb-0">{% trans "Nenhuma ação recente" %}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos de atividade -->
+  <div class="row">
+    <div class="col-lg-8 mb-4">
+      <div class="card shadow">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="bi bi-graph-up"></i> {% trans "Atividade dos Últimos 30 Dias" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          <canvas id="activityChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estatísticas adicionais -->
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">
+            <i class="bi bi-info-circle"></i> {% trans "Informações" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <h6 class="text-primary">{% trans "Filtros Ativos" %}</h6>
+            <p class="mb-0">{{ active_filters }} {% trans "filtros em funcionamento" %}</p>
+          </div>
+          <div class="mb-3">
+            <h6 class="text-primary">{% trans "Logs Recentes" %}</h6>
+            <p class="mb-0">{{ recent_logs.count }} {% trans "ações registradas hoje" %}</p>
+          </div>
+          <hr>
+          <div class="text-center">
+            <a href="{% url 'social:content_filters' %}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-funnel"></i> {% trans "Gerenciar Filtros" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- Script para o gráfico -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('activityChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ chart_dates|safe }},
+            datasets: [{
+                label: '{% trans "Denúncias" %}',
+                data: {{ report_counts|safe }},
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                tension: 0.1
+            }, {
+                label: '{% trans "Ações" %}',
+                data: {{ action_counts|safe }},
+                borderColor: 'rgb(54, 162, 235)',
+                backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock content %}

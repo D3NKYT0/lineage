@@ -1,0 +1,338 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style>
+  .clan-name-container {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Espaço entre o grupo de crests e o nome */
+  }
+
+  .crest-group {
+    display: flex;
+    align-items: center;
+    width: 26px;
+    gap: 0px; /* Espaço entre as duas imagens */
+  }
+
+  .top-clan-crest {
+    width: auto;
+    height: 14px;
+    margin: 0;
+  }
+
+  .filters-section {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
+  }
+
+  .filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: end;
+  }
+
+  .filter-group {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .filter-group label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .filter-group input,
+  .filter-group select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .filter-group input:focus,
+  .filter-group select:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  /* Estilos para as opções do select */
+  .filter-group select option {
+    background-color: #ffffff;
+    color: #495057;
+    padding: 8px 12px;
+  }
+
+  /* Estilo para quando o select está aberto */
+  .filter-group select:focus option:hover,
+  .filter-group select:focus option:focus {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+
+  /* Estilo para a opção selecionada */
+  .filter-group select option:checked {
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* Estilos adicionais para compatibilidade */
+  .filter-group select::-ms-expand {
+    display: none;
+  }
+
+  /* Estilo para o dropdown do select (Firefox) */
+  .filter-group select:-moz-focusring {
+    color: transparent;
+    text-shadow: 0 0 0 #495057;
+  }
+
+  /* Estilo para garantir que o texto seja visível no select fechado */
+  .filter-group select {
+    color: #495057 !important;
+  }
+
+  .filters-actions {
+    display: flex;
+    gap: 10px;
+    align-items: end;
+  }
+
+  .btn-filter {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+
+  .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background-color: #545b62;
+  }
+
+  .filters-info {
+    margin-top: 15px;
+    padding: 10px;
+    background: #e7f3ff;
+    border-radius: 4px;
+    border-left: 4px solid #007bff;
+  }
+
+  .filters-info small {
+    color: #0056b3;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .filters-row {
+      flex-direction: column;
+    }
+    
+    .filter-group {
+      min-width: 100%;
+    }
+    
+    .filters-actions {
+      width: 100%;
+      justify-content: stretch;
+    }
+    
+    .btn-filter {
+      flex: 1;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h2 class="text-center mb-4">{% trans "Ranking Olimpíada" %}</h2>
+
+    <!-- Seção de Filtros -->
+    <div class="filters-section">
+      <form method="GET" action="{% url 'server:olympiad_ranking' %}" id="filters-form">
+        <div class="filters-row">
+          <div class="filter-group">
+            <label for="search">{% trans "Buscar" %}</label>
+            <input type="text" id="search" name="search" 
+                   placeholder="{% trans 'Nome do jogador, clã ou classe' %}" 
+                   value="{{ filters.search }}">
+          </div>
+          
+          <div class="filter-group">
+            <label for="class">{% trans "Classe" %}</label>
+            <select id="class" name="class">
+              <option value="">{% trans "Todas as classes" %}</option>
+              {% for class_name in available_classes %}
+                <option value="{{ class_name }}" {% if filters.class == class_name %}selected{% endif %}>
+                  {{ class_name }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="clan">{% trans "Clã" %}</label>
+            <input type="text" id="clan" name="clan" 
+                   placeholder="{% trans 'Nome do clã' %}" 
+                   value="{{ filters.clan }}">
+          </div>
+          
+          <div class="filter-group">
+            <label for="status">{% trans "Status" %}</label>
+            <select id="status" name="status">
+              <option value="">{% trans "Todos" %}</option>
+              <option value="online" {% if filters.status == 'online' %}selected{% endif %}>
+                {% trans "Online" %}
+              </option>
+              <option value="offline" {% if filters.status == 'offline' %}selected{% endif %}>
+                {% trans "Offline" %}
+              </option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="min_points">{% trans "Pontos Mínimos" %}</label>
+            <input type="number" id="min_points" name="min_points" 
+                   placeholder="{% trans 'Ex: 1000' %}" 
+                   min="0" value="{{ filters.min_points }}">
+          </div>
+          
+          <div class="filters-actions">
+            <button type="submit" class="btn-filter btn-primary">
+              <i class="fas fa-search"></i> {% trans "Filtrar" %}
+            </button>
+            <a href="{% url 'server:olympiad_ranking' %}" class="btn-filter btn-secondary">
+              <i class="fas fa-times"></i> {% trans "Limpar" %}
+            </a>
+          </div>
+        </div>
+      </form>
+      
+      <div class="filters-info">
+        <small>
+          <i class="fas fa-info-circle"></i>
+          {% if filtered_players == total_players %}
+            {% trans "Mostrando todos os" %} {{ total_players }} {% trans "jogadores" %}
+          {% else %}
+            {% trans "Mostrando" %} {{ filtered_players }} {% trans "de" %} {{ total_players }} {% trans "jogadores" %}
+          {% endif %}
+        </small>
+      </div>
+    </div>
+
+    {% if ranking %}
+    <div class="table-responsive-md">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>{% trans "Jogador" %}</th>
+            <th class="d-none d-md-table-cell">{% trans "Clan" %}</th>
+            <th class="d-none d-md-table-cell">{% trans "Aliança" %}</th>
+            <th>{% trans "Pontos" %}</th>
+            <th>{% trans "Classe" %}</th>
+            <th>{% trans "Status" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for player in ranking %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ player.char_name|default:"-" }}</td>
+            <td><div class="clan-name-container">
+              <div class="crest-group">
+                {% if clan.ally_crest_image_base64 %}
+                  <img src="data:image/png;base64,{{ player.ally_crest_image_base64 }}" alt="Crest da Aliança" class="top-clan-crest">
+                {% endif %}
+                <img src="data:image/png;base64,{{ player.clan_crest_image_base64 }}" alt="Crest do Clã" class="top-clan-crest">
+              </div>
+              {{ player.clan_name|default:"-" }}
+            </div></td>
+            <td class="d-none d-md-table-cell">{{ player.ally_name|default:"-" }}</td>
+            <td>
+              <span class="badge bg-warning text-dark">{{ player.olympiad_points|default:"-" }}</span>
+            </td>
+            <td>{{ player.class_name|default:"-" }}</td>
+            <td>
+              {% if player.online %}
+                <span class="badge bg-success">{% trans "Online" %}</span>
+              {% else %}
+                <span class="badge bg-danger">{% trans "Offline" %}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+      {% trans "Nenhum dado encontrado." %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-submit form when select fields change
+    document.getElementById('class').addEventListener('change', function() {
+        document.getElementById('filters-form').submit();
+    });
+    
+    document.getElementById('status').addEventListener('change', function() {
+        document.getElementById('filters-form').submit();
+    });
+    
+    // Search with delay
+    let searchTimeout;
+    document.getElementById('search').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            document.getElementById('filters-form').submit();
+        }, 500);
+    });
+    
+    document.getElementById('clan').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            document.getElementById('filters-form').submit();
+        }, 500);
+    });
+    
+    document.getElementById('min_points').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            document.getElementById('filters-form').submit();
+        }, 500);
+    });
+});
+</script>
+{% endblock %}

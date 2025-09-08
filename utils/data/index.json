@@ -1,0 +1,44 @@
+{
+    "classes": [
+        {
+            "name": "elf",
+            "descricao": {
+                "pt": "Ágeis e com alta velocidade de ataque, os Elfos são especialistas em magias de cura, arco e flecha e combate corpo a corpo leve. Têm menos ataque que outras raças, mas compensam com velocidade e precisão.",
+                "en": "Agile and fast attackers, Elves specialize in healing magic, archery, and light melee combat. They have lower attack power than other races, but make up for it with speed and accuracy.",
+                "es": "Ágiles y con gran velocidad de ataque, los Elfos son expertos en magia de curación, arquería y combate cuerpo a cuerpo ligero. Tienen menos ataque que otras razas, pero compensan con velocidad y precisión."
+            }
+        },
+        {
+            "name": "human",
+            "descricao": {
+                "pt": "Versáteis e equilibrados, os Humanos têm um bom desempenho em todas as áreas: melee, magia e suporte. São o 'padrão' do jogo, com boa curva de crescimento.",
+                "en": "Versatile and balanced, Humans perform well in all areas: melee, magic, and support. They are the 'standard' in the game with a steady growth curve.",
+                "es": "Versátiles y equilibrados, los Humanos se desempeñan bien en todas las áreas: cuerpo a cuerpo, magia y apoyo. Son el 'estándar' del juego, con una buena curva de crecimiento."
+            }
+        },
+        {
+            "name": "dark_elf",
+            "descricao": {
+                "pt": "Especialistas em dano explosivo, tanto físico quanto mágico. São mais frágeis, mas causam muito dano em pouco tempo. Ótimos assassinos e magos ofensivos.",
+                "en": "Experts in burst damage, both physical and magical. They are fragile but deal massive damage in a short time. Great assassins and offensive mages.",
+                "es": "Expertos en daño explosivo, tanto físico como mágico. Son más frágiles, pero causan mucho daño en poco tiempo. Excelentes asesinos y magos ofensivos."
+            }
+        },
+        {
+            "name": "dwarfs",
+            "descricao": {
+                "pt": "Fortes e resistentes, os Anões são mestres em criação de itens (Crafting) e coleta de loot. Também têm grande poder físico e usam armaduras pesadas. Podem invocar autômatos (golems) para ajudar em guerras e caçadas.",
+                "en": "Strong and resilient, Dwarves are masters of item crafting and loot collection. They also have great physical power and wear heavy armor. They can summon automatons (golems) to assist in battles and hunts.",
+                "es": "Fuertes y resistentes, los Enanos son maestros en la creación de objetos y recolección de botín. También poseen gran poder físico y usan armaduras pesadas. Pueden invocar autómatas (gólems) para ayudar en guerras y cacerías."
+            }
+        },
+        {
+            "name": "orcs",
+            "descricao": {
+                "pt": "Possuem o maior poder físico e mágico bruto entre as raças, com grande resistência. São devotados a espíritos e têm habilidades únicas de suporte e ataque. Seus magos focam em buffs de força e resistência.",
+                "en": "Orcs have the highest raw physical and magical power among the races, with great endurance. They are devoted to spirits and have unique support and attack abilities. Their mages focus on strength and endurance buffs.",
+                "es": "Poseen el mayor poder físico y mágico bruto entre las razas, con gran resistencia. Son devotos a los espíritus y tienen habilidades únicas de apoyo y ataque. Sus magos se centran en mejoras de fuerza y resistencia."
+            }
+        }
+    ]
+}

@@ -1,0 +1,85 @@
+{% extends 'wiki/base.html' %}
+{% load static i18n wiki_tags %}
+
+{% block title %}{% trans "Wiki" %}{% endblock %}
+
+{% block wiki_content %}
+<div class="wiki-home">
+    <div class="welcome-section text-center mb-5">
+        <h1>{% trans "Bem-vindo ao Guia Wiki" %}</h1>
+        <p class="lead">{% trans "Encontre todas as informações que você precisa sobre o servidor" %}</p>
+    </div>
+
+    <!-- Páginas por Tipo de Conteúdo -->
+    <div class="wiki-categories">
+        {% regroup pages by page.content_type as content_types %}
+        {% for content_type in content_types %}
+        <div class="wiki-category-section mb-5">
+            <h3 class="category-title">
+                <i class="fas fa-folder"></i>
+                {{ content_type.grouper|title }}
+            </h3>
+            <div class="row">
+                {% for item in content_type.list %}
+                <div class="col-md-4 mb-4">
+                    <div class="wiki-category-card">
+                        <a href="{% url 'wiki:page' item.page.slug %}" class="text-decoration-none">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="{% get_page_icon item.page %}"></i>
+                                        {{ item.translation.title }}
+                                    </h5>
+                                    {% if item.translation.summary %}
+                                        <p class="card-text">{{ item.translation.summary|truncatewords:20 }}</p>
+                                    {% else %}
+                                        <p class="card-text">{{ item.translation.content|striptags|truncatewords:15 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle"></i>
+                {% trans "Nenhuma página encontrada. Crie páginas através do admin." %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Atualizações Recentes -->
+    {% if updates %}
+    <div class="recent-updates mt-5">
+        <h3 class="section-title">
+            <i class="fas fa-sync"></i>
+            {% trans "Atualizações Recentes" %}
+        </h3>
+        <div class="row">
+            {% for update in updates %}
+            <div class="col-md-6 mb-3">
+                <div class="update-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <span class="badge bg-primary">v{{ update.version }}</span>
+                                {{ update.release_date|date:"d/m/Y" }}
+                            </h6>
+                            {% if update.is_major %}
+                                <span class="badge bg-warning">{% trans "Atualização Principal" %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

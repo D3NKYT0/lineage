@@ -1,0 +1,79 @@
+{% extends "layouts/base.html" %}
+{% load lineage_extras %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style>
+  .clan-name-container {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Espaço entre o grupo de crests e o nome */
+  }
+
+  .crest-group {
+    display: flex;
+    align-items: center;
+    width: 26px;
+    gap: 0px; /* Espaço entre as duas imagens */
+  }
+
+  .top-clan-crest {
+    width: auto;
+    height: 14px;
+    margin: 0;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h2 class="text-center mb-4">{% trans "Ranking Clans" %}</h2>
+
+    {% if clans %}
+    <div class="table-responsive-md">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>{% trans "Clan" %}</th>
+            <th class="d-none d-md-table-cell">{% trans "Ally" %}</th>
+            <th class="d-none d-md-table-cell">{% trans "Líder" %}</th>
+            <th class="d-none d-md-table-cell">{% trans "Nível" %}</th>
+            <th>{% trans "Reputação" %}</th>
+            <th>{% trans "Membros" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for clan in clans %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+              <div class="clan-name-container">
+                <div class="crest-group">
+                  {% if clan.ally_crest_image_base64 %}
+                    <img src="data:image/png;base64,{{ clan.ally_crest_image_base64 }}" alt="Crest da Aliança" class="top-clan-crest">
+                  {% endif %}
+                  <img src="data:image/png;base64,{{ clan.clan_crest_image_base64 }}" alt="Crest do Clã" class="top-clan-crest">
+                </div>
+                {{ clan.clan_name|default:"-" }}
+              </div>
+            </td>
+            <td class="d-none d-md-table-cell">{{ clan.ally_name|default:"-" }}</td>
+            <td class="d-none d-md-table-cell">{{ clan.char_name|default:"-" }}</td>
+            <td class="d-none d-md-table-cell">{{ clan.clan_level }}</td>
+            <td>{{ clan.reputation_score }}</td>
+            <td>{{ clan.membros }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+      {% trans "Nenhum dado encontrado." %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

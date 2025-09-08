@@ -1,0 +1,37 @@
+{% load static i18n %}
+
+<footer class="bg-white rounded shadow p-5 mb-4 mt-4">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12 col-md-6 text-center text-md-start mb-3 mb-md-0">
+        <p class="mb-1">
+          &copy; <span id="footer-year"></span> {{ PROJECT_TITLE }} - {% trans "Todos os direitos reservados." %}
+        </p>
+        {% if SHOW_SLOGAN %}
+          <p class="mb-0">{% trans "Feito com ❤️ por aventureiros para aventureiros." %}</p>
+        {% endif %}
+      </div>
+      <div class="col-12 col-md-6 text-center text-md-end">
+        <div class="social-icons mb-2">
+          <a href="{{ PROJECT_DISCORD_URL }}" class="mx-2" title="Discord" target="_blank" rel="noopener"><i class="fab fa-discord fa-lg"></i></a>
+          <a href="{{ PROJECT_YOUTUBE_URL }}" class="mx-2" title="YouTube" target="_blank" rel="noopener"><i class="fab fa-youtube fa-lg"></i></a>
+          <a href="{{ PROJECT_FACEBOOK_URL }}" class="mx-2" title="Facebook" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg"></i></a>
+          <a href="{{ PROJECT_INSTAGRAM_URL }}" class="mx-2" title="Instagram" target="_blank" rel="noopener"><i class="fab fa-instagram fa-lg"></i></a>          
+        </div>
+
+        <!-- Seletor de idioma -->
+        <form action="{% url 'set_language' %}" method="post" class="d-inline-block">
+          {% csrf_token %}
+          <div class="input-group input-group-sm" style="width: 180px;">
+            <select name="language" class="form-select form-select-sm" onchange="this.form.submit()">
+              <option value="pt" {% if LANGUAGE_CODE == 'pt' %}selected{% endif %}>🇧🇷 Português</option>
+              <option value="en" {% if LANGUAGE_CODE == 'en' %}selected{% endif %}>🇺🇸 English</option>
+              <option value="es" {% if LANGUAGE_CODE == 'es' %}selected{% endif %}>🇪🇸 Español</option>
+            </select>
+            <input type="hidden" name="next" value="{{ request.path }}">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</footer>

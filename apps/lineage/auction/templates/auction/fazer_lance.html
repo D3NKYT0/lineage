@@ -1,0 +1,385 @@
+{% extends "layouts/base.html" %}
+{% load i18n l10n static %}
+{% load itens_extras %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .bid-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .bid-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .bid-header h1 {
+    color: white;
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  .bid-header p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0.5rem 0 0 0;
+    font-size: 1.1rem;
+  }
+
+  .breadcrumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .breadcrumb-item a {
+    color: #00d9ff;
+    text-decoration: none;
+  }
+
+  .breadcrumb-item.active {
+    color: white;
+  }
+
+  .auction-info-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .auction-info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  }
+
+  .item-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .item-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 15px;
+    margin-right: 1.5rem;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .item-info h3 {
+    color: white;
+    margin: 0 0 0.5rem 0;
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
+  .item-id {
+    color: #00d9ff;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .auction-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .detail-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .detail-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #00d9ff;
+  }
+
+  .detail-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .detail-value {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .current-bid {
+    color: #28a745;
+  }
+
+  .time-remaining {
+    color: #ffc107;
+  }
+
+  .bid-form-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    display: block;
+    font-size: 1.1rem;
+  }
+
+  .form-control-custom {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+
+  .form-control-custom:focus {
+    outline: none;
+    border-color: #00d9ff;
+    box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .form-control-custom::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  select.form-control-custom option {
+    background-color: #2a2a3e;
+    color: white;
+  }
+
+  .btn-bid {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-bid:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .btn-back {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-back:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(111, 66, 193, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .form-actions .btn-bid {
+    flex: 2;
+  }
+
+  .form-actions .btn-back {
+    flex: 1;
+  }
+
+  @media (max-width: 768px) {
+    .form-actions {
+      flex-direction: column;
+    }
+    
+    .auction-details {
+      grid-template-columns: 1fr;
+    }
+    
+    .item-header {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .item-image {
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bid-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="bid-header">
+      <h1>
+        <i class="fas fa-gavel me-3"></i>{% trans "Dar Lance" %}
+      </h1>
+      <p>{% trans "Faça sua oferta no leilão" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'auction:listar_leiloes' %}">{% trans "Leilões" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Dar Lance" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Auction Info Card -->
+    <div class="auction-info-card">
+      <div class="item-header">
+        <img src="{% item_image_url auction.item_id %}" alt="{{ auction.item_name }}" class="item-image">
+        <div class="item-info">
+          <h3>{{ auction.item_name }}</h3>
+          <div class="item-id">ID: {{ auction.item_id }}</div>
+        </div>
+      </div>
+
+      <div class="auction-details">
+        <div class="detail-item">
+          <div class="detail-icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="detail-label">{% trans "Lance Atual" %}</div>
+          <div class="detail-value current-bid">R$ {{ auction.current_bid|default:auction.starting_bid|floatformat:2 }}</div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="detail-label">{% trans "Tempo Restante" %}</div>
+          <div class="detail-value time-remaining">{{ auction.end_time|timeuntil }}</div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-icon">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="detail-label">{% trans "Vendedor" %}</div>
+          <div class="detail-value">{{ auction.seller.username }}</div>
+        </div>
+
+        <div class="detail-item">
+          <div class="detail-icon">
+            <i class="fas fa-box"></i>
+          </div>
+          <div class="detail-label">{% trans "Quantidade" %}</div>
+          <div class="detail-value">{{ auction.quantity }}x</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bid Form Card -->
+    <div class="bid-form-card">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-user-circle me-2"></i>{% trans "Selecione o Personagem" %}
+          </label>
+          <select name="character_name" class="form-control-custom" required>
+            <option value="" disabled selected>{% trans "Escolha um personagem" %}</option>
+            {% for p in personagens %}
+              <option value="{{ p.char_name }}">{{ p.char_name }} (Lv.{{ p.base_level }})</option>
+            {% endfor %}
+          </select>
+        </div>
+      
+        <div class="form-group">
+          <label for="bid_amount" class="form-label">
+            <i class="fas fa-dollar-sign me-2"></i>{% trans "Seu Lance" %}
+          </label>
+          <input 
+            type="number" 
+            step="0.01" 
+            min="{{ auction.current_bid|default:auction.starting_bid|add:0.01 }}" 
+            name="bid_amount" 
+            id="bid_amount" 
+            class="form-control-custom" 
+            placeholder="{% trans 'Digite o valor do seu lance' %}"
+            required
+          >
+          <small class="text-muted" style="color: rgba(255, 255, 255, 0.7) !important; margin-top: 0.5rem; display: block;">
+            {% trans "Lance mínimo:" %} R$ {{ auction.current_bid|default:auction.starting_bid|add:0.01|floatformat:2 }}
+          </small>
+        </div>
+      
+        <div class="form-actions">
+          <button type="submit" class="btn-bid">
+            <i class="fas fa-gavel"></i>{% trans "Confirmar Lance" %}
+          </button>
+          <a href="{% url 'auction:listar_leiloes' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i>{% trans "Voltar" %}
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

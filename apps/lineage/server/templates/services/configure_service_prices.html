@@ -1,0 +1,344 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .service-prices-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .service-prices-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .service-prices-header h1 {
+    color: white;
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  .service-prices-header p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0.5rem 0 0 0;
+    font-size: 1.1rem;
+  }
+
+  .breadcrumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .breadcrumb-item a {
+    color: #00d9ff;
+    text-decoration: none;
+  }
+
+  .breadcrumb-item.active {
+    color: white;
+  }
+
+  .service-prices-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .service-prices-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  }
+
+  .service-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: #00d9ff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+  }
+
+  .service-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .service-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    display: block;
+    font-size: 1.1rem;
+  }
+
+  .form-control-custom {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+
+  .form-control-custom:focus {
+    outline: none;
+    border-color: #00d9ff;
+    box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .form-control-custom::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .btn-save {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-save:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .price-input-group {
+    position: relative;
+  }
+
+  .currency-symbol {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: bold;
+    z-index: 2;
+  }
+
+  .price-input-group .form-control-custom {
+    padding-left: 2.5rem;
+  }
+
+  .service-info {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid #00d9ff;
+  }
+
+  .service-info h4 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  .service-info p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .current-prices {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .price-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .price-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #00d9ff;
+  }
+
+  .price-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .price-value {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .price-value.current {
+    color: #28a745;
+  }
+
+  @media (max-width: 768px) {
+    .current-prices {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="service-prices-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="service-prices-header">
+      <h1>
+        <i class="fas fa-cog me-3"></i>{% trans "Configurar Preços de Serviços" %}
+      </h1>
+      <p>{% trans "Defina os valores para os serviços disponíveis no servidor" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Preços de Serviços" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Current Prices Display -->
+    <div class="current-prices">
+      <div class="price-card">
+        <div class="price-icon">
+          <i class="fas fa-user-edit"></i>
+        </div>
+        <div class="price-label">{% trans "Alteração de Nickname" %}</div>
+        <div class="price-value current">R$ {{ change_nickname_price|default:"0.00" }}</div>
+      </div>
+
+      <div class="price-card">
+        <div class="price-icon">
+          <i class="fas fa-venus-mars"></i>
+        </div>
+        <div class="price-label">{% trans "Alteração de Sexo" %}</div>
+        <div class="price-value current">R$ {{ change_sex_price|default:"0.00" }}</div>
+      </div>
+    </div>
+
+    <!-- Service Info -->
+    <div class="service-info">
+      <h4><i class="fas fa-info-circle me-2"></i>{% trans "Informações sobre os Serviços" %}</h4>
+      <p>
+        {% trans "Configure os preços para os serviços de personalização de personagens. 
+        Estes valores serão aplicados quando os jogadores solicitarem alterações em seus personagens." %}
+      </p>
+    </div>
+
+    <!-- Main Form Card -->
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="service-prices-card">
+          <div class="text-center">
+            <div class="service-icon">
+              <i class="fas fa-dollar-sign"></i>
+            </div>
+            <h2 class="service-title">{% trans "Definir Novos Preços" %}</h2>
+            <p class="service-description">
+              {% trans "Atualize os valores dos serviços. Use números decimais separados por ponto (ex: 10.50)" %}
+            </p>
+          </div>
+
+          <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+              <label for="change_nickname_price" class="form-label">
+                <i class="fas fa-user-edit me-2"></i>{% trans "Preço para Alteração de Nickname" %}
+              </label>
+              <div class="price-input-group">
+                <span class="currency-symbol">R$</span>
+                <input 
+                  type="number" 
+                  step="0.01" 
+                  min="0" 
+                  name="change_nickname_price" 
+                  id="change_nickname_price" 
+                  class="form-control-custom"
+                  value="{{ change_nickname_price|default:'' }}"
+                  placeholder="{% trans 'Ex: 10.50' %}"
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="change_sex_price" class="form-label">
+                <i class="fas fa-venus-mars me-2"></i>{% trans "Preço para Alteração de Sexo" %}
+              </label>
+              <div class="price-input-group">
+                <span class="currency-symbol">R$</span>
+                <input 
+                  type="number" 
+                  step="0.01" 
+                  min="0" 
+                  name="change_sex_price" 
+                  id="change_sex_price" 
+                  class="form-control-custom"
+                  value="{{ change_sex_price|default:'' }}"
+                  placeholder="{% trans 'Ex: 15.00' %}"
+                >
+              </div>
+            </div>
+
+            <button type="submit" class="btn-save">
+              <i class="fas fa-save"></i>{% trans "Salvar Configurações" %}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

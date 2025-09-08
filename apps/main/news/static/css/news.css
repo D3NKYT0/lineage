@@ -1,0 +1,130 @@
+/* Estilos gerais */
+.card {
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+/* Estilo para o cabeçalho de notícias */
+.card-header.bg-primary {
+    background-color: #3f4d67 !important; /* Cor de fundo do cabeçalho */
+    color: white;
+    border-radius: 0.5rem 0.5rem 0 0;
+    padding: 1rem;
+}
+
+/* Título das notícias */
+.card-body .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Sombra no título */
+    margin-bottom: 10px;
+}
+
+/* Estilo para o resumo das notícias */
+.card-body .card-text.text-muted {
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.7);
+    margin-bottom: 15px;
+}
+
+/* Estilo do botão "Leia mais" */
+.card-body .btn-primary {
+    background-color: #3f4d67;
+    border-color: #3f4d67;
+    border-radius: 0.375rem;
+    transition: background-color 0.3s ease;
+}
+
+.card-body .btn-primary:hover {
+    background-color: #2e3a4e;
+    border-color: #2e3a4e;
+}
+
+/* Estilos para a linha de informações (autor, data) */
+.card-body .card-text small {
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+/* Imagem da notícia */
+.card-img-top {
+    max-height: 200px;
+    object-fit: cover;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+/* Ajuste de layout para as notícias */
+.row {
+    margin-top: 20px;
+}
+
+/* Estilos do título da página */
+h2.my-4 {
+    font-size: 2rem;
+    color: #3f4d67;
+    text-align: center;
+    margin-top: 30px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo de texto quando não há notícias */
+.text-muted {
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Adicionando uma sombra suave ao card */
+.card.shadow-sm {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsividade para as colunas */
+@media (max-width: 768px) {
+    .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* Estilo do cabeçalho da página */
+.header-bg {
+    background-color: #3f4d67; /* Cor de fundo do cabeçalho */
+    color: white;
+    padding: 1.5rem 0;
+    border-radius: 0 0 0.5rem 0.5rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo do título no cabeçalho */
+.header-bg h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Sombra no título */
+}
+
+/* Subtítulo no cabeçalho */
+.header-bg p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Estilo para o breadcrumb */
+.breadcrumb {
+    background-color: transparent;
+    padding-left: 0;
+}
+
+.breadcrumb-item a {
+    color: #3f4d67;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+}

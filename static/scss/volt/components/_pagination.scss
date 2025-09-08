@@ -1,0 +1,70 @@
+/**
+ * = Paginations
+ */
+.circle-pagination {
+
+    .page-link,
+    span {
+        @include display-flex();
+        align-items    : center;
+        justify-content: center;
+        width          : 34px;
+        height         : 34px;
+        padding        : 0;
+        @include border-radius($circle-radius);
+    }
+}
+
+// datatable pagination
+
+.dataTable-pagination-list {
+    display     : flex;
+    padding-left: 0;
+    list-style  : none;
+
+    li>a {
+        position        : relative;
+        display         : block;
+        color           : $pagination-color;
+        text-decoration : if($link-decoration==none, null, none);
+        background-color: $pagination-bg;
+        border          : $pagination-border-width solid $pagination-border-color;
+        @include transition($pagination-transition);
+
+        &:hover {
+            z-index         : 2;
+            color           : $pagination-hover-color;
+            text-decoration : if($link-hover-decoration==underline, none, null);
+            background-color: $pagination-hover-bg;
+            border-color    : $pagination-hover-border-color;
+        }
+
+        &:focus {
+            z-index         : 3;
+            color           : $pagination-focus-color;
+            background-color: $pagination-focus-bg;
+            outline         : $pagination-focus-outline;
+            box-shadow      : $pagination-focus-box-shadow;
+        }
+    }
+
+    li {
+        &:not(:first-child) a {
+            margin-left: $pagination-margin-start;
+        }
+
+        &.active a {
+            z-index: 3;
+            color  : $pagination-active-color;
+            @include gradient-bg($pagination-active-bg);
+            border-color: $pagination-active-border-color;
+        }
+
+        &.disabled a {
+            color           : $pagination-disabled-color;
+            pointer-events  : none;
+            background-color: $pagination-disabled-bg;
+            border-color    : $pagination-disabled-border-color;
+        }
+    }
+}

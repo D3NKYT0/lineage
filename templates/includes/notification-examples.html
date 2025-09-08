@@ -1,0 +1,123 @@
+{% load static i18n %}
+
+<!-- Exemplos de uso do sistema de notificações flutuantes -->
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title">{% trans "Exemplos de Notificações" %}</h5>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <h6>{% trans "Notificações Básicas" %}</h6>
+        <div class="d-grid gap-2">
+          <button type="button" class="btn btn-success btn-sm" onclick="showSuccessNotification()">
+            <i class="bi bi-check-circle"></i> {% trans "Sucesso" %}
+          </button>
+          <button type="button" class="btn btn-danger btn-sm" onclick="showErrorNotification()">
+            <i class="bi bi-exclamation-triangle"></i> {% trans "Erro" %}
+          </button>
+          <button type="button" class="btn btn-warning btn-sm" onclick="showWarningNotification()">
+            <i class="bi bi-exclamation-circle"></i> {% trans "Aviso" %}
+          </button>
+          <button type="button" class="btn btn-info btn-sm" onclick="showInfoNotification()">
+            <i class="bi bi-info-circle"></i> {% trans "Informação" %}
+          </button>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h6>{% trans "Notificações Avançadas" %}</h6>
+        <div class="d-grid gap-2">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="showPersistentNotification()">
+            <i class="bi bi-clock"></i> {% trans "Persistente" %}
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="showMultipleNotifications()">
+            <i class="bi bi-collection"></i> {% trans "Múltiplas" %}
+          </button>
+          <button type="button" class="btn btn-dark btn-sm" onclick="closeAllNotifications()">
+            <i class="bi bi-x-circle"></i> {% trans "Fechar Todas" %}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Funções de exemplo para demonstrar o uso do sistema
+
+function showSuccessNotification() {
+  if (window.floatingNotifications) {
+    window.floatingNotifications.success('Operação realizada com sucesso! Esta é uma mensagem de sucesso.');
+  }
+}
+
+function showErrorNotification() {
+  if (window.floatingNotifications) {
+    window.floatingNotifications.error('Ocorreu um erro na operação. Verifique os dados e tente novamente.');
+  }
+}
+
+function showWarningNotification() {
+  if (window.floatingNotifications) {
+    window.floatingNotifications.warning('Atenção: alguns dados estão incompletos. Revise antes de continuar.');
+  }
+}
+
+function showInfoNotification() {
+  if (window.floatingNotifications) {
+    window.floatingNotifications.info('Nova atualização disponível. Clique aqui para baixar.');
+  }
+}
+
+function showPersistentNotification() {
+  if (window.floatingNotifications) {
+    window.floatingNotifications.addNotification(
+      'Esta notificação não fecha automaticamente. Você deve fechá-la manualmente.',
+      'info',
+      { autoClose: false }
+    );
+  }
+}
+
+function showMultipleNotifications() {
+  if (window.floatingNotifications) {
+    // Simula múltiplas notificações sendo adicionadas rapidamente
+    window.floatingNotifications.success('Primeira notificação de sucesso!');
+    
+    setTimeout(() => {
+      window.floatingNotifications.warning('Segunda notificação de aviso!');
+    }, 500);
+    
+    setTimeout(() => {
+      window.floatingNotifications.info('Terceira notificação de informação!');
+    }, 1000);
+    
+    setTimeout(() => {
+      window.floatingNotifications.error('Quarta notificação de erro!');
+    }, 1500);
+  }
+}
+
+function closeAllNotifications() {
+  if (window.floatingNotifications) {
+    window.floatingNotifications.closeAll();
+  }
+}
+
+// Exemplo de configuração dinâmica
+function configureNotifications() {
+  if (window.floatingNotifications) {
+    // Altera o tempo de auto-close para 3 segundos
+    window.floatingNotifications.setOptions({
+      autoCloseDelay: 3000,
+      maxNotifications: 3
+    });
+  }
+}
+
+// Configura as notificações quando a página carrega
+document.addEventListener('DOMContentLoaded', function() {
+  // Aguarda um pouco para garantir que o sistema foi inicializado
+  setTimeout(configureNotifications, 100);
+});
+</script>

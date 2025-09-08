@@ -1,0 +1,305 @@
+{% extends "layouts/base.html" %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .shop-manager-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .shop-manager-card {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #6f42c1;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(111, 66, 193, 0.3);
+    transition: all 0.3s ease;
+    color: #f8f9fa;
+    overflow: hidden;
+  }
+
+  .shop-manager-header {
+    background: linear-gradient(135deg, #007bff, #6610f2);
+    border-radius: 15px 15px 0 0;
+    padding: 2rem;
+    margin: -1px -1px 0 -1px;
+  }
+
+  .shop-manager-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+  }
+
+  .form-section {
+    padding: 2rem;
+  }
+
+  .form-label {
+    color: #f8f9fa;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control, .form-select {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(111, 66, 193, 0.3);
+    border-radius: 10px;
+    color: #f8f9fa;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus, .form-select:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #00d9ff;
+    box-shadow: 0 0 0 0.2rem rgba(13, 217, 255, 0.25);
+    color: #f8f9fa;
+  }
+
+  .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .action-btn {
+    display: inline-block;
+    background: linear-gradient(45deg, #007bff, #6610f2);
+    border: none;
+    border-radius: 50px;
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
+    color: white;
+    text-decoration: none;
+  }
+
+  .back-btn {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+  }
+
+  .back-btn:hover {
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+  }
+
+  .edit-btn {
+    background: linear-gradient(45deg, #fd7e14, #e83e8c);
+    box-shadow: 0 4px 15px rgba(253, 126, 20, 0.4);
+    padding: 8px 20px;
+    font-size: 0.9rem;
+  }
+
+  .edit-btn:hover {
+    box-shadow: 0 6px 20px rgba(253, 126, 20, 0.6);
+  }
+
+  .packages-list {
+    background: rgba(111, 66, 193, 0.05);
+    border: 1px solid rgba(111, 66, 193, 0.2);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .packages-list h5 {
+    color: #00d9ff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .package-card {
+    background: linear-gradient(135deg, rgba(111, 66, 193, 0.1), rgba(232, 62, 140, 0.1));
+    border: 1px solid rgba(111, 66, 193, 0.3);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .package-card:hover {
+    transform: translateY(-2px);
+    border-color: #00d9ff;
+    box-shadow: 0 8px 25px rgba(13, 217, 255, 0.2);
+  }
+
+  .package-name {
+    color: #f8f9fa;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .package-price {
+    color: #00d9ff;
+    font-weight: 700;
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .status-active {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+  }
+
+  .status-inactive {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    color: white;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #b8c2cc;
+  }
+
+  .empty-state i {
+    font-size: 3rem;
+    color: #6f42c1;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @media (max-width: 768px) {
+    .shop-manager-title {
+      font-size: 1.5rem;
+    }
+    
+    .form-section {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="shop-manager-bg">
+  <div class="container">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+      <div>
+        <h1 class="shop-manager-title">
+          <i class="fas fa-gift me-3"></i>
+          {% trans "Gerenciar Pacotes" %}
+        </h1>
+        <p class="text-muted">{% trans "Monte pacotes personalizados com itens e promoções" %}</p>
+      </div>
+      <a href="{% url 'shop:dashboard' %}" class="action-btn back-btn">
+        <i class="fas fa-arrow-left me-2"></i>
+        {% trans "Voltar" %}
+      </a>
+    </div>
+
+    <!-- Formulário de Cadastro -->
+    <div class="shop-manager-card fade-in-up">
+      <div class="shop-manager-header">
+        <h4 class="shop-manager-title">
+          <i class="fas fa-plus me-2"></i>
+          {% trans "Cadastrar Novo Pacote" %}
+        </h4>
+      </div>
+      <div class="form-section">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.media }}
+          <div class="mb-3">
+            {{ form.as_p }}
+          </div>
+          <button type="submit" class="action-btn w-100">
+            <i class="fas fa-save me-2"></i>
+            {% trans "Cadastrar Pacote" %}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lista de Pacotes -->
+    <div class="packages-list fade-in-up">
+      <h5>
+        <i class="fas fa-list me-2"></i>
+        {% trans "Pacotes Cadastrados" %}
+      </h5>
+      
+      {% if packages %}
+        {% for package in packages %}
+          <div class="package-card">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <div class="package-name">{{ package.nome }}</div>
+                <div class="package-price">R$ {{ package.preco_total }}</div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="status-badge {% if package.ativo %}status-active{% else %}status-inactive{% endif %}">
+                  {% if package.ativo %}{% trans "Ativo" %}{% else %}{% trans "Inativo" %}{% endif %}
+                </span>
+                <a href="{% url 'shop:edit_package' package.id %}" class="action-btn edit-btn">
+                  <i class="fas fa-edit me-1"></i>
+                  {% trans "Editar" %}
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <i class="fas fa-gift"></i>
+          <h5>{% trans "Nenhum pacote cadastrado" %}</h5>
+          <p>{% trans "Comece cadastrando seu primeiro pacote usando o formulário acima." %}</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Scripts para o FilteredSelectMultiple -->
+<script type="text/javascript" src="{% url 'jsi18n' %}"></script>
+<script type="text/javascript">
+  window.addEventListener('load', function () {
+    if (typeof django !== 'undefined' && django.jQuery) {
+      django.jQuery('select.selectfilter, select.selectfilterstacked').each(function () {
+        SelectFilter.init(
+          this.id,
+          this.getAttribute('data-field-name'),
+          this.classList.contains('selectfilterstacked')
+        );
+      });
+    }
+  });
+</script>
+{% endblock %}

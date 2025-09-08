@@ -1,0 +1,95 @@
+{% extends 'wiki/base.html' %}
+{% load static i18n wiki_tags %}
+
+{% block title %}{% trans "Mapa do Site" %} - {% trans "Wiki" %}{% endblock %}
+
+{% block wiki_content %}
+<div class="wiki-sitemap">
+    <div class="page-header mb-4">
+        <div class="page-title-section">
+            <h1 class="page-title">
+                <i class="fas fa-sitemap"></i>
+                {% trans "Mapa do Site" %}
+            </h1>
+            <p class="page-description">
+                {% trans "Navegue por todas as páginas do Wiki organizadas por categoria" %}
+            </p>
+        </div>
+    </div>
+
+    <div class="sitemap-content">
+        {% if pages_by_type %}
+            {% for content_type, pages in pages_by_type.items %}
+            <div class="sitemap-section mb-5">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="fas fa-folder"></i>
+                        {{ content_type }}
+                    </h3>
+                    <span class="page-count">{{ pages|length }} {% trans "página(s)" %}</span>
+                </div>
+                
+                <div class="section-content">
+                    <div class="row">
+                        {% for page in pages %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="sitemap-item">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="{% get_page_icon page %}"></i>
+                                            <a href="{% url 'wiki:page' page.slug %}" class="text-decoration-none">
+                                                {{ page.translations.first.title }}
+                                            </a>
+                                        </h5>
+                                        
+                                        {% if page.translations.first.subtitle %}
+                                            <h6 class="card-subtitle mb-2 text-muted">
+                                                {{ page.translations.first.subtitle }}
+                                            </h6>
+                                        {% endif %}
+                                        
+                                        {% if page.translations.first.summary %}
+                                            <p class="card-text small">
+                                                {{ page.translations.first.summary|striptags|truncatewords:15 }}
+                                            </p>
+                                        {% endif %}
+                                        
+                                        <div class="item-meta">
+                                            {% if page.is_menu_item %}
+                                                <span class="badge bg-success">{% trans "Menu" %}</span>
+                                            {% endif %}
+                                            {% if page.order %}
+                                                <span class="badge bg-secondary">#{{ page.order }}</span>
+                                            {% endif %}
+                                            {% if page.parent_page %}
+                                                <span class="badge bg-info">{% trans "Subpágina" %}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-sitemap">
+                <div class="text-center">
+                    <i class="fas fa-sitemap fa-3x text-muted mb-3"></i>
+                    <h4>{% trans "Nenhuma página encontrada" %}</h4>
+                    <p class="text-muted">
+                        {% trans "O mapa do site estará disponível quando páginas forem criadas." %}
+                    </p>
+                    <a href="{% url 'wiki:home' %}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i>
+                        {% trans "Voltar ao Início" %}
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

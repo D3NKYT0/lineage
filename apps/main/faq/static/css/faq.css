@@ -1,0 +1,197 @@
+/* FAQ Modern Styles - Complementar ao template */
+
+/* Estilos adicionais para melhorar a experiência */
+.faq-container {
+  position: relative;
+}
+
+.faq-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(111, 66, 193, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(13, 202, 240, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(232, 62, 140, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Melhorias nos botões do accordion */
+.faq-button {
+  position: relative;
+  z-index: 1;
+}
+
+.faq-button:focus {
+  box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+  outline: none;
+}
+
+/* Efeito de loading para o accordion */
+.faq-collapse {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-collapse.show {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Melhorias na responsividade */
+@media (max-width: 576px) {
+  .faq-title {
+    font-size: 1.8rem;
+  }
+  
+  .faq-card {
+    margin: 0 1rem;
+  }
+  
+  .faq-button {
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+  }
+  
+  .faq-button::after {
+    right: 1.25rem;
+  }
+}
+
+/* Efeitos de hover melhorados */
+.faq-item {
+  position: relative;
+}
+
+.faq-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(111, 66, 193, 0.05), rgba(13, 202, 240, 0.05));
+  border-radius: 15px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.faq-item:hover::after {
+  opacity: 1;
+}
+
+/* Melhorias na tipografia */
+.faq-collapse-body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.faq-collapse-body h1,
+.faq-collapse-body h2,
+.faq-collapse-body h3,
+.faq-collapse-body h4,
+.faq-collapse-body h5,
+.faq-collapse-body h6 {
+  color: #6f42c1;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.faq-collapse-body p {
+  margin-bottom: 1rem;
+}
+
+.faq-collapse-body ul,
+.faq-collapse-body ol {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.faq-collapse-body li {
+  margin-bottom: 0.5rem;
+}
+
+.faq-collapse-body code {
+  background: #f8f9fa;
+  color: #e83e8c;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.faq-collapse-body pre {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.faq-collapse-body blockquote {
+  border-left: 4px solid #6f42c1;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #6c757d;
+}
+
+/* Melhorias nos ícones */
+.faq-icon {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Efeito de destaque para itens ativos */
+.faq-item.active {
+  box-shadow: 0 8px 25px rgba(111, 66, 193, 0.3);
+}
+
+/* Melhorias na acessibilidade */
+.faq-button:focus-visible {
+  outline: 2px solid #6f42c1;
+  outline-offset: 2px;
+}
+
+/* Efeitos de transição suaves */
+.faq-card,
+.faq-item,
+.faq-button,
+.faq-collapse {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Melhorias no estado vazio */
+.faq-empty {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 15px;
+  border: 2px dashed #dee2e6;
+}
+
+.faq-empty:hover {
+  border-color: #6f42c1;
+  background: linear-gradient(135deg, #f0f0ff, #e6f3ff);
+}

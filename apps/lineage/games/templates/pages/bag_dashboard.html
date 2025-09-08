@@ -1,0 +1,400 @@
+{% extends "layouts/base.html" %}
+{% load i18n l10n %}
+{% load static %}
+{% load itens_extras %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .bag-dashboard-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .bag-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .bag-header h1 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .bag-header p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .bag-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .bag-card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    color: white;
+  }
+
+  .user-info i {
+    margin-right: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .user-info strong {
+    color: white;
+    font-weight: 600;
+  }
+
+  .bulk-transfer-form {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .form-select-custom {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .form-select-custom:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.1);
+  }
+
+  .form-select-custom option {
+    background: #2d3748;
+    color: white;
+  }
+
+  .btn-bulk-transfer {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-bulk-transfer:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(237, 137, 54, 0.4);
+    color: white;
+  }
+
+  .item-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+
+  .item-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .item-image {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    margin: 0 auto 1rem;
+    display: block;
+    transition: all 0.3s ease;
+  }
+
+  .item-card:hover .item-image {
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+  }
+
+  .item-name {
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .item-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+  }
+
+  .item-detail {
+    text-align: center;
+  }
+
+  .item-detail-label {
+    color: #a0aec0;
+    font-size: 0.8rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .item-detail-value {
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .item-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .form-control-custom {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: white;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .form-control-custom:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.1);
+  }
+
+  .form-control-custom::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .btn-transfer {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-transfer:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+    color: white;
+  }
+
+  .empty-bag {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #a0aec0;
+  }
+
+  .empty-bag i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .empty-bag h3 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .empty-bag p {
+    color: #a0aec0;
+    font-size: 1.1rem;
+  }
+
+  .no-bag-alert {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    color: white;
+    box-shadow: 0 8px 25px rgba(237, 137, 54, 0.3);
+  }
+
+  .no-bag-alert h3 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .no-bag-alert p {
+    margin: 0;
+    opacity: 0.9;
+  }
+
+  @media (max-width: 768px) {
+    .bag-card-header {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .bulk-transfer-form {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .item-details {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="bag-dashboard-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="bag-header">
+      <h1>
+        <i class="fas fa-briefcase me-3"></i>{% trans "Minha Bag" %}
+      </h1>
+      <p>{% trans "Gerencie seus itens e transferências" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" style="color: #a0aec0;">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: white;">{% trans "Bag" %}</li>
+      </ol>
+    </nav>
+
+    {% if bag %}
+      <!-- Bag Content -->
+      <div class="bag-card">
+        <!-- Bag Header -->
+        <div class="bag-card-header">
+          <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <strong>{{ request.user.username }}</strong>
+          </div>
+          
+          <form method="post" action="{% url 'games:esvaziar_bag_para_inventario' %}" class="bulk-transfer-form">
+            {% csrf_token %}
+            <select name="character_name_destino" class="form-select-custom" required>
+              <option value="" disabled selected>{% trans "Selecione o personagem" %}</option>
+              {% for nome in personagens %}
+                <option value="{{ nome }}">{{ nome }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="btn-bulk-transfer">
+              <i class="fas fa-boxes me-1"></i>{% trans "Mover todos para inventário" %}
+            </button>
+          </form>
+        </div>
+
+        <!-- Items Grid -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          {% for item in items %}
+            <div class="col">
+              <div class="item-card">
+                <img src="{% item_image_url item.item_id %}" 
+                     alt="{{ item.item_name }}"
+                     class="item-image">
+                
+                <h5 class="item-name">{{ item.item_name }}</h5>
+                
+                <div class="item-details">
+                  <div class="item-detail">
+                    <div class="item-detail-label">{% trans "Quantidade" %}</div>
+                    <div class="item-detail-value">{{ item.quantity }}</div>
+                  </div>
+                  <div class="item-detail">
+                    <div class="item-detail-label">{% trans "Encantamento" %}</div>
+                    <div class="item-detail-value">+{{ item.enchant }}</div>
+                  </div>
+                </div>
+
+                <!-- Individual Transfer Form -->
+                <form method="post" action="{% url 'games:transferir_item_bag' %}" class="item-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                  <input type="hidden" name="enchant" value="{{ item.enchant }}">
+                  
+                  <input type="number" 
+                         name="quantity" 
+                         value="{{ item.quantity }}" 
+                         class="form-control-custom" 
+                         min="1" 
+                         max="{{ item.quantity }}" 
+                         required>
+                  
+                  <select name="character_name_destino" class="form-select-custom" required>
+                    <option value="" disabled selected>{% trans "Selecione o personagem" %}</option>
+                    {% for nome in personagens %}
+                      <option value="{{ nome }}">{{ nome }}</option>
+                    {% endfor %}
+                  </select>
+                  
+                  <button type="submit" class="btn-transfer">
+                    <i class="fas fa-arrow-down me-1"></i>{% trans "Mover para inventário" %}
+                  </button>
+                </form>
+              </div>
+            </div>
+          {% empty %}
+            <div class="col-12">
+              <div class="empty-bag">
+                <i class="fas fa-box-open"></i>
+                <h3>{% trans "Bag Vazia" %}</h3>
+                <p>{% trans "Nenhum item na bag no momento." %}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <!-- No Bag Alert -->
+      <div class="no-bag-alert">
+        <h3>
+          <i class="fas fa-exclamation-triangle me-2"></i>{% trans "Bag não encontrada" %}
+        </h3>
+        <p>{% trans "Você ainda não possui uma bag." %}</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

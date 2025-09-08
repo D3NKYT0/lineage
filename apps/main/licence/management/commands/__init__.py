@@ -1,0 +1,1 @@
+# Comandos de gerenciamento do app licence 

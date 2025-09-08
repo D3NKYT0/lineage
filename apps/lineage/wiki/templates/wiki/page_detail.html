@@ -1,0 +1,74 @@
+{% extends 'wiki/base.html' %}
+{% load static i18n wiki_tags %}
+
+{% block title %}{{ translation.title }} - {% trans "Wiki" %}{% endblock %}
+
+{% block wiki_content %}
+{% if translation %}
+<div class="wiki-page-detail">
+    <div class="page-header mb-4">
+        <div class="page-title-section">
+            <h1 class="page-title">
+                <i class="{% get_page_icon page %}"></i>
+                {{ translation.title }}
+            </h1>
+            {% if translation.subtitle %}
+                <p class="page-subtitle">{{ translation.subtitle }}</p>
+            {% endif %}
+            <div class="page-meta">
+                <span class="badge bg-secondary">{{ content_type_display }}</span>
+                {% if page.is_menu_item %}
+                    <span class="badge bg-success">{% trans "Menu" %}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        {% if translation.summary %}
+        <div class="page-summary mb-4">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <strong>{% trans "Resumo" %}:</strong> {{ translation.summary }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="content-body">
+            {{ translation.content|safe }}
+        </div>
+    </div>
+
+    {% if page.parent_page %}
+    <div class="page-navigation mt-5">
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-level-up-alt"></i>
+                {% trans "Página Pai" %}
+            </div>
+            <div class="card-body">
+                <a href="{% url 'wiki:page' page.parent_page.slug %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left"></i>
+                    {{ page.parent_page.translations.first.title }}
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% else %}
+<div class="wiki-page-detail">
+    <div class="page-header mb-4">
+        <div class="page-title-section">
+            <h1 class="page-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                {% trans "Tradução não disponível" %}
+            </h1>
+            <p class="page-description">
+                {% trans "Esta página não possui tradução para o idioma atual." %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

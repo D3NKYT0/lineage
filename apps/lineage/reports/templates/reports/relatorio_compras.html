@@ -1,0 +1,417 @@
+{% extends "layouts/base.html" %}
+{% load humanize i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'reports:dashboard' %}">{% trans "Relatórios" %}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{% trans "Relatório de Compras" %}</li>
+{% endblock breadcrumbs %}
+
+{% block page_header %}
+<h5 class="display-5">{% trans "Relatório de Compras" %}</h5>
+{% endblock page_header %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="report-container">
+          <div class="report-header">
+            <h1 class="report-title">
+              <i class="fas fa-shopping-cart me-3"></i>
+              {% trans "Relatório de Compras" %}
+            </h1>
+            <p class="reports-subtitle">
+              {% trans "Analise todas as compras realizadas, itens mais vendidos e estatísticas de receita do sistema." %}
+            </p>
+          </div>
+          
+          <div class="report-body">
+            <!-- Resumo Geral de Compras -->
+            <div class="row g-4 mb-4">
+              <div class="col-md-3">
+                <div class="status-block bg-primary text-white p-3 rounded shadow">
+                  <i class="fas fa-shopping-cart fa-2x mb-2"></i>
+                  <h5>{% trans "Total de Compras" %}</h5>
+                  <h4>{{ total_compras }}</h4>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="status-block bg-success text-white p-3 rounded shadow">
+                  <i class="fas fa-dollar-sign fa-2x mb-2"></i>
+                  <h5>{% trans "Total Gasto" %}</h5>
+                  <h4>R$ {{ total_pago|floatformat:2 }}</h4>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="status-block bg-warning text-white p-3 rounded shadow">
+                  <i class="fas fa-times-circle fa-2x mb-2"></i>
+                  <h5>{% trans "Carrinhos Abandonados" %}</h5>
+                  <h4>{{ carrinhos_abandonados }}</h4>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="status-block bg-info text-white p-3 rounded shadow">
+                  <i class="fas fa-chart-line fa-2x mb-2"></i>
+                  <h5>{% trans "Receita da Última Semana" %}</h5>
+                  <h4>R$ {{ receita_periodo|floatformat:2 }}</h4>
+                </div>
+              </div>
+            </div>
+
+            <!-- Itens Mais Vendidos -->
+            <div class="reports-card">
+              <div class="reports-card-header">
+                <i class="fas fa-trophy reports-icon"></i>
+                <h2 class="reports-card-title">{% trans "Itens Mais Vendidos" %}</h2>
+                <p class="reports-card-description">
+                  {% trans "Produtos com maior volume de vendas" %}
+                </p>
+              </div>
+              <div class="reports-card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="chart-container">
+                      <canvas id="itensMaisVendidos"></canvas>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="table-responsive">
+                      <table class="table report-table">
+                        <thead>
+                          <tr>
+                            <th><i class="fas fa-box me-2"></i>{% trans "Item" %}</th>
+                            <th><i class="fas fa-chart-bar me-2"></i>{% trans "Quantidade" %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for item in itens_mais_vendidos %}
+                            <tr>
+                              <td>
+                                <i class="fas fa-box text-primary me-2"></i>
+                                {{ item.nome }}
+                              </td>
+                              <td>
+                                <span class="badge bg-primary">
+                                  <i class="fas fa-chart-bar me-1"></i>
+                                  {{ item.quantidade_vendida|default:"0" }} {% trans "unidades" %}
+                                </span>
+                              </td>
+                            </tr>
+                          {% empty %}
+                            <tr>
+                              <td colspan="2" class="text-center py-4">
+                                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">{% trans "Nenhum item vendido." %}</p>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pacotes Populares -->
+            <div class="reports-card">
+              <div class="reports-card-header">
+                <i class="fas fa-gift reports-icon"></i>
+                <h2 class="reports-card-title">{% trans "Pacotes Populares" %}</h2>
+                <p class="reports-card-description">
+                  {% trans "Pacotes com maior procura pelos jogadores" %}
+                </p>
+              </div>
+              <div class="reports-card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="chart-container">
+                      <canvas id="pacotesPopulares"></canvas>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="table-responsive">
+                      <table class="table report-table">
+                        <thead>
+                          <tr>
+                            <th><i class="fas fa-gift me-2"></i>{% trans "Pacote" %}</th>
+                            <th><i class="fas fa-chart-bar me-2"></i>{% trans "Quantidade" %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for pacote in pacotes_populares %}
+                            <tr>
+                              <td>
+                                <i class="fas fa-gift text-success me-2"></i>
+                                {{ pacote.nome }}
+                              </td>
+                              <td>
+                                <span class="badge bg-success">
+                                  <i class="fas fa-chart-bar me-1"></i>
+                                  {{ pacote.quantidade_vendida|default:"0" }} {% trans "pacotes" %}
+                                </span>
+                              </td>
+                            </tr>
+                          {% empty %}
+                            <tr>
+                              <td colspan="2" class="text-center py-4">
+                                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">{% trans "Nenhum pacote vendido." %}</p>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Promoções Utilizadas -->
+            <div class="reports-card">
+              <div class="reports-card-header">
+                <i class="fas fa-tag reports-icon"></i>
+                <h2 class="reports-card-title">{% trans "Promoções Utilizadas" %}</h2>
+                <p class="reports-card-description">
+                  {% trans "Códigos promocionais mais utilizados" %}
+                </p>
+              </div>
+              <div class="reports-card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="chart-container">
+                      <canvas id="promocoesUtilizadas"></canvas>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="table-responsive">
+                      <table class="table report-table">
+                        <thead>
+                          <tr>
+                            <th><i class="fas fa-tag me-2"></i>{% trans "Código" %}</th>
+                            <th><i class="fas fa-chart-bar me-2"></i>{% trans "Utilizações" %}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for promocao in promocoes_utilizadas %}
+                            <tr>
+                              <td>
+                                <i class="fas fa-tag text-warning me-2"></i>
+                                {{ promocao.codigo }}
+                              </td>
+                              <td>
+                                <span class="badge bg-warning">
+                                  <i class="fas fa-chart-bar me-1"></i>
+                                  {{ promocao.quantidade_utilizada }} {% trans "vezes" %}
+                                </span>
+                              </td>
+                            </tr>
+                          {% empty %}
+                            <tr>
+                              <td colspan="2" class="text-center py-4">
+                                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">{% trans "Nenhuma promoção utilizada." %}</p>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botão de Volta -->
+            <div class="text-center mt-5">
+              <a href="{% url 'reports:dashboard' %}" class="report-back-button">
+                <i class="fas fa-arrow-left me-2"></i>
+                {% trans "Voltar ao Dashboard de Relatórios" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Gráfico de Itens Mais Vendidos
+    const ctxItens = document.getElementById('itensMaisVendidos').getContext('2d');
+    new Chart(ctxItens, {
+      type: 'bar',
+      data: {
+        labels: [{% for item in itens_mais_vendidos %}'{{ item.nome }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+          label: '{% trans "Quantidade Vendida" %}',
+          data: [{% for item in itens_mais_vendidos %}{{ item.quantidade_vendida|default:"0" }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+          backgroundColor: 'rgba(111, 66, 193, 0.7)',
+          borderColor: 'rgba(111, 66, 193, 1)',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: '{% trans "Itens Mais Vendidos" %}',
+            color: '#333',
+            font: {
+              size: 16,
+              family: 'Orbitron, sans-serif'
+            }
+          },
+          legend: {
+            labels: {
+              color: '#333',
+              font: {
+                size: 12
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { 
+              color: '#333',
+              font: {
+                size: 10
+              }
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { 
+              color: '#333',
+              font: {
+                size: 12
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Gráfico de Pacotes Populares
+    const ctxPacotes = document.getElementById('pacotesPopulares').getContext('2d');
+    new Chart(ctxPacotes, {
+      type: 'bar',
+      data: {
+        labels: [{% for pacote in pacotes_populares %}'{{ pacote.nome }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+          label: '{% trans "Quantidade Vendida" %}',
+          data: [{% for pacote in pacotes_populares %}{{ pacote.quantidade_vendida|default:"0" }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+          backgroundColor: 'rgba(232, 62, 140, 0.7)',
+          borderColor: 'rgba(232, 62, 140, 1)',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: '{% trans "Pacotes Populares" %}',
+            color: '#333',
+            font: {
+              size: 16,
+              family: 'Orbitron, sans-serif'
+            }
+          },
+          legend: {
+            labels: {
+              color: '#333',
+              font: {
+                size: 12
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { 
+              color: '#333',
+              font: {
+                size: 10
+              }
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { 
+              color: '#333',
+              font: {
+                size: 12
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Gráfico de Promoções Utilizadas
+    const ctxPromocoes = document.getElementById('promocoesUtilizadas').getContext('2d');
+    new Chart(ctxPromocoes, {
+      type: 'doughnut',
+      data: {
+        labels: [{% for promocao in promocoes_utilizadas %}'{{ promocao.codigo }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+          label: '{% trans "Utilizações" %}',
+          data: [{% for promocao in promocoes_utilizadas %}{{ promocao.quantidade_utilizada }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+          backgroundColor: [
+            'rgba(111, 66, 193, 0.8)',
+            'rgba(232, 62, 140, 0.8)',
+            'rgba(13, 202, 240, 0.8)',
+            'rgba(255, 165, 0, 0.8)',
+            'rgba(0, 200, 83, 0.8)'
+          ],
+          borderColor: [
+            'rgba(111, 66, 193, 1)',
+            'rgba(232, 62, 140, 1)',
+            'rgba(13, 202, 240, 1)',
+            'rgba(255, 165, 0, 1)',
+            'rgba(0, 200, 83, 1)'
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: {
+            display: true,
+            text: '{% trans "Promoções Utilizadas" %}',
+            color: '#333',
+            font: {
+              size: 16,
+              family: 'Orbitron, sans-serif'
+            }
+          },
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: '#333',
+              font: {
+                size: 12
+              },
+              usePointStyle: true
+            }
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

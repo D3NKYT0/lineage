@@ -1,0 +1,305 @@
+/* Sistema de Notificações Flutuantes */
+.floating-notifications-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 400px;
+  width: 100%;
+  pointer-events: none;
+}
+
+.floating-notification {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  margin-bottom: 12px;
+  overflow: hidden;
+  position: relative;
+  pointer-events: auto;
+  border-left: 4px solid;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.floating-notification.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.floating-notification.hide {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* Variantes de cores */
+.floating-notification-success {
+  border-left-color: #28a745;
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+}
+
+.floating-notification-error {
+  border-left-color: #dc3545;
+  background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+}
+
+.floating-notification-warning {
+  border-left-color: #ffc107;
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+}
+
+.floating-notification-info {
+  border-left-color: #17a2b8;
+  background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+}
+
+.floating-notification-debug {
+  border-left-color: #6c757d;
+  background: linear-gradient(135deg, #e2e3e5 0%, #d6d8db 100%);
+}
+
+/* Conteúdo da notificação */
+.notification-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 12px;
+}
+
+.notification-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
+}
+
+.floating-notification-success .notification-icon {
+  color: #155724;
+  background: rgba(40, 167, 69, 0.1);
+}
+
+.floating-notification-error .notification-icon {
+  color: #721c24;
+  background: rgba(220, 53, 69, 0.1);
+}
+
+.floating-notification-warning .notification-icon {
+  color: #856404;
+  background: rgba(255, 193, 7, 0.1);
+}
+
+.floating-notification-info .notification-icon {
+  color: #0c5460;
+  background: rgba(23, 162, 184, 0.1);
+}
+
+.floating-notification-debug .notification-icon {
+  color: #495057;
+  background: rgba(108, 117, 125, 0.1);
+}
+
+.notification-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.floating-notification-success .notification-title {
+  color: #155724;
+}
+
+.floating-notification-error .notification-title {
+  color: #721c24;
+}
+
+.floating-notification-warning .notification-title {
+  color: #856404;
+}
+
+.floating-notification-info .notification-title {
+  color: #0c5460;
+}
+
+.floating-notification-debug .notification-title {
+  color: #495057;
+}
+
+.notification-message {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #495057;
+  word-wrap: break-word;
+}
+
+/* Botão de fechar */
+.notification-close {
+  background: none;
+  border: none;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #495057;
+}
+
+.notification-close:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Barra de progresso */
+.notification-progress {
+  height: 3px;
+  background: rgba(0, 0, 0, 0.1);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.notification-progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: currentColor;
+  animation: progress-shrink 5s linear forwards;
+}
+
+.floating-notification-success .notification-progress::before {
+  background: #28a745;
+}
+
+.floating-notification-error .notification-progress::before {
+  background: #dc3545;
+}
+
+.floating-notification-warning .notification-progress::before {
+  background: #ffc107;
+}
+
+.floating-notification-info .notification-progress::before {
+  background: #17a2b8;
+}
+
+.floating-notification-debug .notification-progress::before {
+  background: #6c757d;
+}
+
+/* Animações */
+@keyframes progress-shrink {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+.fade-out {
+  animation: fade-out 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .floating-notifications-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .floating-notification {
+    margin-bottom: 8px;
+  }
+  
+  .notification-content {
+    padding: 12px;
+  }
+  
+  .notification-title {
+    font-size: 13px;
+  }
+  
+  .notification-message {
+    font-size: 12px;
+  }
+}
+
+/* Hover effects */
+.floating-notification:hover {
+  transform: translateX(0) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Pausa da animação de progresso no hover */
+.floating-notification:hover .notification-progress::before {
+  animation-play-state: paused;
+}
+
+/* Estilo para notificações empilhadas */
+.floating-notification:nth-child(1) { z-index: 9999; }
+.floating-notification:nth-child(2) { z-index: 9998; }
+.floating-notification:nth-child(3) { z-index: 9997; }
+.floating-notification:nth-child(4) { z-index: 9996; }
+.floating-notification:nth-child(5) { z-index: 9995; }
+
+/* Efeito de entrada escalonado */
+.floating-notification:nth-child(1) { animation-delay: 0s; }
+.floating-notification:nth-child(2) { animation-delay: 0.1s; }
+.floating-notification:nth-child(3) { animation-delay: 0.2s; }
+.floating-notification:nth-child(4) { animation-delay: 0.3s; }
+.floating-notification:nth-child(5) { animation-delay: 0.4s; }

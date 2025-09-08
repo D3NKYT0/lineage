@@ -1,0 +1,141 @@
+{% extends 'wiki/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Atualizações" %} - {% trans "Wiki" %}{% endblock %}
+
+{% block wiki_content %}
+<div class="wiki-updates">
+    <div class="page-header mb-4">
+        <div class="page-title-section">
+            <h1 class="page-title">
+                <i class="fas fa-sync"></i>
+                {% trans "Atualizações do Servidor" %}
+            </h1>
+            <p class="page-description">
+                {% trans "Acompanhe todas as atualizações e melhorias do servidor" %}
+            </p>
+        </div>
+    </div>
+
+    <div class="updates-content">
+        {% if updates %}
+        <div class="row">
+            {% for update in updates %}
+            <div class="col-lg-6 mb-4">
+                <div class="update-card">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <div class="update-header">
+                                <h5 class="update-version">
+                                    <span class="badge bg-primary">v{{ update.version }}</span>
+                                    {% if update.is_major %}
+                                        <span class="badge bg-warning">{% trans "Principal" %}</span>
+                                    {% endif %}
+                                </h5>
+                                <div class="update-date">
+                                    <i class="fas fa-calendar"></i>
+                                    {{ update.release_date|date:"d/m/Y" }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-body">
+                            {% if update.translations.first.title %}
+                                <h6 class="update-title">
+                                    {{ update.translations.first.title }}
+                                </h6>
+                            {% endif %}
+                            
+                            {% if update.translations.first.content %}
+                                <div class="update-content">
+                                    {{ update.translations.first.content|safe|truncatewords_html:50 }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if update.translations.first.changelog %}
+                                <div class="update-changelog mt-3">
+                                    <h6 class="changelog-title">
+                                        <i class="fas fa-list"></i>
+                                        {% trans "Changelog" %}
+                                    </h6>
+                                    <div class="changelog-content">
+                                        {{ update.translations.first.changelog|safe|truncatewords_html:30 }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="card-footer">
+                            <a href="{% url 'wiki:update_detail' update.pk %}" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-eye"></i>
+                                {% trans "Ver Detalhes" %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-updates">
+            <div class="text-center">
+                <i class="fas fa-sync fa-3x text-muted mb-3"></i>
+                <h4>{% trans "Nenhuma atualização encontrada" %}</h4>
+                <p class="text-muted">
+                    {% trans "As atualizações aparecerão aqui quando forem publicadas." %}
+                </p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.update-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.update-version .badge {
+    margin-right: 8px;
+}
+
+.update-date {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.update-title {
+    color: #495057;
+    margin-bottom: 15px;
+}
+
+.update-content {
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+.changelog-title {
+    color: #495057;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.changelog-content {
+    color: #6c757d;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.update-card .card {
+    transition: transform 0.2s;
+}
+
+.update-card .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %} 

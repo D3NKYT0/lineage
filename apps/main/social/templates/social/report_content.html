@@ -1,0 +1,169 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %} {% trans "Denunciar Conteúdo" %} {% endblock title %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow">
+        <div class="card-header">
+          <h4 class="mb-0">
+            <i class="bi bi-flag text-danger"></i> {% trans "Denunciar Conteúdo" %}
+          </h4>
+        </div>
+        <div class="card-body">
+          <!-- Informações do conteúdo reportado -->
+          <div class="alert alert-info">
+            <h6 class="alert-heading">
+              <i class="bi bi-info-circle"></i> {% trans "Conteúdo Reportado" %}
+            </h6>
+            <div class="row">
+              <div class="col-md-6">
+                <strong>{% trans "Tipo" %}:</strong> 
+                <span class="badge bg-{% if content_info.type == 'post' %}primary{% elif content_info.type == 'comment' %}info{% else %}secondary{% endif %}">
+                  {{ content_info.type|title }}
+                </span>
+              </div>
+              <div class="col-md-6">
+                <strong>{% trans "Autor" %}:</strong> {{ content_info.author }}
+              </div>
+            </div>
+            <div class="mt-2">
+              <strong>{% trans "Data" %}:</strong> {{ content_info.date|date:"d/m/Y H:i" }}
+            </div>
+            <div class="mt-2">
+              <strong>{% trans "Conteúdo" %}:</strong>
+              <div class="mt-1 p-2 bg-light rounded">
+                {{ content_info.content }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulário de denúncia -->
+          <form method="post">
+            {% csrf_token %}
+            
+            <!-- Erros gerais do formulário -->
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle"></i>
+                {% for error in form.non_field_errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+            
+            <div class="mb-3">
+              <label for="{{ form.report_type.id_for_label }}" class="form-label">
+                <strong>{% trans "Tipo de Denúncia" %} *</strong>
+              </label>
+              {{ form.report_type }}
+              {% if form.report_type.errors %}
+                <div class="text-danger small">
+                  {% for error in form.report_type.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <div class="form-text">
+                {% trans "Selecione o tipo de problema encontrado no conteúdo." %}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.description.id_for_label }}" class="form-label">
+                <strong>{% trans "Descrição" %} *</strong>
+              </label>
+              {{ form.description }}
+              {% if form.description.errors %}
+                <div class="text-danger small">
+                  {% for error in form.description.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <div class="form-text">
+                {% trans "Descreva detalhadamente o problema encontrado. Sua descrição ajudará nossa equipe a tomar a ação adequada." %}
+              </div>
+            </div>
+
+            <div class="alert alert-warning">
+              <i class="bi bi-exclamation-triangle"></i>
+              <strong>{% trans "Importante" %}:</strong>
+              {% trans "Denúncias falsas ou abusivas podem resultar em penalidades para sua conta. Denuncie apenas conteúdo que realmente viole nossas diretrizes." %}
+            </div>
+
+            <div class="d-flex justify-content-between">
+              <a href="javascript:history.back()" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> {% trans "Voltar" %}
+              </a>
+              <button type="submit" class="btn btn-danger">
+                <i class="bi bi-flag"></i> {% trans "Enviar Denúncia" %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Informações sobre tipos de denúncia -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-question-circle"></i> {% trans "Tipos de Denúncia" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h6 class="text-danger">{% trans "Conteúdo Inapropriado" %}</h6>
+              <p class="small text-muted">
+                {% trans "Conteúdo que viola diretrizes da comunidade, como linguagem ofensiva ou inadequada." %}
+              </p>
+              
+              <h6 class="text-danger">{% trans "Assédio" %}</h6>
+              <p class="small text-muted">
+                {% trans "Comportamento que intimida, ameaça ou persegue outros usuários." %}
+              </p>
+              
+              <h6 class="text-danger">{% trans "Violência" %}</h6>
+              <p class="small text-muted">
+                {% trans "Conteúdo que promove ou glorifica violência contra pessoas ou grupos." %}
+              </p>
+            </div>
+            <div class="col-md-6">
+              <h6 class="text-danger">{% trans "Discurso de Ódio" %}</h6>
+              <p class="small text-muted">
+                {% trans "Conteúdo que ataca ou usa linguagem pejorativa contra pessoas com base em características protegidas." %}
+              </p>
+              
+              <h6 class="text-warning">{% trans "Spam" %}</h6>
+              <p class="small text-muted">
+                {% trans "Conteúdo comercial não solicitado, links suspeitos ou postagem excessiva." %}
+              </p>
+              
+              <h6 class="text-info">{% trans "Outro" %}</h6>
+              <p class="small text-muted">
+                {% trans "Outros problemas que não se encaixam nas categorias acima." %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.form-control:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.badge {
+  font-size: 0.8em;
+}
+</style>
+{% endblock content %}

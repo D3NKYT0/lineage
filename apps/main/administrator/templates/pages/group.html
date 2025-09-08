@@ -1,0 +1,548 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Chat da Solicitação" %}{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-button@4.6.0/dist/index.min.css">
+<link rel="stylesheet" href="{% static 'group.css' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .chat-room-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 30px 0;
+    min-height: 100vh;
+  }
+
+  .chat-header {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border: 2px solid #6f42c1;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chat-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .chat-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1rem;
+  }
+
+  .chat-info {
+    position: relative;
+    z-index: 1;
+  }
+
+  .chat-protocol {
+    color: #f8f9fa;
+    font-size: 1.1rem;
+  }
+
+  .chat-protocol strong {
+    color: #00d9ff;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .chat-subtitle {
+    color: rgba(248, 249, 250, 0.8);
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .chat-user {
+    color: #f8f9fa;
+    font-size: 1rem;
+  }
+
+  .chat-user strong {
+    color: #00d9ff;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  }
+
+  .info-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+  }
+
+  .info-card h4 {
+    color: #f8f9fa;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .info-card p {
+    margin-bottom: 0.5rem;
+    color: #f8f9fa;
+  }
+
+  .info-card strong {
+    color: #f8f9fa;
+    font-weight: 600;
+  }
+
+  .info-card .text-info {
+    color: #00d9ff !important;
+    font-weight: 500;
+  }
+
+  #connection-status {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+    margin-bottom: 1rem;
+  }
+
+  #connection-status.alert-success {
+    border-color: #28a745;
+    box-shadow: 0 0 15px rgba(40, 167, 69, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+  }
+
+  #connection-status.alert-danger {
+    border-color: #dc3545;
+    box-shadow: 0 0 15px rgba(220, 53, 69, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+  }
+
+  #connection-status.alert-info {
+    border-color: #17a2b8;
+    box-shadow: 0 0 15px rgba(23, 162, 184, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+  }
+
+  #chat-log {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+    margin-bottom: 2rem;
+    height: 60vh;
+    overflow-y: auto;
+    padding: 1.5rem;
+  }
+
+  #messages-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .chat-message {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    animation: fadeInUp 0.3s ease-out;
+  }
+
+  .chat-message.sent {
+    flex-direction: row-reverse;
+  }
+
+  .chat-message.sent .message-content {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border-radius: 18px 18px 4px 18px;
+    margin-left: auto;
+    max-width: 70%;
+  }
+
+  .chat-message.received .message-content {
+    background: linear-gradient(135deg, #2a2a3e, #222230);
+    border: 1px solid #6f42c1;
+    border-radius: 18px 18px 18px 4px;
+    max-width: 70%;
+  }
+
+  .admin-avatar-container {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #6f42c1;
+    box-shadow: 0 4px 8px rgba(111, 66, 193, 0.3);
+    flex-shrink: 0;
+  }
+
+  .admin-avatar-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: #2a2a3e;
+  }
+
+  .message-content {
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .sender-name {
+    color: #00d9ff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .message-time {
+    color: rgba(248, 249, 250, 0.7);
+    font-size: 0.8rem;
+    font-family: 'Courier New', monospace;
+  }
+
+  .message-text {
+    color: #f8f9fa;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+
+  .input-group {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    padding: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  #chat-message-input {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border: 1px solid #6f42c1;
+    border-radius: 25px;
+    color: #f8f9fa;
+    padding: 12px 20px;
+    flex-grow: 1;
+    transition: all 0.3s ease;
+  }
+
+  #chat-message-input:focus {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border-color: #00d9ff;
+    box-shadow: 0 0 10px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+    outline: none;
+  }
+
+  #chat-message-input::placeholder {
+    color: #aaa;
+  }
+
+  #emoji-button {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-weight: 600;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  #emoji-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+    color: white;
+  }
+
+  #chat-message-submit {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 12px 25px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  #chat-message-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    color: white;
+  }
+
+  /* Scrollbar personalizada */
+  #chat-log::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  #chat-log::-webkit-scrollbar-track {
+    background: #2a2a3e;
+    border-radius: 4px;
+  }
+
+  #chat-log::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #6f42c1, #e83e8c);
+    border-radius: 4px;
+  }
+
+  #chat-log::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #5a32a3, #d63384);
+  }
+
+  /* Animações */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    .chat-title {
+      font-size: 1.4rem;
+    }
+    
+    .chat-message.sent .message-content,
+    .chat-message.received .message-content {
+      max-width: 85%;
+    }
+    
+    .input-group {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    #chat-message-input {
+      order: 1;
+    }
+    
+    #emoji-button {
+      order: 2;
+      align-self: flex-end;
+    }
+    
+    #chat-message-submit {
+      order: 3;
+      width: 100%;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="chat-room-bg">
+  <div class="container">
+    <!-- Chat Room Header -->
+    <div class="chat-header">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <div class="d-flex align-items-center">
+            <div class="me-4">
+              <i class="fas fa-comments fa-3x text-white" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);"></i>
+            </div>
+                         <div>
+               <h1 class="chat-title">
+                 {% trans "Suporte Técnico" %} - {{ type_chat }}
+               </h1>
+               <div class="chat-info">
+                 <p class="chat-subtitle mb-2">
+                   {% trans "Conversa para identificação e resolução do problema" %}
+                 </p>
+                 <div class="d-flex align-items-center gap-3">
+                   <span class="chat-protocol">
+                     {% trans "Protocolo:" %} <strong>{{ group_name }}</strong>
+                   </span>
+                   <span class="chat-user">
+                     {% trans "Solicitante:" %} <strong>{{ solicitation }}</strong>
+                   </span>
+                 </div>
+               </div>
+             </div>
+          </div>
+        </div>
+                 <div class="col-lg-4 text-end">
+           <div class="d-flex align-items-center justify-content-end">
+             <div class="me-3">
+               <span class="text-white-50">{% trans "Atendente:" %}</span>
+               <span class="badge bg-info">{{ username }}</span>
+             </div>
+             <div class="me-3">
+               <span class="text-white-50">{% trans "Status:" %}</span>
+               {% if solicitation_obj.status == 'open' %}
+                 <span class="badge bg-primary">{% trans "Aberto" %}</span>
+               {% elif solicitation_obj.status == 'in_progress' %}
+                 <span class="badge bg-warning">{% trans "Em Andamento" %}</span>
+               {% elif solicitation_obj.status == 'waiting_user' %}
+                 <span class="badge bg-info">{% trans "Aguardando Usuário" %}</span>
+               {% elif solicitation_obj.status == 'waiting_third_party' %}
+                 <span class="badge bg-secondary">{% trans "Aguardando Terceiros" %}</span>
+               {% endif %}
+             </div>
+           </div>
+         </div>
+      </div>
+    </div>
+
+         <!-- Informações do Chamado -->
+     <div class="info-card p-4 mb-3">
+       <h4 class="text-white mb-3">
+         <i class="fas fa-ticket-alt text-info me-2"></i>
+         {% trans "Detalhes do Chamado:" %}
+       </h4>
+                      <div class="row">
+           <div class="col-md-6">
+             <p><strong class="text-white">{% trans "Problema Reportado:" %}</strong> {{ solicitation_obj.title }}</p>
+             <p><strong class="text-white">{% trans "Status do Chamado:" %}</strong> 
+               {% if solicitation_obj.status == 'open' %}
+                 <span class="badge bg-primary">{{ solicitation_obj.get_status_display }}</span>
+               {% elif solicitation_obj.status == 'pending' %}
+                 <span class="badge bg-secondary">{{ solicitation_obj.get_status_display }}</span>
+               {% elif solicitation_obj.status == 'in_progress' %}
+                 <span class="badge bg-warning">{{ solicitation_obj.get_status_display }}</span>
+               {% elif solicitation_obj.status == 'waiting_user' %}
+                 <span class="badge bg-info">{{ solicitation_obj.get_status_display }}</span>
+               {% elif solicitation_obj.status == 'waiting_third_party' %}
+                 <span class="badge bg-secondary">{{ solicitation_obj.get_status_display }}</span>
+               {% elif solicitation_obj.status == 'resolved' %}
+                 <span class="badge bg-success">{{ solicitation_obj.get_status_display }}</span>
+               {% elif solicitation_obj.status == 'closed' %}
+                 <span class="badge bg-dark">{{ solicitation_obj.get_status_display }}</span>
+               {% elif solicitation_obj.status == 'cancelled' %}
+                 <span class="badge bg-secondary">{{ solicitation_obj.get_status_display }}</span>
+               {% elif solicitation_obj.status == 'rejected' %}
+                 <span class="badge bg-danger">{{ solicitation_obj.get_status_display }}</span>
+               {% endif %}
+             </p>
+           </div>
+           <div class="col-md-6">
+             <p><strong class="text-white">{% trans "Tipo de Problema:" %}</strong> <span class="badge bg-secondary">{{ solicitation_obj.get_category_display }}</span></p>
+             <p><strong class="text-white">{% trans "Nível de Urgência:" %}</strong> 
+               {% if solicitation_obj.priority == 'low' %}
+                 <span class="badge bg-success">{{ solicitation_obj.get_priority_display }}</span>
+               {% elif solicitation_obj.priority == 'medium' %}
+                 <span class="badge bg-warning">{{ solicitation_obj.get_priority_display }}</span>
+               {% elif solicitation_obj.priority == 'high' %}
+                 <span class="badge bg-danger">{{ solicitation_obj.get_priority_display }}</span>
+               {% elif solicitation_obj.priority == 'urgent' %}
+                 <span class="badge bg-dark">{{ solicitation_obj.get_priority_display }}</span>
+               {% elif solicitation_obj.priority == 'critical' %}
+                 <span class="badge bg-danger">{{ solicitation_obj.get_priority_display }}</span>
+               {% endif %}
+             </p>
+           </div>
+         </div>
+         <div class="row mt-3">
+           <div class="col-md-6">
+             <p><strong class="text-white">{% trans "Chamado Aberto em:" %}</strong> <span class="text-info">{{ solicitation_obj.created_at|date:"d/m/Y H:i" }}</span></p>
+           </div>
+           <div class="col-md-6">
+             <p><strong class="text-white">{% trans "Última Atualização:" %}</strong> <span class="text-info">{{ solicitation_obj.updated_at|date:"d/m/Y H:i" }}</span></p>
+           </div>
+         </div>
+    </div>
+
+    <!-- Status da Conexão -->
+    <div id="connection-status" class="alert alert-info alert-dismissible fade show mb-3" style="display: none;">
+      <i class="fas fa-spinner fa-spin"></i>
+      Conectando...
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Chat Log -->
+    <div id="chat-log">
+      <div id="messages-container">
+        {% for message in chat_messages %}
+          <div class="chat-message {% if message.sender.username == username %}sent{% else %}received{% endif %}">
+            <div class="admin-avatar-container">
+              <img 
+                src="{% if message.sender.avatar %}{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' message.sender.uuid timestamp %}{% else %}{% static 'assets/img/team/generic_user.png' %}{% endif %}" 
+                alt="{{ message.sender.username }}" />
+            </div>                  
+            <div class="message-content">
+              <div class="message-header">
+                <strong class="sender-name">{{ message.sender.username }}</strong>
+                <span class="message-time">{{ message.timestamp|date:"d/m/Y, H:i:s" }}</span>
+              </div>
+              <div class="message-text">{{ message.message }}</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Input for Chat Message -->
+    <div class="input-group">
+      <input 
+        id="chat-message-input" 
+        type="text" 
+        class="form-control" 
+        placeholder="{% trans 'Digite sua mensagem aqui...' %}"
+        aria-label="{% trans 'Mensagem' %}"
+      >
+      <button 
+        id="emoji-button" 
+        type="button" 
+        class="btn" 
+        aria-label="{% trans 'Selecionar Emoji' %}"
+      >
+        &#x1F60A;
+      </button>
+      <input 
+        id="chat-message-submit" 
+        type="button" 
+        class="btn" 
+        value="{% trans 'Enviar' %}"
+      >
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@3.0.2/dist/index.min.js"></script>
+
+<script>
+  const groupName = "{{ group_name }}";
+  const currentUser = "{{ username }}"; 
+  const currentUserAvatar = "{{ avatar_url }}";
+</script>
+
+<script src="{% static 'group.js' %}"></script>
+{% endblock extra_js %}

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site em Manutenção</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/default/css/main.css">
+  <link rel="stylesheet" href="/static/default/css/downloads.css">
+  <link rel="stylesheet" href="/static/public/css/layout.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style>
+    body {
+      background: url('/static/default/images/bg/5.jpg') top fixed no-repeat;
+      background-position-y: 0;
+      background-color: black;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .downloads-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(53, 47, 35, 0.95);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(230, 199, 125, 0.2);
+      z-index: 1000;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .downloads-header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .downloads-logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .downloads-logo img {
+      height: 40px;
+      width: auto;
+    }
+    .downloads-logo h1 {
+      color: #e6c77d;
+      font-size: 24px;
+      margin: 0;
+      text-shadow: 0px 0px 10px rgba(230, 199, 125, 0.3);
+    }
+    .downloads-header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .back-to-site {
+      background: linear-gradient(135deg, #9b7530, #d1a44f);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(155, 117, 48, 0.3);
+    }
+    .back-to-site:hover {
+      background: linear-gradient(135deg, #d1a44f, #e6c77d);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(155, 117, 48, 0.4);
+      color: white;
+      text-decoration: none;
+    }
+    .back-to-site i {
+      font-size: 12px;
+    }
+    .maintenance-main-content {
+      padding-top: 100px;
+      min-height: calc(100vh - 80px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .maintenance-container {
+      background: rgba(30, 30, 30, 0.97);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      max-width: 600px;
+      width: 90%;
+      backdrop-filter: blur(10px);
+      color: #fff;
+      margin: 0 auto;
+    }
+    .maintenance-icon {
+      font-size: 5rem;
+      color: #e6c77d;
+      margin-bottom: 1rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    .maintenance-title {
+      color: #e6c77d;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px rgba(230, 199, 125, 0.2);
+    }
+    .maintenance-subtitle {
+      color: #fff;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      opacity: 0.85;
+    }
+    .maintenance-info {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-left: 4px solid #e6c77d;
+      color: #fff;
+    }
+    .maintenance-info h4 {
+      color: #e6c77d;
+      margin-bottom: 0.5rem;
+    }
+    .maintenance-info p {
+      color: #fff;
+      margin: 0;
+      opacity: 0.8;
+    }
+    .contact-info {
+      background: rgba(230, 199, 125, 0.08);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 2rem;
+      color: #fff;
+    }
+    .contact-info h5 {
+      color: #e6c77d;
+      margin-bottom: 0.5rem;
+    }
+    .contact-info p {
+      color: #fff;
+      margin: 0;
+      opacity: 0.8;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #2d2d2d;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e6c77d, #ff8a00);
+      border-radius: 4px;
+      animation: progress 3s ease-in-out infinite;
+    }
+    @keyframes progress {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
+    @media (max-width: 768px) {
+      .downloads-header {
+        padding: 10px 15px;
+      }
+      .downloads-logo h1 {
+        font-size: 18px;
+      }
+      .maintenance-container {
+        padding: 1.5rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .downloads-logo h1 {
+        display: none;
+      }
+      .maintenance-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="downloads-header">
+    <div class="downloads-header-left">
+      <div class="downloads-logo">
+        <img src="/static/default/images/logo.png" alt="Logo">
+        <h1>L2JPremium</h1>
+      </div>
+    </div>
+    <div class="downloads-header-right">
+      <a href="/" class="back-to-site">
+        <i class="fas fa-arrow-left"></i>
+        <span>Voltar ao Site</span>
+      </a>
+    </div>
+  </header>
+  <div class="maintenance-main-content">
+    <div class="maintenance-container" data-aos="fade-up" data-aos-duration="2000">
+      <div class="maintenance-icon">
+        <i class="fas fa-tools"></i>
+      </div>
+      <h1 class="maintenance-title">Site em Manutenção</h1>
+      <p class="maintenance-subtitle">
+        Estamos realizando melhorias importantes em nosso sistema para oferecer uma experiência ainda melhor.
+      </p>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+      <div class="maintenance-info">
+        <h4><i class="fas fa-info-circle"></i> O que está acontecendo?</h4>
+        <p>
+          Nossa equipe está trabalhando para implementar novas funcionalidades e melhorar a performance do sistema. Pedimos sua paciência durante este processo.
+        </p>
+      </div>
+      <div class="maintenance-info">
+        <h4><i class="fas fa-clock"></i> Tempo estimado</h4>
+        <p>
+          A manutenção deve ser concluída em breve. Você será notificado assim que o sistema estiver disponível novamente.
+        </p>
+      </div>
+      <div class="contact-info">
+        <h5><i class="fas fa-envelope"></i> Precisa de ajuda?</h5>
+        <p>
+          Se você tem alguma dúvida ou precisa de suporte urgente, entre em contato conosco através do Discord ou WhatsApp.
+        </p>
+      </div>
+      <div style="margin-top: 2rem;">
+        <p style="color: #e6c77d; font-size: 0.9rem;">
+          <i class="fas fa-heart" style="color: #e53e3e;"></i>
+          Obrigado pela sua paciência e compreensão!
+        </p>
+      </div>
+    </div>
+  </div>
+  <script src="/static/default/js/jquery-3.6.0.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="/static/default/js/main.js"></script>
+  <script>
+    AOS.init();
+    setTimeout(function() {
+      window.location.reload();
+    }, 30000);
+  </script>
+</body>
+</html> 

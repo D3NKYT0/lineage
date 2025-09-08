@@ -1,0 +1,231 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Editar Imagem" %}{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .edit-image-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .edit-image-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .edit-image-header h1 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .edit-image-header p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .edit-image-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .current-image {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .current-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 15px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    object-fit: cover;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .form-label {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .form-control-custom {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+
+  .form-control-custom:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.1);
+  }
+
+  .form-control-custom[type="file"] {
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .form-control-custom[type="file"]::-webkit-file-upload-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .form-control-custom[type="file"]::-webkit-file-upload-button:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  }
+
+  .btn-save {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(72, 187, 120, 0.4);
+    color: white;
+  }
+
+  .btn-back {
+    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 1rem;
+  }
+
+  .btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(113, 128, 150, 0.3);
+    color: white;
+    text-decoration: none;
+  }
+
+  .field-info {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .edit-image-card {
+      padding: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="edit-image-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="edit-image-header">
+      <h1>
+        <i class="fas fa-image me-3"></i>{% trans "Editar Imagem" %}
+      </h1>
+      <p>{% trans "Atualize sua imagem de perfil como apoiador" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" style="color: #a0aec0;">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'server:painel_apoiador' %}" style="color: #a0aec0;">{% trans "Painel do Apoiador" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: white;">{% trans "Editar Imagem" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Edit Image Card -->
+    <div class="edit-image-card">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Current Image -->
+        <div class="current-image">
+          <h3 style="color: white; margin-bottom: 1rem;">{% trans "Imagem Atual" %}</h3>
+          {% if apoiador.imagem %}
+            <img src="{{ apoiador.imagem.url }}" alt="{{ apoiador.nome_publico }}">
+          {% else %}
+            <div style="width: 150px; height: 150px; background: rgba(255, 255, 255, 0.1); border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+              <i class="fas fa-user" style="font-size: 3rem; color: #a0aec0;"></i>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Form Group -->
+        <div class="form-group">
+          <label for="imagem" class="form-label">
+            <i class="fas fa-upload me-2"></i>{% trans "Nova Imagem" %}
+          </label>
+          <input type="file" 
+                 id="imagem" 
+                 name="imagem" 
+                 accept="image/*" 
+                 class="form-control-custom">
+          <div class="field-info">{% trans "Formatos aceitos: JPG, PNG, GIF (máx. 5MB)" %}</div>
+        </div>
+
+        <button type="submit" class="btn-save">
+          <i class="fas fa-save me-2"></i>{% trans "Salvar Imagem" %}
+        </button>
+      </form>
+
+      <div class="text-center">
+        <a href="{% url 'server:painel_apoiador' %}" class="btn-back">
+          <i class="fas fa-arrow-left me-2"></i>{% trans "Voltar para o Painel" %}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

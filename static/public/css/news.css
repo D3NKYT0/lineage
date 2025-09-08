@@ -1,0 +1,45 @@
+.ck-content {
+    font-size: 1.1rem;
+  }
+
+  .ck-content h1, .ck-content h2, .ck-content h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  .ck-content p {
+    margin-bottom: 1rem;
+  }
+
+  .ck-content ul,
+  .ck-content ol {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .ck-content blockquote {
+    padding-left: 1rem;
+    border-left: 4px solid var(--gold);
+    font-style: italic;
+    color: #666;
+  }
+
+  .ck-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 8px;
+  }
+
+  .ck-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+
+  .ck-content th, .ck-content td {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: left;
+  }

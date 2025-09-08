@@ -1,0 +1,837 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% load social_tags %}
+
+{% block title %}
+  {% if object %}
+    {% trans "Editar Post" %}
+  {% else %}
+    {% trans "Criar Novo Post" %}
+  {% endif %}
+{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/social.css' %}">
+{% endblock extrastyle %}
+
+{% block extra_js %}
+<script src="{% static 'js/social.js' %}"></script>
+{% endblock extra_js %}
+
+{% block content %}
+<!-- Barra de navegação móvel (só aparece no mobile) -->
+<div class="d-lg-none">
+  <div class="bg-white shadow-sm border-bottom mb-3">
+    <div class="container-fluid px-3 py-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <div class="social-avatar-container me-2" style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden;">
+            {% if user.avatar %}
+              <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+            {% else %}
+              <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+            {% endif %}
+          </div>
+                      <span class="fw-bold small">{{ user.get_full_name|default:user.username }}{% verified_badge user "14px" %}</span>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="{% url 'social:feed' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-house"></i>
+          </a>
+          <a href="{% url 'social:my_posts' %}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-collection"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid py-lg-4 py-2">
+  <div class="row">
+    <!-- Sidebar esquerda com perfil (oculta no mobile) -->
+    <div class="col-lg-3 d-none d-lg-block">
+      <!-- Card do perfil do usuário -->
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <div class="social-avatar-container mb-3" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 0 auto;">
+            {% if user.avatar %}
+              <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+            {% else %}
+              <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+            {% endif %}
+          </div>
+                      <h5 class="mb-1">{{ user.get_full_name|default:user.username }}{% verified_badge user "18px" %}</h5>
+            <p class="text-muted small mb-3">@{{ user.username }}{% verified_badge user "14px" %}</p>
+          
+          <!-- Estatísticas do usuário -->
+          <div class="row text-center mb-3">
+            <div class="col-4">
+              <div class="h6 mb-0 text-primary">{{ user_stats.posts_count }}</div>
+              <small class="text-muted">{% trans "Posts" %}</small>
+            </div>
+            <div class="col-4">
+              <div class="h6 mb-0 text-success">{{ user_stats.followers_count }}</div>
+              <small class="text-muted">{% trans "Seguidores" %}</small>
+            </div>
+            <div class="col-4">
+              <div class="h6 mb-0 text-info">{{ user_stats.following_count }}</div>
+              <small class="text-muted">{% trans "Seguindo" %}</small>
+            </div>
+          </div>
+          
+          <!-- Botões de ação -->
+          <div class="d-grid gap-2">
+            <a href="{% url 'social:feed' %}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-house"></i> {% trans "Feed" %}
+            </a>
+            <a href="{% url 'social:my_posts' %}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-collection"></i> {% trans "Meus Posts" %}
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Links úteis -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-compass"></i> {% trans "Navegação" %}
+          </h6>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            <a href="{% url 'social:feed' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <i class="bi bi-house-door text-primary me-2"></i>
+              {% trans "Feed Principal" %}
+            </a>
+            <a href="{% url 'social:my_posts' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <i class="bi bi-collection text-success me-2"></i>
+              {% trans "Meus Posts" %}
+            </a>
+            <a href="{% url 'social:search' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <i class="bi bi-search text-info me-2"></i>
+              {% trans "Buscar" %}
+            </a>
+            <a href="{% url 'social:user_profile' user.username %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <i class="bi bi-person text-warning me-2"></i>
+              {% trans "Meu Perfil" %}
+            </a>
+            {% if can_moderate %}
+              <a href="{% url 'social:moderation_dashboard' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                <i class="bi bi-shield-check text-danger me-2"></i>
+                {% trans "Moderação" %}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Coluna principal (ocupa toda largura no mobile) -->
+    <div class="col-12 col-lg-6">
+      
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="mb-1">
+            <i class="bi bi-{% if object %}pencil-square{% else %}plus-circle{% endif %}"></i>
+            {% if object %}
+              {% trans "Editar Post" %}
+            {% else %}
+              {% trans "Criar Novo Post" %}
+            {% endif %}
+          </h2>
+          <p class="text-muted mb-0">
+            {% if object %}
+              {% trans "Atualize seu post com novas informações" %}
+            {% else %}
+              {% trans "Compartilhe algo interessante com sua comunidade" %}
+            {% endif %}
+          </p>
+        </div>
+      </div>
+      
+      <!-- Formulário principal -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data" id="post-form">
+            {% csrf_token %}
+            
+            <!-- Campo de conteúdo sempre visível -->
+            <div class="d-flex align-items-start mb-3">
+              <div class="social-avatar-container me-2 me-lg-3" style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden; flex-shrink: 0;">
+                {% if user.avatar %}
+                  <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                       alt="Avatar" class="w-100 h-100" style="object-fit: cover; border-radius: 50%;">
+                {% else %}
+                  <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                       alt="Avatar" class="w-100 h-100" style="object-fit: cover; border-radius: 50%;">
+                {% endif %}
+              </div>
+              <div class="flex-grow-1">
+                <div class="form-group">
+                  {{ form.content }}
+                  {% if form.content.errors %}
+                    <div class="text-danger small">{{ form.content.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Layout Desktop (campos sempre visíveis) -->
+            <div class="d-none d-lg-block">
+              <!-- Preview de mídia -->
+              <div id="media-preview" class="mt-3" style="display: none;">
+                <div class="card border-0 bg-light">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                      <div id="preview-content" class="flex-grow-1"></div>
+                      <button type="button" class="btn btn-sm btn-outline-danger rounded-circle" onclick="clearMedia()" style="width: 32px; height: 32px; padding: 0;">
+                        <i class="bi bi-x"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Preview de link -->
+              <div id="link-preview" class="mt-3" style="display: none;">
+                <div class="card border-0 bg-light">
+                  <div class="card-body p-3">
+                    <div class="d-flex align-items-center">
+                      <div id="link-content" class="flex-grow-1"></div>
+                      <button type="button" class="btn btn-sm btn-outline-danger rounded-circle" onclick="clearLink()" style="width: 32px; height: 32px; padding: 0;">
+                        <i class="bi bi-x"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Barra de ações com menu suspenso estilo WhatsApp -->
+              <div class="post-actions-bar mt-3 p-3 bg-light rounded-3 border">
+                <div class="d-flex justify-content-between align-items-center">
+                  <!-- Menu suspenso de mídia -->
+                  <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="mediaDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="bi bi-plus-circle me-1"></i> {% trans "Adicionar" %}
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="mediaDropdown">
+                      <li>
+                        <label for="{{ form.image.id_for_label }}" class="dropdown-item d-flex align-items-center">
+                          <i class="bi bi-image text-primary me-2"></i>
+                          <span>{% trans "Imagem" %}</span>
+                          {{ form.image }}
+                        </label>
+                      </li>
+                      <li>
+                        <label for="{{ form.video.id_for_label }}" class="dropdown-item d-flex align-items-center">
+                          <i class="bi bi-camera-video text-success me-2"></i>
+                          <span>{% trans "Vídeo" %}</span>
+                          {{ form.video }}
+                        </label>
+                      </li>
+                    </ul>
+                  </div>
+                  <!-- Exibir erros dos campos de mídia -->
+                  {% if form.image.errors %}
+                    <div class="text-danger small">{{ form.image.errors.0 }}</div>
+                  {% endif %}
+                  {% if form.video.errors %}
+                    <div class="text-danger small">{{ form.video.errors.0 }}</div>
+                  {% endif %}
+                  
+                  <!-- Contadores e informações -->
+                  <div class="d-flex gap-3 align-items-center">
+                    <small class="text-muted d-flex align-items-center">
+                      <i class="bi bi-text-paragraph me-1"></i>
+                      <span id="char-count">0</span>/1000
+                    </small>
+                    <small class="text-muted d-flex align-items-center">
+                      <i class="bi bi-hash me-1"></i>
+                      <span id="hashtag-count">0</span> {% trans "hashtags" %}
+                    </small>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Mídia atual (apenas na edição) -->
+              {% if object %}
+                {% if object.image or object.video or object.link %}
+                  <div class="mt-3 p-3 bg-light rounded border">
+                    <h6 class="mb-3">
+                      <i class="bi bi-paperclip"></i> {% trans "Conteúdo atual:" %}
+                    </h6>
+                    
+                    {% if object.image %}
+                      <div class="mb-3">
+                        <img src="{{ object.image.url }}" alt="Imagem atual" class="img-fluid rounded" style="max-height: 200px;">
+                      </div>
+                    {% endif %}
+                    
+                    {% if object.video %}
+                      <div class="mb-3">
+                        <video controls class="img-fluid rounded" style="max-height: 200px;">
+                          <source src="{{ object.video.url }}" type="video/mp4">
+                          {% trans "Seu navegador não suporta vídeos." %}
+                        </video>
+                      </div>
+                    {% endif %}
+                    
+                    {% if object.link %}
+                      <div class="card">
+                        <div class="card-body">
+                          <a href="{{ object.link }}" target="_blank" class="text-decoration-none">
+                            <i class="bi bi-link-45deg"></i> {{ object.link }}
+                          </a>
+                        </div>
+                      </div>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {% endif %}
+              
+              <!-- Botões de ação e configurações -->
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="d-flex gap-3 align-items-center">
+                  <div class="form-check">
+                    {{ form.is_public }}
+                    <label class="form-check-label" for="{{ form.is_public.id_for_label }}">
+                      <i class="bi bi-globe me-1"></i> {% trans "Post público" %}
+                    </label>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary px-4 btn-publish">
+                  <i class="bi bi-{% if object %}pencil{% else %}send{% endif %} me-2"></i> 
+                  {% if object %}{% trans "Atualizar" %}{% else %}{% trans "Publicar" %}{% endif %}
+                </button>
+              </div>
+            </div>
+            
+                          <!-- Layout Mobile Compacto -->
+              <div class="d-lg-none">
+                <!-- Preview de mídia -->
+                <div id="media-preview-mobile" class="mt-2" style="display: none;">
+                  <div class="alert alert-info p-2 m-0">
+                    <div class="d-flex align-items-center">
+                      <div id="preview-content-mobile" class="flex-grow-1"></div>
+                      <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearMediaMobile()">
+                        <i class="bi bi-x"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Barra de ações mobile com menu suspenso -->
+                <div class="post-actions-bar mt-3 p-3 bg-light rounded-3 border">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <!-- Menu suspenso de mídia mobile -->
+                    <div class="dropdown">
+                      <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="mediaDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-plus-circle me-1"></i> {% trans "Adicionar" %}
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="mediaDropdownMobile">
+                        <li>
+                          <label for="{{ form.image.id_for_label }}" class="dropdown-item d-flex align-items-center">
+                            <i class="bi bi-image text-primary me-2"></i>
+                            <span>{% trans "Imagem" %}</span>
+                            {{ form.image }}
+                          </label>
+                        </li>
+                        <li>
+                          <label for="{{ form.video.id_for_label }}" class="dropdown-item d-flex align-items-center">
+                            <i class="bi bi-camera-video text-success me-2"></i>
+                            <span>{% trans "Vídeo" %}</span>
+                            {{ form.video }}
+                          </label>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- Exibir erros dos campos de mídia -->
+                    {% if form.image.errors %}
+                      <div class="text-danger small">{{ form.image.errors.0 }}</div>
+                    {% endif %}
+                    {% if form.video.errors %}
+                      <div class="text-danger small">{{ form.video.errors.0 }}</div>
+                    {% endif %}
+                    
+                                         <!-- Contadores e informações -->
+                     <div class="d-flex gap-3 align-items-center">
+                       <small class="text-muted d-flex align-items-center">
+                         <i class="bi bi-text-paragraph me-1"></i>
+                         <span id="char-count-mobile">0</span>/1000
+                       </small>
+                       <small class="text-muted d-flex align-items-center">
+                         <i class="bi bi-hash me-1"></i>
+                         <span id="hashtag-count-mobile">0</span> {% trans "hashtags" %}
+                       </small>
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <!-- Botões de ação mobile -->
+                 <div class="d-flex justify-content-between align-items-center mt-3">
+                   <div class="d-flex gap-2 align-items-center">
+                     <!-- Checkbox público compacto -->
+                     <div class="form-check form-check-inline">
+                       {{ form.is_public }}
+                       <label class="form-check-label small" for="{{ form.is_public.id_for_label }}">
+                         <i class="bi bi-globe" title="{% trans 'Post público' %}"></i>
+                       </label>
+                     </div>
+                   </div>
+                   
+                   <!-- Botão publicar -->
+                   <button type="submit" class="btn btn-primary btn-sm">
+                     <i class="bi bi-{% if object %}pencil{% else %}send{% endif %}"></i>
+                   </button>
+                 </div>
+               </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Dicas para um post atrativo -->
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-lightbulb text-warning"></i> {% trans "Dicas para um post atrativo" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+                <div>
+                  <small class="fw-bold">{% trans "Seja autêntico" %}</small>
+                  <div class="small text-muted">{% trans "Compartilhe experiências reais e genuínas" %}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+                <div>
+                  <small class="fw-bold">{% trans "Use mídia de qualidade" %}</small>
+                  <div class="small text-muted">{% trans "Imagens e vídeos atraem mais engajamento" %}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+                <div>
+                  <small class="fw-bold">{% trans "Hashtags relevantes" %}</small>
+                  <div class="small text-muted">{% trans "Aumente o alcance com tags apropriadas" %}</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex align-items-start">
+                <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+                <div>
+                  <small class="fw-bold">{% trans "Engaje com comentários" %}</small>
+                  <div class="small text-muted">{% trans "Responda e interaja com sua audiência" %}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    
+    <!-- Sidebar direita com hashtags e sugestões (oculta no mobile) -->
+    <div class="col-lg-3 d-none d-lg-block">
+      <!-- Hashtags populares -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-hash text-primary"></i> {% trans "Hashtags Populares" %}
+          </h6>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            {% for hashtag in popular_hashtags|slice:":5" %}
+              <div class="list-group-item d-flex justify-content-between align-items-center hashtag-suggestion" data-hashtag="{{ hashtag.name }}">
+                <span style="cursor: pointer;">#{{ hashtag.name }}</span>
+                <span class="badge bg-primary rounded-pill">{{ hashtag.posts_count }}</span>
+              </div>
+            {% empty %}
+              <div class="list-group-item text-muted small">
+                {% trans "Nenhuma hashtag popular ainda" %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Usuários sugeridos -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-person-plus text-success"></i> {% trans "Quem Seguir" %}
+          </h6>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            {% for suggested_user in suggested_users|slice:":5" %}
+              <div class="list-group-item d-flex align-items-center">
+                <div class="social-avatar-container me-2" style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden;">
+                  {% if suggested_user.avatar %}
+                    <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' suggested_user.uuid timestamp %}" 
+                         alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                  {% else %}
+                    <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                         alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+                  {% endif %}
+                </div>
+                <div class="flex-grow-1">
+                  <div class="small fw-bold">{{ suggested_user.get_full_name|default:suggested_user.username }}</div>
+                  <div class="small text-muted">@{{ suggested_user.username }}</div>
+                </div>
+                <button class="btn btn-sm btn-outline-primary follow-btn" data-user-id="{% localize off %}{{ suggested_user.id }}{% endlocalize %}">
+                  <i class="bi bi-person-plus"></i>
+                </button>
+              </div>
+            {% empty %}
+              <div class="list-group-item text-muted small">
+                {% trans "Nenhuma sugestão disponível" %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Estatísticas da rede (apenas para moderadores) -->
+      {% if can_moderate %}
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="bi bi-graph-up text-info"></i> {% trans "Estatísticas" %}
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="small">{% trans "Total de usuários" %}</span>
+              <span class="small text-primary fw-bold">{{ network_stats.total_users }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="small">{% trans "Total de posts" %}</span>
+              <span class="small text-success fw-bold">{{ network_stats.total_posts }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="small">{% trans "Posts hoje" %}</span>
+              <span class="small text-info fw-bold">{{ network_stats.posts_today }}</span>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+// JavaScript para interações
+document.addEventListener('DOMContentLoaded', function() {
+  // Validação do formulário
+  const postForm = document.getElementById('post-form');
+  if (postForm) {
+    postForm.addEventListener('submit', function(e) {
+      const contentField = document.querySelector('#{{ form.content.id_for_label }}');
+      const content = contentField ? contentField.value.trim() : '';
+      
+      if (!content) {
+        e.preventDefault();
+        alert('{% trans "O conteúdo do post não pode estar vazio." %}');
+        if (contentField) {
+          contentField.focus();
+        }
+        return false;
+      }
+      
+      if (content.length > 1000) {
+        e.preventDefault();
+        alert('{% trans "O conteúdo não pode ter mais de 1000 caracteres." %}');
+        if (contentField) {
+          contentField.focus();
+        }
+        return false;
+      }
+    });
+  }
+  
+
+  
+  // Contador de caracteres
+  const contentField = document.querySelector('#{{ form.content.id_for_label }}');
+  const charCount = document.getElementById('char-count');
+  const charCountMobile = document.getElementById('char-count-mobile');
+  
+  if (contentField) {
+    contentField.addEventListener('input', function() {
+      const length = this.value.length;
+      if (charCount) {
+        charCount.textContent = length;
+      }
+      if (charCountMobile) {
+        charCountMobile.textContent = length;
+      }
+    });
+  }
+  
+  // Contador de hashtags (baseado no conteúdo)
+  const hashtagCount = document.getElementById('hashtag-count');
+  const hashtagCountMobile = document.getElementById('hashtag-count-mobile');
+  
+  if (contentField && hashtagCount) {
+    contentField.addEventListener('input', function() {
+      const hashtags = this.value.match(/#\w+/g) || [];
+      if (hashtagCount) {
+        hashtagCount.textContent = hashtags.length;
+      }
+      if (hashtagCountMobile) {
+        hashtagCountMobile.textContent = hashtags.length;
+      }
+    });
+  }
+  
+  // Preview de mídia
+  const imageField = document.querySelector('#{{ form.image.id_for_label }}');
+  const videoField = document.querySelector('#{{ form.video.id_for_label }}');
+  const mediaPreview = document.getElementById('media-preview');
+  const previewContent = document.getElementById('preview-content');
+  
+  if (imageField && mediaPreview && previewContent) {
+    imageField.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          if (previewContent) {
+            previewContent.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 100px;">`;
+          }
+          if (mediaPreview) {
+            mediaPreview.style.display = 'block';
+          }
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+  }
+  
+  if (videoField && mediaPreview && previewContent) {
+    videoField.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        if (previewContent) {
+          previewContent.innerHTML = `<video controls class="img-fluid rounded" style="max-height: 100px;"><source src="${URL.createObjectURL(this.files[0])}"></video>`;
+        }
+        if (mediaPreview) {
+          mediaPreview.style.display = 'block';
+        }
+      }
+    });
+  }
+  
+
+  
+  // Sugestões de hashtags clicáveis
+  const hashtagSuggestions = document.querySelectorAll('.hashtag-suggestion');
+  if (hashtagSuggestions.length > 0 && contentField) {
+    hashtagSuggestions.forEach(suggestion => {
+      suggestion.addEventListener('click', function() {
+        const hashtag = this.dataset.hashtag;
+        const currentValue = contentField.value;
+        const newValue = currentValue ? `${currentValue} #${hashtag}` : `#${hashtag}`;
+        contentField.value = newValue;
+        
+        // Atualizar contadores
+        const hashtags = newValue.match(/#\w+/g) || [];
+        if (hashtagCount) {
+          hashtagCount.textContent = hashtags.length;
+        }
+        if (hashtagCountMobile) {
+          hashtagCountMobile.textContent = hashtags.length;
+        }
+      });
+    });
+  }
+  
+  // Botões de seguir na sidebar
+  const followBtns = document.querySelectorAll('.follow-btn');
+  if (followBtns.length > 0) {
+    followBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const userId = parseInt(this.dataset.userId);
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        
+        if (!userId || isNaN(userId) || !csrfToken) {
+          console.error('Elementos necessários não encontrados para follow ou ID inválido:', this.dataset.userId);
+          return;
+        }
+        
+        fetch(`/social/user/${userId}/follow/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': csrfToken.value
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.following) {
+            this.innerHTML = '<i class="bi bi-person-check"></i>';
+            this.classList.remove('btn-outline-primary');
+            this.classList.add('btn-success');
+          } else {
+            this.innerHTML = '<i class="bi bi-person-plus"></i>';
+            this.classList.remove('btn-success');
+            this.classList.add('btn-outline-primary');
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+        });
+      });
+    });
+  }
+});
+
+// Funções auxiliares
+function clearMedia() {
+  const mediaPreview = document.getElementById('media-preview');
+  const previewContent = document.getElementById('preview-content');
+  const imageField = document.querySelector('#{{ form.image.id_for_label }}');
+  const videoField = document.querySelector('#{{ form.video.id_for_label }}');
+  
+  if (mediaPreview) {
+    mediaPreview.style.display = 'none';
+  }
+  if (previewContent) {
+    previewContent.innerHTML = '';
+  }
+  if (imageField) {
+    imageField.value = '';
+  }
+  if (videoField) {
+    videoField.value = '';
+  }
+}
+
+
+
+// Funções auxiliares para mobile
+function clearMediaMobile() {
+  const mediaPreviewMobile = document.getElementById('media-preview-mobile');
+  const previewContentMobile = document.getElementById('preview-content-mobile');
+  const imageField = document.querySelector('#{{ form.image.id_for_label }}');
+  const videoField = document.querySelector('#{{ form.video.id_for_label }}');
+  
+  if (mediaPreviewMobile) {
+    mediaPreviewMobile.style.display = 'none';
+  }
+  if (previewContentMobile) {
+    previewContentMobile.innerHTML = '';
+  }
+  if (imageField) {
+    imageField.value = '';
+  }
+  if (videoField) {
+    videoField.value = '';
+  }
+}
+
+
+</script>
+
+<!-- CSS específico para a página -->
+<style>
+/* Garantir que o campo content seja sempre visível e acessível */
+#{{ form.content.id_for_label }} {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+
+
+/* Ocultar inputs de arquivo */
+.dropdown-item input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Sugestões de hashtags clicáveis */
+.hashtag-suggestion {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.hashtag-suggestion:hover {
+  background-color: #f8f9fa;
+}
+
+/* Mobile optimizations */
+@media (max-width: 991.98px) {
+  .card-body {
+    padding: 0.75rem !important;
+  }
+  
+  .card.mb-4 {
+    margin-bottom: 1rem !important;
+  }
+  
+
+  
+  .social-social-avatar-container {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .d-lg-none .social-social-avatar-container {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  .container-fluid {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+/* Mobile extra small devices */
+@media (max-width: 575.98px) {
+  .card {
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+  }
+  
+  .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .card.mb-4, .card {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+</style>
+{% endblock content %}

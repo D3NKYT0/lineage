@@ -1,0 +1,164 @@
+{% extends 'layouts/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Teste de Bloqueio de Licença" %} - {{ settings.PROJECT_TITLE }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">{% trans "Teste de Bloqueio de Login por Licença" %}</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{% url 'licence:dashboard' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> {% trans "Voltar" %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Status da Licença -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-shield-alt"></i> {% trans "Status do Sistema de Bloqueio" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>{% trans "Status da Licença:" %}</h6>
+                            {% if is_valid %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check-circle"></i> {% trans "Válida" %}
+                                </span>
+                                <p class="text-muted mt-2">
+                                    {% trans "Superusuários podem fazer login normalmente." %}
+                                </p>
+                            {% else %}
+                                <span class="badge bg-danger">
+                                    <i class="fas fa-times-circle"></i> {% trans "Inválida/Expirada" %}
+                                </span>
+                                <p class="text-muted mt-2">
+                                    {% trans "Superusuários serão bloqueados no login." %}
+                                </p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <h6>{% trans "Sistema de Bloqueio:" %}</h6>
+                            <span class="badge bg-info">
+                                <i class="fas fa-lock"></i> {% trans "Ativo" %}
+                            </span>
+                            <p class="text-muted mt-2">
+                                {% trans "Backend de autenticação configurado e funcionando." %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Informações da Licença -->
+    {% if license_info %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-info-circle"></i> {% trans "Informações da Licença Atual" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>{% trans "Tipo:" %}</strong></td>
+                                    <td>{{ license_info.type }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>{% trans "Status:" %}</strong></td>
+                                    <td>{{ license_info.status }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>{% trans "Domínio:" %}</strong></td>
+                                    <td>{{ license_info.domain }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>{% trans "Ativada em:" %}</strong></td>
+                                    <td>{{ license_info.activated_at|date:"d/m/Y H:i"|default:"N/A" }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>{% trans "Expira em:" %}</strong></td>
+                                    <td>{{ license_info.expires_at|date:"d/m/Y H:i"|default:"Nunca expira" }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>{% trans "Empresa:" %}</strong></td>
+                                    <td>{{ license_info.company|default:"Não informado" }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Instruções de Teste -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-flask"></i> {% trans "Como Testar o Sistema" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> {% trans "Instruções para Teste:" %}</h6>
+                        <ol class="mb-0">
+                            <li>{% trans "Para simular licença inválida:" %}
+                                <ul>
+                                    <li>{% trans "Edite uma licença e mude o status para 'expired'" %}</li>
+                                    <li>{% trans "Ou modifique a data de expiração para uma data passada" %}</li>
+                                </ul>
+                            </li>
+                            <li>{% trans "Tente fazer login com um superusuário" %}</li>
+                            <li>{% trans "O login deve ser bloqueado com mensagem de erro" %}</li>
+                            <li>{% trans "Usuários normais continuarão funcionando normalmente" %}</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comando de Teste -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-terminal"></i> {% trans "Comando de Teste" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p>{% trans "Execute o comando abaixo para testar o sistema:" %}</p>
+                    <div class="bg-dark text-light p-3 rounded">
+                        <code>python manage.py test_license_block</code>
+                    </div>
+                    <small class="text-muted">
+                        {% trans "Este comando verificará o status da licença e listará os superusuários afetados." %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,584 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block extrahead %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .avatar-page-container {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .avatar-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    border: 2px solid #6f42c1;
+    overflow: hidden;
+  }
+
+  .avatar-header {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .avatar-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .avatar-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .avatar-header p {
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  .avatar-body {
+    padding: 2rem;
+  }
+
+  .avatar-preview-section {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .avatar-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    border: 4px solid #6f42c1;
+    box-shadow: 0 10px 30px rgba(111, 66, 193, 0.3);
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #6f42c1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .avatar-preview::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .upload-zone {
+    border: 3px dashed #6f42c1;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    background: rgba(111, 66, 193, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+  }
+
+  .upload-zone:hover {
+    border-color: #e83e8c;
+    background: rgba(232, 62, 140, 0.05);
+    transform: translateY(-2px);
+  }
+
+  .upload-zone.dragover {
+    border-color: #28a745;
+    background: rgba(40, 167, 69, 0.1);
+    transform: scale(1.02);
+  }
+
+  .upload-icon {
+    font-size: 3rem;
+    color: #6f42c1;
+    margin-bottom: 1rem;
+  }
+
+  .upload-text {
+    font-size: 1.1rem;
+    color: #495057;
+    margin-bottom: 0.5rem;
+  }
+
+  .upload-hint {
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+
+  .file-input {
+    display: none;
+  }
+
+  /* Ocultar o campo do formulário Django */
+  input[name="avatar"] {
+    display: none !important;
+  }
+
+  .btn-elegant {
+    border-radius: 12px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-elegant::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn-elegant:hover::before {
+    left: 100%;
+  }
+
+  .btn-primary-elegant {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+  }
+
+  .btn-primary-elegant:hover {
+    background: linear-gradient(135deg, #5a32a3, #d63384);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(111, 66, 193, 0.3);
+  }
+
+  .btn-secondary-elegant {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+  }
+
+  .btn-secondary-elegant:hover {
+    background: linear-gradient(135deg, #5a6268, #343a40);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+  }
+
+  .btn-danger-elegant {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+  }
+
+  .btn-danger-elegant:hover {
+    background: linear-gradient(135deg, #c82333, #a71e2a);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+  }
+
+  .avatar-info {
+    background: linear-gradient(135deg, #17a2b8, #20c997);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .avatar-info i {
+    margin-right: 0.5rem;
+  }
+
+  .progress-upload {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e9ecef;
+    display: none;
+  }
+
+  .progress-bar-custom {
+    height: 8px;
+    border-radius: 4px;
+    background: #e9ecef;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+
+
+  .crop-container {
+    display: none;
+    margin: 1rem 0;
+  }
+
+  .crop-area {
+    max-width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (max-width: 768px) {
+    .avatar-body {
+      padding: 1.5rem;
+    }
+    
+    .avatar-header {
+      padding: 1.5rem;
+    }
+
+    .avatar-preview {
+      width: 120px;
+      height: 120px;
+      font-size: 2.5rem;
+    }
+
+    .upload-zone {
+      padding: 1.5rem;
+    }
+
+
+  }
+
+  .loading-spinner {
+    display: none;
+    text-align: center;
+    margin: 1rem 0;
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #6f42c1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="avatar-page-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="avatar-card">
+          <!-- Header -->
+          <div class="avatar-header">
+            <h2>
+              <i class="fas fa-user-edit me-2"></i>{% trans 'Editar Avatar' %}
+            </h2>
+            <p>{% trans 'Personalize sua aparência com uma nova foto de perfil' %}</p>
+          </div>
+
+          <!-- Body -->
+          <div class="avatar-body">
+            <!-- Avatar Info -->
+            <div class="avatar-info">
+              <i class="fas fa-info-circle"></i>
+              <strong>{% trans 'Dica:' %}</strong> {% trans 'Use imagens quadradas para melhor resultado. Formatos aceitos: JPG, PNG, GIF (máx. 5MB)' %}
+            </div>
+
+            <!-- Avatar Preview -->
+            <div class="avatar-preview-section">
+                             <div class="avatar-preview" id="avatar-preview">
+                 {% if request.user.avatar %}
+                   <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' request.user.uuid timestamp %}" alt="Avatar atual" id="preview-image">
+                 {% else %}
+                   <i class="fas fa-user"></i>
+                 {% endif %}
+               </div>
+              <h5 class="text-muted">{% trans 'Preview do Avatar' %}</h5>
+            </div>
+
+            <!-- Upload Progress -->
+            <div class="progress-upload" id="upload-progress">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted">{% trans 'Enviando arquivo...' %}</small>
+                <small class="text-muted" id="progress-text">0%</small>
+              </div>
+              <div class="progress-bar-custom">
+                <div class="progress-fill" id="progress-fill"></div>
+              </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="loading-spinner" id="loading-spinner">
+              <div class="spinner"></div>
+              <p class="mt-2 text-muted">{% trans 'Processando imagem...' %}</p>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="upload-zone">
+              <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+              </div>
+              <div class="upload-text">{% trans 'Arraste e solte sua imagem aqui' %}</div>
+              <div class="upload-hint">{% trans 'ou clique para selecionar um arquivo' %}</div>
+              <input type="file" class="file-input" id="avatar-input" accept="image/*">
+            </div>
+
+
+
+            <!-- Form -->
+            <form method="POST" enctype="multipart/form-data" id="avatar-form">
+              {% csrf_token %}
+              <!-- Campo file real para upload -->
+              <input type="file" name="avatar" id="real-avatar-field" style="display: none;" accept="image/*">
+              
+              <!-- Buttons -->
+              <div class="d-flex flex-wrap gap-3 justify-content-center">
+                <button type="submit" class="btn btn-elegant btn-primary-elegant" id="save-btn" disabled>
+                  <i class="fas fa-save me-2"></i>{% trans 'Salvar Avatar' %}
+                </button>
+                <a href="{% url 'profile' %}" class="btn btn-elegant btn-secondary-elegant">
+                  <i class="fas fa-arrow-left me-2"></i>{% trans 'Voltar ao Perfil' %}
+                </a>
+                {% if request.user.avatar %}
+                  <button type="button" class="btn btn-elegant btn-danger-elegant" id="remove-avatar">
+                    <i class="fas fa-trash me-2"></i>{% trans 'Remover Avatar' %}
+                  </button>
+                {% endif %}
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const uploadZone = document.getElementById('upload-zone');
+  const fileInput = document.getElementById('avatar-input');
+  const realAvatarField = document.getElementById('real-avatar-field');
+  const avatarPreview = document.getElementById('avatar-preview');
+  const previewImage = document.getElementById('preview-image');
+  const saveBtn = document.getElementById('save-btn');
+  const uploadProgress = document.getElementById('upload-progress');
+  const progressFill = document.getElementById('progress-fill');
+  const progressText = document.getElementById('progress-text');
+  const loadingSpinner = document.getElementById('loading-spinner');
+  const removeAvatarBtn = document.getElementById('remove-avatar');
+
+  // Drag and Drop functionality
+  uploadZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    uploadZone.classList.add('dragover');
+  });
+
+  uploadZone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+  });
+
+  uploadZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    uploadZone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFile(files[0]);
+    }
+  });
+
+  // Click to upload
+  uploadZone.addEventListener('click', function() {
+    fileInput.click();
+  });
+
+  // File input change
+  fileInput.addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+      handleFile(e.target.files[0]);
+    }
+  });
+
+  // Handle file selection
+  function handleFile(file) {
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('{% trans "Por favor, selecione apenas arquivos de imagem." %}');
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('{% trans "O arquivo é muito grande. Tamanho máximo: 5MB" %}');
+      return;
+    }
+
+    // Set the file to the real form field
+    if (realAvatarField) {
+      try {
+        // Create a new FileList-like object
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        realAvatarField.files = dataTransfer.files;
+      } catch (error) {
+        console.error('Erro ao definir arquivo:', error);
+      }
+    }
+
+    // Show loading
+    loadingSpinner.style.display = 'block';
+    uploadProgress.style.display = 'block';
+
+    // Simulate upload progress
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += Math.random() * 30;
+      if (progress > 90) progress = 90;
+      
+      progressFill.style.width = progress + '%';
+      progressText.textContent = Math.round(progress) + '%';
+    }, 200);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      // Clear existing preview
+      avatarPreview.innerHTML = '';
+      
+      // Create new image
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.alt = 'Preview do avatar';
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'cover';
+      img.style.borderRadius = '50%';
+      
+      avatarPreview.appendChild(img);
+      
+      // Hide loading and progress
+      setTimeout(() => {
+        loadingSpinner.style.display = 'none';
+        uploadProgress.style.display = 'none';
+        clearInterval(progressInterval);
+        progressFill.style.width = '100%';
+        progressText.textContent = '100%';
+        
+        // Enable save button
+        saveBtn.disabled = false;
+      }, 1000);
+    };
+    reader.readAsDataURL(file);
+  }
+
+
+
+  // Remove avatar
+  if (removeAvatarBtn) {
+    removeAvatarBtn.addEventListener('click', function() {
+      if (confirm('{% trans "Tem certeza que deseja remover seu avatar?" %}')) {
+        // Create a form to remove avatar
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = window.location.href;
+        
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = csrfToken;
+        
+        const removeInput = document.createElement('input');
+        removeInput.type = 'hidden';
+        removeInput.name = 'remove_avatar';
+        removeInput.value = 'true';
+        
+        form.appendChild(csrfInput);
+        form.appendChild(removeInput);
+        document.body.appendChild(form);
+        form.submit();
+      }
+    });
+  }
+
+  // Form submission
+  document.getElementById('avatar-form').addEventListener('submit', function(e) {
+    const hasFile = realAvatarField && realAvatarField.files.length > 0;
+    
+    if (!hasFile) {
+      e.preventDefault();
+      alert('{% trans "Por favor, faça upload de uma imagem." %}');
+      return;
+    }
+    
+    // Show loading
+    loadingSpinner.style.display = 'block';
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>{% trans "Salvando..." %}';
+  });
+
+  // Força reload da imagem após upload bem-sucedido
+  // Verifica se há parâmetro de sucesso na URL
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('success')) {
+    // Força o reload da imagem do avatar atual com novo timestamp
+    const currentAvatarImg = document.querySelector('#avatar-preview img');
+    if (currentAvatarImg) {
+      // Extrai a URL base e adiciona novo timestamp
+      const baseUrl = currentAvatarImg.src.split('/').slice(0, -1).join('/');
+      const newTimestamp = Math.floor(Date.now() / 1000); // Timestamp em segundos
+      currentAvatarImg.src = `${baseUrl}/${newTimestamp}/`;
+    }
+  }
+});
+</script>
+{% endblock %}

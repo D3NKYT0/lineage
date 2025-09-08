@@ -1,0 +1,679 @@
+{% extends 'layouts/public.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Notícias" %}{% endblock title %}
+
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .news-container {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .news-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInDown 0.8s ease-out;
+  }
+
+  .news-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #ffd700, #ffed4e, #ffb347);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    margin-bottom: 1rem;
+  }
+
+  .news-subtitle {
+    color: #a8a8a8;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .news-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 179, 71, 0.2);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    animation: slideInUp 0.6s ease-out;
+  }
+
+  .news-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #ffd700, #ffed4e, #ffb347);
+    border-radius: 20px;
+    padding: 2px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+  }
+
+  .news-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 35px rgba(255, 215, 0, 0.4), 0 0 50px rgba(255, 179, 71, 0.3);
+  }
+
+  .news-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .news-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .news-card:hover .news-image {
+    transform: scale(1.05);
+  }
+
+  .news-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ffd700, #ffb347);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .news-image-placeholder::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .news-image-placeholder i {
+    font-size: 3rem;
+    color: white;
+    opacity: 0.9;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    position: relative;
+    z-index: 1;
+  }
+
+  .news-content {
+    padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .news-card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  .news-card-summary {
+    color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex: 1;
+  }
+
+  .news-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    color: #718096;
+  }
+
+  .news-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .news-author i {
+    color: #ffd700;
+  }
+
+  .news-date {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .news-date i {
+    color: #ffb347;
+  }
+
+  .news-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .news-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+  }
+
+  .news-btn-primary {
+    background: linear-gradient(135deg, #ffd700, #ffb347);
+    color: #333;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .news-btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .news-btn-primary:hover::before {
+    left: 100%;
+  }
+
+  .news-btn-primary:hover {
+    background: linear-gradient(135deg, #ffed4e, #ffd700);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+    color: #333;
+    text-decoration: none;
+  }
+
+  .news-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 179, 71, 0.2);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .news-empty::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #ffd700, #ffed4e, #ffb347);
+    border-radius: 20px;
+    padding: 2px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+  }
+
+  .news-empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+
+  .news-empty h3 {
+    color: #2d3748;
+    margin-bottom: 1rem;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+  }
+
+  .news-empty p {
+    color: #718096;
+    font-size: 1.1rem;
+  }
+
+  .news-pagination {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-top: 3rem;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.3), 0 0 40px rgba(255, 179, 71, 0.2);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .news-pagination::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #ffd700, #ffed4e, #ffb347);
+    border-radius: 20px;
+    padding: 2px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+  }
+
+  .pagination-info {
+    margin-bottom: 1.5rem;
+    color: #718096;
+    font-size: 0.875rem;
+  }
+
+  .pagination-info span {
+    margin: 0 1rem;
+  }
+
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .pagination-btn {
+    background: linear-gradient(135deg, #ffd700, #ffb347);
+    color: #333;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.875rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pagination-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .pagination-btn:hover::before {
+    left: 100%;
+  }
+
+  .pagination-btn:hover {
+    background: linear-gradient(135deg, #ffed4e, #ffd700);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+    color: #333;
+    text-decoration: none;
+  }
+
+  .pagination-numbers {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .pagination-number {
+    background: #f7fafc;
+    color: #4a5568;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+    min-width: 2.5rem;
+    text-align: center;
+  }
+
+  .pagination-number:hover {
+    background: #edf2f7;
+    color: #2d3748;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+    text-decoration: none;
+  }
+
+  .pagination-current {
+    background: linear-gradient(135deg, #ffd700, #ffb347);
+    color: #333;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    min-width: 2.5rem;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  @keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .news-container {
+      padding: 2rem 1rem;
+    }
+
+    .news-title {
+      font-size: 2rem;
+    }
+
+    .news-subtitle {
+      font-size: 1rem;
+    }
+
+    .news-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .news-content {
+      padding: 1.25rem;
+    }
+
+    .news-card-title {
+      font-size: 1.1rem;
+    }
+
+    .news-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .news-actions {
+      width: 100%;
+    }
+
+    .news-btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .news-pagination {
+      padding: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .pagination-controls {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .pagination-numbers {
+      order: 2;
+    }
+
+    .pagination-btn {
+      order: 1;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<div class="news-container">
+  <div class="container">
+    <!-- Header das Notícias -->
+    <div class="news-header">
+      <h1 class="news-title">
+        <i class="fas fa-newspaper me-3"></i>
+        {% trans "Notícias Recentes" %}
+      </h1>
+      <p class="news-subtitle">
+        {% trans "Fique por dentro das últimas novidades e atualizações da nossa comunidade." %}
+      </p>
+    </div>
+
+    <!-- Grid de Notícias -->
+    {% if latest_news_list %}
+      <div class="news-grid">
+        {% for item in latest_news_list %}
+          <div class="news-card">
+            <div class="news-image-container">
+              {% if item.news.image %}
+                <img class="news-image" src="{{ item.news.image.url }}" alt="{{ item.translation.title }}">
+              {% else %}
+                <div class="news-image-placeholder">
+                  <i class="fas fa-newspaper"></i>
+                </div>
+              {% endif %}
+            </div>
+            
+            <div class="news-content">
+              <h3 class="news-card-title">{{ item.translation.title }}</h3>
+              <p class="news-card-summary">{{ item.translation.summary }}</p>
+              
+              <div class="news-meta">
+                <div class="news-author">
+                  <i class="fas fa-user"></i>
+                  <span>{{ item.news.author.username }}</span>
+                </div>
+                <div class="news-date">
+                  <i class="fas fa-calendar"></i>
+                  <span>{{ item.news.pub_date|date:"d/m/Y" }}</span>
+                </div>
+              </div>
+              
+                             <div class="news-actions">
+                 <a href="{% url 'public_news_detail' item.news.slug %}" class="news-btn news-btn-primary">
+                   <i class="fas fa-arrow-right"></i>
+                   {% trans "Leia mais" %}
+                 </a>
+               </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+         {% else %}
+       <div class="news-empty">
+         <i class="fas fa-newspaper news-empty-icon"></i>
+         <h3>{% trans "Nenhuma notícia disponível" %}</h3>
+         <p>{% trans "Não há notícias disponíveis no momento. Volte em breve para novidades!" %}</p>
+       </div>
+     {% endif %}
+
+     <!-- Paginação -->
+     {% if has_other_pages %}
+       <div class="news-pagination">
+         <div class="pagination-info">
+           <span>{% trans "Página" %} {{ current_page }} {% trans "de" %} {{ num_pages }}</span>
+           <span>{% trans "Total de" %} {{ total_news }} {% trans "notícias" %}</span>
+         </div>
+         
+         <div class="pagination-controls">
+           {% if has_previous %}
+             <a href="?page={{ previous_page_number }}" class="pagination-btn">
+               <i class="fas fa-chevron-left"></i>
+               {% trans "Anterior" %}
+             </a>
+           {% endif %}
+           
+           <div class="pagination-numbers">
+             {% for page_num in news_page.paginator.page_range %}
+               {% if page_num == current_page %}
+                 <span class="pagination-current">{{ page_num }}</span>
+               {% elif page_num <= current_page|add:2 and page_num >= current_page|add:-2 %}
+                 <a href="?page={{ page_num }}" class="pagination-number">{{ page_num }}</a>
+               {% endif %}
+             {% endfor %}
+           </div>
+           
+           {% if has_next %}
+             <a href="?page={{ next_page_number }}" class="pagination-btn">
+               {% trans "Próxima" %}
+               <i class="fas fa-chevron-right"></i>
+             </a>
+           {% endif %}
+         </div>
+       </div>
+     {% endif %}
+   </div>
+ </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Adiciona efeitos de interação aos cards de notícias
+  const newsCards = document.querySelectorAll('.news-card');
+  
+  newsCards.forEach((card, index) => {
+    // Efeito de entrada para cada card
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    
+    setTimeout(() => {
+      card.style.transition = 'all 0.6s ease';
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, 100 + (index * 100));
+    
+    // Adiciona classe active quando hover
+    card.addEventListener('mouseenter', function() {
+      this.classList.add('active');
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.classList.remove('active');
+    });
+  });
+  
+  // Efeito de parallax suave no fundo
+  window.addEventListener('scroll', function() {
+    const scrolled = window.pageYOffset;
+    const parallax = document.querySelector('.news-container');
+    const speed = scrolled * 0.5;
+    
+    if (parallax) {
+      parallax.style.transform = `translateY(${speed}px)`;
+    }
+  });
+  
+  // Adiciona efeito de destaque ao hover nos botões
+  const newsButtons = document.querySelectorAll('.news-btn');
+  
+  newsButtons.forEach(button => {
+    button.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateX(5px) scale(1.02)';
+    });
+    
+    button.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateX(0) scale(1)';
+    });
+  });
+
+  // Efeitos de hover nos botões de paginação
+  const paginationButtons = document.querySelectorAll('.pagination-btn, .pagination-number');
+  
+  paginationButtons.forEach(button => {
+    button.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-2px) scale(1.05)';
+    });
+    
+    button.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+    });
+  });
+
+  // Animação do ícone principal
+  const newsIcon = document.querySelector('.news-title i');
+  if (newsIcon) {
+    setInterval(() => {
+      newsIcon.style.transform = 'rotate(5deg)';
+      setTimeout(() => {
+        newsIcon.style.transform = 'rotate(-5deg)';
+        setTimeout(() => {
+          newsIcon.style.transform = 'rotate(0deg)';
+        }, 200);
+      }, 200);
+    }, 5000);
+  }
+  
+  // Animação do ícone vazio
+  const emptyIcon = document.querySelector('.news-empty-icon');
+  if (emptyIcon) {
+    setInterval(() => {
+      emptyIcon.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        emptyIcon.style.transform = 'scale(1)';
+      }, 300);
+    }, 3000);
+  }
+});
+</script>
+{% endblock content %}

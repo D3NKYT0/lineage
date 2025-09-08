@@ -1,0 +1,276 @@
+{% extends 'layouts/base.html' %}
+{% load i18n widget_tweaks %}
+{% load static %}
+
+{% block title %}{% trans "Solicitar Comissão" %}{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .commission-request-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .commission-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .commission-header h1 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .commission-header p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .commission-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .available-amount {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: white;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+    border: 1px solid rgba(72, 187, 120, 0.3);
+  }
+
+  .available-amount h3 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .available-amount .amount-value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .form-section {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .form-label {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .form-control-custom {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+  }
+
+  .form-control-custom:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.1);
+  }
+
+  .form-control-custom::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .error-message {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    border: 1px solid rgba(245, 101, 101, 0.3);
+  }
+
+  .btn-request {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .btn-request:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(72, 187, 120, 0.4);
+    color: white;
+  }
+
+  .btn-back {
+    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 1rem;
+  }
+
+  .btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(113, 128, 150, 0.3);
+    color: white;
+    text-decoration: none;
+  }
+
+  .info-text {
+    color: #a0aec0;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .currency-input {
+    position: relative;
+  }
+
+  .currency-input::before {
+    content: "R$";
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+    z-index: 1;
+  }
+
+  .currency-input .form-control-custom {
+    padding-left: 3rem;
+  }
+
+  @media (max-width: 768px) {
+    .commission-card {
+      padding: 1.5rem;
+    }
+    
+    .available-amount {
+      padding: 1rem;
+    }
+    
+    .available-amount .amount-value {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="commission-request-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="commission-header">
+      <h1>
+        <i class="fas fa-money-bill-wave me-3"></i>{% trans "Solicitar Comissão" %}
+      </h1>
+      <p>{% trans "Informe o valor que deseja solicitar como comissão" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" style="color: #a0aec0;">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'server:painel_apoiador' %}" style="color: #a0aec0;">{% trans "Painel do Apoiador" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: white;">{% trans "Solicitar Comissão" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Commission Card -->
+    <div class="commission-card">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <!-- Available Amount -->
+          <div class="available-amount">
+            <h3>
+              <i class="fas fa-wallet me-2"></i>{% trans "Valor disponível para saque" %}
+            </h3>
+            <p class="amount-value">R$ {{ valor_disponivel|floatformat:2 }}</p>
+          </div>
+
+          <!-- Info Text -->
+          <p class="info-text text-center">
+            {% trans "Informe o valor que deseja solicitar como comissão. Ele deve ser compatível com o valor disponível." %}
+          </p>
+
+          <!-- Form Section -->
+          <div class="form-section">
+            <form method="post" novalidate>
+              {% csrf_token %}
+              
+              <div class="form-group">
+                <label for="{{ form.valor.id_for_label }}" class="form-label">
+                  <i class="fas fa-dollar-sign me-2"></i>{% trans "Valor da Comissão" %}
+                </label>
+                
+                <div class="currency-input">
+                  {{ form.valor|add_class:"form-control-custom" }}
+                </div>
+                
+                {% if form.valor.errors %}
+                  <div class="error-message">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    {{ form.valor.errors }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <button type="submit" class="btn-request">
+                <i class="fas fa-check me-2"></i>{% trans "Solicitar Comissão" %}
+              </button>
+            </form>
+
+            <div class="text-center">
+              <a href="{% url 'server:painel_apoiador' %}" class="btn-back">
+                <i class="fas fa-arrow-left me-2"></i>{% trans "Voltar para o Painel" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/accountancy.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{% trans "Contabilidade" %}</li>
+{% endblock breadcrumbs %}
+
+{% block page_header %}
+<h5 class="display-5">{% trans "Dashboard Contábil" %}</h5>
+{% endblock page_header %}
+
+{% block content %}
+<div class="accountancy-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <!-- Header do Accountancy -->
+        <div class="accountancy-header">
+          <h1 class="accountancy-title">
+            <i class="fas fa-calculator me-3"></i>
+            {% trans "Dashboard Contábil" %}
+          </h1>
+          <p class="accountancy-subtitle">
+            {% trans "Gerencie e visualize todos os relatórios financeiros do servidor. Acompanhe saldos, fluxo de caixa e reconciliações de forma eficiente." %}
+          </p>
+        </div>
+
+        <!-- Cards dos Relatórios -->
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="accountancy-card">
+              <div class="accountancy-card-header">
+                <i class="fas fa-wallet accountancy-icon"></i>
+                <h2 class="accountancy-card-title">{% trans "Saldo de Usuários" %}</h2>
+                <p class="accountancy-card-description">
+                  {% trans "Visualize o saldo atual de todos os usuários e compare com os valores calculados" %}
+                </p>
+              </div>
+              <div class="accountancy-card-body">
+                <a href="{% url 'accountancy:relatorio_saldo' %}" class="accountancy-button">
+                  <i class="fas fa-chart-line me-2"></i>
+                  {% trans "Ver Relatório" %}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="accountancy-card">
+              <div class="accountancy-card-header">
+                <i class="fas fa-chart-area accountancy-icon"></i>
+                <h2 class="accountancy-card-title">{% trans "Fluxo de Caixa Diário" %}</h2>
+                <p class="accountancy-card-description">
+                  {% trans "Acompanhe o movimento financeiro diário e identifique tendências" %}
+                </p>
+              </div>
+              <div class="accountancy-card-body">
+                <a href="{% url 'accountancy:relatorio_fluxo_caixa' %}" class="accountancy-button">
+                  <i class="fas fa-chart-bar me-2"></i>
+                  {% trans "Ver Relatório" %}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="accountancy-card">
+              <div class="accountancy-card-header">
+                <i class="fas fa-credit-card accountancy-icon"></i>
+                <h2 class="accountancy-card-title">{% trans "Pedidos e Pagamentos" %}</h2>
+                <p class="accountancy-card-description">
+                  {% trans "Analise todos os pedidos e status de pagamentos dos usuários" %}
+                </p>
+              </div>
+              <div class="accountancy-card-body">
+                <a href="{% url 'accountancy:relatorio_pedidos_pagamentos' %}" class="accountancy-button">
+                  <i class="fas fa-receipt me-2"></i>
+                  {% trans "Ver Relatório" %}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="accountancy-card">
+              <div class="accountancy-card-header">
+                <i class="fas fa-balance-scale accountancy-icon"></i>
+                <h2 class="accountancy-card-title">{% trans "Reconciliação de Carteiras" %}</h2>
+                <p class="accountancy-card-description">
+                  {% trans "Verifique a consistência entre carteiras e identifique discrepâncias" %}
+                </p>
+              </div>
+              <div class="accountancy-card-body">
+                <a href="{% url 'accountancy:relatorio_reconciliacao_wallet' %}" class="accountancy-button">
+                  <i class="fas fa-search-dollar me-2"></i>
+                  {% trans "Ver Relatório" %}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botão de Volta -->
+        <div class="text-center mt-5">
+          <a href="{% url 'dashboard' %}" class="report-back-button">
+            <i class="fas fa-arrow-left me-2"></i>
+            {% trans "Voltar ao Dashboard Principal" %}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,364 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+<style>
+.no-bonus-message {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px dashed #dee2e6;
+}
+
+.no-bonus-message i {
+    font-size: 2rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.no-bonus-message p {
+    margin: 0 0 5px 0;
+    color: #495057;
+    font-weight: 500;
+}
+
+.no-bonus-message small {
+    color: #6c757d;
+    font-style: italic;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reports-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="reports-header">
+      <h1 class="reports-title">
+        <i class="fas fa-coins me-3"></i>{% trans "Comprar Moedas" %}
+      </h1>
+      <p class="reports-subtitle">
+        {% trans "Adicione moedas à sua carteira para usar no jogo" %}
+      </p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Comprar Moedas" %}</li>
+      </ol>
+    </nav>
+
+    <div class="row">
+      <!-- Formulário de Compra -->
+      <div class="col-lg-8">
+        <div class="reports-card">
+          <div class="reports-card-header">
+            <i class="fas fa-shopping-cart reports-icon"></i>
+            <h2 class="reports-card-title">{% trans "Nova Compra" %}</h2>
+            <p class="reports-card-description">{% trans "Configure sua compra de moedas" %}</p>
+          </div>
+          <div class="reports-card-body">
+            <form method="post" action="{% url 'payment:novo_pedido' %}" class="purchase-form">
+              {% csrf_token %}
+
+              <div class="form-group">
+                <label for="valor" class="form-label">
+                  <i class="fas fa-dollar-sign me-2"></i>{% trans "Valor em Reais (R$)" %}
+                </label>
+                <input
+                  type="number"
+                  class="form-control purchase-input"
+                  id="valor"
+                  name="valor"
+                  step="0.01"
+                  min="1"
+                  placeholder="{% trans 'Digite o valor que deseja comprar' %}"
+                  required
+                >
+                <div class="form-text">
+                  {% trans "Valor mínimo: R$ 1,00" %}
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="metodo" class="form-label">
+                  <i class="fas fa-credit-card me-2"></i>{% trans "Método de Pagamento" %}
+                </label>
+                <select class="form-select purchase-select" id="metodo" name="metodo" required>
+                  <option value="">{% trans "Selecione um método de pagamento" %}</option>
+                  <option value="MercadoPago">
+                    <i class="fab fa-mercado-pago"></i>{% trans "Mercado Pago" %}
+                  </option>
+                  <option value="Stripe">
+                    <i class="fab fa-stripe"></i>{% trans "Stripe" %}
+                  </option>
+                </select>
+                <div class="form-text">
+                  {% trans "Escolha a forma de pagamento de sua preferência" %}
+                </div>
+              </div>
+
+              <div class="purchase-summary">
+                <h4 class="summary-title">
+                  <i class="fas fa-calculator me-2"></i>{% trans "Resumo da Compra" %}
+                </h4>
+                <div class="summary-content">
+                  <div class="summary-row">
+                    <span>{% trans "Valor da Compra" %}:</span>
+                    <span class="summary-amount" id="valor-compra">R$ 0,00</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>{% trans "Moedas Recebidas" %}:</span>
+                    <span class="summary-amount" id="moedas-recebidas">0 moedas</span>
+                  </div>
+                  <div class="summary-row bonus-row" id="bonus-row" style="display: none;">
+                    <span>{% trans "Bônus Adicional" %}:</span>
+                    <span class="summary-amount bonus-amount" id="bonus-amount">+0 moedas</span>
+                  </div>
+                  <div class="summary-row total-row">
+                    <span>{% trans "Total de Moedas" %}:</span>
+                    <span class="summary-amount total-amount" id="total-moedas">0 moedas</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="purchase-actions">
+                <button type="submit" class="purchase-btn">
+                  <i class="fas fa-check me-2"></i>{% trans "Gerar Pedido" %}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informações de Bônus -->
+      <div class="col-lg-4">
+        <div class="reports-card">
+          <div class="reports-card-header">
+            <i class="fas fa-gift reports-icon"></i>
+            <h2 class="reports-card-title">{% trans "Bônus Disponíveis" %}</h2>
+            <p class="reports-card-description">{% trans "Promoções ativas" %}</p>
+          </div>
+          <div class="reports-card-body">
+            <div class="bonus-info">
+                             <div class="bonus-rules">
+                 <h4>{% trans "Como Funciona" %}</h4>
+                 {% if bonus_configurados %}
+                   <ul class="bonus-list">
+                     {% for bonus in bonus_configurados %}
+                       <li>
+                         <i class="fas fa-star"></i>
+                         {% if bonus.valor_maximo %}
+                           {% trans "Compras de R$" %} {{ bonus.valor_minimo|floatformat:2 }} {% trans "a R$" %} {{ bonus.valor_maximo|floatformat:2 }} {% trans "ganham" %} {{ bonus.bonus_percentual|floatformat:0 }}% {% trans "de bônus" %}
+                         {% else %}
+                           {% trans "Compras acima de R$" %} {{ bonus.valor_minimo|floatformat:2 }} {% trans "ganham" %} {{ bonus.bonus_percentual|floatformat:0 }}% {% trans "de bônus" %}
+                         {% endif %}
+                       </li>
+                     {% endfor %}
+                   </ul>
+                 {% else %}
+                   <div class="no-bonus-message">
+                     <i class="fas fa-info-circle"></i>
+                     <p>{% trans "Nenhuma promoção ativa no momento" %}</p>
+                     <small>{% trans "Fique atento às nossas promoções especiais!" %}</small>
+                   </div>
+                 {% endif %}
+               </div>
+              
+              <div class="bonus-calculator">
+                <div id="bonus-info">
+                  <div class="bonus-placeholder">
+                    <i class="fas fa-calculator"></i>
+                    <p>{% trans "Digite um valor para ver os bônus disponíveis" %}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Informações de Segurança -->
+        <div class="reports-card">
+          <div class="reports-card-header">
+            <i class="fas fa-shield-alt reports-icon"></i>
+            <h2 class="reports-card-title">{% trans "Segurança" %}</h2>
+            <p class="reports-card-description">{% trans "Suas informações estão seguras" %}</p>
+          </div>
+          <div class="reports-card-body">
+            <div class="security-info">
+              <div class="security-item">
+                <i class="fas fa-lock"></i>
+                <div>
+                  <h5>{% trans "Pagamento Seguro" %}</h5>
+                  <p>{% trans "Todas as transações são criptografadas" %}</p>
+                </div>
+              </div>
+              <div class="security-item">
+                <i class="fas fa-credit-card"></i>
+                <div>
+                  <h5>{% trans "Métodos Confiáveis" %}</h5>
+                  <p>{% trans "Utilizamos apenas gateways de pagamento seguros" %}</p>
+                </div>
+              </div>
+              <div class="security-item">
+                <i class="fas fa-headset"></i>
+                <div>
+                  <h5>{% trans "Suporte 24/7" %}</h5>
+                  <p>{% trans "Nossa equipe está sempre disponível para ajudar" %}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Return Button -->
+    <div class="text-center mt-4">
+      <a href="{% url 'dashboard' %}" class="report-back-button">
+        <i class="fas fa-arrow-left me-2"></i>{% trans "Voltar ao Dashboard Principal" %}
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+let timeoutId;
+
+document.getElementById('valor').addEventListener('input', function() {
+    const valor = parseFloat(this.value) || 0;
+    const bonusInfo = document.getElementById('bonus-info');
+    
+    // Atualiza o resumo da compra
+    updatePurchaseSummary(valor);
+    
+    // Limpa o timeout anterior
+    clearTimeout(timeoutId);
+    
+    if (valor > 0) {
+        // Mostra loading
+        bonusInfo.innerHTML = `
+            <div class="bonus-loading">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <p>{% trans "Calculando bônus..." %}</p>
+            </div>
+        `;
+        
+        // Faz a requisição AJAX com delay para evitar muitas requisições
+        timeoutId = setTimeout(() => {
+            fetch('{% url "payment:calcular_bonus_ajax" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: `valor=${valor}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.tem_bonus) {
+                        bonusInfo.innerHTML = `
+                            <div class="bonus-result">
+                                <div class="bonus-header">
+                                    <i class="fas fa-gift"></i>
+                                    <h5>{% trans "Bônus Disponível!" %}</h5>
+                                </div>
+                                                                 <div class="bonus-details">
+                                     <div class="bonus-amount">
+                                         <span class="bonus-value">+${data.bonus_percentual || 0}%</span>
+                                         <span class="bonus-description">{% trans "de bônus" %}</span>
+                                     </div>
+                                     <div class="bonus-description">
+                                         <p>${data.descricao_bonus || ''}</p>
+                                     </div>
+                                 </div>
+                            </div>
+                        `;
+                        
+                                                 // Atualiza o resumo com bônus
+                         updatePurchaseSummaryWithBonus(valor, data.bonus_percentual || 0);
+                    } else {
+                        bonusInfo.innerHTML = `
+                            <div class="bonus-no-bonus">
+                                <i class="fas fa-info-circle"></i>
+                                <p>{% trans "Nenhum bônus disponível para este valor" %}</p>
+                                <small>{% trans "Aumente o valor para ganhar bônus" %}</small>
+                            </div>
+                        `;
+                        
+                        // Esconde a linha de bônus no resumo
+                        document.getElementById('bonus-row').style.display = 'none';
+                    }
+                } else {
+                    bonusInfo.innerHTML = `
+                        <div class="bonus-error">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>{% trans "Erro ao calcular bônus" %}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                bonusInfo.innerHTML = `
+                    <div class="bonus-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>{% trans "Erro de conexão" %}</p>
+                    </div>
+                `;
+            });
+        }, 500);
+    } else {
+        // Mostra placeholder quando não há valor
+        bonusInfo.innerHTML = `
+            <div class="bonus-placeholder">
+                <i class="fas fa-calculator"></i>
+                <p>{% trans "Digite um valor para ver os bônus disponíveis" %}</p>
+            </div>
+        `;
+        
+        // Reseta o resumo
+        resetPurchaseSummary();
+    }
+});
+
+function updatePurchaseSummary(valor) {
+    const moedasBase = Math.floor(valor * 1); // 1 real = 1 moeda (conversão 1:1)
+    document.getElementById('valor-compra').textContent = `R$ ${valor.toFixed(2)}`;
+    document.getElementById('moedas-recebidas').textContent = `${moedasBase} moedas`;
+    document.getElementById('total-moedas').textContent = `${moedasBase} moedas`;
+}
+
+function updatePurchaseSummaryWithBonus(valor, bonusPercentual) {
+    const moedasBase = Math.floor(valor * 1);
+    const bonusPercentualNum = parseFloat(bonusPercentual) || 0;
+    const bonusMoedas = Math.floor(moedasBase * (bonusPercentualNum / 100));
+    const totalMoedas = moedasBase + bonusMoedas;
+    
+    document.getElementById('valor-compra').textContent = `R$ ${valor.toFixed(2)}`;
+    document.getElementById('moedas-recebidas').textContent = `${moedasBase} moedas`;
+    document.getElementById('bonus-amount').textContent = `+${bonusMoedas} moedas`;
+    document.getElementById('total-moedas').textContent = `${totalMoedas} moedas`;
+    
+    // Mostra a linha de bônus
+    document.getElementById('bonus-row').style.display = 'flex';
+}
+
+function resetPurchaseSummary() {
+    document.getElementById('valor-compra').textContent = 'R$ 0,00';
+    document.getElementById('moedas-recebidas').textContent = '0 moedas';
+    document.getElementById('total-moedas').textContent = '0 moedas';
+    document.getElementById('bonus-row').style.display = 'none';
+}
+</script>
+{% endblock content %}

@@ -1,0 +1,291 @@
+{% extends "layouts/base.html" %}
+{% load i18n static l10n %}
+{% load itens_extras %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Header -->
+  <div class="page-header">
+    <h1 class="page-title">
+      <i class="fas fa-shopping-cart me-3"></i>{% trans "Meu Carrinho" %}
+    </h1>
+    <p class="page-subtitle">
+      {% trans "Revise seus itens e finalize sua compra" %}
+    </p>
+  </div>
+
+
+
+    {% if cart.cartitem_set.all or cart.cartpackage_set.all %}
+    <div class="cart-layout">
+      <!-- Coluna Principal - Itens do Carrinho -->
+      <div class="cart-main-content">
+        <!-- Cart Items Section -->
+        <div class="cart-card">
+          <div class="cart-card-header">
+            <i class="fas fa-shopping-bag me-2"></i>
+            <h2 class="cart-card-title">{% trans "Itens no Carrinho" %}</h2>
+            <p class="cart-card-subtitle">{% trans "Revise os itens selecionados para compra" %}</p>
+          </div>
+          <div class="cart-card-body">
+            <div class="cart-items">
+              {% for ci in cart.cartitem_set.all %}
+              <div class="cart-item">
+                <div class="cart-item-info">
+                  <img src="{% item_image_url ci.item.item_id %}" alt="{{ ci.item.item_name }}" class="cart-item-image">
+                  <div class="cart-item-details">
+                    <h5 class="cart-item-name">{{ ci.item.nome }}</h5>
+                    <div class="cart-item-meta">
+                      <span>{% trans "Quantidade" %}: {{ ci.quantidade|unlocalize }}</span>
+                      <span>{% trans "ID" %}: {{ ci.item.item_id }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="cart-item-actions">
+                  <div class="cart-item-price">
+                    <span class="currency">R$</span>
+                    <span class="amount">{{ ci.item.preco|floatformat:2 }}</span>
+                  </div>
+                  <form method="post" action="{% url 'shop:remove_cart_item' ci.item.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" title="{% trans 'Remover Item' %}">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+              {% endfor %}
+              
+              {% for cp in cart.cartpackage_set.all %}
+              <div class="cart-item">
+                <div class="cart-item-info">
+                  <div class="package-icon">
+                    <i class="fas fa-gift"></i>
+                  </div>
+                  <div class="cart-item-details">
+                    <h5 class="cart-item-name">{{ cp.pacote.nome }}</h5>
+                    <div class="cart-item-meta">
+                      <span>{% trans "Quantidade" %}: {{ cp.quantidade|unlocalize }}</span>
+                      <span>{% trans "Pacote com" %} {{ cp.pacote.itens.count }} {% trans "itens" %}</span>
+                      <button type="button" class="btn-view-items" data-bs-toggle="modal" data-bs-target="#modalPackageItems{{ cp.pacote.id }}">
+                        <i class="fas fa-eye me-1"></i>{% trans "Ver Itens" %}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="cart-item-actions">
+                  <div class="cart-item-price">
+                    <span class="currency">R$</span>
+                    <span class="amount">{{ cp.pacote.preco_total|floatformat:2 }}</span>
+                  </div>
+                  <form method="post" action="{% url 'shop:remove_cart_package' cp.pacote.id %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" title="{% trans 'Remover Pacote' %}">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+
+              <!-- Modal para visualizar itens do pacote -->
+              <div class="modal fade" id="modalPackageItems{{ cp.pacote.id }}" tabindex="-1" aria-labelledby="modalPackageItemsLabel{{ cp.pacote.id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                                         <div class="modal-header">
+                       <h5 class="modal-title" id="modalPackageItemsLabel{{ cp.pacote.id }}">
+                         <i class="fas fa-box-seam me-2"></i>{{ cp.pacote.nome }} - {% trans "Itens do Pacote" %}
+                       </h5>
+                     </div>
+                    <div class="modal-body">
+                      <div class="package-items-list">
+                        {% for item in cp.pacote.itens.all %}
+                        <div class="package-item">
+                          <img src="{% item_image_url item.item_id %}" alt="{{ item.item_name }}" class="package-item-image">
+                          <div class="package-item-info">
+                            <h6>{{ item.nome }}</h6>
+                            <span class="package-item-quantity">x{{ item.quantidade }}</span>
+                          </div>
+                        </div>
+                        {% empty %}
+                        <div class="empty-state">
+                          <i class="fas fa-exclamation-triangle"></i>
+                          <p>{% trans "Este pacote não contém itens." %}</p>
+                        </div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Fechar" %}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar - Resumo e Ações -->
+      <div class="cart-sidebar">
+        <!-- Resumo do Carrinho -->
+        <div class="cart-card">
+          <div class="cart-card-header">
+            <h3 class="cart-card-title">
+              <i class="fas fa-calculator me-2"></i>{% trans "Resumo da Compra" %}
+            </h3>
+          </div>
+          <div class="cart-card-body">
+            <!-- Informações de Saldo -->
+            <div class="wallet-info">
+              <div class="wallet-item">
+                <div class="wallet-item-title">{% trans "Saldo Principal" %}</div>
+                <div class="wallet-item-amount">
+                  <span class="currency">R$</span>
+                  <span class="amount">{{ wallet.saldo|floatformat:2 }}</span>
+                </div>
+              </div>
+              <div class="wallet-item bonus">
+                <div class="wallet-item-title">{% trans "Saldo Bônus" %}</div>
+                <div class="wallet-item-amount">
+                  <span class="currency">R$</span>
+                  <span class="amount">{{ wallet.saldo_bonus|floatformat:2 }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Resumo do Pagamento -->
+            <div class="payment-summary">
+              <div class="summary-row">
+                <span>{% trans "Total da Compra" %}:</span>
+                <div class="summary-amount">
+                  <span class="currency">R$</span>
+                  <span class="amount">{{ cart.calcular_total|floatformat:2 }}</span>
+                </div>
+              </div>
+              
+              {% if cart.usar_bonus %}
+              <div class="payment-breakdown">
+                {% if valor_bonus_usado > 0 %}
+                <div class="summary-row">
+                  <span><i class="fas fa-gift me-1"></i>{% trans "Bônus" %}:</span>
+                  <span>R$ {{ valor_bonus_usado|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+                {% if valor_dinheiro_usado > 0 %}
+                <div class="summary-row">
+                  <span><i class="fas fa-wallet me-1"></i>{% trans "Dinheiro" %}:</span>
+                  <span>R$ {{ valor_dinheiro_usado|floatformat:2 }}</span>
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Código Promocional -->
+            <div class="promo-section">
+              <h6><i class="fas fa-ticket-alt me-1"></i>{% trans "Código Promocional" %}</h6>
+              <form method="post" action="{% url 'shop:apply_promo_code' %}" class="promo-form">
+                {% csrf_token %}
+                <div class="input-group">
+                  <input type="text" name="promo_code" class="form-control" placeholder="{% trans 'Digite seu código' %}">
+                  <button type="submit" class="btn btn-success">
+                    <i class="fas fa-ticket-perforated"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Forma de Pagamento -->
+            <div class="payment-toggle">
+              <h6><i class="fas fa-credit-card me-1"></i>{% trans "Forma de Pagamento" %}</h6>
+              <form method="post" action="{% url 'shop:toggle_bonus_usage' %}" class="payment-form">
+                {% csrf_token %}
+                <button type="submit" class="btn {% if cart.usar_bonus %}btn-warning{% else %}btn-outline-warning{% endif %} w-100">
+                  <i class="fas fa-gift me-2"></i>
+                  {% if cart.usar_bonus %}
+                    {% trans "Desativar Pagamento com Bônus" %}
+                  {% else %}
+                    {% trans "Ativar Pagamento com Bônus" %}
+                  {% endif %}
+                </button>
+              </form>
+              
+              {% if cart.usar_bonus %}
+              <div class="payment-info mt-2">
+                <i class="fas fa-info-circle"></i>
+                <small>{% trans "O sistema usará primeiro o saldo de bônus e depois o saldo principal." %}</small>
+              </div>
+              {% endif %}
+            </div>
+
+            <!-- Finalizar Compra -->
+            <div class="checkout-section">
+              <h6><i class="fas fa-shopping-cart me-1"></i>{% trans "Finalizar Compra" %}</h6>
+              <form method="post" action="{% url 'shop:checkout' %}" class="checkout-form">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                  <select name="character_name" class="form-select" required>
+                    <option value="" disabled selected>{% trans "Escolha um personagem" %}</option>
+                    {% for p in personagens %}
+                    <option value="{{ p.char_name }}">{{ p.char_name }} (Lv.{{ p.base_level }})</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">
+                  <i class="fas fa-credit-card me-2"></i>{% trans "Finalizar Compra" %}
+                </button>
+              </form>
+            </div>
+
+            <!-- Ações do Carrinho -->
+            <div class="cart-actions">
+              <form method="post" action="{% url 'shop:clear_cart' %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger">
+                  <i class="fas fa-trash me-2"></i>{% trans "Esvaziar Carrinho" %}
+                </button>
+              </form>
+              
+              <a href="{% url 'shop:shop_home' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>{% trans "Continuar Comprando" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <!-- Empty Cart State -->
+    <div class="cart-card">
+      <div class="cart-card-body">
+        <div class="empty-cart">
+          <i class="fas fa-shopping-cart"></i>
+          <h3>{% trans "Seu carrinho está vazio" %}</h3>
+          <p>{% trans "Adicione alguns itens para começar suas compras!" %}</p>
+          <a href="{% url 'shop:shop_home' %}" class="btn btn-primary">
+            <i class="fas fa-shopping-bag me-2"></i>{% trans "Ir para a Loja" %}
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Return Button -->
+    <div class="return-button">
+      <a href="{% url 'dashboard' %}">
+        <i class="fas fa-arrow-left"></i>{% trans "Voltar ao Dashboard Principal" %}
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Modal Management Script -->
+<script src="{% static 'js/cart-modal.js' %}"></script>
+{% endblock %}

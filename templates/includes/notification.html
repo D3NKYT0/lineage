@@ -1,0 +1,144 @@
+{% load static i18n %}
+
+<!-- Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="notificationModalLabel">{% trans "Detalhes da Notificação" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Fechar' %}"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Os detalhes da notificação serão carregados aqui -->
+      </div>
+      <div class="modal-footer d-flex justify-content-between">
+        <div id="notification-link-container" class="d-none">
+          <a id="notification-link" href="#" class="btn btn-primary" target="_blank">
+            <i class="bi bi-box-arrow-up-right"></i> {% trans "Acessar" %}
+          </a>
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Fechar" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #notificationDropdown {
+    left: -220px;
+  }
+</style>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Botões com mensagens traduzidas -->
+<div style="display: none;">
+  <span id="clear-confirm-message">{% trans "Tem certeza de que deseja limpar todas as notificações?" %}</span>
+  <span id="error-loading-details">{% trans "Erro ao carregar os detalhes da notificação." %}</span>
+  <span id="created-at-label">{% trans "Criado em:" %}</span>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    function loadNotifications() {
+      fetch("{% url 'notification:notification_list' %}")
+        .then(response => response.json())
+        .then(data => {
+          const notificationList = document.getElementById('notification-list');
+          const notificationBadge = document.getElementById('notification-count');
+          let notificationCount = 0;
+          notificationList.innerHTML = '';
+
+          data.notifications.forEach(notification => {
+            const listItem = document.createElement('a');
+            listItem.href = "#";
+            listItem.className = `list-group-item list-group-item-action border-bottom ${notification.viewed ? 'viewed' : ''}`;
+            listItem.setAttribute('data-bs-toggle', 'modal');
+            listItem.setAttribute('data-bs-target', '#notificationModal');
+            listItem.setAttribute('data-notification-id', notification.id);
+
+            listItem.innerHTML = `
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <img alt="Image placeholder" src="{% static 'assets/img/logo_painel.png' %}" class="avatar-md rounded">
+                </div>
+                <div class="col ps-0 ms-2">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h4 class="h6 mb-0 text-small">${notification.type}</h4>
+                    </div>
+                    <div class="text-end">
+                      <small class="text-danger">${notification.created_at}</small>
+                    </div>
+                  </div>
+                  <p class="font-small mt-1 mb-0">
+                    ${notification.message}
+                  </p>
+                </div>
+              </div>
+            `;
+
+            notificationList.appendChild(listItem);
+            if (!notification.viewed) notificationCount++;
+          });
+
+          if (notificationCount > 0) {
+            notificationBadge.textContent = notificationCount;
+            notificationBadge.style.display = 'inline';
+          } else {
+            notificationBadge.style.display = 'none';
+          }
+        });
+    }
+
+    document.getElementById('mark-as-read').addEventListener('click', function () {
+      fetch("{% url 'notification:mark_all_as_read' %}").then(loadNotifications);
+    });
+
+    document.getElementById('clear-all').addEventListener('click', function () {
+      const confirmMessage = document.getElementById('clear-confirm-message').textContent;
+      if (confirm(confirmMessage)) {
+        fetch("{% url 'notification:clear_all_notifications' %}").then(loadNotifications);
+      }
+    });
+
+    document.getElementById('notificationModal').addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const notificationId = button.getAttribute('data-notification-id');
+      const modalBody = document.querySelector('#notificationModal .modal-body');
+      const createdAtLabel = document.getElementById('created-at-label').textContent;
+      const errorLoadingDetails = document.getElementById('error-loading-details').textContent;
+
+      fetch(`/app/notification/detail/${notificationId}/`)
+        .then(response => response.json())
+        .then(data => {
+          modalBody.innerHTML = `
+            <div class="notification-details">
+              <div class="notification-type"><i class="fas fa-info-circle"></i> ${data.type}</div>
+              <div class="notification-message">${data.message}</div>
+              <div class="notification-created-at">
+                <i class="far fa-clock"></i> ${createdAtLabel} ${data.created_at}
+              </div>
+            </div>
+          `;
+
+          const linkContainer = document.getElementById('notification-link-container');
+          const linkButton = document.getElementById('notification-link');
+
+          if (data.link) {
+            linkButton.href = data.link;
+            linkContainer.classList.remove('d-none');
+          } else {
+            linkContainer.classList.add('d-none');
+          }
+
+          loadNotifications();
+        })
+        .catch(() => {
+          modalBody.innerHTML = `<p class="text-danger">${errorLoadingDetails}</p>`;
+        });
+    });
+
+    loadNotifications();
+  });
+</script>

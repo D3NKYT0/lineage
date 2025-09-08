@@ -1,0 +1,110 @@
+{% load static i18n %}
+
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {% if message.tags == 'warning' and 'filtros automáticos' in message.message or 'filtros automáticos' in message %}
+          <!-- Mensagem de filtro personalizada -->
+          <div class="d-flex align-items-start">
+            <div class="flex-shrink-0 me-3">
+              <i class="bi bi-shield-exclamation fs-4"></i>
+            </div>
+            <div class="flex-grow-1">
+              <h6 class="alert-heading mb-2">{% trans "Conteúdo em Revisão" %}</h6>
+              <p class="mb-2">{{ message }}</p>
+              <div class="small text-muted">
+                <i class="bi bi-info-circle me-1"></i>
+                {% trans "Nossa equipe irá revisar seu conteúdo em breve. Posts aprovados ficam visíveis para todos os usuários." %}
+              </div>
+            </div>
+          </div>
+        {% elif message.tags == 'info' and 'ocultado' in message.message or 'ocultado' in message %}
+          <!-- Mensagem de conteúdo oculto -->
+          <div class="d-flex align-items-start">
+            <div class="flex-shrink-0 me-3">
+              <i class="bi bi-eye-slash fs-4"></i>
+            </div>
+            <div class="flex-grow-1">
+              <h6 class="alert-heading mb-2">{% trans "Conteúdo Oculto" %}</h6>
+              <p class="mb-2">{{ message }}</p>
+              <div class="small text-muted">
+                <i class="bi bi-info-circle me-1"></i>
+                {% trans "Seu conteúdo foi temporariamente ocultado. Entre em contato conosco se tiver dúvidas." %}
+              </div>
+            </div>
+          </div>
+        {% elif message.tags == 'error' and 'bloqueado' in message.message or 'removido' in message.message %}
+          <!-- Mensagem de conteúdo bloqueado -->
+          <div class="d-flex align-items-start">
+            <div class="flex-shrink-0 me-3">
+              <i class="bi bi-x-circle fs-4"></i>
+            </div>
+            <div class="flex-grow-1">
+              <h6 class="alert-heading mb-2">{% trans "Conteúdo Não Permitido" %}</h6>
+              <p class="mb-2">{{ message }}</p>
+              <div class="small text-muted">
+                <i class="bi bi-info-circle me-1"></i>
+                {% trans "Revise nossas diretrizes da comunidade antes de publicar novamente." %}
+                <a href="#" class="text-decoration-none ms-1">{% trans "Ver diretrizes" %}</a>
+              </div>
+            </div>
+          </div>
+        {% elif message.tags == 'success' and 'Post criado' in message.message %}
+          <!-- Mensagem de sucesso personalizada -->
+          <div class="d-flex align-items-start">
+            <div class="flex-shrink-0 me-3">
+              <i class="bi bi-check-circle fs-4"></i>
+            </div>
+            <div class="flex-grow-1">
+              <h6 class="alert-heading mb-1">{% trans "Post Publicado!" %}</h6>
+              <div class="small text-muted">
+                {% trans "Seu post está visível para todos os usuários da rede social." %}
+              </div>
+            </div>
+          </div>
+        {% else %}
+          <!-- Mensagem padrão -->
+          {{ message }}
+        {% endif %}
+        
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{% trans 'Fechar' %}"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<style>
+.alert {
+  border-left: 4px solid;
+}
+
+.alert-warning {
+  border-left-color: #ffc107;
+  background-color: #fff9e6;
+}
+
+.alert-info {
+  border-left-color: #0dcaf0;
+  background-color: #e6f7ff;
+}
+
+.alert-danger, .alert-error {
+  border-left-color: #dc3545;
+  background-color: #ffe6e6;
+}
+
+.alert-success {
+  border-left-color: #198754;
+  background-color: #e6f7e6;
+}
+
+.alert-heading {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.alert .bi {
+  color: rgba(0,0,0,0.6);
+}
+</style>

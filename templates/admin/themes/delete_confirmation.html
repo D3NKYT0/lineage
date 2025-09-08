@@ -1,0 +1,49 @@
+{% extends "layouts/base-auth.html" %}
+{% load i18n admin_urls %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="card shadow rounded-4">
+    <div class="card-body">
+      <h3 class="card-title text-danger mb-4">
+        <i class="fas fa-triangle-exclamation me-2"></i>{% trans "Tem certeza que deseja excluir os temas selecionados?" %}
+      </h3>
+
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete_selected_themes" />
+        {% for obj in themes %}
+          <input type="hidden" name="_selected_action" value="{{ obj.pk }}" />
+        {% endfor %}
+
+        <div class="mb-3">
+          <ul class="list-group">
+            {% for obj in themes %}
+              <li class="list-group-item d-flex align-items-center">
+                <i class="fas fa-folder-minus text-secondary me-2"></i>
+                <strong>{{ obj }}</strong>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          <div>
+            <strong>{% trans "Esta ação não pode ser desfeita!" %}</strong>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+          <a href="{% url 'admin:administrator_theme_changelist' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>{% trans "Cancelar" %}
+          </a>
+          <button type="submit" class="btn btn-danger" name="post">
+            <i class="fas fa-trash-alt me-1"></i>{% trans "Confirmar exclusão" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

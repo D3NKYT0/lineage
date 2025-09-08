@@ -1,0 +1,302 @@
+/* Admin Custom Styles */
+
+/* Melhorar aparência dos badges */
+.admin-badge {
+    background: #e3f2fd;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    color: #1976d2;
+    font-weight: 500;
+}
+
+.admin-badge.success {
+    background: #e8f5e8;
+    color: #2e7d32;
+}
+
+.admin-badge.warning {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.admin-badge.danger {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+/* Melhorar campos de tradução */
+.translation-inline {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.translation-inline .form-row {
+    margin-bottom: 8px;
+}
+
+.translation-inline label {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Melhorar campos de busca */
+.search-field {
+    background: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.search-field:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Melhorar filtros */
+.filter-field {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+/* Melhorar ações em massa */
+.action-buttons {
+    margin: 10px 0;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.action-buttons .button {
+    margin-right: 8px;
+    padding: 6px 12px;
+    border: 1px solid #007bff;
+    background: #007bff;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.action-buttons .button:hover {
+    background: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Melhorar campos de data */
+.date-field {
+    background: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+/* Melhorar campos de status */
+.status-field {
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+    text-align: center;
+    min-width: 60px;
+    display: inline-block;
+}
+
+.status-active {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-inactive {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+/* Melhorar tooltips */
+.admin-tooltip {
+    position: relative;
+    cursor: help;
+}
+
+.admin-tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+/* Melhorar campos de imagem */
+.image-preview {
+    border: 2px solid #dee2e6;
+    border-radius: 6px;
+    padding: 4px;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.image-preview:hover {
+    border-color: #007bff;
+}
+
+/* Melhorar campos de raridade */
+.rarity-common {
+    background: #6c757d;
+    color: white;
+}
+
+.rarity-rare {
+    background: #007bff;
+    color: white;
+}
+
+.rarity-epic {
+    background: #6f42c1;
+    color: white;
+}
+
+.rarity-legendary {
+    background: #fd7e14;
+    color: white;
+}
+
+/* Melhorar campos de preço */
+.price-field {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #28a745;
+}
+
+.price-field.negative {
+    color: #dc3545;
+}
+
+/* Melhorar campos de quantidade */
+.quantity-field {
+    text-align: center;
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Melhorar campos de data/hora */
+.datetime-field {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* Melhorar campos de usuário */
+.user-field {
+    font-weight: 500;
+    color: #007bff;
+}
+
+/* Melhorar campos de descrição */
+.description-field {
+    color: #6c757d;
+    font-style: italic;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Melhorar responsividade */
+@media (max-width: 768px) {
+    .admin-badge {
+        font-size: 10px;
+        padding: 1px 4px;
+    }
+    
+    .description-field {
+        max-width: 200px;
+    }
+    
+    .action-buttons .button {
+        display: block;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+}
+
+/* Melhorar campos de formulário */
+.form-control {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Melhorar campos de checkbox */
+.form-check-input {
+    width: 16px;
+    height: 16px;
+    margin-top: 0.25rem;
+    margin-right: 0.5rem;
+    vertical-align: top;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    appearance: none;
+    color-adjust: exact;
+}
+
+.form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}
+
+/* Melhorar campos de select */
+.form-select {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+    appearance: none;
+}
+
+.form-select:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}

@@ -1,0 +1,210 @@
+/* Accountancy Modern Styles */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+.accountancy-container {
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.accountancy-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+.accountancy-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #28a745, #20c997, #17a2b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 20px rgba(40, 167, 69, 0.5);
+  margin-bottom: 1rem;
+}
+
+.accountancy-subtitle {
+  color: #e8f5e8;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.accountancy-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(40, 167, 69, 0.3);
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  animation: slideInUp 0.6s ease-out;
+  transition: all 0.3s ease;
+}
+
+.accountancy-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(40, 167, 69, 0.4);
+}
+
+.accountancy-card-header {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.accountancy-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+  animation: pulse 2s infinite;
+}
+
+.accountancy-card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.accountancy-card-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+.accountancy-button {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border: none;
+  color: white;
+  padding: 1.5rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 15px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+}
+
+.accountancy-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+  color: white;
+  text-decoration: none;
+}
+
+.report-container {
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(40, 167, 69, 0.2);
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.report-header {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.report-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.report-body {
+  padding: 2rem;
+}
+
+.report-table {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.report-table thead {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.report-table th {
+  border: none;
+  padding: 1.5rem 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.report-table td {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid #e9ecef;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.report-table tbody tr:hover {
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.05), rgba(32, 201, 151, 0.05));
+}
+
+.report-back-button {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  border: none;
+  color: white;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(108, 117, 125, 0.3);
+}
+
+.report-back-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+  color: white;
+  text-decoration: none;
+}
+
+@keyframes fadeInDown {
+  0% { opacity: 0; transform: translateY(-30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInUp {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Melhorar legibilidade dos textos muted nos relatórios */
+.report-container .text-muted {
+  color: #6c757d !important;
+  font-weight: 500;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.report-container .fa-3x.text-muted {
+  color: #6c757d !important;
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .accountancy-title { font-size: 2rem; }
+  .accountancy-card-header { padding: 1.5rem; }
+  .accountancy-card-body { padding: 1.5rem; }
+  .accountancy-button { padding: 1.25rem 1.5rem; font-size: 1rem; }
+} 

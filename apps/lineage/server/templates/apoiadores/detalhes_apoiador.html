@@ -1,0 +1,475 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load apoiador_extras %}
+{% load static %}
+
+{% block title %}{% trans "Detalhes do Apoiador" %}{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .supporter-details-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .supporter-details-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .supporter-details-header h1 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .supporter-details-header p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .supporter-info-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .supporter-info-card h2 {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .supporter-profile {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .supporter-image-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 15px;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .supporter-image-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .supporter-image-placeholder i {
+    font-size: 3rem;
+    color: #a0aec0;
+  }
+
+  .supporter-basic-info h3 {
+    color: white;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+
+  .supporter-basic-info p {
+    color: #a0aec0;
+    margin: 0.25rem 0;
+    font-size: 1rem;
+  }
+
+  .status-badge-large {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 1rem;
+  }
+
+  .status-pending {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: white;
+  }
+
+  .status-approved {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+  }
+
+  .status-rejected {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    color: white;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .info-section {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .info-section h4 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .info-item:last-child {
+    border-bottom: none;
+  }
+
+  .info-label {
+    color: #a0aec0;
+    font-weight: 500;
+  }
+
+  .info-value {
+    color: white;
+    font-weight: 600;
+  }
+
+  .social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .social-link {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .social-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .coupon-section {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(72, 187, 120, 0.3);
+  }
+
+  .coupon-section h4 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .coupon-code {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 1rem 0;
+  }
+
+  .purchases-table {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .purchases-table thead th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem;
+    font-weight: 600;
+  }
+
+  .purchases-table tbody tr {
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.3s ease;
+  }
+
+  .purchases-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .purchases-table tbody td {
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .purchases-table tbody td:last-child {
+    border-bottom: none;
+  }
+
+  .amount-value {
+    color: #48bb78;
+    font-weight: 600;
+  }
+
+  .empty-purchases {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #a0aec0;
+  }
+
+  .empty-purchases i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .empty-purchases h4 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .empty-purchases p {
+    color: #a0aec0;
+    font-size: 1.1rem;
+  }
+
+  .btn-back {
+    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(113, 128, 150, 0.3);
+    color: white;
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .supporter-profile {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .social-links {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="supporter-details-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="supporter-details-header">
+      <h1>
+        <i class="fas fa-user-circle me-3"></i>{% trans "Detalhes do Apoiador" %}
+      </h1>
+      <p>{{ apoiador.nome_publico }}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" style="color: #a0aec0;">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'server:painel_staff' %}" style="color: #a0aec0;">{% trans "Painel Staff" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: white;">{% trans "Detalhes" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Supporter Info Card -->
+    <div class="supporter-info-card">
+      <h2>
+        <i class="fas fa-info-circle me-2"></i>{% trans "Informações do Apoiador" %}
+      </h2>
+
+      <div class="supporter-profile">
+        {% if apoiador.imagem %}
+          <img src="{{ apoiador.imagem.url }}" alt="{{ apoiador.nome_publico }}" class="supporter-image-large">
+        {% else %}
+          <div class="supporter-image-placeholder">
+            <i class="fas fa-user"></i>
+          </div>
+        {% endif %}
+
+        <div class="supporter-basic-info">
+          <h3>{{ apoiador.nome_publico }}</h3>
+          <p><strong>{% trans "Usuário" %}:</strong> {{ apoiador.user.username }}</p>
+          <p><strong>{% trans "Email" %}:</strong> {{ apoiador.user.email }}</p>
+          <p><strong>{% trans "Data de Registro" %}:</strong> {{ apoiador.user.date_joined|date:"d/m/Y H:i" }}</p>
+          
+          <span class="status-badge-large status-{{ apoiador.status|lower }}">
+            {{ apoiador.get_status_display }}
+          </span>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-section">
+          <h4>{% trans "Descrição" %}</h4>
+          <p style="color: #a0aec0; line-height: 1.6;">
+            {{ apoiador.descricao|default:_("Nenhuma descrição fornecida.") }}
+          </p>
+        </div>
+
+        <div class="info-section">
+          <h4>{% trans "Redes Sociais" %}</h4>
+          {% if apoiador.link_twitch or apoiador.link_youtube %}
+            <div class="social-links">
+              {% if apoiador.link_twitch %}
+                <a href="{{ apoiador.link_twitch }}" target="_blank" class="social-link">
+                  <i class="fab fa-twitch"></i>Twitch
+                </a>
+              {% endif %}
+              {% if apoiador.link_youtube %}
+                <a href="{{ apoiador.link_youtube }}" target="_blank" class="social-link">
+                  <i class="fab fa-youtube"></i>YouTube
+                </a>
+              {% endif %}
+            </div>
+          {% else %}
+            <p style="color: #a0aec0;">{% trans "Nenhuma rede social fornecida." %}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Cupom Ativo -->
+    {% if cupom %}
+      <div class="coupon-section">
+        <h4>
+          <i class="fas fa-gift me-2"></i>{% trans "Cupom Ativo" %}
+        </h4>
+        <div class="coupon-code">{{ cupom.codigo }}</div>
+        <p style="color: rgba(255, 255, 255, 0.9); margin: 0;">
+          {% trans "Desconto" %}: <strong>{{ cupom.desconto_percentual }}%</strong> | 
+          {% trans "Válido até" %}: <strong>{{ cupom.validade|date:"d/m/Y" }}</strong>
+        </p>
+      </div>
+    {% endif %}
+
+    <!-- Estatísticas -->
+    <div class="supporter-info-card">
+      <h2>
+        <i class="fas fa-chart-bar me-2"></i>{% trans "Estatísticas" %}
+      </h2>
+      
+      <div class="info-grid">
+        <div class="info-section">
+          <h4>{% trans "Total de Vendas" %}</h4>
+          <div class="info-item">
+            <span class="info-label">{% trans "Valor Total" %}</span>
+            <span class="info-value" style="color: #48bb78;">R$ {{ total_vendas|floatformat:2 }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">{% trans "Usuários Impactados" %}</span>
+            <span class="info-value">{{ total_usuarios }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Histórico de Compras -->
+    <div class="supporter-info-card">
+      <h2>
+        <i class="fas fa-shopping-cart me-2"></i>{% trans "Histórico de Compras" %}
+      </h2>
+      
+      {% if compras %}
+        <div class="table-responsive">
+          <table class="table purchases-table">
+            <thead>
+              <tr>
+                <th>{% trans "Usuário" %}</th>
+                <th>{% trans "Personagem" %}</th>
+                <th>{% trans "Total" %}</th>
+                <th>{% trans "Data" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for compra in compras %}
+                <tr>
+                  <td>{{ compra.user.username }}</td>
+                  <td>{{ compra.character_name }}</td>
+                  <td class="amount-value">R$ {{ compra.total_pago }}</td>
+                  <td>{{ compra.data_compra|date:"d/m/Y H:i" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-purchases">
+          <i class="fas fa-shopping-bag"></i>
+          <h4>{% trans "Nenhuma compra registrada" %}</h4>
+          <p>{% trans "Este apoiador ainda não possui compras registradas." %}</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Back Button -->
+    <div class="text-center">
+      <a href="{% url 'server:painel_staff' %}" class="btn-back">
+        <i class="fas fa-arrow-left me-2"></i>{% trans "Voltar para o Painel Staff" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %} 

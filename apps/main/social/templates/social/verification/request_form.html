@@ -1,0 +1,241 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Solicitar Verificação de Conta" %} - {{ block.super }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-section {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .form-section h5 {
+        color: #495057;
+        border-bottom: 2px solid #dee2e6;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .required-field::after {
+        content: " *";
+        color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">
+                        <i class="bi bi-patch-check-fill text-primary"></i>
+                        {% trans "Solicitar Verificação de Conta" %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>{% trans "Importante:" %}</strong>
+                        {% trans "A verificação de conta é um processo rigoroso que garante a autenticidade dos usuários. Todas as informações fornecidas serão tratadas com confidencialidade e usadas apenas para fins de verificação." %}
+                    </div>
+
+                    <form method="post" enctype="multipart/form-data" id="verification-form">
+                        {% csrf_token %}
+                        
+                        <!-- Seção: Informações Pessoais -->
+                        <div class="form-section">
+                            <h5><i class="bi bi-person-badge"></i> {% trans "Informações Pessoais" %}</h5>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.cpf.id_for_label }}" class="form-label required-field">
+                                        {% trans "CPF" %}
+                                    </label>
+                                    {{ form.cpf }}
+                                    {% if form.cpf.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.cpf.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">{{ form.cpf.help_text }}</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.full_name.id_for_label }}" class="form-label required-field">
+                                        {% trans "Nome Completo" %}
+                                    </label>
+                                    {{ form.full_name }}
+                                    {% if form.full_name.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.full_name.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.birth_date.id_for_label }}" class="form-label required-field">
+                                        {% trans "Data de Nascimento" %}
+                                    </label>
+                                    {{ form.birth_date }}
+                                    {% if form.birth_date.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.birth_date.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">{{ form.birth_date.help_text }}</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.phone_number.id_for_label }}" class="form-label required-field">
+                                        {% trans "Telefone" %}
+                                    </label>
+                                    {{ form.phone_number }}
+                                    {% if form.phone_number.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.phone_number.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text">{{ form.phone_number.help_text }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção: Documento de Identificação -->
+                        <div class="form-section">
+                            <h5><i class="bi bi-file-earmark-image"></i> {% trans "Documento de Identificação" %}</h5>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.identity_document.id_for_label }}" class="form-label required-field">
+                                    {% trans "Documento de Identificação" %}
+                                </label>
+                                {{ form.identity_document }}
+                                {% if form.identity_document.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.identity_document.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">{{ form.identity_document.help_text }}</div>
+                                
+                                <div class="alert alert-warning mt-2">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    <strong>{% trans "Atenção:" %}</strong>
+                                    {% trans "Aceitamos RG, CNH ou outros documentos oficiais com foto. O documento deve estar legível e com foto visível." %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção: Motivo da Solicitação -->
+                        <div class="form-section">
+                            <h5><i class="bi bi-chat-text"></i> {% trans "Motivo da Solicitação" %}</h5>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.reason.id_for_label }}" class="form-label required-field">
+                                    {% trans "Por que você deseja ter sua conta verificada?" %}
+                                </label>
+                                {{ form.reason }}
+                                {% if form.reason.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.reason.errors.0 }}
+                                    </div>
+                                {% endif %}
+                                <div class="form-text">{{ form.reason.help_text }}</div>
+                            </div>
+                        </div>
+
+                        <!-- Termos e Condições -->
+                        <div class="form-section">
+                            <h5><i class="bi bi-shield-check"></i> {% trans "Termos e Condições" %}</h5>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="terms-accept" required>
+                                <label class="form-check-label" for="terms-accept">
+                                    {% trans "Li e aceito os" %} <a href="#" target="_blank">{% trans "Termos de Uso" %}</a> {% trans "e" %} <a href="#" target="_blank">{% trans "Política de Privacidade" %}</a>
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="data-consent" required>
+                                <label class="form-check-label" for="data-consent">
+                                    {% trans "Autorizo o uso das informações fornecidas exclusivamente para fins de verificação de conta" %}
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'social:verification_status' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i>
+                                {% trans "Cancelar" %}
+                            </a>
+                            
+                            <button type="submit" class="btn btn-primary" id="submit-btn">
+                                <i class="bi bi-send"></i>
+                                {% trans "Enviar Solicitação" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Máscaras para CPF e telefone
+    const cpfInput = document.getElementById('{{ form.cpf.id_for_label }}');
+    const phoneInput = document.getElementById('{{ form.phone_number.id_for_label }}');
+    
+    // Máscara para CPF
+    if (cpfInput) {
+        cpfInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            e.target.value = value;
+        });
+    }
+    
+    // Máscara para telefone
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 10) {
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            } else {
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{5})(\d)/, '$1-$2');
+            }
+            e.target.value = value;
+        });
+    }
+    
+    // Validação do formulário
+    const form = document.getElementById('verification-form');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    form.addEventListener('submit', function(e) {
+        const termsAccept = document.getElementById('terms-accept').checked;
+        const dataConsent = document.getElementById('data-consent').checked;
+        
+        if (!termsAccept || !dataConsent) {
+            e.preventDefault();
+            alert('{% trans "Você deve aceitar os termos e condições para continuar." %}');
+            return false;
+        }
+        
+        // Desabilitar botão para evitar duplo envio
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> {% trans "Enviando..." %}';
+    });
+});
+</script>
+{% endblock %}

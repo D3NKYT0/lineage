@@ -1,0 +1,33 @@
+/**
+ * = Breadcrumbs
+ */
+
+.breadcrumb-item {
+  font-size: $font-size-xs;
+  &, a {
+    color: $breadcrumb-item-color;
+    font-weight: $breadcrumb-font-weight;
+    font-size: $font-size-xs;
+    @include media-breakpoint-up(sm){
+      font-size: $font-size-sm;
+    }
+  }
+  
+}
+
+.breadcrumb-transparent {
+  background: transparent;
+  padding: 0;
+}
+
+.breadcrumb-text-light {
+  .breadcrumb-item {
+    &, a {
+      color: $breadcrumb-item-light-color;
+    }
+
+    &:before {
+      color: $breadcrumb-divider-light-color;
+    }
+  }
+}

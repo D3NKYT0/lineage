@@ -1,0 +1,105 @@
+{% extends 'layouts/base-auth.html' %}
+{% load static i18n %}
+
+{% block content %}
+<style>
+  body {
+    background: url("{{ background_url }}") no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  .panel-2fa {
+    background-color: rgba(20, 20, 20, 0.95);
+    color: #f0e6d2;
+    border-radius: 1rem;
+    border: 1px solid #e0c36b;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.85);
+    font-family: 'Cinzel', serif;
+  }
+
+  .panel-2fa h1 {
+    font-size: 1.5rem;
+    color: #e0c36b;
+    text-shadow: 0 0 8px rgba(255, 215, 100, 0.4);
+  }
+
+  label {
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: #f5deb3;
+  }
+
+  .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid #e0c36b;
+  }
+
+  .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #f0e68c;
+    box-shadow: 0 0 10px rgba(255, 255, 160, 0.5);
+  }
+
+  .btn-golden {
+    background: linear-gradient(to right, #b89b56, #d5c170);
+    color: #000;
+    font-weight: bold;
+    text-shadow: 0 0 5px #fff8dc;
+    border: none;
+  }
+
+  .btn-golden:hover {
+    background: linear-gradient(to right, #d5c170, #b89b56);
+    color: #000;
+  }
+
+  .qr-container {
+    text-align: center;
+    margin: 1rem 0;
+  }
+
+  .otp-key {
+    font-family: monospace;
+    background: #333;
+    padding: 0.5rem;
+    border-radius: 5px;
+    display: inline-block;
+    color: #f0e6d2;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    margin-top: 1rem;
+  }
+</style>
+
+<section class="vh-100 d-flex align-items-center justify-content-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="p-5 panel-2fa">
+          <div class="text-center mb-4">
+            <h1>{% trans "Ativar Autenticação em 2 Etapas" %}</h1>
+            <p>{% trans "Escaneie o QR Code abaixo com o Google Authenticator ou similar." %}</p>
+          </div>
+
+          <div class="qr-container">
+            <img src="data:image/png;base64,{{ qr_png }}" alt="QR Code">
+        </div>
+
+          <form method="post" class="mt-4">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+              <label for="token">{% trans "Digite o código do aplicativo" %}</label>
+              <input type="text" class="form-control text-white" name="token" id="token" required>
+            </div>
+
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-golden">{% trans "Ativar 2FA" %}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

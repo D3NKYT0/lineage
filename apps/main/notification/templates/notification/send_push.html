@@ -1,0 +1,350 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .push-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .push-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .push-header h1 {
+    color: white;
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  .push-header p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0.5rem 0 0 0;
+    font-size: 1.1rem;
+  }
+
+  .breadcrumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .breadcrumb-item a {
+    color: #00d9ff;
+    text-decoration: none;
+  }
+
+  .breadcrumb-item.active {
+    color: white;
+  }
+
+  .push-form-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .push-form-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  }
+
+  .push-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: #00d9ff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+  }
+
+  .push-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  .push-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 2rem;
+  }
+
+  .form-label {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    display: block;
+    font-size: 1.1rem;
+  }
+
+  .form-control-custom {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .form-control-custom:focus {
+    outline: none;
+    border-color: #00d9ff;
+    box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .form-control-custom::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .char-counter {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    text-align: right;
+    margin-top: 0.5rem;
+  }
+
+  .char-counter.near-limit {
+    color: #ffc107;
+  }
+
+  .char-counter.at-limit {
+    color: #dc3545;
+  }
+
+  .btn-send {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-send:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .info-alert {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    border-left: 4px solid #00d9ff;
+  }
+
+  .info-alert h5 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  .info-alert p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .push-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .stat-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #00d9ff;
+  }
+
+  .stat-label {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .stat-value {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  @media (max-width: 768px) {
+    .push-stats {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="push-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="push-header">
+      <h1>
+        <i class="fas fa-bell me-3"></i>{% trans "Enviar Notificação Push" %}
+      </h1>
+      <p>{% trans "Envie mensagens instantâneas para todos os usuários inscritos" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Enviar Push" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Push Stats -->
+    <div class="push-stats">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-label">{% trans "Usuários Inscritos" %}</div>
+        <div class="stat-value">{{ subscribed_users_count|default:"0" }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-paper-plane"></i>
+        </div>
+        <div class="stat-label">{% trans "Mensagens Enviadas" %}</div>
+        <div class="stat-value">{{ total_sent|default:"0" }}</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-label">{% trans "Última Enviada" %}</div>
+        <div class="stat-value">{{ last_sent|default:"Nunca" }}</div>
+      </div>
+    </div>
+
+    <!-- Main Form Card -->
+    <div class="push-form-card">
+      <div class="text-center">
+        <div class="push-icon">
+          <i class="fas fa-bell"></i>
+        </div>
+        <h2 class="push-title">{% trans "Nova Notificação" %}</h2>
+        <p class="push-description">
+          {% trans "Digite sua mensagem abaixo. Ela será enviada instantaneamente para todos os usuários inscritos no push." %}
+        </p>
+      </div>
+
+      <form method="post" autocomplete="off">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label for="message" class="form-label">
+            <i class="fas fa-comment me-2"></i>{% trans "Mensagem" %}
+          </label>
+          <textarea 
+            class="form-control-custom" 
+            id="message" 
+            name="message" 
+            rows="4" 
+            maxlength="255" 
+            required 
+            placeholder="{% trans 'Digite a mensagem a ser enviada...' %}"
+          ></textarea>
+          <div class="char-counter" id="charCount">
+            <span id="charCountValue">0</span>/255
+          </div>
+        </div>
+
+        <button type="submit" class="btn-send">
+          <i class="fas fa-paper-plane"></i>{% trans "Enviar Notificação" %}
+        </button>
+      </form>
+    </div>
+
+    <!-- Info Alert -->
+    <div class="info-alert">
+      <h5><i class="fas fa-info-circle me-2"></i>{% trans "Dica Importante" %}</h5>
+      <p>
+        {% trans "Todos os usuários inscritos no push receberão a mensagem instantaneamente." %}
+        {% trans "Use para alertas importantes, avisos de manutenção, eventos especiais e comunicações urgentes." %}
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const textarea = document.getElementById('message');
+  const charCountValue = document.getElementById('charCountValue');
+  const charCounter = document.getElementById('charCount');
+  
+  if (textarea && charCountValue && charCounter) {
+    textarea.addEventListener('input', function() {
+      const length = textarea.value.length;
+      charCountValue.textContent = length;
+      
+      // Remove previous classes
+      charCounter.classList.remove('near-limit', 'at-limit');
+      
+      // Add appropriate class based on length
+      if (length >= 240) {
+        charCounter.classList.add('at-limit');
+      } else if (length >= 200) {
+        charCounter.classList.add('near-limit');
+      }
+    });
+  }
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,48 @@
+{% load static i18n %}
+
+<!-- Container para notificações flutuantes -->
+<div id="floating-notifications-container" class="floating-notifications-container">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="floating-notification floating-notification-{{ message.tags }} fade-in" 
+           data-message-id="{{ forloop.counter }}" 
+           data-auto-close="true">
+        <div class="notification-content">
+          <div class="notification-icon">
+            {% if message.tags == 'error' %}
+              <i class="bi bi-exclamation-triangle-fill"></i>
+            {% elif message.tags == 'warning' %}
+              <i class="bi bi-exclamation-circle-fill"></i>
+            {% elif message.tags == 'info' %}
+              <i class="bi bi-info-circle-fill"></i>
+            {% elif message.tags == 'success' %}
+              <i class="bi bi-check-circle-fill"></i>
+            {% else %}
+              <i class="bi bi-bell-fill"></i>
+            {% endif %}
+          </div>
+          <div class="notification-text">
+            <div class="notification-title">
+              {% if message.tags == 'error' %}
+                {% trans "Erro" %}
+              {% elif message.tags == 'warning' %}
+                {% trans "Aviso" %}
+              {% elif message.tags == 'info' %}
+                {% trans "Informação" %}
+              {% elif message.tags == 'success' %}
+                {% trans "Sucesso" %}
+              {% else %}
+                {% trans "Notificação" %}
+              {% endif %}
+            </div>
+            <div class="notification-message">{{ message }}</div>
+          </div>
+          <button type="button" class="notification-close" aria-label="{% trans 'Fechar' %}">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        <div class="notification-progress"></div>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>

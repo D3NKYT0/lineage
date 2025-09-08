@@ -1,0 +1,39 @@
+.apexcharts-tooltip {
+    background-color: $white !important;
+    color: $body-color !important;
+    border: 0 !important;
+    @include box-shadow( $box-shadow !important);
+    @include border-radius( $border-radius-sm !important);
+    .apexcharts-tooltip-title {
+        padding: 6px 10px !important;
+        background: $gray-200 !important;
+        border-bottom: $border-width solid $gray-300 !important;
+    }
+}
+
+.apexcharts-xaxistooltip {
+    color: $body-color !important;
+    border: 0 !important;
+    background-color: $white !important;
+    @include box-shadow( $box-shadow !important);
+    @include border-radius( $border-radius-sm !important);
+}
+
+.apexcharts-xaxistooltip-bottom{
+    &::before{
+        border-bottom-color: $white !important;
+    }
+    &::after{
+        border-bottom-color: $white !important;
+    }
+}
+
+.apexcharts-tooltip-marker {
+    min-width: 10px !important;
+    min-height: 10px !important;
+    margin-right: 8px !important;
+}
+
+.apexcharts-tooltip-y-group {
+    padding: 4px 0 5px !important;
+}

@@ -1,0 +1,134 @@
+{% extends 'wiki/base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ title }} - {% trans "Atualizações" %} - {% trans "Wiki" %}{% endblock %}
+
+{% block wiki_content %}
+<div class="wiki-update-detail">
+    <div class="page-header mb-4">
+        <div class="page-title-section">
+            <div class="update-header">
+                <h1 class="page-title">
+                    <i class="fas fa-sync"></i>
+                    {{ title }}
+                </h1>
+                <div class="update-meta">
+                    <span class="badge bg-primary">v{{ update.version }}</span>
+                    {% if update.is_major %}
+                        <span class="badge bg-warning">{% trans "Atualização Principal" %}</span>
+                    {% endif %}
+                    <span class="badge bg-secondary">{{ update.release_date|date:"d/m/Y" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="update-content">
+        {% if update.translations.first.title %}
+        <div class="update-title-section mb-4">
+            <h2>{{ update.translations.first.title }}</h2>
+        </div>
+        {% endif %}
+
+        {% if update.translations.first.content %}
+        <div class="content-section mb-4">
+            <h3>
+                <i class="fas fa-file-alt"></i>
+                {% trans "Detalhes da Atualização" %}
+            </h3>
+            <div class="content-body">
+                {{ update.translations.first.content|safe }}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if update.translations.first.changelog %}
+        <div class="changelog-section">
+            <h3>
+                <i class="fas fa-list"></i>
+                {% trans "Changelog" %}
+            </h3>
+            <div class="changelog-body">
+                {{ update.translations.first.changelog|safe }}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="update-navigation mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="{% url 'wiki:updates' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left"></i>
+                    {% trans "Voltar às Atualizações" %}
+                </a>
+            </div>
+            <div class="col-md-6 text-end">
+                <div class="update-info">
+                    <small class="text-muted">
+                        <i class="fas fa-calendar"></i>
+                        {% trans "Lançado em" %} {{ update.release_date|date:"d/m/Y" }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.update-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.update-meta .badge {
+    margin-right: 8px;
+}
+
+.update-title-section h2 {
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 10px;
+}
+
+.content-section h3,
+.changelog-section h3 {
+    color: #495057;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.content-body,
+.changelog-body {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+    line-height: 1.6;
+}
+
+.changelog-body {
+    border-left-color: #28a745;
+}
+
+.update-navigation {
+    border-top: 1px solid #dee2e6;
+    padding-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .update-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .update-meta {
+        margin-top: 10px;
+    }
+}
+</style>
+{% endblock %}

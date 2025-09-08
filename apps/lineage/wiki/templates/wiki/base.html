@@ -1,0 +1,69 @@
+{% extends 'wiki/base-wiki.html' %}
+{% load static i18n wiki_tags %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'default/css/wiki.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="wiki-container">
+    <div class="wiki-nav-container" data-aos="fade-right" data-aos-duration="1000">
+        <div class="wiki-nav-header">
+            <i class="fas fa-book-open"></i>
+            <h2>{% trans "Guia Wiki" %}</h2>
+        </div>
+        <div class="wiki-nav-menu">
+            <ul class="wiki-nav-list">
+                <li class="wiki-nav-item">
+                    <a href="{% url 'wiki:home' %}" {% if request.resolver_match.url_name == 'home' %}class="wiki-nav-link active"{% else %}class="wiki-nav-link"{% endif %}>
+                        <i class="fas fa-home"></i>{% trans "Início" %}
+                    </a>
+                </li>
+                
+                <!-- Páginas do Menu -->
+                {% for item in pages %}
+                    {% if item.page.is_menu_item %}
+                    <li class="wiki-nav-item">
+                                            <a href="{% url 'wiki:page' item.page.slug %}" {% if request.resolver_match.kwargs.slug == item.page.slug %}class="wiki-nav-link active"{% else %}class="wiki-nav-link"{% endif %}>
+                        <i class="{% get_page_icon item.page %}"></i>
+                        {{ item.translation.title }}
+                    </a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                
+                <li class="wiki-nav-item">
+                    <a href="{% url 'wiki:updates' %}" {% if request.resolver_match.url_name == 'updates' %}class="wiki-nav-link active"{% else %}class="wiki-nav-link"{% endif %}>
+                        <i class="fas fa-sync"></i>{% trans "Atualizações" %}
+                    </a>
+                </li>
+                
+                <li class="wiki-nav-item">
+                    <a href="{% url 'wiki:search' %}" {% if request.resolver_match.url_name == 'search' %}class="wiki-nav-link active"{% else %}class="wiki-nav-link"{% endif %}>
+                        <i class="fas fa-search"></i>{% trans "Buscar" %}
+                    </a>
+                </li>
+                
+                <li class="wiki-nav-item">
+                    <a href="{% url 'wiki:sitemap' %}" {% if request.resolver_match.url_name == 'sitemap' %}class="wiki-nav-link active"{% else %}class="wiki-nav-link"{% endif %}>
+                        <i class="fas fa-sitemap"></i>{% trans "Mapa do Site" %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="wiki-content" data-aos="fade-left" data-aos-duration="1000">
+        <div class="content-wrapper">
+            {% block wiki_content %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+<script>
+    // Initialize AOS
+    AOS.init();
+</script>
+{% endblock %} 

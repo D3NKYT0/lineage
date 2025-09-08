@@ -1,0 +1,13 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="alert alert-info text-center shadow-sm p-4">
+    <h3 class="mb-3">{% trans "Passe de Batalha Indisponível" %}</h3>
+    <p class="lead">{% trans "No momento, nenhuma temporada do Passe de Batalha está ativa." %}</p>
+    <p>{% trans "Fique ligado! Em breve uma nova temporada estará disponível com recompensas exclusivas." %}</p>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-primary mt-3">{% trans "Voltar para a página inicial" %}</a>
+  </div>
+</div>
+{% endblock %}

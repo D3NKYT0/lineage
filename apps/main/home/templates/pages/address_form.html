@@ -1,0 +1,471 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block extrahead %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .address-container {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .address-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    border: 2px solid #6f42c1;
+    overflow: hidden;
+  }
+
+  .address-header {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .address-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .address-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .address-header p {
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  .address-body {
+    padding: 2rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .form-label i {
+    color: #6f42c1;
+    font-size: 0.9rem;
+  }
+
+  .form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+  }
+
+  .form-control:focus {
+    border-color: #6f42c1;
+    box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+    background: white;
+  }
+
+  .form-control.is-invalid {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+  }
+
+  .form-control.is-valid {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  }
+
+  .invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+
+  .btn-elegant {
+    border-radius: 12px;
+    padding: 0.75rem 2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-elegant::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn-elegant:hover::before {
+    left: 100%;
+  }
+
+  .btn-primary-elegant {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+  }
+
+  .btn-primary-elegant:hover {
+    background: linear-gradient(135deg, #5a32a3, #d63384);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(111, 66, 193, 0.3);
+  }
+
+  .btn-secondary-elegant {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+  }
+
+  .btn-secondary-elegant:hover {
+    background: linear-gradient(135deg, #5a6268, #343a40);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
+  }
+
+  .progress-indicator {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    border: 1px solid #e9ecef;
+  }
+
+  .progress-bar-custom {
+    height: 8px;
+    border-radius: 4px;
+    background: #e9ecef;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  .field-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+
+  .field-status.valid {
+    color: #28a745;
+  }
+
+  .field-status.invalid {
+    color: #dc3545;
+  }
+
+  .field-status i {
+    font-size: 0.75rem;
+  }
+
+  .cep-helper {
+    background: linear-gradient(135deg, #17a2b8, #20c997);
+    color: white;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .cep-helper i {
+    margin-right: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .address-body {
+      padding: 1.5rem;
+    }
+    
+    .address-header {
+      padding: 1.5rem;
+    }
+  }
+
+  .floating-label {
+    position: relative;
+  }
+
+  .floating-label .form-control {
+    padding-top: 1.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .floating-label .form-label {
+    position: absolute;
+    top: 0.75rem;
+    left: 1rem;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    background: white;
+    padding: 0 0.25rem;
+    border-radius: 4px;
+  }
+
+  .floating-label .form-control:focus + .form-label,
+  .floating-label .form-control:not(:placeholder-shown) + .form-label {
+    top: 0.25rem;
+    font-size: 0.75rem;
+    color: #6f42c1;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="address-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="address-card">
+          <!-- Header -->
+          <div class="address-header">
+            <h2>
+              {% if form.instance.pk %}
+                <i class="fas fa-edit me-2"></i>{% trans 'Editar Endereço' %}
+              {% else %}
+                <i class="fas fa-map-marker-alt me-2"></i>{% trans 'Cadastrar Endereço' %}
+              {% endif %}
+            </h2>
+            <p>{% trans 'Complete suas informações de endereço para melhorar sua experiência' %}</p>
+          </div>
+
+          <!-- Body -->
+          <div class="address-body">
+            <!-- Progress Indicator -->
+            <div class="progress-indicator">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <small class="text-muted">{% trans 'Progresso do cadastro' %}</small>
+                <small class="text-muted" id="progress-text">0%</small>
+              </div>
+              <div class="progress-bar-custom">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <!-- CEP Helper -->
+            <div class="cep-helper">
+              <i class="fas fa-info-circle"></i>
+              <strong>{% trans 'Dica:' %}</strong> {% trans 'Digite o CEP para preencher automaticamente o endereço' %}
+            </div>
+
+            <form method="post" id="address-form">
+              {% csrf_token %}
+              
+              <div class="row">
+                <!-- CEP -->
+                <div class="col-md-4 mb-3">
+                  <div class="form-group floating-label">
+                    {{ form.postal_code }}
+                    <label for="{{ form.postal_code.id_for_label }}" class="form-label">
+                      <i class="fas fa-mail-bulk"></i>{% trans 'CEP' %}
+                    </label>
+                    <div class="field-status" id="cep-status"></div>
+                  </div>
+                </div>
+
+                <!-- Logradouro -->
+                <div class="col-md-8 mb-3">
+                  <div class="form-group floating-label">
+                    {{ form.street }}
+                    <label for="{{ form.street.id_for_label }}" class="form-label">
+                      <i class="fas fa-road"></i>{% trans 'Logradouro' %}
+                    </label>
+                    <div class="field-status" id="street-status"></div>
+                  </div>
+                </div>
+
+                <!-- Número -->
+                <div class="col-md-3 mb-3">
+                  <div class="form-group floating-label">
+                    {{ form.number }}
+                    <label for="{{ form.number.id_for_label }}" class="form-label">
+                      <i class="fas fa-hashtag"></i>{% trans 'Número' %}
+                    </label>
+                    <div class="field-status" id="number-status"></div>
+                  </div>
+                </div>
+
+                <!-- Complemento -->
+                <div class="col-md-9 mb-3">
+                  <div class="form-group floating-label">
+                    {{ form.complement }}
+                    <label for="{{ form.complement.id_for_label }}" class="form-label">
+                      <i class="fas fa-home"></i>{% trans 'Complemento' %}
+                    </label>
+                    <div class="field-status" id="complement-status"></div>
+                  </div>
+                </div>
+
+                <!-- Bairro -->
+                <div class="col-md-6 mb-3">
+                  <div class="form-group floating-label">
+                    {{ form.neighborhood }}
+                    <label for="{{ form.neighborhood.id_for_label }}" class="form-label">
+                      <i class="fas fa-map"></i>{% trans 'Bairro' %}
+                    </label>
+                    <div class="field-status" id="neighborhood-status"></div>
+                  </div>
+                </div>
+
+                <!-- Cidade -->
+                <div class="col-md-6 mb-3">
+                  <div class="form-group floating-label">
+                    {{ form.city }}
+                    <label for="{{ form.city.id_for_label }}" class="form-label">
+                      <i class="fas fa-city"></i>{% trans 'Cidade' %}
+                    </label>
+                    <div class="field-status" id="city-status"></div>
+                  </div>
+                </div>
+
+                <!-- Estado -->
+                <div class="col-md-6 mb-3">
+                  <div class="form-group floating-label">
+                    {{ form.state }}
+                    <label for="{{ form.state.id_for_label }}" class="form-label">
+                      <i class="fas fa-flag"></i>{% trans 'Estado' %}
+                    </label>
+                    <div class="field-status" id="state-status"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Buttons -->
+              <div class="d-flex flex-wrap gap-3 mt-4">
+                <button type="submit" class="btn btn-elegant btn-primary-elegant">
+                  <i class="fas fa-save me-2"></i>{% trans 'Salvar Endereço' %}
+                </button>
+                <a href="{% url 'profile' %}" class="btn btn-elegant btn-secondary-elegant">
+                  <i class="fas fa-arrow-left me-2"></i>{% trans 'Voltar ao Perfil' %}
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('address-form');
+  const fields = form.querySelectorAll('.form-control');
+  const progressFill = document.getElementById('progress-fill');
+  const progressText = document.getElementById('progress-text');
+
+  // Função para calcular progresso
+  function updateProgress() {
+    let filledFields = 0;
+    fields.forEach(field => {
+      if (field.value.trim() !== '') {
+        filledFields++;
+      }
+    });
+    
+    const progress = Math.round((filledFields / fields.length) * 100);
+    progressFill.style.width = progress + '%';
+    progressText.textContent = progress + '%';
+  }
+
+  // Atualizar progresso quando campos mudam
+  fields.forEach(field => {
+    field.addEventListener('input', updateProgress);
+    field.addEventListener('blur', updateProgress);
+  });
+
+  // Validação em tempo real
+  fields.forEach(field => {
+    field.addEventListener('blur', function() {
+      const statusElement = document.getElementById(field.id + '-status');
+      if (statusElement) {
+        if (field.value.trim() !== '') {
+          field.classList.remove('is-invalid');
+          field.classList.add('is-valid');
+          statusElement.className = 'field-status valid';
+          statusElement.innerHTML = '<i class="fas fa-check-circle"></i>Campo preenchido';
+        } else {
+          field.classList.remove('is-valid');
+          field.classList.add('is-invalid');
+          statusElement.className = 'field-status invalid';
+          statusElement.innerHTML = '<i class="fas fa-exclamation-circle"></i>Campo obrigatório';
+        }
+      }
+    });
+  });
+
+  // Máscara para CEP
+  const cepField = document.getElementById('{{ form.postal_code.id_for_label }}');
+  if (cepField) {
+    cepField.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+      e.target.value = value;
+    });
+
+    // Busca CEP via API
+    cepField.addEventListener('blur', function() {
+      const cep = this.value.replace(/\D/g, '');
+      if (cep.length === 8) {
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+          .then(response => response.json())
+          .then(data => {
+            if (!data.erro) {
+              document.getElementById('{{ form.street.id_for_label }}').value = data.logradouro;
+              document.getElementById('{{ form.neighborhood.id_for_label }}').value = data.bairro;
+              document.getElementById('{{ form.city.id_for_label }}').value = data.localidade;
+              document.getElementById('{{ form.state.id_for_label }}').value = data.uf;
+              updateProgress();
+            }
+          })
+          .catch(error => console.log('Erro ao buscar CEP:', error));
+      }
+    });
+  }
+
+  // Inicializar progresso
+  updateProgress();
+});
+</script>
+{% endblock %}

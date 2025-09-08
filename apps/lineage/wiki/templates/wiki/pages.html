@@ -1,0 +1,80 @@
+{% extends 'wiki/base.html' %}
+{% load static i18n wiki_tags %}
+
+{% block title %}{{ content_type_display }} - {% trans "Wiki" %}{% endblock %}
+
+{% block wiki_content %}
+<div class="wiki-pages-list">
+    <div class="page-header mb-4">
+        <div class="page-title-section">
+            <h1 class="page-title">
+                <i class="fas fa-folder"></i>
+                {{ content_type_display }}
+            </h1>
+            <p class="page-description">
+                {% trans "Páginas relacionadas a" %} {{ content_type_display|lower }}
+            </p>
+        </div>
+    </div>
+
+    <div class="pages-grid">
+        {% if pages %}
+        <div class="row">
+            {% for item in pages %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="page-card">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="{% get_page_icon item.page %}"></i>
+                                <a href="{% url 'wiki:page' item.page.slug %}" class="text-decoration-none">
+                                    {{ item.translation.title }}
+                                </a>
+                            </h5>
+                            
+                            {% if item.translation.subtitle %}
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    {{ item.translation.subtitle }}
+                                </h6>
+                            {% endif %}
+                            
+                            {% if item.translation.summary %}
+                                <p class="card-text">{{ item.translation.summary|truncatewords:25 }}</p>
+                            {% else %}
+                                <p class="card-text">{{ item.translation.content|striptags|truncatewords:20 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="card-footer">
+                            <div class="page-meta">
+                                {% if item.page.is_menu_item %}
+                                    <span class="badge bg-success">{% trans "Menu" %}</span>
+                                {% endif %}
+                                {% if item.page.order %}
+                                    <span class="badge bg-secondary">#{{ item.page.order }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="text-center">
+                <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                <h4>{% trans "Nenhuma página encontrada" %}</h4>
+                <p class="text-muted">
+                    {% trans "Não há páginas do tipo" %} "{{ content_type_display|lower }}" {% trans "ainda." %}
+                </p>
+                <a href="{% url 'wiki:home' %}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i>
+                    {% trans "Voltar ao Início" %}
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

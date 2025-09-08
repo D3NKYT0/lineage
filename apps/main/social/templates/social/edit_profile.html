@@ -1,0 +1,550 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load l10n %}
+{% load social_tags %}
+
+{% block title %} {% trans "Editar Perfil Social" %} {% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/social.css' %}">
+{% endblock extrastyle %}
+
+{% block extra_js %}
+<script src="{% static 'js/social.js' %}"></script>
+{% endblock extra_js %}
+
+{% block content %}
+<!-- Barra de navegação móvel (só aparece no mobile) -->
+<div class="d-lg-none">
+  <div class="bg-white shadow-sm border-bottom mb-3">
+    <div class="container-fluid px-3 py-2">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <div class="social-avatar-container me-2" style="width: 32px; height: 32px; border-radius: 50%; overflow: hidden;">
+            {% if user.avatar %}
+              <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+            {% else %}
+              <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+            {% endif %}
+          </div>
+                      <span class="fw-bold small">{{ user.get_full_name|default:user.username }}{% verified_badge user "14px" %}</span>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="{% url 'social:user_profile' user.username %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i>
+          </a>
+          <a href="{% url 'social:feed' %}" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-house"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid py-lg-4 py-2">
+  <div class="row">
+    <!-- Sidebar esquerda com perfil (oculta no mobile) -->
+    <div class="col-lg-3 d-none d-lg-block">
+      <!-- Card do perfil do usuário -->
+      <div class="card mb-4">
+        <div class="card-body text-center">
+          <div class="avatar-container mb-3" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; margin: 0 auto;">
+            {% if user.avatar %}
+              <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+            {% else %}
+              <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                   alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+            {% endif %}
+          </div>
+                      <h5 class="mb-1">{{ user.get_full_name|default:user.username }}{% verified_badge user "18px" %}</h5>
+            <p class="text-muted small mb-3">@{{ user.username }}{% verified_badge user "14px" %}</p>
+          
+          <!-- Estatísticas do usuário -->
+          <div class="row text-center mb-3">
+            <div class="col-4">
+              <div class="h6 mb-0 text-primary">{{ user_stats.posts_count }}</div>
+              <small class="text-muted">{% trans "Posts" %}</small>
+            </div>
+            <div class="col-4">
+              <div class="h6 mb-0 text-success">{{ user_stats.followers_count }}</div>
+              <small class="text-muted">{% trans "Seguidores" %}</small>
+            </div>
+            <div class="col-4">
+              <div class="h6 mb-0 text-info">{{ user_stats.following_count }}</div>
+              <small class="text-muted">{% trans "Seguindo" %}</small>
+            </div>
+          </div>
+          
+          <!-- Botões de ação -->
+          <div class="d-grid gap-2">
+            <a href="{% url 'social:user_profile' user.username %}" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-person"></i> {% trans "Ver Perfil" %}
+            </a>
+            <a href="{% url 'social:feed' %}" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-house"></i> {% trans "Feed" %}
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Links úteis -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-gear"></i> {% trans "Configurações" %}
+          </h6>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            <a href="{% url 'edit_avatar' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <i class="bi bi-person-circle text-primary me-2"></i>
+              {% trans "Editar Avatar" %}
+              <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+            </a>
+            <a href="{% url 'edit_profile' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <i class="bi bi-person-gear text-success me-2"></i>
+              {% trans "Perfil Principal" %}
+              <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+            </a>
+            <a href="{% url 'social:my_posts' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <i class="bi bi-collection text-info me-2"></i>
+              {% trans "Meus Posts" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Coluna principal (ocupa toda largura no mobile) -->
+    <div class="col-12 col-lg-6">
+      
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h2 class="mb-1">
+            <i class="bi bi-person-gear"></i> {% trans "Editar Perfil Social" %}
+          </h2>
+          <p class="text-muted mb-0">{% trans "Personalize como você aparece na rede social" %}</p>
+        </div>
+      </div>
+      
+      <!-- Mensagens -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      
+      <!-- Formulário principal -->
+      <form method="post" enctype="multipart/form-data" id="profile-form">
+        {% csrf_token %}
+        
+        <!-- Card de Avatar -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="bi bi-person-circle"></i> {% trans "Foto de Perfil" %}
+            </h5>
+          </div>
+          <div class="card-body text-center">
+            <div class="social-avatar-container mb-3" style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto;">
+              {% if user.avatar %}
+                <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                     alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+              {% else %}
+                <img src="{% static 'assets/img/team/generic_user.png' %}" 
+                     alt="Avatar" class="w-100 h-100" style="object-fit: cover;">
+              {% endif %}
+            </div>
+            <p class="text-muted mb-3">{% trans "O avatar é gerenciado no perfil principal" %}</p>
+            <a href="{% url 'edit_avatar' %}" class="btn btn-primary">
+              <i class="bi bi-person-circle"></i> {% trans "Editar Avatar" %}
+            </a>
+          </div>
+        </div>
+        
+        <!-- Card de Informações Básicas -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="bi bi-info-circle"></i> {% trans "Informações Básicas" %}
+            </h5>
+          </div>
+          <div class="card-body">
+            
+            <!-- Biografia -->
+            <div class="mb-3">
+              <label for="{{ form.bio.id_for_label }}" class="form-label">
+                <i class="bi bi-chat-quote"></i> {% trans "Biografia" %}
+              </label>
+              {{ form.bio }}
+              <div class="form-text">{% trans "Conte um pouco sobre você. Máximo 500 caracteres." %}</div>
+              {% if form.bio.errors %}
+                <div class="text-danger small">{{ form.bio.errors.0 }}</div>
+              {% endif %}
+            </div>
+            
+            <!-- Localização e Website -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="{{ form.location.id_for_label }}" class="form-label">
+                    <i class="bi bi-geo-alt"></i> {% trans "Localização" %}
+                  </label>
+                  {{ form.location }}
+                  {% if form.location.errors %}
+                    <div class="text-danger small">{{ form.location.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="{{ form.website.id_for_label }}" class="form-label">
+                    <i class="bi bi-link-45deg"></i> {% trans "Website" %}
+                  </label>
+                  {{ form.website }}
+                  {% if form.website.errors %}
+                    <div class="text-danger small">{{ form.website.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Data de nascimento e Telefone -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="{{ form.birth_date.id_for_label }}" class="form-label">
+                    <i class="bi bi-calendar"></i> {% trans "Data de Nascimento" %}
+                  </label>
+                  {{ form.birth_date }}
+                  {% if form.birth_date.errors %}
+                    <div class="text-danger small">{{ form.birth_date.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="{{ form.phone.id_for_label }}" class="form-label">
+                    <i class="bi bi-phone"></i> {% trans "Telefone" %}
+                  </label>
+                  {{ form.phone }}
+                  {% if form.phone.errors %}
+                    <div class="text-danger small">{{ form.phone.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Gênero e Interesses -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="{{ form.gender.id_for_label }}" class="form-label">
+                    <i class="bi bi-person"></i> {% trans "Gênero" %}
+                  </label>
+                  {{ form.gender }}
+                  {% if form.gender.errors %}
+                    <div class="text-danger small">{{ form.gender.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label for="{{ form.interests.id_for_label }}" class="form-label">
+                    <i class="bi bi-heart"></i> {% trans "Interesses" %}
+                  </label>
+                  {{ form.interests }}
+                  {% if form.interests.errors %}
+                    <div class="text-danger small">{{ form.interests.errors.0 }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <!-- Card de Imagem de Capa -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="bi bi-image"></i> {% trans "Imagem de Capa" %}
+            </h5>
+          </div>
+          <div class="card-body">
+            
+            <!-- Preview da capa atual -->
+            <div class="mb-3">
+              {% if profile.cover_image %}
+                <img src="{{ profile.cover_image.url }}" 
+                     alt="Capa atual" class="img-fluid rounded" style="max-height: 150px; width: 100%; object-fit: cover;" id="cover-preview">
+              {% else %}
+                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 150px;" id="cover-preview">
+                  <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                </div>
+              {% endif %}
+            </div>
+            
+            <!-- Campo de upload -->
+            <div class="mb-3">
+              <label for="{{ form.cover_image.id_for_label }}" class="form-label">
+                {% trans "Nova imagem de capa" %}
+              </label>
+              {{ form.cover_image }}
+              <div class="form-text">{{ form.cover_image.help_text }}</div>
+              {% if form.cover_image.errors %}
+                <div class="text-danger small">{{ form.cover_image.errors.0 }}</div>
+              {% endif %}
+            </div>
+            
+          </div>
+        </div>
+        
+        <!-- Card de Configurações de Privacidade -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="bi bi-shield-check"></i> {% trans "Configurações de Privacidade" %}
+            </h5>
+          </div>
+          <div class="card-body">
+            
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-check mb-3">
+                  {{ form.is_private }}
+                  <label class="form-check-label" for="{{ form.is_private.id_for_label }}">
+                    <i class="bi bi-lock"></i> {% trans "Perfil privado" %}
+                  </label>
+                  <div class="form-text">{% trans "Apenas seguidores aprovados podem ver seu conteúdo" %}</div>
+                </div>
+                
+                <div class="form-check mb-3">
+                  {{ form.show_email }}
+                  <label class="form-check-label" for="{{ form.show_email.id_for_label }}">
+                    <i class="bi bi-envelope"></i> {% trans "Mostrar email no perfil" %}
+                  </label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-check mb-3">
+                  {{ form.show_phone }}
+                  <label class="form-check-label" for="{{ form.show_phone.id_for_label }}">
+                    <i class="bi bi-phone"></i> {% trans "Mostrar telefone no perfil" %}
+                  </label>
+                </div>
+                
+                <div class="form-check mb-3">
+                  {{ form.allow_messages }}
+                  <label class="form-check-label" for="{{ form.allow_messages.id_for_label }}">
+                    <i class="bi bi-chat"></i> {% trans "Permitir mensagens de outros usuários" %}
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <!-- Botões de ação -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <a href="{% url 'social:user_profile' user.username %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> {% trans "Cancelar" %}
+          </a>
+          <button type="submit" class="btn btn-primary px-4">
+            <i class="bi bi-check-circle"></i> {% trans "Salvar Alterações" %}
+          </button>
+        </div>
+        
+      </form>
+
+    </div>
+    
+    <!-- Sidebar direita com dicas (oculta no mobile) -->
+    <div class="col-lg-3 d-none d-lg-block">
+      
+      <!-- Dicas de perfil -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-lightbulb text-warning"></i> {% trans "Dicas de Perfil" %}
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+              <div>
+                <small class="fw-bold">{% trans "Biografia Atrativa" %}</small>
+                <div class="small text-muted">{% trans "Escreva uma bio interessante que conte quem você é" %}</div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+              <div>
+                <small class="fw-bold">{% trans "Imagem de Capa" %}</small>
+                <div class="small text-muted">{% trans "Use uma imagem que represente sua personalidade" %}</div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+              <div>
+                <small class="fw-bold">{% trans "Informações Completas" %}</small>
+                <div class="small text-muted">{% trans "Preencha localização e interesses para se conectar melhor" %}</div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+              <div>
+                <small class="fw-bold">{% trans "Privacidade" %}</small>
+                <div class="small text-muted">{% trans "Configure suas preferências de privacidade" %}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Links rápidos -->
+      <div class="card">
+        <div class="card-header">
+          <h6 class="mb-0">
+            <i class="bi bi-lightning"></i> {% trans "Ações Rápidas" %}
+          </h6>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            <a href="{% url 'edit_avatar' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <i class="bi bi-person-circle text-primary me-2"></i>
+              {% trans "Editar Avatar" %}
+              <i class="bi bi-box-arrow-up-right text-muted ms-auto"></i>
+            </a>
+            <a href="{% url 'social:post_create' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <i class="bi bi-plus-circle text-success me-2"></i>
+              {% trans "Criar Post" %}
+            </a>
+            <a href="{% url 'social:my_posts' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <i class="bi bi-collection text-info me-2"></i>
+              {% trans "Meus Posts" %}
+            </a>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<script>
+// JavaScript para preview de imagens
+document.addEventListener('DOMContentLoaded', function() {
+  // Preview da imagem de capa
+  const coverInput = document.querySelector('#{{ form.cover_image.id_for_label }}');
+  if (coverInput) {
+    coverInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const coverPreview = document.getElementById('cover-preview');
+          if (coverPreview) {
+            coverPreview.innerHTML = `<img src="${e.target.result}" alt="Preview" class="img-fluid rounded" style="max-height: 150px; width: 100%; object-fit: cover;">`;
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+  
+  // Validação do formulário
+  const profileForm = document.getElementById('profile-form');
+  if (profileForm) {
+    profileForm.addEventListener('submit', function(e) {
+      const bio = document.querySelector('#{{ form.bio.id_for_label }}');
+      if (bio && bio.value.length > 500) {
+        e.preventDefault();
+        alert('{% trans "A biografia não pode ter mais de 500 caracteres." %}');
+        bio.focus();
+        return false;
+      }
+    });
+  }
+});
+</script>
+
+<!-- CSS específico para a página -->
+<style>
+/* Mobile optimizations */
+@media (max-width: 991.98px) {
+  .card-body {
+    padding: 0.75rem !important;
+  }
+  
+  .card.mb-4 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .social-avatar-container {
+    width: 40px !important;
+    height: 40px !important;
+  }
+  
+  .d-lg-none .social-avatar-container {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  .container-fluid {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
+/* Mobile extra small devices */
+@media (max-width: 575.98px) {
+  .card {
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+  }
+  
+  .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .card.mb-4, .card {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Melhorias visuais */
+.form-check-label {
+  cursor: pointer;
+}
+
+.list-group-item-action:hover {
+  background-color: #f8f9fa;
+}
+
+#cover-preview {
+  transition: all 0.3s ease;
+}
+</style>
+{% endblock content %}

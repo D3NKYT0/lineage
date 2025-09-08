@@ -1,0 +1,57 @@
+{% extends 'layouts/public.html' %}
+{% load static i18n %}
+
+{% block extrahead %}
+<link type="text/css" href="{% static 'public/css/terms.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}{% trans 'Acordo do Usuário' %} | {{ PROJECT_TITLE }}{% endblock %}
+
+{% block content %}
+<div class="container my-5 px-3 px-md-5 terms-page">
+  <div class="bg-dark p-5 rounded-4 shadow-lg border border-yellow-700" style="background-color: var(--bg-section);">
+    <h1 class="text-3xl text-center mb-5 text-yellow-400" style="text-shadow: var(--glow);">🤝 {% trans 'Acordo do Usuário' %}</h1>
+    <p class="text-sm text-gray-400 text-end mb-4">{% trans 'Última atualização' %}: {{ last_updated|default:"Abril de 2025" }}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-4 mb-2">1. {% trans 'Aceitação do Acordo' %}</h2>
+    <p>{% trans 'Ao criar uma conta e utilizar nossos serviços, você concorda com todos os termos deste acordo. Este documento estabelece as regras e responsabilidades para o uso do servidor.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">2. {% trans 'Conta e Segurança' %}</h2>
+    <ul class="list-disc ps-4 space-y-1">
+      <li>{% trans 'Você deve ter pelo menos 13 anos de idade para criar uma conta.' %}</li>
+      <li>{% trans 'Você é responsável por manter a segurança de sua conta.' %}</li>
+      <li>{% trans 'Não compartilhe suas credenciais de acesso com terceiros.' %}</li>
+      <li>{% trans 'Notifique-nos imediatamente sobre qualquer uso não autorizado.' %}</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">3. {% trans 'Comportamento do Usuário' %}</h2>
+    <p>{% trans 'Ao utilizar nossos serviços, você concorda em:' %}</p>
+    <ul class="list-disc ps-4 space-y-1">
+      <li>{% trans 'Respeitar outros jogadores e membros da equipe.' %}</li>
+      <li>{% trans 'Não utilizar linguagem ofensiva ou discriminatória.' %}</li>
+      <li>{% trans 'Não realizar atividades que prejudiquem a experiência de outros jogadores.' %}</li>
+      <li>{% trans 'Não utilizar programas ou métodos que dêem vantagens injustas.' %}</li>
+    </ul>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">4. {% trans 'Conteúdo do Usuário' %}</h2>
+    <p>{% trans 'Você mantém os direitos sobre o conteúdo que cria, mas nos concede permissão para utilizá-lo em relação aos serviços.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">5. {% trans 'Modificações do Serviço' %}</h2>
+    <p>{% trans 'Reservamo-nos o direito de modificar, suspender ou encerrar qualquer aspecto do serviço a qualquer momento.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">6. {% trans 'Limitação de Responsabilidade' %}</h2>
+    <p>{% trans 'Não nos responsabilizamos por perdas de dados, interrupções do serviço ou outros danos que possam ocorrer durante o uso.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">7. {% trans 'Rescisão' %}</h2>
+    <p>{% trans 'Podemos encerrar ou suspender sua conta se você violar este acordo ou as regras do servidor.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">8. {% trans 'Alterações no Acordo' %}</h2>
+    <p>{% trans 'Podemos modificar este acordo a qualquer momento. As alterações entram em vigor após a publicação.' %}</p>
+
+    <h2 class="text-xl font-semibold text-yellow-300 mt-5 mb-2">9. {% trans 'Contato' %}</h2>
+    <p>{% trans 'Para questões sobre este acordo, entre em contato através do' %} <strong>{% trans 'Discord' %}</strong> {% trans 'ou' %} <strong>{% trans 'e-mail' %}</strong>.</p>
+
+    <p class="text-center text-gray-400 mt-10 italic">{{ PROJECT_TITLE }} — {% trans 'Um mundo para verdadeiros aventureiros.' %}</p>
+  </div>
+</div>
+{% endblock %} 

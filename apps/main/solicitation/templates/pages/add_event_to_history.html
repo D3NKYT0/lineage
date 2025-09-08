@@ -1,0 +1,384 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Adicionar Evento ao Histórico" %}{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .add-event-bg {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    color: #f8f9fa;
+    padding: 50px 0;
+    min-height: 100vh;
+  }
+
+  .header-card {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border: 2px solid #6f42c1;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .header-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+  }
+
+  .info-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+    margin-bottom: 2rem;
+  }
+
+  .form-card {
+    background: linear-gradient(to bottom right, #1a1a2e, #121220);
+    border: 2px solid #6f42c1;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+  }
+
+  .form-label {
+    color: #f8f9fa;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-control {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border: 1px solid #6f42c1;
+    border-radius: 8px;
+    color: #f8f9fa;
+    transition: all 0.3s ease;
+  }
+
+  .form-control:focus {
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border-color: #00d9ff;
+    box-shadow: 0 0 10px rgba(13, 202, 240, 0.3);
+    color: #f8f9fa;
+  }
+
+  .form-control::placeholder {
+    color: #aaa;
+  }
+
+  .btn-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 25px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    color: white;
+  }
+
+  .btn-secondary {
+    background: linear-gradient(45deg, #6c757d, #495057);
+    border: none;
+    border-radius: 25px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 25px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.4);
+    color: white;
+  }
+
+  .text-danger {
+    color: #e83e8c !important;
+  }
+
+  .info-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .info-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(111, 66, 193, 0.3);
+    color: #f8f9fa;
+  }
+
+  .info-list li:last-child {
+    border-bottom: none;
+  }
+
+  .info-list li::before {
+    content: '•';
+    color: #00d9ff;
+    font-weight: bold;
+    margin-right: 0.5rem;
+  }
+
+  .protocol-badge {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 0.9em;
+    padding: 0.5em 1em;
+    letter-spacing: 1px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color: #00d9ff !important;
+    text-shadow: 1px 1px 2px #000;
+  }
+
+  .protocol-badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .file-input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .file-input-wrapper input[type=file] {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .file-input-label {
+    display: block;
+    padding: 12px 20px;
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    border: 2px dashed #6f42c1;
+    border-radius: 8px;
+    color: #f8f9fa;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .file-input-label:hover {
+    border-color: #00d9ff;
+    background: linear-gradient(to bottom right, #2a2a3e, #222230);
+    box-shadow: 0 0 10px rgba(13, 202, 240, 0.3);
+  }
+
+  .file-input-label i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: #00d9ff;
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="add-event-bg">
+  <div class="container">
+    <!-- Header -->
+    <div class="header-card">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <div class="d-flex align-items-center">
+            <div class="me-4">
+              <i class="fas fa-plus-circle fa-3x text-white" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);"></i>
+            </div>
+            <div>
+              <h1 class="header-title">{% trans "Adicionar Evento ao Histórico" %}</h1>
+              <p class="text-white-50">{% trans "Registre uma nova ação ou evento na solicitação" %}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4 text-end">
+          <div class="d-flex align-items-center justify-content-end">
+            <div class="me-3">
+              <span class="text-white-50">{% trans "Protocolo:" %}</span>
+              <span class="badge protocol-badge">{{ solicitation.get_display_protocol }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Informações da Solicitação -->
+    <div class="info-card p-4">
+      <h4 class="text-white mb-3">
+        <i class="fas fa-info-circle text-info me-2"></i>
+        {% trans "Informações da Solicitação:" %}
+      </h4>
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong class="text-white">{% trans "Título:" %}</strong> {{ solicitation.title }}</p>
+          <p><strong class="text-white">{% trans "Status:" %}</strong> 
+            {% if solicitation.status == 'open' %}
+              <span class="badge bg-primary">{{ solicitation.get_status_display }}</span>
+            {% elif solicitation.status == 'pending' %}
+              <span class="badge bg-secondary">{{ solicitation.get_status_display }}</span>
+            {% elif solicitation.status == 'in_progress' %}
+              <span class="badge bg-warning">{{ solicitation.get_status_display }}</span>
+            {% elif solicitation.status == 'waiting_user' %}
+              <span class="badge bg-info">{{ solicitation.get_status_display }}</span>
+            {% elif solicitation.status == 'waiting_third_party' %}
+              <span class="badge bg-secondary">{{ solicitation.get_status_display }}</span>
+            {% elif solicitation.status == 'resolved' %}
+              <span class="badge bg-success">{{ solicitation.get_status_display }}</span>
+            {% elif solicitation.status == 'closed' %}
+              <span class="badge bg-dark">{{ solicitation.get_status_display }}</span>
+            {% elif solicitation.status == 'cancelled' %}
+              <span class="badge bg-secondary">{{ solicitation.get_status_display }}</span>
+            {% elif solicitation.status == 'rejected' %}
+              <span class="badge bg-danger">{{ solicitation.get_status_display }}</span>
+            {% endif %}
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p><strong class="text-white">{% trans "Categoria:" %}</strong> <span class="badge bg-secondary">{{ solicitation.get_category_display }}</span></p>
+          <p><strong class="text-white">{% trans "Prioridade:" %}</strong> 
+            {% if solicitation.priority == 'low' %}
+              <span class="badge bg-success">{{ solicitation.get_priority_display }}</span>
+            {% elif solicitation.priority == 'medium' %}
+              <span class="badge bg-warning">{{ solicitation.get_priority_display }}</span>
+            {% elif solicitation.priority == 'high' %}
+              <span class="badge bg-danger">{{ solicitation.get_priority_display }}</span>
+            {% elif solicitation.priority == 'urgent' %}
+              <span class="badge bg-dark">{{ solicitation.get_priority_display }}</span>
+            {% elif solicitation.priority == 'critical' %}
+              <span class="badge bg-danger">{{ solicitation.get_priority_display }}</span>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário -->
+    <div class="form-card p-4">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="row">
+          <div class="col-md-12 mb-4">
+            <label for="action" class="form-label">{% trans "Descrição do Evento" %} *</label>
+            <textarea name="action" class="form-control" id="action" rows="4" required 
+                      placeholder="{% trans 'Descreva detalhadamente o que aconteceu, a ação tomada ou qualquer informação relevante sobre este evento...' %}"></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 mb-4">
+            <label class="form-label">{% trans "Imagem (opcional)" %}</label>
+            <div class="file-input-wrapper">
+              <input type="file" name="image" class="form-control" id="image" accept="image/*">
+              <label for="image" class="file-input-label">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>{% trans "Clique para selecionar uma imagem ou arraste aqui" %}</span>
+                <small class="d-block text-muted mt-2">{% trans "Formatos aceitos: JPG, PNG, GIF (máx. 5MB)" %}</small>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3">
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-check me-2"></i>{% trans "Adicionar Evento" %}
+          </button>
+          <a href="{% url 'solicitation:solicitation_dashboard' solicitation.protocol %}" class="btn btn-secondary">
+            <i class="fas fa-times me-2"></i>{% trans "Cancelar" %}
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// Preview da imagem selecionada
+document.getElementById('image').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  const label = document.querySelector('.file-input-label');
+  
+  if (file) {
+    if (file.size > 5 * 1024 * 1024) { // 5MB
+      alert('{% trans "A imagem deve ter no máximo 5MB." %}');
+      this.value = '';
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      label.innerHTML = `
+        <i class="fas fa-image"></i>
+        <span>${file.name}</span>
+        <small class="d-block text-success mt-2">{% trans "Imagem selecionada com sucesso!" %}</small>
+      `;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    label.innerHTML = `
+      <i class="fas fa-cloud-upload-alt"></i>
+      <span>{% trans "Clique para selecionar uma imagem ou arraste aqui" %}</span>
+      <small class="d-block text-muted mt-2">{% trans "Formatos aceitos: JPG, PNG, GIF (máx. 5MB)" %}</small>
+    `;
+  }
+});
+
+// Drag and drop
+const dropZone = document.querySelector('.file-input-label');
+const fileInput = document.getElementById('image');
+
+dropZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  dropZone.style.borderColor = '#00d9ff';
+  dropZone.style.background = 'linear-gradient(to bottom right, #2a2a3e, #222230)';
+});
+
+dropZone.addEventListener('dragleave', (e) => {
+  e.preventDefault();
+  dropZone.style.borderColor = '#6f42c1';
+  dropZone.style.background = 'linear-gradient(to bottom right, #2a2a3e, #222230)';
+});
+
+dropZone.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const files = e.dataTransfer.files;
+  if (files.length > 0) {
+    fileInput.files = files;
+    fileInput.dispatchEvent(new Event('change'));
+  }
+  dropZone.style.borderColor = '#6f42c1';
+  dropZone.style.background = 'linear-gradient(to bottom right, #2a2a3e, #222230)';
+});
+</script>
+{% endblock content %}

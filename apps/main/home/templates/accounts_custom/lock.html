@@ -1,0 +1,216 @@
+{% extends 'layouts/base-auth.html' %}
+{% load static i18n %}
+
+{% block content %}
+<style>
+  body {
+    background: url("{{ background_url }}") no-repeat center center fixed;
+    background-size: cover;
+  }
+
+  .unlock-panel {
+    background-color: rgba(15, 15, 15, 0.92);
+    color: #f0e6d2;
+    border-radius: 1rem;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+    border: 1px solid #e0c36b;
+  }
+
+  .unlock-panel h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: #e0c36b;
+    text-shadow: 0 0 10px rgba(255, 215, 100, 0.4);
+  }
+
+  .unlock-panel p.text-gray {
+    color: #f5deb3;
+    font-size: 0.9rem;
+  }
+
+  label {
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: #f5deb3;
+  }
+
+  .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid #e0c36b;
+  }
+
+  .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #f0e68c;
+    box-shadow: 0 0 10px rgba(255, 255, 160, 0.5);
+  }
+
+  .btn-golden {
+    background: linear-gradient(to right, #b89b56, #d5c170);
+    color: #000;
+    font-weight: bold;
+    text-shadow: 0 0 5px #fff8dc;
+    border: none;
+  }
+
+  .btn-golden:hover {
+    background: linear-gradient(to right, #d5c170, #b89b56);
+    color: #000;
+  }
+
+  .link-home {
+    color: #e0c36b;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .link-home:hover {
+    color: #fff2aa;
+  }
+
+  .avatar-lg img {
+    border: 3px solid #e0c36b;
+    box-shadow: 0 0 15px rgba(255, 215, 100, 0.3);
+  }
+
+  /* Estilos para o ícone de olho */
+  .password-field {
+    position: relative;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #e0c36b;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+    z-index: 10;
+  }
+
+  .password-toggle:hover {
+    color: #fff;
+  }
+
+  .password-toggle:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .password-field .form-control {
+    padding-right: 40px; /* Espaço para o ícone */
+  }
+
+  /* Estilos para o botão de sair */
+  .btn-outline-light {
+    border: 1px solid #e0c36b;
+    color: #e0c36b;
+    background: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-light:hover {
+    background: #e0c36b;
+    color: #000;
+    border-color: #e0c36b;
+  }
+
+  .btn-outline-light:focus {
+    box-shadow: 0 0 10px rgba(255, 255, 160, 0.5);
+  }
+
+  .btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+</style>
+
+<section class="vh-100 d-flex align-items-center justify-content-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="p-5 unlock-panel">
+          <div class="text-center mb-4">
+            <div class="avatar avatar-lg mx-auto mb-3">
+              <div class="avatar-container" style="width: 4.5rem; height: 4.5rem; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255, 255, 255, 0.3); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); position: relative;">
+                {% if user.avatar %}
+                  <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
+                       alt="User-Profile-Image" 
+                       style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                {% else %}
+                  <img alt="Image placeholder" 
+                       src="{% static 'assets/img/team/generic_user.png' %}"
+                       style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+                {% endif %}
+              </div>
+            </div>
+            <h1>{{ user.username }}</h1>
+            <p class="text-gray">{% trans "Melhor prevenir do que remediar." %}</p>
+          </div>
+
+          <form method="POST" class="mt-4">
+            {% csrf_token %}
+            {% if error %}
+              <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            <div class="form-group mb-4">
+              <label for="password">{% trans "Sua Senha" %}</label>
+              <div class="password-field">
+                <div class="input-group">
+                  <span class="input-group-text">
+                    <svg class="icon icon-xs text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                    </svg>
+                  </span>
+                  <input type="password" name="password" placeholder="{% trans 'Senha' %}" class="form-control" id="password" autocomplete="current-password" required>
+                </div>
+                <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                  <i class="bi bi-eye" id="eye-icon-password"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-golden">{% trans "Desbloquear" %}</button>
+            </div>
+          </form>
+
+          <!-- Botão de Sair -->
+          <div class="text-center mt-3">
+            <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">
+              <svg class="icon icon-xs me-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+              </svg>
+              {% trans "Sair" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function togglePassword(inputId) {
+  const input = document.getElementById(inputId);
+  const icon = document.getElementById('eye-icon-' + inputId);
+  
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.classList.remove('bi-eye');
+    icon.classList.add('bi-eye-slash');
+  } else {
+    input.type = 'password';
+    icon.classList.remove('bi-eye-slash');
+    icon.classList.add('bi-eye');
+  }
+}
+</script>
+{% endblock %}

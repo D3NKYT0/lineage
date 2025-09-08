@@ -1,0 +1,399 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load apoiador_extras %}
+{% load static %}
+
+{% block title %}{% trans "Painel Staff - Apoiadores" %}{% endblock %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .staff-panel-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .staff-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .staff-header h1 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .staff-header p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+  }
+
+  .stat-card h3 {
+    color: #a0aec0;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+  }
+
+  .stat-value {
+    color: white;
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .stat-value.pending {
+    color: #ed8936;
+  }
+
+  .stat-value.approved {
+    color: #48bb78;
+  }
+
+  .stat-value.rejected {
+    color: #f56565;
+  }
+
+  .supporters-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .supporters-card h2 {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .supporter-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .supporter-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .supporter-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .supporter-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .supporter-details h4 {
+    color: white;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+  }
+
+  .supporter-details p {
+    color: #a0aec0;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .supporter-links {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .supporter-link {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+  }
+
+  .supporter-link:hover {
+    color: #5a67d8;
+  }
+
+  .supporter-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-approve {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-approve:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+    color: white;
+  }
+
+  .btn-reject {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .btn-reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 101, 101, 0.4);
+    color: white;
+  }
+
+  .btn-view {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .btn-view:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    margin-left: auto;
+  }
+
+  .status-pending {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: white;
+  }
+
+  .status-approved {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+  }
+
+  .status-rejected {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    color: white;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #a0aec0;
+  }
+
+  .empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .empty-state h3 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .empty-state p {
+    color: #a0aec0;
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .supporter-info {
+      flex-direction: column;
+      text-align: center;
+    }
+    
+    .supporter-actions {
+      justify-content: center;
+    }
+    
+    .status-badge {
+      margin: 0.5rem 0 0 0;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="staff-panel-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="staff-header">
+      <h1>
+        <i class="fas fa-users-cog me-3"></i>{% trans "Painel Staff - Apoiadores" %}
+      </h1>
+      <p>{% trans "Gerencie solicitações e apoiadores do sistema" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" style="color: #a0aec0;">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: white;">{% trans "Painel Staff" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>{% trans "Solicitações Pendentes" %}</h3>
+        <p class="stat-value pending">{{ solicitacoes_pendentes }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>{% trans "Apoiadores Aprovados" %}</h3>
+        <p class="stat-value approved">{{ apoiadores_aprovados }}</p>
+      </div>
+      <div class="stat-card">
+        <h3>{% trans "Solicitações Rejeitadas" %}</h3>
+        <p class="stat-value rejected">{{ solicitacoes_rejeitadas }}</p>
+      </div>
+    </div>
+
+    <!-- Supporters List -->
+    <div class="supporters-card">
+      <h2>
+        <i class="fas fa-list me-2"></i>{% trans "Solicitações de Apoiadores" %}
+      </h2>
+
+      {% if apoiadores %}
+        {% for apoiador in apoiadores %}
+          <div class="supporter-item">
+            <div class="supporter-info">
+              {% if apoiador.imagem %}
+                <img src="{{ apoiador.imagem.url }}" alt="{{ apoiador.nome_publico }}" class="supporter-image">
+              {% else %}
+                <div class="supporter-image" style="background: rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-user" style="color: #a0aec0; font-size: 1.5rem;"></i>
+                </div>
+              {% endif %}
+              
+              <div class="supporter-details">
+                <h4>{{ apoiador.nome_publico }}</h4>
+                <p>{{ apoiador.descricao|truncatewords:20 }}</p>
+              </div>
+
+              <span class="status-badge status-{{ apoiador.status|lower }}">
+                {{ apoiador.get_status_display }}
+              </span>
+            </div>
+
+            {% if apoiador.link_twitch or apoiador.link_youtube %}
+              <div class="supporter-links">
+                {% if apoiador.link_twitch %}
+                  <a href="{{ apoiador.link_twitch }}" target="_blank" class="supporter-link">
+                    <i class="fab fa-twitch me-1"></i>Twitch
+                  </a>
+                {% endif %}
+                {% if apoiador.link_youtube %}
+                  <a href="{{ apoiador.link_youtube }}" target="_blank" class="supporter-link">
+                    <i class="fab fa-youtube me-1"></i>YouTube
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            <div class="supporter-actions">
+              <a href="{% url 'server:detalhes_apoiador' apoiador.id %}" class="btn-view">
+                <i class="fas fa-eye me-1"></i>{% trans "Ver Detalhes" %}
+              </a>
+              
+              {% if apoiador.status == 'pendente' %}
+                <form method="post" action="{% url 'server:aprovar_apoiador' apoiador.id %}" style="display: inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-approve">
+                    <i class="fas fa-check me-1"></i>{% trans "Aprovar" %}
+                  </button>
+                </form>
+                
+                <form method="post" action="{% url 'server:rejeitar_apoiador' apoiador.id %}" style="display: inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-reject" onclick="return confirm('{% trans 'Tem certeza que deseja rejeitar este apoiador?' %}')">
+                    <i class="fas fa-times me-1"></i>{% trans "Rejeitar" %}
+                  </button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <i class="fas fa-users"></i>
+          <h3>{% trans "Nenhuma solicitação encontrada" %}</h3>
+          <p>{% trans "Não há solicitações de apoiadores para revisar no momento." %}</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

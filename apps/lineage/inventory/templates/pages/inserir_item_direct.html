@@ -1,0 +1,48 @@
+{% extends "layouts/base.html" %}
+{% load i18n l10n %}
+{% load static %}
+{% load itens_extras %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="card border-0 shadow-lg rounded-4">
+    <div class="card-header bg-primary text-white rounded-top-4 py-3 px-4">
+      <h4 class="mb-0 fw-bold">
+        <i class="bi bi-upload me-2"></i>{% trans "Devolver Item" %}
+      </h4>
+    </div>
+    <div class="card-body px-5 py-4">
+      <h5 class="fw-bold mb-3">
+        <i class="bi bi-person-circle me-2"></i>{{ personagem.char_name }}
+      </h5>
+
+      <div class="d-flex align-items-center mb-4">
+        <img src="{% item_image_url item.item_id %}" 
+          alt="{{ item.item_name }}"
+          class="rounded border border-secondary me-3"
+          style="width: 32px; height: 32px;">
+        <p class="mb-0">
+          <strong>{{ item.item_name }}</strong> — {% trans "Disponível" %}: {{ item.quantity }}
+        </p>
+      </div>     
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{% trans "Quantidade" %}</label>
+          <input type="number" name="quantity" min="1" max="{{ item.quantity|unlocalize }}" class="form-control rounded-3" required>
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">{% trans "Senha" %}</label>
+          <input type="password" name="senha" class="form-control rounded-3" required>
+        </div>
+        <div class="text-end">
+          <button type="submit" class="btn btn-success rounded-pill px-4 shadow-sm">
+            <i class="bi bi-check-circle me-2"></i>{% trans "Confirmar Devolução" %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

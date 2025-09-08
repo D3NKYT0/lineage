@@ -1,0 +1,42 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% trans "Suas Caixas" %}</h2>
+    <p class="text-muted">{% trans "Abaixo estão todas as caixas que você comprou e ainda não abriu." %}</p>
+
+    {% if boxes %}
+        <table class="table table-bordered table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>{% trans "ID" %}</th>
+                    <th>{% trans "Tipo" %}</th>
+                    <th>{% trans "Aberta?" %}</th>
+                    <th>{% trans "Ação" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for box in boxes %}
+                    <tr>
+                        <td>{{ box.id }}</td>
+                        <td>{{ box.box_type.name }}</td>
+                        <td>{{ box.opened|yesno:"Sim,Não" }}</td>
+                        <td>
+                            {% if not box.opened %}
+                                <a href="{% url 'games:box_user_open_box' box.id %}" class="btn btn-sm btn-success">
+                                    {% trans "Abrir" %}
+                                </a>
+                            {% else %}
+                                <span class="badge bg-secondary">{% trans "Aberta" %}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-warning">{% trans "Você ainda não possui nenhuma caixa para abrir." %}</p>
+    {% endif %}
+</div>
+{% endblock %}

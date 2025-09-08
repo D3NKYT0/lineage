@@ -1,0 +1,64 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+
+{% block extrastyle %}
+<style>
+  .clan-name-container {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Espaço entre o grupo de crests e o nome */
+  }
+
+  .crest-group {
+    display: flex;
+    align-items: center;
+    width: 26px;
+    gap: 0px; /* Espaço entre as duas imagens */
+  }
+
+  .top-clan-crest {
+    width: auto;
+    height: 14px;
+    margin: 0;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg p-4">
+    <h2 class="text-center mb-4">{% trans "Grand Boss Status" %}</h2>
+
+    {% if bosses %}
+    <div class="table-responsive-md">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>{% trans "Nome" %}</th>
+            <th class="d-none d-md-table-cell">{% trans "Nível" %}</th>
+            <th class="d-none d-md-table-cell">{% trans "Respawn" %}</th>
+            <th>{% trans "Status" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for boss in bosses %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ boss.name }}</td>
+            <td class="d-none d-md-table-cell">{{ boss.level }}</td>
+            <td class="d-none d-md-table-cell">{{ boss.respawn_human }}</td>
+            <td>{{ boss.status }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+      {% trans "Nenhum boss encontrado." %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

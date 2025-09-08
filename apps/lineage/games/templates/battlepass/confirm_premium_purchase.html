@@ -1,0 +1,17 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="card p-4 shadow-lg">
+  <h2 class="mb-3">{% trans "Confirmar Compra do Passe de Batalha Premium" %}</h2>
+  <p><strong>{% trans "Temporada" %}:</strong> {{ season.name }}</p>
+  <p><strong>{% trans "Preço" %}:</strong> {{ premium_price }} {% trans "moedas" %}</p>
+  <p><strong>{% trans "Saldo atual" %}:</strong> {{ wallet.saldo }} {% trans "moedas" %}</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">{% trans "Confirmar Compra" %}</button>
+    <a href="{% url 'games:battle_pass' %}" class="btn btn-secondary">{% trans "Cancelar" %}</a>
+  </form>
+</div>
+{% endblock %}

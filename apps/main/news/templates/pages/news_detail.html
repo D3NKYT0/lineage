@@ -1,0 +1,370 @@
+{% extends 'layouts/base.html' %}
+{% load static i18n %}
+
+{% block title %}{{ translation.title }}{% endblock title %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/news_detail.css' %}">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+  .news-detail-container {
+    background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .news-detail-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(111, 66, 193, 0.3), 0 0 40px rgba(13, 202, 240, 0.2);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    animation: slideInUp 0.6s ease-out;
+  }
+
+  .news-detail-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #6f42c1, #e83e8c, #0dcaf0);
+    border-radius: 20px;
+    padding: 2px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+  }
+
+  .news-detail-header {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .news-detail-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .news-detail-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+    line-height: 1.3;
+  }
+
+  .news-detail-meta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    font-size: 1rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+  }
+
+  .news-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .news-meta-item i {
+    font-size: 1.1rem;
+  }
+
+  .news-detail-body {
+    padding: 2rem;
+  }
+
+  .news-detail-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+  }
+
+  .news-detail-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 35px rgba(111, 66, 193, 0.3);
+  }
+
+  .news-detail-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #333;
+  }
+
+  .news-detail-content h1,
+  .news-detail-content h2,
+  .news-detail-content h3,
+  .news-detail-content h4,
+  .news-detail-content h5,
+  .news-detail-content h6 {
+    color: #6f42c1;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .news-detail-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  .news-detail-content ul,
+  .news-detail-content ol {
+    margin-left: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .news-detail-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  .news-detail-content blockquote {
+    border-left: 4px solid #6f42c1;
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: #666;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 1.5rem;
+    border-radius: 0 10px 10px 0;
+  }
+
+  .news-detail-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .news-detail-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .news-detail-content th,
+  .news-detail-content td {
+    border: 1px solid #e9ecef;
+    padding: 1rem;
+    text-align: left;
+  }
+
+  .news-detail-content th {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+    font-weight: 600;
+  }
+
+  .news-detail-content tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+
+  .news-back-button {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    border: none;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-top: 2rem;
+  }
+
+  .news-back-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .news-back-button:hover::before {
+    left: 100%;
+  }
+
+  .news-back-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(111, 66, 193, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  @keyframes slideInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .news-detail-title {
+      font-size: 1.8rem;
+    }
+    
+    .news-detail-meta {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .news-detail-body {
+      padding: 1.5rem;
+    }
+    
+    .news-detail-content {
+      font-size: 1rem;
+    }
+  }
+</style>
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'news:index' %}"> {% trans "Notícias" %}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ translation.title|truncatechars:30 }}</li>
+{% endblock breadcrumbs %}
+
+{% block page_header %}
+<h5 class="display-5">{{ translation.title|truncatechars:50 }}</h5>
+{% endblock page_header %}
+
+{% block content %}
+<div class="news-detail-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="news-detail-card">
+          <div class="news-detail-header">
+            <h1 class="news-detail-title">{{ translation.title }}</h1>
+            <div class="news-detail-meta">
+              <div class="news-meta-item">
+                <i class="fas fa-user"></i>
+                <span>{{ news.author.username }}</span>
+              </div>
+              <div class="news-meta-item">
+                <i class="fas fa-calendar"></i>
+                <span>{{ news.pub_date|date:"d/m/Y H:i" }}</span>
+              </div>
+              <div class="news-meta-item">
+                <i class="fas fa-newspaper"></i>
+                <span>{% trans "Notícia" %}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="news-detail-body">
+            {% if news.image %}
+              <img class="news-detail-image" src="{{ news.image.url }}" alt="{{ translation.title }}">
+            {% endif %}
+            
+            <div class="news-detail-content">
+              {{ translation.content|safe }}
+            </div>
+            
+            <div class="text-center">
+              <a href="{% url 'news:index' %}" class="news-back-button">
+                <i class="fas fa-arrow-left"></i>
+                {% trans "Voltar às Notícias" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Efeito de parallax suave no fundo
+  window.addEventListener('scroll', function() {
+    const scrolled = window.pageYOffset;
+    const parallax = document.querySelector('.news-detail-container');
+    const speed = scrolled * 0.3;
+    
+    if (parallax) {
+      parallax.style.transform = `translateY(${speed}px)`;
+    }
+  });
+  
+  // Animação do botão voltar
+  const backButton = document.querySelector('.news-back-button');
+  if (backButton) {
+    backButton.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-3px) scale(1.05)';
+    });
+    
+    backButton.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+    });
+  }
+  
+  // Animação da imagem
+  const newsImage = document.querySelector('.news-detail-image');
+  if (newsImage) {
+    newsImage.addEventListener('mouseenter', function() {
+      this.style.transform = 'scale(1.03)';
+    });
+    
+    newsImage.addEventListener('mouseleave', function() {
+      this.style.transform = 'scale(1)';
+    });
+  }
+  
+  // Efeito de destaque nos títulos do conteúdo
+  const contentHeadings = document.querySelectorAll('.news-detail-content h1, .news-detail-content h2, .news-detail-content h3');
+  contentHeadings.forEach(heading => {
+    heading.addEventListener('mouseenter', function() {
+      this.style.color = '#e83e8c';
+      this.style.transform = 'translateX(5px)';
+    });
+    
+    heading.addEventListener('mouseleave', function() {
+      this.style.color = '#6f42c1';
+      this.style.transform = 'translateX(0)';
+    });
+  });
+});
+</script>
+{% endblock content %}

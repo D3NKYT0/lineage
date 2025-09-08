@@ -1,0 +1,273 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{% static 'css/dashboard-custom.css' %}">
+<style>
+  .order-details-container {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .order-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .order-header h1 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .order-header p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0.5rem 0 0 0;
+  }
+
+  .order-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .order-card h2 {
+    color: white;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .detail-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .detail-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+  }
+
+  .detail-label {
+    color: #a0aec0;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+
+  .detail-value {
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+
+  .bonus-item {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border: 1px solid rgba(72, 187, 120, 0.3);
+  }
+
+  .bonus-item .detail-label,
+  .bonus-item .detail-value {
+    color: white;
+  }
+
+  .bonus-alert {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+    border: 1px solid rgba(72, 187, 120, 0.3);
+  }
+
+  .bonus-alert h5 {
+    color: white;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .bonus-alert p {
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+  }
+
+  .action-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    color: white;
+  }
+
+  .back-btn {
+    background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem 1.5rem;
+    color: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .back-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(113, 128, 150, 0.3);
+    color: white;
+    text-decoration: none;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .status-pending {
+    background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+    color: white;
+  }
+
+  .status-completed {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+  }
+
+  .status-cancelled {
+    background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+    color: white;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="order-details-container">
+  <div class="container">
+    <!-- Header -->
+    <div class="order-header">
+      <h1>
+        <i class="fas fa-receipt me-3"></i>{% trans "Detalhes do Pedido" %}
+      </h1>
+      <p>{% trans "Informações completas sobre sua compra" %}</p>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{% url 'dashboard' %}" style="color: #a0aec0;">{% trans "Dashboard" %}</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="{% url 'payment:pedidos_pendentes' %}" style="color: #a0aec0;">{% trans "Pedidos" %}</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page" style="color: white;">{% trans "Detalhes" %}</li>
+      </ol>
+    </nav>
+
+    <!-- Order Details Card -->
+    <div class="order-card">
+      <h2>
+        <i class="fas fa-info-circle me-2"></i>{% trans "Informações do Pedido" %}
+      </h2>
+      
+      <div class="detail-item">
+        <div class="detail-label">{% trans "ID do Pedido" %}</div>
+        <div class="detail-value">#{{ pedido.id }}</div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-label">{% trans "Valor Pago" %}</div>
+        <div class="detail-value">R$ {{ pedido.valor_pago }}</div>
+      </div>
+      
+      {% if pedido.bonus_aplicado > 0 %}
+        <div class="detail-item bonus-item">
+          <div class="detail-label">
+            <i class="fas fa-gift me-2"></i>{% trans "Bônus Aplicado" %}
+          </div>
+          <div class="detail-value">R$ {{ pedido.bonus_aplicado }}</div>
+        </div>
+        
+        <div class="detail-item bonus-item">
+          <div class="detail-label">{% trans "Total Creditado" %}</div>
+          <div class="detail-value">R$ {{ pedido.total_creditado }}</div>
+        </div>
+      {% else %}
+        <div class="detail-item">
+          <div class="detail-label">{% trans "Moedas Geradas" %}</div>
+          <div class="detail-value">{{ pedido.moedas_geradas }}</div>
+        </div>
+      {% endif %}
+      
+      <div class="detail-item">
+        <div class="detail-label">{% trans "Status" %}</div>
+        <div class="detail-value">
+          <span class="status-badge status-{{ pedido.status|lower }}">
+            {{ pedido.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-label">{% trans "Método de Pagamento" %}</div>
+        <div class="detail-value">{{ pedido.metodo }}</div>
+      </div>
+
+      <div class="detail-item">
+        <div class="detail-label">{% trans "Data de Criação" %}</div>
+        <div class="detail-value">{{ pedido.data_criacao }}</div>
+      </div>
+    </div>
+
+    {% if pedido.bonus_aplicado > 0 %}
+      <!-- Bonus Alert -->
+      <div class="bonus-alert">
+        <h5>
+          <i class="fas fa-gift me-2"></i>{% trans "Bônus Aplicado!" %}
+        </h5>
+        <p>
+          {% trans "Parabéns! Você receberá um bônus de" %} <strong>R$ {{ pedido.bonus_aplicado }}</strong> 
+          {% trans "além do valor da sua compra." %}
+        </p>
+      </div>
+    {% endif %}
+
+    <!-- Action Buttons -->
+    <div class="text-center">
+      <form method="post" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="action-btn me-3">
+          <i class="fas fa-credit-card me-2"></i>{% trans "Confirmar e Ir para o Pagamento" %}
+        </button>
+      </form>
+      
+      <a href="{% url 'payment:pedidos_pendentes' %}" class="back-btn">
+        <i class="fas fa-arrow-left me-2"></i>{% trans "Voltar para Pedidos Pendentes" %}
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
