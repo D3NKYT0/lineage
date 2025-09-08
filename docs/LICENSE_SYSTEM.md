@@ -1,11 +1,11 @@
-# Sistema de Licenciamento L2JPremium
+# Sistema de Licenciamento PDL
 
 ## Visão Geral
 
-O sistema de licenciamento L2JPremium (Painel Definitivo Lineage) é um sistema completo para gerenciar licenças de software, suportando dois tipos de licenças:
+O sistema de licenciamento PDL (Painel Definitivo Lineage) é um sistema completo para gerenciar licenças de software, suportando dois tipos de licenças:
 
-- **L2JPremium FREE**: Licença gratuita para uso livre
-- **L2JPremium PRO**: Licença profissional com vínculo contratual
+- **PDL FREE**: Licença gratuita para uso livre
+- **PDL PRO**: Licença profissional com vínculo contratual
 
 ## Arquitetura
 
@@ -41,7 +41,7 @@ apps/licence/
 - `activated_at`: Data de ativação
 - `expires_at`: Data de expiração
 - `verification_count`: Contador de verificações
-- `contract_number`: Número do contrato (L2JPremium PRO)
+- `contract_number`: Número do contrato (PDL PRO)
 - `support_hours_used`: Horas de suporte utilizadas
 - `support_hours_limit`: Limite de horas de suporte
 - `features_enabled`: Funcionalidades habilitadas (JSON)
@@ -58,7 +58,7 @@ apps/licence/
 
 ## Funcionalidades
 
-### L2JPremium FREE
+### PDL FREE
 - ✅ Painel administrativo
 - ✅ Funcionalidades básicas
 - ✅ Sistema de temas
@@ -68,7 +68,7 @@ apps/licence/
 - ❌ Personalização
 - ❌ Suporte prioritário
 
-### L2JPremium PRO
+### PDL PRO
 - ✅ Todas as funcionalidades FREE
 - ✅ Suporte técnico
 - ✅ Atualizações automáticas
@@ -117,10 +117,10 @@ python manage.py migrate
 #### Criar Licença
 
 ```bash
-# L2JPremium FREE
+# PDL FREE
 python manage.py create_license --type free --domain meusite.com --email contato@meusite.com
 
-# L2JPremium PRO
+# PDL PRO
 python manage.py create_license --type pro --domain meusite.com --email contato@meusite.com --company "Minha Empresa" --contract "CONTRATO-2024-001"
 ```
 
@@ -290,19 +290,19 @@ Os templates estão em `templates/licence/` e podem ser personalizados conforme 
 ## Suporte
 
 Para suporte técnico:
-- **L2JPremium FREE**: Comunidade e documentação
-- **L2JPremium PRO**: Suporte profissional incluído
+- **PDL FREE**: Comunidade e documentação
+- **PDL PRO**: Suporte profissional incluído
 
 ### Contatos
-- E-mail: suporte@L2JPremium.com
-- Documentação: https://L2JPremium.com
-- Comunidade: https://L2JPremium.com
+- E-mail: suporte@pdl.com
+- Documentação: https://docs.pdl.com
+- Comunidade: https://community.pdl.com
 
 ## Changelog
 
 ### v1.0.0
 - Sistema inicial de licenciamento
-- Suporte a L2JPremium FREE e L2JPremium PRO
+- Suporte a PDL FREE e PDL PRO
 - Middleware de verificação
 - APIs de ativação e status
 - Interface administrativa

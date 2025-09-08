@@ -1,7 +1,7 @@
-# Wiki do Sistema Lineage 2 L2JPremium
+# Wiki do Sistema Lineage 2 PDL
 
 ## 📋 Visão Geral
-O Lineage 2 L2JPremium é um sistema completo para gerenciamento de servidores privados de Lineage 2, oferecendo uma ampla gama de funcionalidades para administradores e jogadores.
+O Lineage 2 PDL é um sistema completo para gerenciamento de servidores privados de Lineage 2, oferecendo uma ampla gama de funcionalidades para administradores e jogadores.
 
 ## 🎮 Recursos para Jogadores
 
@@ -228,6 +228,6 @@ chmod +x setup.sh
 
 ## 📞 Suporte
 
-- Email: contato@l2jprmeium.com
-- Discord: jacksonfelipe
-- Documentação: https://l2jpremium.com
+- Email: contato@denky.dev.br
+- Discord: denkyto
+- Documentação: https://pdl.denky.dev.br

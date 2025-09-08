@@ -6061,8 +6061,8 @@ msgstr "Blocked conquest"
 msgid "Você ainda não desbloqueou nenhuma conquista."
 msgstr "You have not yet unlocked any achievements."
 
-msgid "Painel Definitivo Lineage - L2JPremium"
-msgstr "Lineage Definitive Panel - L2JPremium"
+msgid "Painel Definitivo Lineage - PDL"
+msgstr "Lineage Definitive Panel - PDL"
 
 msgid "Gerenciamento de Servidores de Lineage 2 com Python e Django"
 msgstr "Lineage 2 server management with Python and Django"
@@ -6144,11 +6144,11 @@ msgid "Participe do Futuro dos Servidores Privados"
 msgstr "Participate in the future of private servers"
 
 msgid ""
-"O L2JPremium é open source e está em constante evolução. Contribua, implemente, "
+"O PDL é open source e está em constante evolução. Contribua, implemente, "
 "personalize e transforme a forma como servidores Lineage 2 são "
 "administrados."
 msgstr ""
-"The L2JPremium is Open Source and is constantly evolving. Contribute, implement, "
+"The PDL is Open Source and is constantly evolving. Contribute, implement, "
 "customize and turn the way Lineage 2 servers are administered."
 
 msgid "Ver Projeto no GitHub"
@@ -11225,9 +11225,6 @@ msgstr "You are not allowed to create staff public notifications."
 
 #~ msgid "Saldo Atual"
 #~ msgstr "Current balance"
-
-#~ msgid "Lineage 2 L2JPremium"
-#~ msgstr "Lineage 2 L2JPremium"
 
 #~ msgid "Últimas Transações"
 #~ msgstr "Latest transactions"

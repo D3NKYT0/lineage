@@ -1,10 +1,10 @@
-# Migração de Contas L2 → L2JPremium
+# Migração de Contas L2 → PDL
 
-Este documento descreve como migrar contas do banco de dados do Lineage 2 para o L2JPremium (Painel de Controle).
+Este documento descreve como migrar contas do banco de dados do Lineage 2 para o PDL (Painel de Controle).
 
 ## Visão Geral
 
-O comando `migrate_l2_accounts` permite migrar contas do servidor L2 para o L2JPremium seguindo regras específicas de segurança e validação.
+O comando `migrate_l2_accounts` permite migrar contas do servidor L2 para o PDL seguindo regras específicas de segurança e validação.
 
 ## Regras de Migração
 
@@ -26,7 +26,7 @@ O comando `migrate_l2_accounts` permite migrar contas do servidor L2 para o L2JP
    LINEAGE_QUERY_MODULE=dreamv3  # ou outro módulo compatível
    ```
 
-2. **Banco L2JPremium configurado e migrações aplicadas**
+2. **Banco PDL configurado e migrações aplicadas**
 
 ## Uso do Comando
 
@@ -86,13 +86,13 @@ docker-compose exec site python3 manage.py migrate_l2_accounts \
 ### Durante a Execução
 
 ```
-🚀 Iniciando migração de contas L2 → L2JPremium
+🚀 Iniciando migração de contas L2 → PDL
 📋 Buscando contas do L2...
 ✅ Encontradas 1500 contas no L2
 📦 Processando lote 1/15
 ✅ Criado: player1 → player1@email.com
 ✅ Criado: player2 → L2_player2@email.com
-⚠️  Username player3 já existe no L2JPremium - pulando
+⚠️  Username player3 já existe no PDL - pulando
 🔑 Senha para admin1: K9#mP$2vL@qR7nX...
 ```
 
@@ -127,7 +127,7 @@ Conflitos de email resolvidos: 23
 
 ### Usernames Duplicados
 
-- Se o username já existe no L2JPremium, a conta é pulada
+- Se o username já existe no PDL, a conta é pulada
 - Recomenda-se verificar manualmente essas contas
 
 ### Níveis de Acesso
@@ -215,8 +215,8 @@ O comando gera logs detalhados incluindo:
 **IMPORTANTE**: Sempre faça backup antes da migração:
 
 ```bash
-# Backup do banco L2JPremium
-docker-compose exec site python3 manage.py dumpdata > backup_l2jpremium_$(date +%Y%m%d_%H%M%S).json
+# Backup do banco PDL
+docker-compose exec site python3 manage.py dumpdata > backup_pdl_$(date +%Y%m%d_%H%M%S).json
 
 # Backup do banco L2 (se possível)
 mysqldump -h 192.168.1.100 -u l2user -p l2jdb > backup_l2_$(date +%Y%m%d_%H%M%S).sql
@@ -228,11 +228,11 @@ mysqldump -h 192.168.1.100 -u l2user -p l2jdb > backup_l2_$(date +%Y%m%d_%H%M%S)
 #!/bin/bash
 # migrate_l2_safe.sh
 
-echo "🔄 Iniciando migração segura L2 → L2JPremium"
+echo "🔄 Iniciando migração segura L2 → PDL"
 
 # 1. Backup
 echo "💾 Criando backup..."
-docker-compose exec site python3 manage.py dumpdata > backup_l2jpremium_$(date +%Y%m%d_%H%M%S).json
+docker-compose exec site python3 manage.py dumpdata > backup_pdl_$(date +%Y%m%d_%H%M%S).json
 
 # 2. Teste
 echo "🧪 Executando teste..."

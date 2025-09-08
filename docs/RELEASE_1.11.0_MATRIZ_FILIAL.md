@@ -1,4 +1,4 @@
-# L2JPremium 1.11.0 – Sistema Matriz-Filial de Contas (Explicação Técnica)
+# PDL 1.11.0 – Sistema Matriz-Filial de Contas (Explicação Técnica)
 
 ## Visão Geral
 O recurso Matriz-Filial permite que múltiplos servidores Lineage 2 (filiais) sejam gerenciados sob uma estrutura centralizada (matriz), compartilhando ou isolando dados conforme a necessidade do projeto. O sistema foi desenhado para ser flexível, seguro e facilmente integrável a diferentes arquiteturas.
@@ -109,6 +109,6 @@ graph TD
 
 ## Resumo Técnico
 
-O sistema Matriz-Filial do L2JPremium 1.11.0 foi projetado para ambientes profissionais, com foco em flexibilidade, segurança e facilidade de integração. Ele abstrai a complexidade de múltiplos bancos e servidores, oferecendo uma experiência unificada tanto para administradores quanto para desenvolvedores.
+O sistema Matriz-Filial do PDL 1.11.0 foi projetado para ambientes profissionais, com foco em flexibilidade, segurança e facilidade de integração. Ele abstrai a complexidade de múltiplos bancos e servidores, oferecendo uma experiência unificada tanto para administradores quanto para desenvolvedores.
 
-Se você precisa de um painel multi-servidor, escalável e pronto para integrações corporativas, o L2JPremium 1.11.0 entrega tudo isso de forma open source e altamente configurável. 
+Se você precisa de um painel multi-servidor, escalável e pronto para integrações corporativas, o PDL 1.11.0 entrega tudo isso de forma open source e altamente configurável. 

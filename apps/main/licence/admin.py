@@ -29,7 +29,7 @@ class LicenseAdmin(BaseModelAdmin):
         (_('Cliente'), {
             'fields': ('domain', 'company_name', 'contact_email', 'contact_phone')
         }),
-        (_('Contrato (L2JPremium PRO)'), {
+        (_('Contrato (PDL PRO)'), {
             'fields': ('contract_number', 'support_hours_used', 'support_hours_limit'),
             'classes': ('collapse',)
         }),
@@ -71,11 +71,11 @@ class LicenseAdmin(BaseModelAdmin):
         """Exibe o tipo de licença com ícone"""
         if obj.license_type == 'free':
             return format_html(
-                '<i class="fas fa-gift text-info"></i> <span class="badge bg-info">L2JPremium FREE</span>'
+                '<i class="fas fa-gift text-info"></i> <span class="badge bg-info">PDL FREE</span>'
             )
         else:
             return format_html(
-                '<i class="fas fa-crown text-warning"></i> <span class="badge bg-warning">L2JPremium PRO</span>'
+                '<i class="fas fa-crown text-warning"></i> <span class="badge bg-warning">PDL PRO</span>'
             )
     license_type_with_icon.short_description = _("Tipo")
     

@@ -8,7 +8,7 @@ from utils.protocol import create_protocol
 
 def gerar_qr_png(email, secret):
     protocol = create_protocol()
-    issuer = f"L2JPremium: {settings.PROJECT_TITLE} - {protocol}"
+    issuer = f"PDL: {settings.PROJECT_TITLE} - {protocol}"
     
     uri = pyotp.totp.TOTP(secret).provisioning_uri(name=email, issuer_name=issuer)
     

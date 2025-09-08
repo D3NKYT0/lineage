@@ -5,6 +5,99 @@
   padding: 0;
 }
 
+/* Theme Error Banner Styles */
+.theme-error-banner {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  color: white;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  text-align: center;
+  position: relative;
+  z-index: 1000;
+  animation: slideInDown 0.5s ease-out;
+}
+
+.theme-error-banner h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.theme-error-banner p {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.theme-error-banner .fallback-message {
+  margin: 0 0 15px 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.theme-error-banner details {
+  margin: 15px 0;
+  text-align: left;
+}
+
+.theme-error-banner summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffeaa7;
+  padding: 5px 0;
+}
+
+.theme-error-banner .error-details {
+  background: rgba(0,0,0,0.2);
+  padding: 15px;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-family: monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.theme-error-banner .error-info {
+  background: rgba(255,255,255,0.1);
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-top: 15px;
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .theme-error-banner {
+    margin: 10px;
+    padding: 15px;
+  }
+  
+  .theme-error-banner h3 {
+    font-size: 16px;
+  }
+  
+  .theme-error-banner p {
+    font-size: 13px;
+  }
+}
+
 body {
   background-color: #161616;
   font-family: 'Source Sans Pro';

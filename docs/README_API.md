@@ -1,4 +1,4 @@
-# API App - Lineage 2 L2JPremium
+# API App - Lineage 2 PDL
 
 Este app fornece APIs públicas para o servidor Lineage 2 usando Django REST Framework (DRF).
 
@@ -125,7 +125,7 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Lineage 2 L2JPremium API',
+    'TITLE': 'Lineage 2 PDL API',
     'DESCRIPTION': 'API pública para servidores privados de Lineage 2',
     'VERSION': '1.0.0',
     # ...

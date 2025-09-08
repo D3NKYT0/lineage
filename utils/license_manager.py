@@ -3,7 +3,7 @@ from django.conf import settings
 
 def check_license_status():
     """
-    Verifica o status da licença usando o sistema de licença L2JPremium real.
+    Verifica o status da licença usando o sistema de licença PDL real.
     """
     try:
         # Importa o gerenciador de licenças do PDL
@@ -12,7 +12,7 @@ def check_license_status():
         # Verifica o status da licença atual
         is_valid = license_manager.check_license_status()
         
-        print(f"[LicenseManager] Status da licença L2JPremium: {'Válida' if is_valid else 'Inválida'}")
+        print(f"[LicenseManager] Status da licença PDL: {'Válida' if is_valid else 'Inválida'}")
         return is_valid
         
     except ImportError as e:

@@ -37,21 +37,13 @@ O sistema usa um template tag personalizado para carregar a imagem do banner:
 {% if banner_url %}
   <img src="{{ banner_url }}" alt="Logo Lineage 2" class="img-fluid mb-4">
 {% else %}
-<<<<<<< HEAD
-  <img src="{% static 'assets/img/banner-l2jpremium.png' %}" alt="Logo Lineage 2" class="img-fluid mb-4">
-=======
   <img src="{% static 'assets/img/banner-pdl.jpeg' %}" alt="Logo Lineage 2" class="img-fluid mb-4">
->>>>>>> upstream/main
 {% endif %}
 ```
 
 ### Fallback
 
-<<<<<<< HEAD
-Se nenhuma imagem estiver configurada no admin, o sistema usa a imagem estática padrão (`banner-l2jpremium.png`).
-=======
 Se nenhuma imagem estiver configurada no admin, o sistema usa a imagem estática padrão (`banner-pdl.jpeg`).
->>>>>>> upstream/main
 
 ## Comandos Úteis
 

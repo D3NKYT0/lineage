@@ -1,8 +1,8 @@
-# 🚀 PWA Push Notifications L2JPremium - Resumo Executivo
+# 🚀 PWA Push Notifications PDL - Resumo Executivo
 
 ## 📱 O que é?
 
-Uma **aplicação web progressiva (PWA)** desenvolvida em React para o sistema L2JPremium (Perfect Dark Lineage), oferecendo uma interface moderna para gerenciamento de notificações push, monitoramento de servidores e administração do sistema.
+Uma **aplicação web progressiva (PWA)** desenvolvida em React para o sistema PDL (Perfect Dark Lineage), oferecendo uma interface moderna para gerenciamento de notificações push, monitoramento de servidores e administração do sistema.
 
 ## ✨ Principais Funcionalidades
 
@@ -99,5 +99,5 @@ Uma **aplicação web progressiva (PWA)** desenvolvida em React para o sistema L
 
 ---
 
-**🎮 Sistema L2JPremium - Perfect Dark Lineage**  
+**🎮 Sistema PDL - Perfect Dark Lineage**  
 *PWA Push Notifications - Interface Moderna e Responsiva* 

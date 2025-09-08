@@ -8,7 +8,7 @@ mkdir -p "$INSTALL_DIR"
 clear
 
 echo "========================================================="
-echo "  🚀 Bem-vindo ao Instalador da Plataforma L2JPremium!   "
+echo "  🚀 Bem-vindo ao Instalador do Projeto Lineage 2 PDL!   "
 echo "========================================================="
 echo
 
@@ -210,16 +210,16 @@ DB_PORT=5432
 CONFIG_EMAIL_ENABLE=False
 CONFIG_EMAIL_USE_TLS=True
 CONFIG_EMAIL_HOST=smtp.domain.com
-CONFIG_EMAIL_HOST_USER=mail@l2jpremium.com
-CONFIG_DEFAULT_FROM_EMAIL=mail@l2jpremium.com
+CONFIG_EMAIL_HOST_USER=mail@mail.dev.br
+CONFIG_DEFAULT_FROM_EMAIL=mail@mail.dev.br
 CONFIG_EMAIL_HOST_PASSWORD=password
 CONFIG_EMAIL_PORT=587
 
 CONFIG_AUDITOR_MIDDLEWARE_ENABLE = True
 DJANGO_CACHE_REDIS_URI=redis://redis:6379/0
 
-RENDER_EXTERNAL_HOSTNAME=plataforma.l2jpremium.com
-RENDER_EXTERNAL_FRONTEND=plataforma.l2jpremium.com
+RENDER_EXTERNAL_HOSTNAME=pdl.denky.dev.br
+RENDER_EXTERNAL_FRONTEND=pdl.denky.dev.br
 
 CELERY_BROKER_URI=redis://redis:6379/1
 CELERY_BACKEND_URI=redis://redis:6379/1
@@ -247,10 +247,10 @@ CONFIG_MERCADO_PAGO_CLIENT_ID = "0000000000000000"
 CONFIG_MERCADO_PAGO_CLIENT_SECRET = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 CONFIG_MERCADO_PAGO_SIGNATURE = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
-LINEAGE_QUERY_MODULE=l2jpremium
+LINEAGE_QUERY_MODULE=dreamv3
 
-CONFIG_HCAPTCHA_SITE_KEY=ff225ef6-dd92-4b46-a6ca-5046182affde
-CONFIG_HCAPTCHA_SECRET_KEY=ES_6c1089f19adf43eeb8cfcf7c7fd52b05
+CONFIG_HCAPTCHA_SITE_KEY=bcf40348-fa88-4570-a752-2asdasde0b2bc
+CONFIG_HCAPTCHA_SECRET_KEY=ES_dc688fdasdasdadasdas4e918093asddsddsafa3f1b
 
 CONFIG_LANGUAGE_CODE="pt"
 CONFIG_TIME_ZONE="America/Recife"
@@ -260,17 +260,13 @@ CONFIG_DATETIME_FORMAT='d/m/Y H:i:s'
 CONFIG_DATE_FORMAT='d/m/Y'
 CONFIG_TIME_FORMAT='H:i:s'
 CONFIG_GMT_OFFSET=-3
-# Exibir data e hora ou apenas data no status dos Grand Bosses (True = data e hora, False = apenas data)
-CONFIG_GRANDBOSS_SHOW_TIME=True
-# Exibir quantidade de jogadores online na página inicial (True = mostrar, False = ocultar)
-CONFIG_SHOW_PLAYERS_ONLINE=True
 
-PROJECT_TITLE=L2JPremium
-PROJECT_AUTHOR=Plataforma L2JPremium
-PROJECT_DESCRIPTION=A Plataforma L2JPremium é um painel que nasceu com a missão de oferecer ferramentas poderosas para administradores de servido>
+PROJECT_TITLE=Lineage 2 PDL
+PROJECT_AUTHOR=Lineage 2 PDL
+PROJECT_DESCRIPTION=O PDL é um painel que nasceu com a missão de oferecer ferramentas poderosas para administradores de servidores privados de Lineage 2. Inicialmente voltado à análise de riscos e estabilidade dos servidores, o projeto evoluiu e se consolidou como uma solução completa para prospecção, gerenciamento e operação de servidores — tudo em código aberto.
 PROJECT_KEYWORDS=lineage l2 painel servidor
-PROJECT_URL=https://plataforma.l2jpremium.com
-PROJECT_LOGO_URL=https://i.imgur.com/GHEsChg.png
+PROJECT_URL=https://pdl.denky.dev.br
+PROJECT_LOGO_URL=/static/assets/img/logo_painel.png
 PROJECT_FAVICON_ICO=/static/assets/img/ico.jpg
 PROJECT_FAVICON_MANIFEST=/static/assets/img/favicon/site.webmanifest
 PROJECT_THEME_COLOR=#ffffff

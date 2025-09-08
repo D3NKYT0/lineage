@@ -5,7 +5,7 @@ from apps.main.licence.manager import license_manager
 
 
 class Command(BaseCommand):
-    help = 'Verifica o status das licenças L2JPremium'
+    help = 'Verifica o status das licenças PDL'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -23,7 +23,7 @@ class Command(BaseCommand):
         domain_filter = options['domain']
 
         self.stdout.write(
-            self.style.SUCCESS('🔍 Verificando status das licenças L2JPremium...\n')
+            self.style.SUCCESS('🔍 Verificando status das licenças PDL...\n')
         )
 
         # Busca licenças

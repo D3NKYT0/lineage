@@ -1,8 +1,8 @@
-# Análise Técnica - PWA Push Notifications L2JPremium
+# Análise Técnica - PWA Push Notifications PDL
 
 ## 📋 Visão Geral
 
-O **PWA Push Notifications L2JPremium** é uma aplicação web progressiva desenvolvida em React que oferece uma interface moderna e responsiva para gerenciamento de notificações push, monitoramento de servidores e administração do sistema L2JPremium (Perfect Dark Lineage).
+O **PWA Push Notifications PDL** é uma aplicação web progressiva desenvolvida em React que oferece uma interface moderna e responsiva para gerenciamento de notificações push, monitoramento de servidores e administração do sistema PDL (Perfect Dark Lineage).
 
 ## 🏗️ Arquitetura do Sistema
 
@@ -210,7 +210,7 @@ const subscription = await registration.pushManager.subscribe({
 ### Manifest.json
 ```json
 {
-  "name": "Notificações Push L2JPremium",
+  "name": "Notificações Push PDL",
   "short_name": "PushAppPDL",
   "display": "standalone",
   "theme_color": "#1976d2",
@@ -274,7 +274,7 @@ static/pwa/
 
 ## 🎯 Conclusão
 
-O PWA Push Notifications L2JPremium representa uma implementação moderna e robusta de uma aplicação web progressiva, oferecendo:
+O PWA Push Notifications PDL representa uma implementação moderna e robusta de uma aplicação web progressiva, oferecendo:
 
 - **Experiência de usuário superior** com design responsivo e intuitivo
 - **Funcionalidades avançadas** de push notifications e monitoramento
@@ -286,5 +286,5 @@ A aplicação está pronta para produção e oferece uma base sólida para futur
 
 ---
 
-**Desenvolvido para o Sistema L2JPremium**  
+**Desenvolvido para o Sistema PDL**  
 *Perfect Dark Lineage - PWA Push Notifications* 

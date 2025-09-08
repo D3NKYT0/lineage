@@ -1,4 +1,4 @@
-# 🚀 Migração L2 → L2JPremium - Guia Rápido
+# 🚀 Migração L2 → PDL - Guia Rápido
 
 ## O que foi criado
 
@@ -62,13 +62,13 @@ docker-compose exec site python3 manage.py migrate_l2_accounts --batch-size 50
 ## Saída esperada
 
 ```
-🚀 Iniciando migração de contas L2 → L2JPremium
+🚀 Iniciando migração de contas L2 → PDL
 📋 Buscando contas do L2...
 ✅ Encontradas 1500 contas no L2
 📦 Processando lote 1/15
 ✅ Criado: player1 → player1@email.com
 ✅ Criado: player2 → L2_player2@email.com
-⚠️  Username player3 já existe no L2JPremium - pulando
+⚠️  Username player3 já existe no PDL - pulando
 
 ============================================================
 📊 RELATÓRIO DE MIGRAÇÃO

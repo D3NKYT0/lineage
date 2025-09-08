@@ -172,7 +172,7 @@ def license_edit(request, license_id):
             license_obj.contract_number = request.POST.get('contract_number', '')
             license_obj.notes = request.POST.get('notes', '')
             
-            # Atualiza funcionalidades se for L2JPremium PRO
+            # Atualiza funcionalidades se for PDL PRO
             if license_obj.license_type == 'pro':
                 features = {}
                 for feature in ['support', 'updates', 'customization', 'priority_support', 'source_code', 'installation_service', 'database_integration']:

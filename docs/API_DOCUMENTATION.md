@@ -1,4 +1,4 @@
-# API Documentation - Lineage 2 L2JPremium
+# API Documentation - Lineage 2 PDL
 
 ## Visão Geral
 

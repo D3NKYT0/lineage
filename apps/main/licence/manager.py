@@ -9,7 +9,7 @@ from .utils import license_validator, license_crypto
 
 class LicenseManager:
     """
-    Gerenciador central de licenças L2JPremium
+    Gerenciador central de licenças do PDL
     """
     
     def __init__(self):
@@ -130,7 +130,7 @@ class LicenseManager:
     
     def create_free_license(self, domain, contact_email, company_name="", contact_phone=""):
         """
-        Cria uma licença gratuita (L2JPremium FREE) - apenas uma por sistema
+        Cria uma licença gratuita (PDL FREE) - apenas uma por sistema
         """
         try:
             # Verifica se já existe uma licença FREE ativa
@@ -166,7 +166,7 @@ class LicenseManager:
     
     def create_pro_license(self, domain, contact_email, company_name, contact_phone, contract_number="", skip_dns_validation=False):
         """
-        Cria uma licença profissional (L2JPremium PRO) com validação de contrato
+        Cria uma licença profissional (PDL PRO) com validação de contrato
         """
         try:
             # Valida se o número do contrato foi fornecido

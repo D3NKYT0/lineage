@@ -81,6 +81,42 @@
       </div>
     </nav>
 
+    <!-- Error Display for Theme Issues -->
+    {% if error_type %}
+      <div class="theme-error-banner">
+        <div style="max-width: 800px; margin: 0 auto;">
+          <h3>
+            <i class="fa-solid fa-exclamation-triangle"></i>
+            {% if error_type == 'url_error' %}
+              Problema com URLs no Tema
+            {% elif error_type == 'template_error' %}
+              Problema com Template do Tema
+            {% else %}
+              Problema com o Tema
+            {% endif %}
+          </h3>
+          
+          <p>{{ error_message }}</p>
+          
+          <p class="fallback-message">{{ fallback_message }}</p>
+          
+          {% if url_error_details %}
+            <details>
+              <summary>Detalhes Técnicos</summary>
+              <div class="error-details">
+                {{ url_error_details }}
+              </div>
+            </details>
+          {% endif %}
+          
+          <div class="error-info">
+            <strong>Tema:</strong> {{ theme_slug }} | 
+            <strong>Template:</strong> {{ template_name }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
     <!-- Main Content -->
     <div class="main-content">
       {% block content %}{% endblock %}

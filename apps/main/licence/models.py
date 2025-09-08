@@ -8,11 +8,11 @@ from .utils import license_validator
 
 class License(BaseModel):
     """
-    Modelo para gerenciar licenças do L2JPremium (Painel Definitivo Lineage)
+    Modelo para gerenciar licenças do PDL (Painel Definitivo Lineage)
     """
     LICENSE_TYPES = [
-        ('free', _('L2JPremium FREE - Uso Livre')),
-        ('pro', _('L2JPremium PRO - Com Vínculo Contratual')),
+        ('free', _('PDL FREE - Uso Livre')),
+        ('pro', _('PDL PRO - Com Vínculo Contratual')),
     ]
     
     LICENSE_STATUS = [
@@ -86,7 +86,7 @@ class License(BaseModel):
         verbose_name=_("Contador de Verificações")
     )
     
-    # Campos específicos do L2JPremium PRO
+    # Campos específicos do PDL PRO
     contract_number = models.CharField(
         max_length=50,
         blank=True,

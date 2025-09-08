@@ -20,7 +20,13 @@ load_dotenv()  # take environment variables from .env.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # System Version
-VERSION = '1.14.10'
+VERSION = '1.14.15'
+
+# =========================== THEME CONFIGURATION ===========================
+
+# Control whether to display theme errors to users
+# Set to False in production to only log errors without showing them to users
+SHOW_THEME_ERRORS_TO_USERS = str2bool(os.environ.get('SHOW_THEME_ERRORS_TO_USERS', True))
 
 # Enable/Disable DEBUG Mode
 DEBUG = str2bool(os.environ.get('DEBUG', False))
@@ -749,8 +755,8 @@ HCAPTCHA_FAIL_OPEN = str2bool(os.environ.get('CONFIG_HCAPTCHA_FAIL_OPEN', False)
 
 # =========================== HEAD CONFIGS ===========================
 
-PROJECT_TITLE = os.getenv('PROJECT_TITLE', 'Lineage 2 L2JPremium')
-PROJECT_AUTHOR = os.getenv('PROJECT_AUTHOR', 'Lineage 2 L2JPremium')
+PROJECT_TITLE = os.getenv('PROJECT_TITLE', 'Lineage 2 PDL')
+PROJECT_AUTHOR = os.getenv('PROJECT_AUTHOR', 'Lineage 2 PDL')
 PROJECT_DESCRIPTION = os.getenv('PROJECT_DESCRIPTION', 'Painel para servidores privados de Lineage 2.')
 PROJECT_KEYWORDS = os.getenv('PROJECT_KEYWORDS', 'lineage l2 painel servidor')
 PROJECT_URL = os.getenv('PROJECT_URL', '#')
@@ -916,8 +922,8 @@ FAKE_PLAYERS_MAX = int(os.getenv('FAKE_PLAYERS_MAX', 0))
 
 # Configurações de validação de licenças
 LICENSE_CONFIG = {
-    'ENCRYPTION_KEY': os.environ.get('L2JPREMIUM_ENCRYPTION_KEY', ''),  # Chave Fernet usada no script gerador
-    'DNS_TIMEOUT': int(os.environ.get('L2JPREMIUM_DNS_TIMEOUT', '10')),
+    'ENCRYPTION_KEY': os.environ.get('PDL_ENCRYPTION_KEY', ''),  # Chave Fernet usada no script gerador
+    'DNS_TIMEOUT': int(os.environ.get('PDL_DNS_TIMEOUT', '10')),
 }
 
 # Web Push VAPID keys (gere usando pywebpush ou web-push)

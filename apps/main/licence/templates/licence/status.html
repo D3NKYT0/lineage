@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <!-- Header -->
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">{% trans "Status da Licença L2JPremium" %}</h1>
+        <h1 class="h2">{% trans "Status da Licença PDL" %}</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <a href="{% url 'licence:dashboard' %}" class="btn btn-sm btn-outline-secondary">
                 <i class="fas fa-arrow-left"></i> {% trans "Voltar" %}
@@ -120,14 +120,14 @@
         </div>
     </div>
 
-    <!-- Informações específicas do L2JPremium PRO -->
+    <!-- Informações específicas do PDL PRO -->
     {% if current_license.license_type == 'pro' %}
     <div class="row mb-4">
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title mb-0">
-                        <i class="fas fa-star"></i> {% trans "Informações L2JPremium PRO" %}
+                        <i class="fas fa-star"></i> {% trans "Informações PDL PRO" %}
                     </h5>
                 </div>
                 <div class="card-body">

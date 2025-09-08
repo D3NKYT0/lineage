@@ -69,7 +69,7 @@ def index(request):
         translation = config.translations.filter(language=current_lang).first()
 
     # Caso não exista o registro de configuração ou tradução, usa valores padrões
-    nome_servidor = "Lineage 2 L2JPremium"
+    nome_servidor = "Lineage 2 PDL"
     descricao_servidor = "Onde Lendas Nascem, Heróis Lutam e a Glória É Eterna."
     jogadores_online_texto = "Jogadores online Agora"
 

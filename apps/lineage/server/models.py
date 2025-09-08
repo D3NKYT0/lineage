@@ -179,11 +179,11 @@ class ApiEndpointToggle(BaseModel):
 
 
 class IndexConfig(BaseModel):
-    nome_servidor = models.CharField(max_length=100, default="Lineage 2 L2JPremium", verbose_name=_("Server Name"))
+    nome_servidor = models.CharField(max_length=100, default="Lineage 2 PDL", verbose_name=_("Server Name"))
     descricao_servidor = models.CharField(max_length=255, blank=True, default=_("Onde Lendas Nascem, Heróis Lutam e a Glória É Eterna."), verbose_name=_("Server Description"))
-    link_patch = models.URLField(default="https://L2JPremium.com/", verbose_name=_("Patch Link"))
-    link_cliente = models.URLField(default="https://L2JPremium.com/", verbose_name=_("Client Link"))
-    link_discord = models.URLField(default="https://L2JPremium.com/", verbose_name=_("Discord Link"))
+    link_patch = models.URLField(default="https://pdl.denky.dev.br/", verbose_name=_("Patch Link"))
+    link_cliente = models.URLField(default="https://pdl.denky.dev.br/", verbose_name=_("Client Link"))
+    link_discord = models.URLField(default="https://pdl.denky.dev.br/", verbose_name=_("Discord Link"))
     trailer_video_id = models.CharField(max_length=100, blank=True, default="CsNutvmrHIA?si=2lF1z1jPFkf8uGJB", verbose_name=_("Trailer Video ID"))
     jogadores_online_texto = models.CharField(max_length=255, blank=True, default=_("jogadores online Agora"), verbose_name=_("Players Online Text"))
     imagem_banner = models.ImageField(upload_to='banners/', blank=True, null=True, verbose_name=_("Banner Image"))
