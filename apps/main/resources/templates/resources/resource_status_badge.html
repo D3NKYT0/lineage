@@ -1,0 +1,11 @@
+{% load i18n %}
+
+{% if is_active %}
+    <span class="badge badge-sm bg-gradient-success">
+        {% if show_text %}{% trans "Ativo" %}{% endif %}
+    </span>
+{% else %}
+    <span class="badge badge-sm bg-gradient-danger">
+        {% if show_text %}{% trans "Inativo" %}{% endif %}
+    </span>
+{% endif %}

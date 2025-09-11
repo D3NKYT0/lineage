@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from apps.main.home.decorator import conditional_otp_required
+from apps.main.resources.decorators import require_shop_module
 from django.contrib import messages
 from django.db import transaction
 from django.utils.translation import gettext as _
@@ -16,6 +17,7 @@ LineageServices = get_query_class("LineageServices")
 
 
 @conditional_otp_required
+@require_shop_module
 def shop_home(request):
     item_list = ShopItem.objects.filter(ativo=True)
     package_list = ShopPackage.objects.filter(ativo=True)

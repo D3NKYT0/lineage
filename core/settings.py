@@ -20,7 +20,7 @@ load_dotenv()  # take environment variables from .env.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # System Version
-VERSION = '1.14.15'
+VERSION = '1.14.20'
 
 # =========================== THEME CONFIGURATION ===========================
 
@@ -142,6 +142,7 @@ INSTALLED_APPS = [
 
     "apps.main.licence",
     "apps.main.social",
+    "apps.main.resources",
 
     "apps.main.administrator",
     "apps.main.auditor",
@@ -200,6 +201,9 @@ MIDDLEWARE = [
     "django.middleware.locale.LocaleMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
+    # Resource access middleware - deve vir logo após os middlewares básicos do Django
+    "apps.main.resources.middleware.ResourceAccessMiddleware",
 
     'allauth.account.middleware.AccountMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',

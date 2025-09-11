@@ -1,6 +1,7 @@
 {% extends "layouts/base.html" %}
 {% load i18n static l10n %}
 {% load itens_extras %}
+{% load resource_tags %}
 
 {% block extrastyle %}
 <link rel="stylesheet" href="{% static 'css/reports.css' %}?v=1.1">
@@ -30,11 +31,13 @@
     </nav>
 
     <!-- Cart Button -->
+    {% if 'shop_cart'|resource_is_active %}
     <div class="text-end mb-4">
       <a href="{% url 'shop:view_cart' %}" class="reports-button">
         <i class="fas fa-shopping-cart me-2"></i>{% trans "Ver Carrinho" %}
       </a>
     </div>
+    {% endif %}
 
     <!-- Itens Section -->
     <div class="reports-card">

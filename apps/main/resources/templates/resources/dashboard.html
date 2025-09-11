@@ -1,0 +1,543 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Painel de Recursos do Sistema" %}{% endblock %}
+
+{% block extrastyle %}
+<style>
+    .resources-dashboard {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+    
+    .dashboard-header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stats-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .stats-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: white;
+    }
+    
+    .category-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        border: none;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .category-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 1.5rem;
+        border: none;
+    }
+    
+    .resource-item {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .resource-item:hover {
+        background: rgba(102, 126, 234, 0.05);
+    }
+    
+    .resource-item:last-child {
+        border-bottom: none;
+    }
+    
+    .resource-disabled {
+        opacity: 0.6;
+        background-color: #f8f9fa;
+    }
+    
+    .resource-disabled .resource-icon {
+        background: #6c757d !important;
+    }
+    
+    .toggle-switch.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+    
+    .toggle-switch {
+        position: relative;
+        width: 60px;
+        height: 30px;
+        background: #ddd;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .toggle-switch.active {
+        background: #4CAF50;
+    }
+    
+    .toggle-switch::before {
+        content: '';
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: white;
+        top: 2px;
+        left: 2px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .toggle-switch.active::before {
+        transform: translateX(30px);
+    }
+    
+    .resource-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: white;
+        margin-right: 1rem;
+    }
+    
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .status-active {
+        background: linear-gradient(135deg, #4CAF50, #45a049);
+        color: white;
+    }
+    
+    .status-inactive {
+        background: linear-gradient(135deg, #f44336, #d32f2f);
+        color: white;
+    }
+    
+    .main-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+        color: #666;
+        font-size: 1.1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="resources-dashboard">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="dashboard-header text-center">
+            <h1 class="main-title">
+                <i class="fas fa-cogs me-3"></i>
+                {% trans "Painel de Recursos" %}
+            </h1>
+            <p class="subtitle">
+                {% trans "Gerencie e controle todos os recursos do sistema PDL" %}
+            </p>
+            <div class="mt-3">
+                <span class="status-badge status-active">
+                    <i class="fas fa-check-circle me-2"></i>
+                    {{ active_resources }}/{{ total_resources }} {% trans "Recursos Ativos" %}
+                </span>
+            </div>
+        </div>
+        <!-- Estatísticas Gerais -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="mb-0 fw-bold">{{ total_master_resources }}</h3>
+                            <p class="mb-0 text-muted">{% trans "Módulos Master" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon" style="background: linear-gradient(135deg, #4CAF50, #45a049);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="mb-0 fw-bold text-success">{{ active_master_resources }}</h3>
+                            <p class="mb-0 text-muted">{% trans "Módulos Ativos" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon" style="background: linear-gradient(135deg, #f44336, #d32f2f);">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="mb-0 fw-bold text-danger">{{ inactive_master_resources }}</h3>
+                            <p class="mb-0 text-muted">{% trans "Módulos Inativos" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-4">
+                <div class="stats-card">
+                    <div class="d-flex align-items-center">
+                        <div class="stats-icon" style="background: linear-gradient(135deg, #2196F3, #1976D2);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="ms-3">
+                            <h3 class="mb-0 fw-bold text-info">{{ master_percentage }}%</h3>
+                            <p class="mb-0 text-muted">{% trans "Taxa de Ativação" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recursos por Categoria -->
+        {% for category, resources in resources_by_category.items %}
+        <div class="category-card">
+            <div class="category-header">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-{{ category|default:'cog' }} me-3" style="font-size: 1.5rem;"></i>
+                        <div>
+                            <h4 class="mb-0 fw-bold">{% trans category|title %}</h4>
+                            <p class="mb-0 opacity-75">{{ resources|length }} {% trans "recursos disponíveis" %}</p>
+                        </div>
+                    </div>
+                    <span class="badge bg-light text-dark px-3 py-2">
+                        {{ resources|length }} {% trans "itens" %}
+                    </span>
+                </div>
+            </div>
+            <div class="p-0">
+                {% for resource in resources %}
+                <div class="resource-item d-flex align-items-center justify-content-between {% if not resource.is_master and not resource.is_parent_active %}resource-disabled{% endif %}">
+                    <div class="d-flex align-items-center">
+                        <div class="resource-icon {% if resource.is_master %}bg-warning{% else %}bg-primary{% endif %}">
+                            {% if resource.is_master %}
+                                <i class="fas fa-crown text-white"></i>
+                            {% elif resource.icon %}
+                                <i class="{{ resource.icon }}"></i>
+                            {% else %}
+                                <i class="fas fa-cog"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h6 class="mb-1 fw-bold {% if not resource.is_master and not resource.is_parent_active %}text-muted{% endif %}">
+                                {{ resource.display_name }}
+                                {% if resource.is_master %}
+                                    <span class="badge bg-warning text-dark ms-2">{% trans "MASTER" %}</span>
+                                {% endif %}
+                            </h6>
+                            <p class="mb-0 text-muted small">{{ resource.description|truncatechars:60 }}</p>
+                            <small class="text-muted">{{ resource.name }}</small>
+                            {% if not resource.is_master and resource.parent_module %}
+                                <br><small class="text-info">
+                                    <i class="fas fa-link me-1"></i>{% trans "Depende de" %}: {{ resource.parent_module }}
+                                </small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        {% if resource.is_effectively_active %}
+                            <span class="status-badge status-active me-3">
+                                <i class="fas fa-check me-1"></i>{% trans "Ativo" %}
+                            </span>
+                        {% else %}
+                            <span class="status-badge status-inactive me-3">
+                                <i class="fas fa-times me-1"></i>
+                                {% if not resource.is_parent_active %}
+                                    {% trans "Indisponível" %}
+                                {% else %}
+                                    {% trans "Inativo" %}
+                                {% endif %}
+                            </span>
+                        {% endif %}
+                        
+                        {% if resource.is_master or resource.is_parent_active %}
+                            <div class="toggle-switch {% if resource.is_active %}active{% endif %}" 
+                                 data-resource="{{ resource.name }}">
+                            </div>
+                        {% else %}
+                            <div class="toggle-switch disabled" title="{% trans 'Módulo pai inativo' %}">
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Toast para notificações -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="resourceToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <i class="fas fa-cog me-2"></i>
+            <strong class="me-auto">{% trans "Recursos do Sistema" %}</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toastMessage">
+            <!-- Mensagem será inserida aqui via JavaScript -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggles = document.querySelectorAll('.toggle-switch:not(.disabled)');
+    const toast = new bootstrap.Toast(document.getElementById('resourceToast'));
+    const toastMessage = document.getElementById('toastMessage');
+
+    // Define a hierarquia de recursos
+    const hierarchy = {
+        'battle_pass': 'games_module',
+        'box_opening': 'games_module', 
+        'roulette': 'games_module',
+        'shop_dashboard': 'shop_module',
+        'shop_items': 'shop_module',
+        'shop_packages': 'shop_module',
+        'shop_cart': 'shop_module',
+        'shop_checkout': 'shop_module',
+        'shop_purchases': 'shop_module',
+        'wallet_dashboard': 'wallet_module',
+        'wallet_transfer': 'wallet_module',
+        'wallet_history': 'wallet_module',
+        'social_feed': 'social_module',
+        'social_profile': 'social_module',
+        'social_search': 'social_module',
+        'auction_list': 'auction_module',
+        'auction_create': 'auction_module',
+        'inventory_dashboard': 'inventory_module',
+        'payment_process': 'payment_module',
+        'payment_history': 'payment_module',
+    };
+
+    // Módulos master
+    const masterModules = new Set([
+        'shop_module', 'wallet_module', 'social_module', 'games_module',
+        'auction_module', 'inventory_module', 'payment_module', 
+        'notification_module', 'admin_module', 'api_module'
+    ]);
+
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const resourceName = this.dataset.resource;
+            const isActive = this.classList.contains('active');
+            
+            // Desabilita o toggle temporariamente
+            this.style.pointerEvents = 'none';
+            this.style.opacity = '0.6';
+            
+            fetch(`{% url 'resources:toggle' 'PLACEHOLDER' %}`.replace('PLACEHOLDER', resourceName), {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Atualiza o recurso atual
+                    updateResourceStatus(resourceName, data.is_active);
+                    
+                    // Se é um módulo master, atualiza todos os sub-recursos
+                    if (masterModules.has(resourceName)) {
+                        updateChildResources(resourceName, data.is_active);
+                    }
+                    
+                    // Atualiza estatísticas
+                    updateStatistics();
+                    
+                    // Mostra toast de sucesso
+                    toastMessage.textContent = data.message;
+                    toast.show();
+                } else {
+                    // Reverte o toggle em caso de erro
+                    revertToggle(this, isActive);
+                    
+                    // Mostra toast de erro
+                    toastMessage.textContent = data.message;
+                    toast.show();
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                // Reverte o toggle em caso de erro
+                revertToggle(this, isActive);
+                
+                toastMessage.textContent = '{% trans "Erro ao alterar status do recurso" %}';
+                toast.show();
+            })
+            .finally(() => {
+                // Reabilita o toggle
+                this.style.pointerEvents = 'auto';
+                this.style.opacity = '1';
+            });
+        });
+    });
+
+    function updateResourceStatus(resourceName, isActive) {
+        const resourceItem = document.querySelector(`[data-resource="${resourceName}"]`).closest('.resource-item');
+        const toggle = resourceItem.querySelector('.toggle-switch');
+        const statusBadge = resourceItem.querySelector('.status-badge');
+        
+        // Atualiza toggle
+        if (isActive) {
+            toggle.classList.add('active');
+        } else {
+            toggle.classList.remove('active');
+        }
+        
+        // Atualiza badge
+        if (isActive) {
+            statusBadge.className = 'status-badge status-active me-3';
+            statusBadge.innerHTML = '<i class="fas fa-check me-1"></i>{% trans "Ativo" %}';
+        } else {
+            statusBadge.className = 'status-badge status-inactive me-3';
+            statusBadge.innerHTML = '<i class="fas fa-times me-1"></i>{% trans "Inativo" %}';
+        }
+    }
+
+    function updateChildResources(parentResource, parentIsActive) {
+        // Encontra todos os recursos filhos
+        Object.entries(hierarchy).forEach(([childResource, parent]) => {
+            if (parent === parentResource) {
+                const childItem = document.querySelector(`[data-resource="${childResource}"]`);
+                if (childItem) {
+                    const resourceItem = childItem.closest('.resource-item');
+                    const toggle = childItem;
+                    const statusBadge = resourceItem.querySelector('.status-badge');
+                    
+                    if (parentIsActive) {
+                        // Pai ativado - habilita o filho
+                        resourceItem.classList.remove('resource-disabled');
+                        toggle.classList.remove('disabled');
+                        toggle.style.pointerEvents = '';
+                        toggle.title = '';
+                        
+                        // Atualiza status baseado no estado atual do filho
+                        const childIsActive = toggle.classList.contains('active');
+                        if (childIsActive) {
+                            statusBadge.className = 'status-badge status-active me-3';
+                            statusBadge.innerHTML = '<i class="fas fa-check me-1"></i>{% trans "Ativo" %}';
+                        } else {
+                            statusBadge.className = 'status-badge status-inactive me-3';
+                            statusBadge.innerHTML = '<i class="fas fa-times me-1"></i>{% trans "Inativo" %}';
+                        }
+                    } else {
+                        // Pai desativado - desabilita o filho
+                        resourceItem.classList.add('resource-disabled');
+                        toggle.classList.add('disabled');
+                        toggle.style.pointerEvents = 'none';
+                        toggle.title = '{% trans "Módulo pai inativo" %}';
+                        
+                        statusBadge.className = 'status-badge status-inactive me-3';
+                        statusBadge.innerHTML = '<i class="fas fa-times me-1"></i>{% trans "Indisponível" %}';
+                    }
+                }
+            }
+        });
+    }
+
+    function updateStatistics() {
+        // Conta módulos master ativos
+        let activeMasterCount = 0;
+        let totalMasterCount = 0;
+        
+        masterModules.forEach(moduleName => {
+            const toggle = document.querySelector(`[data-resource="${moduleName}"]`);
+            if (toggle) {
+                totalMasterCount++;
+                if (toggle.classList.contains('active')) {
+                    activeMasterCount++;
+                }
+            }
+        });
+        
+        const inactiveMasterCount = totalMasterCount - activeMasterCount;
+        const percentage = totalMasterCount > 0 ? Math.round((activeMasterCount / totalMasterCount) * 100 * 10) / 10 : 0;
+        
+        // Atualiza os números na interface
+        const totalElement = document.querySelector('.stats-card:nth-child(1) h3');
+        const activeElement = document.querySelector('.stats-card:nth-child(2) h3');
+        const inactiveElement = document.querySelector('.stats-card:nth-child(3) h3');
+        const percentageElement = document.querySelector('.stats-card:nth-child(4) h3');
+        
+        if (totalElement) totalElement.textContent = totalMasterCount;
+        if (activeElement) activeElement.textContent = activeMasterCount;
+        if (inactiveElement) inactiveElement.textContent = inactiveMasterCount;
+        if (percentageElement) percentageElement.textContent = percentage + '%';
+    }
+
+    function revertToggle(toggle, wasActive) {
+        if (wasActive) {
+            toggle.classList.add('active');
+        } else {
+            toggle.classList.remove('active');
+        }
+    }
+});
+</script>
+{% endblock %}

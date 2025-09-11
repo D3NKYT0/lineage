@@ -1,0 +1,116 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Recurso Indisponível" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body text-center py-5">
+                    <!-- Ícone de erro -->
+                    <div class="mb-4">
+                        <i class="fas fa-exclamation-triangle text-warning" style="font-size: 4rem;"></i>
+                    </div>
+                    
+                    <!-- Título -->
+                    <h1 class="display-4 text-dark mb-3">
+                        {% trans "Recurso Desativado" %}
+                    </h1>
+                    
+                    <!-- Descrição -->
+                    <p class="lead text-muted mb-4">
+                        {% trans "Este recurso foi desativado no painel de controle. Para reativá-lo, acesse o painel de recursos." %}
+                    </p>
+                    
+                    <!-- Informações técnicas -->
+                    <div class="alert alert-warning border-0 mb-4">
+                        <i class="fas fa-tools me-2"></i>
+                        <strong>{% trans "Ação Necessária:" %}</strong>
+                        <ul class="list-unstyled mt-2 mb-0">
+                            <li><i class="fas fa-cog text-primary me-2"></i>{% trans "Acesse o Painel de Recursos" %}</li>
+                            <li><i class="fas fa-toggle-on text-success me-2"></i>{% trans "Ative o recurso correspondente" %}</li>
+                            <li><i class="fas fa-refresh text-info me-2"></i>{% trans "Recarregue a página" %}</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Botões de ação -->
+                    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                        <a href="{% url 'dashboard' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-home me-2"></i>
+                            {% trans "Voltar ao Dashboard" %}
+                        </a>
+                        
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            {% trans "Voltar" %}
+                        </a>
+                        
+                        <a href="{% url 'resources:dashboard' %}" class="btn btn-outline-info btn-lg">
+                            <i class="fas fa-cog me-2"></i>
+                            {% trans "Painel de Recursos" %}
+                        </a>
+                    </div>
+                    
+                    <!-- Informações técnicas -->
+                    <div class="mt-5 pt-4 border-top">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">{% trans "Detalhes Técnicos:" %}</h6>
+                                <ul class="list-unstyled">
+                                    <li><strong>{% trans "Caminho:" %}</strong> <code>{{ request.path }}</code></li>
+                                    <li><strong>{% trans "Recurso:" %}</strong> <code>shop_module</code></li>
+                                    <li><strong>{% trans "Status:" %}</strong> <span class="badge bg-danger">{% trans "DESATIVADO" %}</span></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">{% trans "Ações Rápidas:" %}</h6>
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'resources:dashboard' %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-cog me-1"></i> {% trans "Painel de Recursos" %}
+                                    </a>
+                                    <a href="/admin/" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-database me-1"></i> {% trans "Admin Django" %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border-radius: 15px;
+}
+
+.btn {
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+.alert {
+    border-radius: 10px;
+}
+
+.display-4 {
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+</style>
+{% endblock %}
