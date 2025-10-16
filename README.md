@@ -1,8 +1,8 @@
-# Painel Definitivo Lineage [1.14](https://pdl.denky.dev.br)
+# Painel Definitivo Lineage [1.14](https://l2jprmeium.com)
 
-<img align="right" height="180" src="https://i.imgur.com/0tL4OQ7.png"/>
+<img align="right" height="180" src="https://i.imgur.com/EzJCcrr.png"/>
 
-O PDL é um painel que nasceu com a missão de oferecer ferramentas poderosas para administradores de servidores privados de Lineage 2. Inicialmente voltado à análise de riscos e estabilidade dos servidores, o projeto evoluiu e se consolidou como uma solução completa para prospecção, gerenciamento e operação de servidores — tudo em código aberto.
+ A Platafrma L2JPremium é um painel que nasceu com a missão de oferecer ferramentas poderosas para administradores de servidores privados de Lineage 2. Inicialmente voltado à análise de riscos e estabilidade dos servidores, o projeto evoluiu e se consolidou como uma solução completa para prospecção, gerenciamento e operação de servidores.
 
 ## Tecnologias Utilizadas
 
@@ -38,7 +38,7 @@ O PDL é um painel que nasceu com a missão de oferecer ferramentas poderosas pa
 #
 
 <p align="center">
-<img height="280" src="https://i.imgur.com/gdB0k6o.jpeg">
+<img height="280" src="https://i.imgur.com/SJV9SQw.png">
 </p>
 
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/Django.svg)](https://www.djangoproject.com/)
@@ -47,14 +47,14 @@ O PDL é um painel que nasceu com a missão de oferecer ferramentas poderosas pa
 ## Como Instalar
 
 ```bash
-Instalar o PDL:
+Instalar a Plataforma L2JPremium:
 
 sudo mkdir -p /var/pdl
 cd /var/pdl
 
 nano setup.sh
 >> copie o conteudo desse arquivo para dentro <<
-https://github.com/D3NKYT0/lineage/blob/main/setup/setup.sh
+https://github.com/jacksonfelipe/lineage/blob/main/setup/setup.sh
 >> e salve o arquivo. <<
 
 chmod +x setup.sh
@@ -93,7 +93,7 @@ $ ./build.sh
 ```bash
 $ >> entre na pasta [ cd /var/pdl/lineage ] e execute o comando abaixo <<
 $ >> copie o conteudo desse arquivo para dentro <<
-$ https://github.com/D3NKYT0/lineage/blob/main/setup/backup.sh
+$ https://github.com/jacksonfelipe/lineage/blob/main/setup/backup.sh
 $ >> e salve o arquivo. <<
 $ chmod +x backup.sh
 $ crontab -e
@@ -104,13 +104,13 @@ $ 0 3 * * * /var/pdl/lineage/backup.sh >> /var/pdl/backup.log 2>&1
 ## Como testar (produção)
 
 ```bash
-https://pdl.denky.dev.br/
+https://l2jprmeium.com/
 ```
 
 ## Sobre Mim
 >Desenvolvedor - Daniel Amaral Recife/PE
-- Emails:  contato@denky.dev.br
-- Discord: denkyto
+- Emails:  contato@l2jpremium.com
+- Discord: jacksonfelipe
 
 
 ## Grupo de Staffs:

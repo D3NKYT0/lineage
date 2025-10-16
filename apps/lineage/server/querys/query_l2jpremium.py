@@ -742,7 +742,7 @@ class LineageAccount:
 
 
 class TransferFromWalletToChar:
-    items_delayed = False
+    items_delayed = True
 
     @staticmethod
     @cache_lineage_result(timeout=300, use_cache=False)
@@ -769,7 +769,7 @@ class TransferFromWalletToChar:
 
     @staticmethod
     @cache_lineage_result(timeout=300, use_cache=False)
-    def insert_coin(char_name: str, coin_id: int, amount: int, enchant: int = 0):
+    def insert_coin(char_name: str, coin_id: int, amount: int, enchant: int = 0, loc: str = 'INVENTORY'):
         db = LineageDB()
 
         # Get character ID
@@ -778,94 +778,24 @@ class TransferFromWalletToChar:
         if not char_result:
             return None
 
-        owner_id = char_result[0]["charId"]
+        char_id = char_result[0]["charId"]
 
-        # Check if item already exists in inventory
-        check_query = """
-            SELECT object_id FROM items 
-            WHERE owner_id = :owner_id 
-            AND item_id = :coin_id 
-            AND loc = 'INVENTORY' 
-            LIMIT 1
-        """
-        existing_item = db.select(check_query, {
-            "owner_id": owner_id,
-            "coin_id": coin_id
-        })
-
-        if existing_item:
-            # Item exists, update count
-            object_id = existing_item[0]["object_id"]
-            update_query = """
-                UPDATE items 
-                SET count = count + :amount 
-                WHERE object_id = :object_id 
-                AND owner_id = :owner_id 
-                LIMIT 1
-            """
-            result = db.update(update_query, {
-                "amount": amount,
-                "object_id": object_id,
-                "owner_id": owner_id
-            })
-            if not result:
-                print(f"Erro ao atualizar item existente: {object_id}")
-            else:
-                print(f"Item existente atualizado com sucesso: {object_id}")
-            return result
-
-        # Item doesn't exist, create new one
-        # Get last object_id
-        last_object_query = "SELECT object_id FROM items ORDER BY object_id DESC LIMIT 1"
-        last_object_result = db.select(last_object_query)
-        if not last_object_result:
-            new_object_id = 700000000
-        else:
-            last_object_id = int(last_object_result[0]["object_id"])
-            new_object_id = last_object_id + 1
-
-        # Get last loc_data for this owner
-        last_loc_query = """
-            SELECT loc_data FROM items 
-            WHERE owner_id = :owner_id 
-            ORDER BY loc_data DESC LIMIT 1
-        """
-        last_loc_result = db.select(last_loc_query, {"owner_id": owner_id})
-        if not last_loc_result:
-            new_loc_data = 0
-        else:
-            last_loc_data = int(last_loc_result[0]["loc_data"])
-            new_loc_data = last_loc_data + 1
-
-        # Get current timestamp
-        creation_time = int(time.time())
-
-        # Insert new item with all required fields
+        # Insere o pedido de entrega na tabela web_item_delivery
         insert_query = """
-            INSERT INTO items (
-                owner_id, object_id, item_id, count,
-                enchant_level, loc, loc_data, process,
-                creator_id, first_owner_id, creation_time
-            ) VALUES (
-                :owner_id, :object_id, :coin_id, :amount,
-                :enchant, 'INVENTORY', :loc_data, 'admin_create',
-                268501254, 268501254, :creation_time
-            )
+            INSERT INTO web_item_delivery (charId, item_id, count, loc)
+            VALUES (:char_id, :coin_id, :amount, :loc)
         """
         result = db.insert(insert_query, {
-            "owner_id": owner_id,
-            "object_id": new_object_id,
+            "char_id": char_id,
             "coin_id": coin_id,
             "amount": amount,
-            "enchant": enchant,
-            "loc_data": new_loc_data,
-            "creation_time": creation_time
+            "loc": loc
         })
 
         if not result:
-            print(f"Erro ao criar novo item: {new_object_id}")
+            print(f"Erro ao criar pedido de entrega para o personagem: {char_name}")
         else:
-            print(f"Novo item criado com sucesso: {new_object_id}")
+            print(f"Pedido de entrega criado com sucesso para o personagem: {char_name}")
 
         return result is not None
 
