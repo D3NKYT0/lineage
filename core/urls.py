@@ -60,7 +60,7 @@ urlpatterns = [
     path('app/server/', include('apps.lineage.server.urls')),
     path('app/accountancy/', include('apps.lineage.accountancy.urls')),
     path('app/inventory/', include('apps.lineage.inventory.urls')),
-    path('app/shop/', include('apps.lineage.shop.urls')),
+    path('loja/', include('apps.lineage.shop.urls')),
     path('app/auction/', include('apps.lineage.auction.urls')),
     path('app/game/', include('apps.lineage.games.urls')),
     path('app/report/', include('apps.lineage.reports.urls')),

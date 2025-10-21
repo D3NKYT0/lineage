@@ -13,6 +13,7 @@ class SystemResource(BaseModel):
     is_active = models.BooleanField(_("Ativo"), default=True)
     category = models.CharField(_("Categoria"), max_length=50, choices=[
         ('shop', _('Loja')),
+        ('marketplace', _('Marketplace')),
         ('wallet', _('Carteira')),
         ('social', _('Rede Social')),
         ('games', _('Jogos')),

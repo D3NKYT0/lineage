@@ -12,7 +12,7 @@
             <p class="hero-subtitle">{% trans "Descubra os melhores jogadores e clãs que dominam nosso mundo" %}</p>
             <div class="hero-stats">
                 <div class="stat-item">
-                    <span class="stat-number">7</span>
+                    <span class="stat-number">9</span>
                     <span class="stat-label">{% trans "Categorias" %}</span>
                 </div>
                 <div class="stat-item">
@@ -179,6 +179,25 @@
                         <p class="category-description">{% trans "Status dos castelos e cerco" %}</p>
                         <div class="category-meta">
                             <span class="category-badge siege-badge">{% trans "War" %}</span>
+                        </div>
+                    </div>
+                    <div class="category-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Agathions -->
+            <div class="category-card" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="900">
+                <a href="{% url 'tops:agathions' %}" class="category-link">
+                    <div class="category-icon agathions-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3 class="category-title">{% trans "Ranking Agathions" %}</h3>
+                        <p class="category-description">{% trans "Os melhores criadores de Agathions" %}</p>
+                        <div class="category-meta">
+                            <span class="category-badge agathions-badge">{% trans "Magic" %}</span>
                         </div>
                     </div>
                     <div class="category-arrow">
@@ -443,6 +462,15 @@
     color: #6f42c1;
 }
 
+.agathions-icon {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(75, 0, 130, 0.2));
+    border-color: rgba(138, 43, 226, 0.3);
+}
+
+.agathions-icon i {
+    color: #8a2be2;
+}
+
 .category-content {
     flex: 1;
 }
@@ -519,6 +547,12 @@
     background: rgba(111, 66, 193, 0.1);
     color: #6f42c1;
     border-color: rgba(111, 66, 193, 0.2);
+}
+
+.agathions-badge {
+    background: rgba(138, 43, 226, 0.1);
+    color: #8a2be2;
+    border-color: rgba(138, 43, 226, 0.2);
 }
 
 .category-arrow {

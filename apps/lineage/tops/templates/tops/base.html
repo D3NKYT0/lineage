@@ -58,6 +58,11 @@
                         <i class="fas fa-chess-rook"></i>{% trans "Castle & Siege" %}
                     </a>
                 </li>
+                <li class="tops-nav-item">
+                    <a href="{% url 'tops:agathions' %}" {% if request.resolver_match.url_name == 'agathions' %}class="tops-nav-link active"{% else %}class="tops-nav-link"{% endif %}>
+                        <i class="fas fa-magic"></i>{% trans "Ranking Agathions" %}
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

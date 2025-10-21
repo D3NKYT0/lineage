@@ -23,7 +23,7 @@
 
     <style>
       body {
-          background: url({% static 'default/images/bg/5.jpg' %}) top fixed no-repeat;
+          background: url("{% static 'default/images/bg/5.jpg' %}") top fixed no-repeat;
           background-position-y: 80px;
           background-color: black;
           min-height: 100vh;
@@ -63,6 +63,7 @@
         <li><a href="{% url 'wiki' %}">{% trans "Informações" %}</a></li>
         <li><a href="{% url 'public_news_list' %}">{% trans "Notícias" %}</a></li>
         <li><a href="{% url 'public_faq_list' %}">{% trans "Perguntas Frequentes" %}</a></li>
+        <li><a href="{% url 'shop:public_loja_list' %}">{% trans "Marketplace" %}</a></li>
       </ul>
 
       <div>

@@ -124,6 +124,7 @@ services:
     ports:
       - "5432:5432"
 
+
 networks:
   lineage_network:
     driver: bridge

@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import TemplateView
 from apps.main.home.decorator import conditional_otp_required
 from apps.main.resources.decorators import require_shop_module
 from django.contrib import messages
@@ -361,3 +362,7 @@ def remove_cart_package(request, package_id):
     except CartPackage.DoesNotExist:
         messages.error(request, "Pacote não encontrado no carrinho.")
     return redirect('shop:view_cart')
+
+
+class MarketplaceView(TemplateView):
+    template_name = "shop/marketplace.html"

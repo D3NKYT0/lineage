@@ -18,4 +18,5 @@ urlpatterns = [
     path('public/tops/online/', views.TopsOnlineView.as_view(), name='online'),
     path('public/tops/olympiad/', views.TopsOlympiadView.as_view(), name='olympiad'),
     path('public/tops/siege/', views.TopsSiegeView.as_view(), name='siege'),
+    path('public/tops/agathions/', views.TopsAgathionsView.as_view(), name='agathions'),
 ]

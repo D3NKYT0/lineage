@@ -292,12 +292,12 @@ if DB_ENGINE and DB_NAME and DB_USERNAME:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'db.sqlite3',
-            'OPTIONS': {
-                'timeout': 20,
-                'check_same_thread': False,
-            }
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'l2jpremium',
+            'USER': 'soft',
+            'PASSWORD': 'senha',
+            'HOST': 'localhost',  # ou 'db' se usar Docker Compose
+            'PORT': '3306',
         }
     }
     

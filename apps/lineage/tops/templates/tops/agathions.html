@@ -1,0 +1,101 @@
+{% extends 'tops/base.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Ranking Agathions" %}{% endblock %}
+
+{% block tops_content %}
+<div class="tops-agathions">
+    <div class="tops-header-section">
+        <h1>{% trans "Ranking Agathions" %}</h1>
+        <p class="lead">{% trans "Os melhores criadores de Agathions do servidor" %}</p>
+    </div>
+
+    <div class="tops-table-container">
+        {% if agathions %}
+        <div class="tops-table-responsive">
+            <table class="tops-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{% trans "Proprietário" %}</th>
+                        <th>{% trans "Clã" %}</th>
+                        <th>{% trans "Agathion" %}</th>
+                        <th>{% trans "Level Agathion" %}</th>
+                        <th>{% trans "Nível Char" %}</th>
+                        <th>{% trans "Classe" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agathion in agathions %}
+                    <tr>
+                        <td>
+                            {% if forloop.counter == 1 %}
+                                <span class="tops-badge gold">🥇</span>
+                            {% elif forloop.counter == 2 %}
+                                <span class="tops-badge silver">🥈</span>
+                            {% elif forloop.counter == 3 %}
+                                <span class="tops-badge bronze">🥉</span>
+                            {% else %}
+                                <span class="tops-text-muted">{{ forloop.counter }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="tops-flex">
+                                {% if agathion.crest %}
+                                    <img src="data:image/png;base64,{{ agathion.crest }}" alt="Crest" class="tops-crest">
+                                {% endif %}
+                                <span class="tops-player-name">{{ agathion.char_name }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            {% if agathion.clan_name %}
+                                <div class="tops-flex">
+                                    {% if agathion.clan_crest %}
+                                        <img src="data:image/png;base64,{{ agathion.clan_crest }}" alt="Clan Crest" class="tops-crest">
+                                    {% endif %}
+                                    <span>{{ agathion.clan_name }}</span>
+                                </div>
+                            {% else %}
+                                <span class="tops-text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="tops-agathion-name">{{ agathion.agathion_name|default:"-" }}</span>
+                        </td>
+                        <td>
+                            <span class="tops-badge magic">Lv. {{ agathion.agathion_level|default:"-" }}</span>
+                        </td>
+                        <td>
+                            <span class="tops-badge info">{{ agathion.level|default:"-" }}</span>
+                        </td>
+                        <td>
+                            <span class="tops-text-muted">{{ agathion.class_name|default:"-" }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="tops-empty-state">
+            <i class="fas fa-magic"></i>
+            <h3>{% trans "Nenhum dado disponível" %}</h3>
+            <p>{% trans "Não foi possível carregar os dados do ranking de Agathions no momento." %}</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.tops-agathion-name {
+    color: #8a2be2;
+    font-weight: 600;
+}
+
+.tops-badge.magic {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(75, 0, 130, 0.2));
+    color: #8a2be2;
+    border: 1px solid rgba(138, 43, 226, 0.3);
+}
+</style>
+{% endblock %}
