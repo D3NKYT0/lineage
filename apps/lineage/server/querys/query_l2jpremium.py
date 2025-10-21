@@ -412,6 +412,37 @@ class LineageStats:
         """
         return LineageStats._run_query(sql, {"boss_jewel_ids": tuple(boss_jewel_ids)})
 
+    @staticmethod
+    @cache_lineage_result(timeout=300)
+    def top_agathions(limit=10):
+        sql = """
+            SELECT 
+                C.char_name, 
+                C.online, 
+                C.onlinetime,
+                CS.level,
+                CS.class_id AS base,
+                D.name AS clan_name,
+                C.clanid AS clan_id,
+                CD.ally_id AS ally_id,
+                A.name AS agathion_name,
+                A.level AS agathion_level,
+                A.exp AS agathion_exp,
+                A.item_id AS agathion_item_id,
+                A.status AS agathion_status
+            FROM characters C
+            LEFT JOIN character_subclasses CS ON CS.char_obj_id = C.obj_Id AND CS.class_index = 0
+            LEFT JOIN clan_subpledges D ON D.clan_id = C.clanid AND D.sub_pledge_id = 0
+            LEFT JOIN clan_data CD ON CD.clan_id = C.clanid
+            INNER JOIN agathion_data A ON A.owner_id = C.obj_Id
+            WHERE C.accesslevel = '0' 
+                AND A.level IS NOT NULL 
+                AND A.status IN ('active', 'stored')
+            ORDER BY A.level DESC, A.exp DESC, CS.level DESC, C.char_name ASC
+            LIMIT :limit
+        """
+        return LineageStats._run_query(sql, {"limit": limit})
+
 
 class LineageServices:
 
@@ -914,34 +945,3 @@ class TransferFromCharToWallet:
         except Exception as e:
             print(f"Erro ao remover coin do inventário/warehouse: {e}")
             return False
-
-    @staticmethod
-    @cache_lineage_result(timeout=300)
-    def top_agathions(limit=10):
-        sql = """
-            SELECT 
-                C.char_name, 
-                C.online, 
-                C.onlinetime,
-                CS.level,
-                CS.class_id AS base,
-                D.name AS clan_name,
-                C.clanid AS clan_id,
-                CD.ally_id AS ally_id,
-                A.name AS agathion_name,
-                A.level AS agathion_level,
-                A.exp AS agathion_exp,
-                A.item_id AS agathion_item_id,
-                A.status AS agathion_status
-            FROM characters C
-            LEFT JOIN character_subclasses CS ON CS.char_obj_id = C.obj_Id AND CS.class_index = 0
-            LEFT JOIN clan_subpledges D ON D.clan_id = C.clanid AND D.sub_pledge_id = 0
-            LEFT JOIN clan_data CD ON CD.clan_id = C.clanid
-            INNER JOIN agathion_data A ON A.owner_id = C.obj_Id
-            WHERE C.accesslevel = '0' 
-                AND A.level IS NOT NULL 
-                AND A.status IN ('active', 'stored')
-            ORDER BY A.level DESC, A.exp DESC, CS.level DESC, C.char_name ASC
-            LIMIT :limit
-        """
-        return LineageStats._run_query(sql, {"limit": limit})

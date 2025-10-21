@@ -1,5 +1,493 @@
 {% extends 'layouts/base-default.html' %}
+{% load static i18n %}
+
+{% block title %}{% trans "Marketplace - Loja de Jogadores" %}{% endblock %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'default/css/tops-tables.css' %}">
+<style>
+/* Marketplace specific styles */
+.marketplace-container {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.05), rgba(75, 0, 130, 0.05));
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+.marketplace-nav-header {
+    background: linear-gradient(135deg, #8a2be2, #4b0082);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+}
+
+.marketplace-nav-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.marketplace-nav-menu {
+    background: white;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.marketplace-nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.marketplace-nav-item {
+    flex: 1;
+    min-width: 150px;
+}
+
+.marketplace-nav-link {
+    display: block;
+    color: #6c757d;
+    padding: 12px 16px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    text-decoration: none;
+    text-align: center;
+}
+
+.marketplace-nav-link:hover {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(75, 0, 130, 0.1));
+    color: #8a2be2;
+    border-color: rgba(138, 43, 226, 0.2);
+    text-decoration: none;
+}
+
+.marketplace-nav-link.active {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(75, 0, 130, 0.2));
+    color: #8a2be2;
+    border-color: rgba(138, 43, 226, 0.3);
+    font-weight: 600;
+}
+
+.marketplace-nav-link i {
+    margin-right: 8px;
+}
+
+.item-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    border: 1px solid rgba(138, 43, 226, 0.1);
+    height: 100%;
+}
+
+.item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(138, 43, 226, 0.15);
+}
+
+.item-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    border: 1px solid rgba(138, 43, 226, 0.3);
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(75, 0, 130, 0.1));
+    padding: 4px;
+}
+
+.price-badge {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+    color: #ff8c00;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.category-badge {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(75, 0, 130, 0.2));
+    color: #8a2be2;
+    border: 1px solid rgba(138, 43, 226, 0.3);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.enchant-badge {
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 191, 255, 0.2));
+    color: #00bfff;
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.marketplace-search-section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid rgba(138, 43, 226, 0.1);
+    margin-bottom: 20px;
+}
+
+.btn-marketplace-primary {
+    background: linear-gradient(135deg, #8a2be2, #4b0082);
+    border-color: #8a2be2;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.btn-marketplace-primary:hover {
+    background: linear-gradient(135deg, #7a1fd2, #3b0072);
+    border-color: #7a1fd2;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-marketplace-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border-color: #28a745;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.stats-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid rgba(138, 43, 226, 0.1);
+    margin-bottom: 20px;
+}
+
+.stats-card h3 {
+    color: #8a2be2;
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.tops-empty-state {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid rgba(138, 43, 226, 0.1);
+}
+
+.tops-empty-state i {
+    font-size: 3rem;
+    color: #8a2be2;
+    margin-bottom: 20px;
+}
+</style>
+{% endblock %}
+
 {% block content %}
-<h1>Marketplace</h1>
-<p>Em breve!</p>
+<div class="marketplace-container">
+    <div class="container">
+        <div class="marketplace-nav-header">
+            <h2><i class="fas fa-store"></i> {% trans "Marketplace" %}</h2>
+            <p style="margin: 8px 0 0 0; opacity: 0.9;">{% trans "Loja de Jogadores - Compre e venda itens com outros players" %}</p>
+        </div>
+        
+        <div class="marketplace-nav-menu">
+            <ul class="marketplace-nav-list">
+                <li class="marketplace-nav-item">
+                    <a href="#" class="marketplace-nav-link active">
+                        <i class="fas fa-home"></i>{% trans "Início" %}
+                    </a>
+                </li>
+                <li class="marketplace-nav-item">
+                    <a href="#" class="marketplace-nav-link">
+                        <i class="fas fa-search"></i>{% trans "Buscar" %}
+                    </a>
+                </li>
+                <li class="marketplace-nav-item">
+                    <a href="#" class="marketplace-nav-link">
+                        <i class="fas fa-sword"></i>{% trans "Weapons" %}
+                    </a>
+                </li>
+                <li class="marketplace-nav-item">
+                    <a href="#" class="marketplace-nav-link">
+                        <i class="fas fa-shield-alt"></i>{% trans "Armor" %}
+                    </a>
+                </li>
+                <li class="marketplace-nav-item">
+                    <a href="#" class="marketplace-nav-link">
+                        <i class="fas fa-ring"></i>{% trans "Accessories" %}
+                    </a>
+                </li>
+                <li class="marketplace-nav-item">
+                    <a href="#" class="marketplace-nav-link">
+                        <i class="fas fa-plus-circle"></i>{% trans "Vender" %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="marketplace-search-section">
+            <form class="row g-3">
+                <div class="col-md-8">
+                    <input type="text" class="form-control" placeholder="{% trans 'Buscar itens...' %}">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select">
+                        <option>{% trans "Todas as categorias" %}</option>
+                        <option>Weapons</option>
+                        <option>Armor</option>
+                        <option>Accessories</option>
+                        <option>Consumables</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-marketplace-primary w-100">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3>247</h3>
+                    <p>{% trans "Itens Disponíveis" %}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3>5</h3>
+                    <p>{% trans "Categorias" %}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3>89</h3>
+                    <p>{% trans "Vendedores Ativos" %}</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <h3>23</h3>
+                    <p>{% trans "Vendas Hoje" %}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Items -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3 class="mb-3"><i class="fas fa-star text-warning"></i> {% trans "Itens em Destaque" %}</h3>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="item-card p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{% static 'assets/img/l2/icons/5-6746.jpg' %}" 
+                             alt="Draconic Bow" 
+                             class="item-icon me-3"
+                             onerror="this.style.display='none'">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">Draconic Bow</h6>
+                            <span class="enchant-badge">+16</span>
+                            <span class="category-badge ms-1">Weapons</span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="price-badge">5.000.000 Adena</span>
+                        <small class="text-muted">por PlayerTop</small>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="#" class="btn-marketplace-primary text-center">
+                            <i class="fas fa-eye"></i> {% trans "Ver Detalhes" %}
+                        </a>
+                        <a href="#" class="btn-marketplace-success text-center">
+                            <i class="fas fa-shopping-cart"></i> {% trans "Comprar" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="item-card p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{% static 'assets/img/l2/icons/5-6373.jpg' %}" 
+                             alt="Majestic Heavy Set" 
+                             class="item-icon me-3"
+                             onerror="this.style.display='none'">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">Majestic Heavy Set</h6>
+                            <span class="category-badge">Armor</span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="price-badge">500 L-Coins</span>
+                        <small class="text-muted">por ElitePlayer</small>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="#" class="btn-marketplace-primary text-center">
+                            <i class="fas fa-eye"></i> {% trans "Ver Detalhes" %}
+                        </a>
+                        <a href="#" class="btn-marketplace-success text-center">
+                            <i class="fas fa-shopping-cart"></i> {% trans "Comprar" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="item-card p-3">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="{% static 'assets/img/l2/icons/5-13881.jpg' %}" 
+                             alt="Infinity Blade" 
+                             class="item-icon me-3"
+                             onerror="this.style.display='none'">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1">Infinity Blade</h6>
+                            <span class="enchant-badge">+20</span>
+                            <span class="category-badge ms-1">Weapons</span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="price-badge">15.000.000 Adena</span>
+                        <small class="text-muted">por MegaPlayer</small>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="#" class="btn-marketplace-primary text-center">
+                            <i class="fas fa-eye"></i> {% trans "Ver Detalhes" %}
+                        </a>
+                        <a href="#" class="btn-marketplace-success text-center">
+                            <i class="fas fa-shopping-cart"></i> {% trans "Comprar" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Items Table -->
+        <div class="row">
+            <div class="col-12">
+                <h3 class="mb-3"><i class="fas fa-clock"></i> {% trans "Itens Recentes" %}</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped" style="background: white; border-radius: 8px; overflow: hidden;">
+                        <thead style="background: linear-gradient(135deg, #8a2be2, #4b0082); color: white;">
+                            <tr>
+                                <th>{% trans "Item" %}</th>
+                                <th>{% trans "Enchant" %}</th>
+                                <th>{% trans "Preço" %}</th>
+                                <th>{% trans "Vendedor" %}</th>
+                                <th>{% trans "Categoria" %}</th>
+                                <th>{% trans "Ações" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{% static 'assets/img/l2/icons/5-6746.jpg' %}" 
+                                             alt="Draconic Bow" 
+                                             class="me-2"
+                                             style="width: 32px; height: 32px; border-radius: 4px;"
+                                             onerror="this.style.display='none'">
+                                        <span class="fw-bold">Draconic Bow</span>
+                                    </div>
+                                </td>
+                                <td><span class="enchant-badge">+16</span></td>
+                                <td><span class="price-badge">5.000.000 Adena</span></td>
+                                <td>PlayerTop</td>
+                                <td><span class="category-badge">Weapons</span></td>
+                                <td>
+                                    <a href="#" class="btn-marketplace-primary me-1" style="padding: 4px 8px; font-size: 0.8rem;">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="btn-marketplace-success" style="padding: 4px 8px; font-size: 0.8rem;">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{% static 'assets/img/l2/icons/5-6373.jpg' %}" 
+                                             alt="Majestic Heavy Set" 
+                                             class="me-2"
+                                             style="width: 32px; height: 32px; border-radius: 4px;"
+                                             onerror="this.style.display='none'">
+                                        <span class="fw-bold">Majestic Heavy Set</span>
+                                    </div>
+                                </td>
+                                <td><span class="text-muted">-</span></td>
+                                <td><span class="price-badge">500 L-Coins</span></td>
+                                <td>ElitePlayer</td>
+                                <td><span class="category-badge">Armor</span></td>
+                                <td>
+                                    <a href="#" class="btn-marketplace-primary me-1" style="padding: 4px 8px; font-size: 0.8rem;">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="btn-marketplace-success" style="padding: 4px 8px; font-size: 0.8rem;">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{% static 'assets/img/l2/icons/5-13881.jpg' %}" 
+                                             alt="Infinity Blade" 
+                                             class="me-2"
+                                             style="width: 32px; height: 32px; border-radius: 4px;"
+                                             onerror="this.style.display='none'">
+                                        <span class="fw-bold">Infinity Blade</span>
+                                    </div>
+                                </td>
+                                <td><span class="enchant-badge">+20</span></td>
+                                <td><span class="price-badge">15.000.000 Adena</span></td>
+                                <td>MegaPlayer</td>
+                                <td><span class="category-badge">Weapons</span></td>
+                                <td>
+                                    <a href="#" class="btn-marketplace-primary me-1" style="padding: 4px 8px; font-size: 0.8rem;">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="#" class="btn-marketplace-success" style="padding: 4px 8px; font-size: 0.8rem;">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="tops-empty-state">
+                    <i class="fas fa-tools"></i>
+                    <h3>{% trans "Sistema em Desenvolvimento" %}</h3>
+                    <p>{% trans "O marketplace está sendo construído com todas as funcionalidades para compra e venda de itens entre jogadores." %}</p>
+                    <p class="text-muted">{% trans "Em breve: Sistema completo de transações, filtros avançados, histórico de vendas e muito mais!" %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
