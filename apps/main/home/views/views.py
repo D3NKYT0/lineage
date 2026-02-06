@@ -317,6 +317,13 @@ def profile(request):
     
     reward_context = build_profile_rewards_context(request.user)
 
+    from utils.push import get_push_choices_for_user
+    perfil = PerfilGamer.objects.filter(user=request.user).first()
+    push_prefs = getattr(perfil, 'push_preferences', None) if perfil else {}
+    push_prefs = push_prefs or {}
+    choices = get_push_choices_for_user(request.user)
+    push_choices_with_pref = [(key, label, staff_only, push_prefs.get(key, True) is not False) for key, label, staff_only in choices]
+
     context = {
         'segment': 'profile',
         'parent': 'home',
@@ -324,9 +331,32 @@ def profile(request):
         'is_email_master_owner': is_email_master_owner,
         'account_is_linked': account_is_linked,
         'original_email_master_owner': original_email_master_owner,  # Para mostrar mensagem de desvinculação
+        'push_choices_with_pref': push_choices_with_pref,
     }
     context.update(reward_context)
     return render(request, 'pages/profile.html', context)
+
+
+@conditional_otp_required
+@require_http_methods(["POST"])
+def save_push_preferences(request):
+    """Salva preferências de notificações push a partir do formulário do perfil."""
+    from apps.main.home.models import PerfilGamer
+    from utils.push import PUSH_EVENT_CHOICES
+
+    perfil, _ = PerfilGamer.objects.get_or_create(user=request.user)
+    is_staff = getattr(request.user, "is_staff", False) or getattr(request.user, "is_superuser", False)
+    prefs = dict(getattr(perfil, "push_preferences", None) or {})
+
+    for key, _label, staff_only in PUSH_EVENT_CHOICES:
+        if staff_only and not is_staff:
+            continue
+        prefs[key] = request.POST.get("push_" + key) == "1"
+
+    perfil.push_preferences = prefs
+    perfil.save()
+    messages.success(request, _("Preferências de notificações push salvas."))
+    return redirect("profile")
 
 
 @conditional_otp_required

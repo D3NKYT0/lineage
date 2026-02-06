@@ -222,7 +222,20 @@ def reconciliar_pendentes_mercadopago(cutoff_minutes: int = 5) -> int:
                                 pedido.total_creditado = valor_total
                                 pedido.status = 'CONCLUÍDO'
                                 pedido.save()
-                                
+
+                                try:
+                                    from django.urls import reverse
+                                    from utils.push import send_push_to_staff_for_event, EVENT_ADMIN_DOACOES_COMPRAS
+                                    send_push_to_staff_for_event(
+                                        EVENT_ADMIN_DOACOES_COMPRAS,
+                                        username=pedido.usuario.username,
+                                        valor=str(pedido.valor_pago),
+                                        url=reverse('dashboard'),
+                                        async_send=True,
+                                    )
+                                except Exception:
+                                    pass
+
                                 reconciliados += 1
                                 logger.info(f"Pagamento {pagamento.id} reconciliado com sucesso")
                             break

@@ -354,6 +354,20 @@ def checkout(request):
             # Limpar o carrinho
             cart.limpar()
 
+            # Notifica staff (push) sobre compra na loja
+            try:
+                from django.urls import reverse
+                from utils.push import send_push_to_staff_for_event, EVENT_ADMIN_USO_LOJAS
+                send_push_to_staff_for_event(
+                    EVENT_ADMIN_USO_LOJAS,
+                    username=request.user.username,
+                    valor=str(total),
+                    url=reverse('shop:shop_home'),
+                    async_send=True,
+                )
+            except Exception:
+                pass
+
             # Mensagem de sucesso
             if cart.usar_bonus and valor_bonus_usado > 0:
                 messages.success(request, f"Compra realizada com sucesso! R$ {valor_bonus_usado:.2f} em bônus e R$ {valor_dinheiro_usado:.2f} em dinheiro.")

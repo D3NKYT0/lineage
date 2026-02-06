@@ -566,6 +566,32 @@
     }
   }
 
+  .push-choices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.75rem 1.5rem;
+  }
+
+  .push-choice-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    font-weight: 500;
+    color: #495057;
+  }
+
+  .push-choice-item input {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: #6f42c1;
+  }
+
+  .push-choice-item small {
+    font-weight: normal;
+  }
+
   @media (max-width: 768px) {
     .profile-body {
       padding: 1.5rem;
@@ -795,6 +821,29 @@
                 </div>
                 <div class="stat-label">{% trans "Bio" %}</div>
               </div>
+            </div>
+
+            <!-- Push notification preferences -->
+            <div class="info-section">
+              <h4><i class="fas fa-bell"></i> {% trans "Notificações push" %}</h4>
+              <p class="text-muted mb-3">{% trans "Escolha quais notificações deseja receber no dispositivo (quando estiver inscrito)." %}</p>
+              <form method="post" action="{% url 'save_push_preferences' %}" class="push-preferences-form">
+                {% csrf_token %}
+                <div class="push-choices-grid">
+                  {% for key, label, staff_only, enabled in push_choices_with_pref %}
+                    <label class="push-choice-item">
+                      <input type="checkbox" name="push_{{ key }}" value="1" {% if enabled %}checked{% endif %}>
+                      <span>{{ label }}</span>
+                      {% if staff_only %}<small class="text-muted">({% trans "admin" %})</small>{% endif %}
+                    </label>
+                  {% empty %}
+                    <p class="text-muted">{% trans "Nenhuma opção disponível." %}</p>
+                  {% endfor %}
+                </div>
+                <button type="submit" class="btn-elegant btn-primary-elegant mt-3">
+                  <i class="fas fa-save"></i> {% trans "Salvar preferências" %}
+                </button>
+              </form>
             </div>
 
             <!-- Personal Information -->

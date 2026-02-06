@@ -212,6 +212,21 @@ def process_transfer_to_server(user, nome_personagem, valor, origem_saldo, activ
 
             logger.info(f"Transferência concluída com sucesso: usuário={user.username}, personagem={nome_personagem}, valor={valor}")
 
+            # Notifica staff (push) sobre envio para o servidor
+            try:
+                from django.urls import reverse
+                from utils.push import send_push_to_staff_for_event, EVENT_ADMIN_ENVIOS_SERVIDOR
+                send_push_to_staff_for_event(
+                    EVENT_ADMIN_ENVIOS_SERVIDOR,
+                    username=user.username,
+                    valor=str(valor),
+                    personagem=nome_personagem,
+                    url=reverse('wallet:transfer_to_server'),
+                    async_send=True,
+                )
+            except Exception:
+                pass
+
             message = f"R${valor:.2f} transferidos com sucesso para o personagem {nome_personagem}." if origem_saldo == 'normal' else f"R${valor:.2f} do bônus transferidos com sucesso para o personagem {nome_personagem}."
             
             return {

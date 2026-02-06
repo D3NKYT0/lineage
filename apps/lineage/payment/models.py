@@ -42,6 +42,20 @@ class PedidoPagamento(BaseModel):
             self.total_creditado = valor_total
             self.save()
 
+            # Notifica staff (push) sobre doação/compra na carteira
+            try:
+                from django.urls import reverse
+                from utils.push import send_push_to_staff_for_event, EVENT_ADMIN_DOACOES_COMPRAS
+                send_push_to_staff_for_event(
+                    EVENT_ADMIN_DOACOES_COMPRAS,
+                    username=self.usuario.username,
+                    valor=str(self.valor_pago),
+                    url=reverse('dashboard'),
+                    async_send=True,
+                )
+            except Exception:
+                pass
+
     def __str__(self):
         bonus_info = f" + R${self.bonus_aplicado} bônus" if self.bonus_aplicado > 0 else ""
         return f"Pedido #{self.id} - {self.usuario.username} - R${self.valor_pago}{bonus_info} - {self.status}"

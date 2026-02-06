@@ -328,7 +328,7 @@ class PerfilGamerAdmin(BaseModelAdmin):
     list_filter = ('level', 'last_login_reward', 'created_at')
     readonly_fields = ('xp', 'level', 'last_login_reward')
     ordering = ('-level', '-xp')
-    
+
     fieldsets = (
         (_('Usuário'), {
             'fields': ('user',)
@@ -336,6 +336,10 @@ class PerfilGamerAdmin(BaseModelAdmin):
         (_('Progresso'), {
             'fields': ('level', 'xp', 'last_login_reward'),
             'description': _('Informações de progresso do jogador')
+        }),
+        (_('Notificações push'), {
+            'fields': ('push_preferences',),
+            'description': _('Preferências de notificações push (chave = tipo de evento, False = desativado). Vazio = todos ativos.')
         }),
     )
 

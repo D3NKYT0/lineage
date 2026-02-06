@@ -245,6 +245,8 @@ class PerfilGamer(BaseModel):
     xp = models.PositiveIntegerField(default=0, verbose_name=_("XP"))
     level = models.PositiveIntegerField(default=1, verbose_name=_("Nível"))
     last_login_reward = models.DateField(null=True, blank=True, verbose_name=_("Último bônus de login"))
+    # Chaves = tipos de evento (ex: convite_amizade, admin_doacoes_compras). Valor False = usuário desativou.
+    push_preferences = models.JSONField(default=dict, blank=True, verbose_name=_("Preferências de push"))
 
     def adicionar_xp(self, quantidade):
         self.xp += quantidade

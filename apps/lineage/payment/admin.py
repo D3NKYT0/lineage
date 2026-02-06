@@ -312,6 +312,18 @@ class PagamentoAdmin(BaseModelAdmin):
                     pedido.total_creditado = valor_total
                     pedido.status = 'CONCLUÍDO'
                     pedido.save()
+                    try:
+                        from django.urls import reverse
+                        from utils.push import send_push_to_staff_for_event, EVENT_ADMIN_DOACOES_COMPRAS
+                        send_push_to_staff_for_event(
+                            EVENT_ADMIN_DOACOES_COMPRAS,
+                            username=pedido.usuario.username,
+                            valor=str(pedido.valor_pago),
+                            url=reverse('dashboard'),
+                            async_send=True,
+                        )
+                    except Exception:
+                        pass
                     processados += 1
                     logger.info(f"Pagamento {pagamento.id} processado com sucesso. Valor: R${pagamento.valor}, Bônus: R${valor_bonus}")
             except Exception as e:
