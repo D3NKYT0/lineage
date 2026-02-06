@@ -167,13 +167,22 @@ def send_push_for_event(
         title = _("Notificação")
     if not body:
         body = _("Você tem uma nova notificação.")
-    if async_send:
+    if async_send and not getattr(settings, "PUSH_ALWAYS_SYNC", False):
         try:
-            from apps.main.notification.tasks import send_push_notification_async
-            send_push_notification_async.delay(user.id, title, body, url)
+            from apps.main.notification.tasks import send_push_notification_async, execute_task_sync_or_async
+            # Em DEBUG executa síncrono; em produção usa .delay() (ou síncrono se PUSH_ALWAYS_SYNC=True)
+            execute_task_sync_or_async(
+                send_push_notification_async,
+                user.id,
+                title=title,
+                body=body,
+                url=url,
+            )
         except Exception as e:
             logger.warning("Falha ao agendar push por evento: %s", e)
             send_webpush_notification(user, title, body, url)
+    elif async_send and getattr(settings, "PUSH_ALWAYS_SYNC", False):
+        send_webpush_notification(user, title, body, url)
     else:
         send_webpush_notification(user, title, body, url)
 

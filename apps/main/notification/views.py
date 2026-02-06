@@ -422,8 +422,10 @@ def send_push_view(request):
         if message:
             # Conta total de inscritos antes do envio
             total_subscribers = PushSubscription.objects.count()
-            
-            for sub in PushSubscription.objects.all():
+            # Lista fixa para poder remover inscrições inválidas durante o loop
+            subscriptions = list(PushSubscription.objects.all())
+
+            for sub in subscriptions:
                 subscription_info = {
                     "endpoint": sub.endpoint,
                     "keys": {
@@ -434,7 +436,7 @@ def send_push_view(request):
                 try:
                     webpush(
                         subscription_info=subscription_info,
-                        data=json.dumps({"body": message}),
+                        data=json.dumps({"title": "PDL", "body": message, "url": "/"}),
                         vapid_private_key=settings.VAPID_PRIVATE_KEY,
                         vapid_claims={"sub": "mailto:seu@email.com"}
                     )
@@ -442,6 +444,10 @@ def send_push_view(request):
                 except WebPushException as ex:
                     logger.error(f"Erro ao enviar push para {sub.user}: {repr(ex)}")
                     errors.append(sub.user)
+                    # 410 Gone / 400 Bad Request = inscrição expirada ou inválida; remove para não tentar de novo
+                    if "410" in str(ex) or "400" in str(ex):
+                        sub.delete()
+                        logger.info(f"Inscrição push inválida removida para {sub.user} (endpoint expirado).")
             
             # Registra o log da notificação push
             PushNotificationLog.objects.create(

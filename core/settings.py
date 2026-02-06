@@ -997,3 +997,7 @@ LICENSE_CONFIG = {
 #   public_key = generate_vapid_public_key(private_key)
 VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE_KEY")
 VAPID_PUBLIC_KEY = os.environ.get("VAPID_PUBLIC_KEY")
+
+# Push sem Celery: se True, envia push na própria request (útil em produção sem worker Celery).
+# Defina PUSH_ALWAYS_SYNC=1 no ambiente ou no .env se não rodar o worker.
+PUSH_ALWAYS_SYNC = str2bool(os.environ.get("PUSH_ALWAYS_SYNC", False))
