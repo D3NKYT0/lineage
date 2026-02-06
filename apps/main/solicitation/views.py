@@ -11,6 +11,7 @@ from .forms import SolicitationForm, SolicitationStatusForm
 from django.contrib import messages
 from django.shortcuts import redirect
 from utils.notifications import send_notification
+from utils.push import send_push_for_event, EVENT_RESPOSTA_SOLICITACAO, EVENT_NOVO_EVENTO_SOLICITACAO
 from django.urls import reverse
 import logging
 import re
@@ -187,13 +188,22 @@ class SolicitationStatusUpdateView(LoginRequiredMixin, View):
             
             # Notifica o usuário sobre a mudança de status
             if solicitation.user and solicitation.user != request.user:
+                link = reverse('solicitation:solicitation_dashboard', kwargs={'protocol': solicitation.protocol})
                 try:
                     send_notification(
                         user=solicitation.user,
                         notification_type='solicitation_update',
                         message=f'Sua solicitação {solicitation.protocol} teve o status alterado para {new_status_display}',
                         created_by=request.user,
-                        link=reverse('solicitation:solicitation_dashboard', kwargs={'protocol': solicitation.protocol})
+                        link=link
+                    )
+                    send_push_for_event(
+                        solicitation.user,
+                        EVENT_RESPOSTA_SOLICITACAO,
+                        body=f'Sua solicitação {solicitation.protocol} teve o status alterado para {new_status_display}.',
+                        url=link,
+                        protocol=solicitation.protocol,
+                        async_send=True,
                     )
                 except Exception as e:
                     logger.error(f"Erro ao enviar notificação: {str(e)}")
@@ -266,6 +276,20 @@ class AddEventToHistoryView(View):
             image=image,
             user=request.user  # Associando o usuário que fez a alteração
         )
+
+        # Push para o dono da solicitação (se não for quem adicionou o evento)
+        if solicitation.user and solicitation.user != request.user:
+            link = reverse('solicitation:solicitation_dashboard', kwargs={'protocol': protocol})
+            try:
+                send_push_for_event(
+                    solicitation.user,
+                    EVENT_NOVO_EVENTO_SOLICITACAO,
+                    url=link,
+                    protocol=protocol,
+                    async_send=True,
+                )
+            except Exception as e:
+                logger.error("Erro ao enviar push de novo evento: %s", e)
 
         messages.success(request, _("Evento registrado com sucesso."))
         return redirect('solicitation:solicitation_dashboard', protocol=protocol)

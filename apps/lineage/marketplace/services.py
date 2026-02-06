@@ -4,10 +4,12 @@ Contém toda a lógica de negócio relacionada à compra/venda de personagens.
 """
 from django.db import transaction
 from django.utils import timezone
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from decimal import Decimal
 from .models import CharacterTransfer, MarketplaceTransaction, ClaimRequest
+from utils.push import send_push_for_event, EVENT_MARKETPLACE_VENDIDO, EVENT_MARKETPLACE_COMPRA
 from .config import MARKETPLACE_MASTER_ACCOUNT, MAX_CHARACTERS_PER_ACCOUNT
 from apps.lineage.wallet.models import Wallet
 from apps.lineage.wallet.signals import aplicar_transacao
@@ -235,7 +237,24 @@ class MarketplaceService:
             raise ValidationError(
                 _("Erro ao transferir personagem: {}. A compra foi revertida e seu saldo foi restaurado.").format(str(e))
             )
-        
+
+        # Push: vendedor (personagem vendido) e comprador (compra realizada)
+        char_name = transfer.char_name or str(transfer.char_id)
+        send_push_for_event(
+            transfer.seller,
+            EVENT_MARKETPLACE_VENDIDO,
+            url=reverse('marketplace:my_sales'),
+            char_name=char_name,
+            async_send=True,
+        )
+        send_push_for_event(
+            buyer,
+            EVENT_MARKETPLACE_COMPRA,
+            url=reverse('marketplace:my_purchases'),
+            char_name=char_name,
+            async_send=True,
+        )
+
         return transfer
     
     @staticmethod

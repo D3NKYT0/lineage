@@ -1,10 +1,12 @@
 from django.db import transaction
 from django.utils.translation import gettext as _
+from django.urls import reverse
 from .models import Bid
 from apps.lineage.wallet.models import Wallet
 from apps.lineage.wallet.signals import aplicar_transacao
 from apps.lineage.inventory.models import InventoryItem, Inventory
 from apps.lineage.auction.models import Auction
+from utils.push import send_push_for_event, EVENT_LEILAO_VENDIDO, EVENT_LEILAO_GANHO
 
 
 @transaction.atomic
@@ -105,6 +107,23 @@ def finish_auction(auction: Auction):
         # Marca o leilão como finalizado e pago
         auction.status = 'finished'
         auction.save()
+
+        # Push: vendedor (item vendido) e comprador (você ganhou)
+        url_leiloes = reverse('auction:listar_leiloes')
+        send_push_for_event(
+            auction.seller,
+            EVENT_LEILAO_VENDIDO,
+            url=url_leiloes,
+            item_name=auction.item_name or str(auction.item_id),
+            async_send=True,
+        )
+        send_push_for_event(
+            auction.highest_bidder,
+            EVENT_LEILAO_GANHO,
+            url=url_leiloes,
+            item_name=auction.item_name or str(auction.item_id),
+            async_send=True,
+        )
 
     else:
         # Se ninguém comprou, devolve o item ao vendedor

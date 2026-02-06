@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 
 from utils.notifications import send_notification
+from utils.push import send_push_for_event, EVENT_CONVITE_AMIZADE
 from django.urls import reverse
 
 from apps.main.home.models import PerfilGamer, ConquistaUsuario
@@ -71,12 +72,20 @@ def send_friend_request(request, user_id):
 
     try:
         message = f"{request.user.username} enviou um pedido de amizade."
+        link = reverse('message:friends_list')
         send_notification(
             user=friend,
             notification_type='user',
             message=message,
             created_by=request.user,
-            link=reverse('message:friends_list')
+            link=link
+        )
+        send_push_for_event(
+            friend,
+            EVENT_CONVITE_AMIZADE,
+            url=link,
+            username=request.user.username,
+            async_send=True,
         )
     except Exception as e:
         logger.error(f"Erro ao criar notificação: {str(e)}")
