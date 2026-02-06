@@ -51,7 +51,8 @@ def send_push_notification_async(self, user_id, title, body, url=None):
     from utils.push import send_webpush_notification
     
     try:
-        user = User.objects.get(id=user_id)
+        # .defer('avatar') evita carregar o arquivo no worker (pode não existir no FS do container)
+        user = User.objects.defer("avatar").get(id=user_id)
         send_webpush_notification(user, title, body, url)
         logger.info(f"Push notification enviada para usuário {user_id}")
         return True
