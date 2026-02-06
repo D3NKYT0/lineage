@@ -9,24 +9,19 @@ export async function getVapidPublicKey() {
 }
 
 export async function subscribeUserToPush(token) {
-  if (!('serviceWorker' in navigator)) {
-    console.log("Service worker não suportado");
-    return false;
-  }
+  if (!("serviceWorker" in navigator)) return { success: false, error: "Navegador não suporta notificações push." };
   const registration = await navigator.serviceWorker.ready;
   let permission = Notification.permission;
   if (permission !== "granted") {
     permission = await Notification.requestPermission();
-    console.log("Permissão de notificação:", permission);
-    if (permission !== "granted") return false;
+    if (permission !== "granted") return { success: false, error: "Permissão de notificação negada." };
   }
   try {
     const vapidKey = await getVapidPublicKey();
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(vapidKey)
+      applicationServerKey: urlBase64ToUint8Array(vapidKey),
     });
-    console.log("Subscription criada:", subscription);
     const res = await fetch("/api/v1/push-subscription/", {
       method: "POST",
       headers: {
@@ -41,8 +36,7 @@ export async function subscribeUserToPush(token) {
     }
     return { success: true };
   } catch (e) {
-    console.error("Erro ao subscrever push:", e);
-    return { success: false, error: e.message || 'Erro desconhecido' };
+    return { success: false, error: e.message || "Erro ao ativar notificações." };
   }
 }
 
@@ -58,8 +52,7 @@ export async function unsubscribeUserFromPush(token, subscription) {
       body: JSON.stringify({ endpoint: subscription.endpoint })
     });
     return true;
-  } catch (e) {
-    console.error("Erro ao remover push subscription:", e);
+  } catch (_) {
     return false;
   }
 }

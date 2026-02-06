@@ -1,20 +1,25 @@
 {
-  "name": "Notificações Push PDL",
-  "short_name": "PushAppPDL",
+  "name": "PDL — Notificações e Painel",
+  "short_name": "PDL Push",
+  "description": "Notificações push, perfil e monitoramento do Perfect Dark Lineage.",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1976d2",
+  "orientation": "portrait-primary",
+  "background_color": "#1a1812",
+  "theme_color": "#1a1812",
+  "categories": ["games", "utilities"],
   "icons": [
     {
       "src": "/static/pwa/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "/static/pwa/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
-} 
+}

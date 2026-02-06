@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { subscribeUserToPush, unsubscribeUserFromPush } from "./push";
 import "./App.css";
 import UserSection from "./UserSection";
@@ -8,9 +8,28 @@ import GameSection from "./GameSection";
 import MetricsSection from "./MetricsSection";
 import AdminSection from "./AdminSection";
 import PushSection from "./PushSection";
-import { FaUser, FaServer, FaSearch, FaGamepad, FaChartBar, FaCogs, FaBell, FaSignOutAlt } from "react-icons/fa";
+import { FaUser, FaServer, FaSearch, FaGamepad, FaChartBar, FaCogs, FaBell, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
 
-// Error Boundary Component
+const SECTIONS = [
+  { key: "user", label: "Usuário", icon: FaUser },
+  { key: "server", label: "Servidor", icon: FaServer },
+  { key: "search", label: "Busca", icon: FaSearch },
+  { key: "game", label: "Jogo", icon: FaGamepad },
+  { key: "metrics", label: "Métricas", icon: FaChartBar },
+  { key: "admin", label: "Administração", icon: FaCogs },
+  { key: "push", label: "Push", icon: FaBell },
+];
+
+const SECTION_COMPONENTS = {
+  user: UserSection,
+  server: ServerSection,
+  search: SearchSection,
+  game: GameSection,
+  metrics: MetricsSection,
+  admin: AdminSection,
+  push: PushSection,
+};
+
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -22,67 +41,58 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error("Erro capturado pelo ErrorBoundary:", error, errorInfo);
+    if (typeof this.props.onError === "function") {
+      this.props.onError(error, errorInfo);
+    }
   }
 
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: "20px", color: "red", textAlign: "center" }}>
-          <h2>Algo deu errado!</h2>
-          <p>Erro: {this.state.error?.message}</p>
-          <button onClick={() => window.location.reload()}>Recarregar</button>
+        <div className="pwa-error-boundary">
+          <div className="pwa-card pwa-card--error">
+            <h2>Algo deu errado</h2>
+            <p>{this.state.error?.message || "Erro inesperado."}</p>
+            <button type="button" className="pwa-btn pwa-btn--primary" onClick={() => window.location.reload()}>
+              Recarregar
+            </button>
+          </div>
         </div>
       );
     }
-
     return this.props.children;
   }
 }
 
-const SECTIONS = [
-  { key: "user", label: "Usuário", icon: <FaUser /> },
-  { key: "server", label: "Servidor", icon: <FaServer /> },
-  { key: "search", label: "Busca", icon: <FaSearch /> },
-  { key: "game", label: "Jogo", icon: <FaGamepad /> },
-  { key: "metrics", label: "Métricas", icon: <FaChartBar /> },
-  { key: "admin", label: "Administração", icon: <FaCogs /> },
-  { key: "push", label: "Push", icon: <FaBell /> },
-];
-
 function SectionPlaceholder({ section }) {
   return (
-    <div className="section-placeholder">
-      <h2>{section.label}</h2>
-      <p>Funcionalidade "{section.label}" em construção.</p>
+    <div className="pwa-section-placeholder">
+      <div className="pwa-card">
+        <h2>{section.label}</h2>
+        <p>Esta seção estará disponível em breve.</p>
+      </div>
     </div>
   );
 }
 
 export default function App() {
-  console.log("App component iniciando...");
-  
-  const [permission, setPermission] = useState(Notification.permission);
+  const [permission, setPermission] = useState(() =>
+    typeof Notification !== "undefined" ? Notification.permission : "default"
+  );
   const [subscribed, setSubscribed] = useState(false);
-  const [token, setToken] = useState(localStorage.getItem("jwt_token") || "");
+  const [token, setToken] = useState(() => localStorage.getItem("jwt_token") || "");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false);
   const [pushError, setPushError] = useState("");
   const [activeSection, setActiveSection] = useState(SECTIONS[0].key);
-  const [sidebarExpanded, setSidebarExpanded] = useState(() => {
-    const saved = localStorage.getItem('sidebar_expanded');
-    return saved !== null ? JSON.parse(saved) : true;
-  });
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  console.log("Estado inicial:", { token: !!token, activeSection });
-
-  const toggleSidebar = () => {
-    const newState = !sidebarExpanded;
-    setSidebarExpanded(newState);
-    localStorage.setItem('sidebar_expanded', JSON.stringify(newState));
-  };
+  useEffect(() => {
+    const title = SECTIONS.find((s) => s.key === activeSection)?.label || "PDL";
+    document.title = activeSection ? `${title} — PDL` : "PDL — Notificações e Painel";
+  }, [activeSection]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -92,44 +102,44 @@ export default function App() {
       const res = await fetch("/api/v1/auth/login/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok && data.access) {
         setToken(data.access);
         localStorage.setItem("jwt_token", data.access);
       } else {
-        setLoginError(data.detail || "Usuário ou senha inválidos");
+        setLoginError(data.detail || "Usuário ou senha inválidos.");
       }
-    } catch (err) {
-      setLoginError("Erro ao conectar ao servidor");
+    } catch (_) {
+      setLoginError("Erro ao conectar ao servidor.");
     }
     setLoading(false);
   };
 
   const handleSubscribe = async () => {
-    console.log("Clicou em Ativar Push");
     setPushError("");
     const result = await subscribeUserToPush(token);
-    console.log("Resultado subscribeUserToPush:", result);
-    if (result && result.success) {
+    if (result?.success) {
       setSubscribed(true);
       setPermission("granted");
-    } else if (result && result.error) {
+    } else if (result?.error) {
       setPushError(result.error);
     }
   };
 
   const handleUnsubscribe = async () => {
-    if (!('serviceWorker' in navigator)) return;
-    const registration = await navigator.serviceWorker.ready;
-    const subscription = await registration.pushManager.getSubscription();
-    if (subscription) {
-      await subscription.unsubscribe();
-      await unsubscribeUserFromPush(token, subscription);
-      setSubscribed(false);
-      setPermission(Notification.permission);
-    }
+    if (!("serviceWorker" in navigator)) return;
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+      if (subscription) {
+        await subscription.unsubscribe();
+        await unsubscribeUserFromPush(token, subscription);
+        setSubscribed(false);
+        setPermission(typeof Notification !== "undefined" ? Notification.permission : "default");
+      }
+    } catch (_) {}
   };
 
   const handleLogout = () => {
@@ -138,47 +148,56 @@ export default function App() {
     setSubscribed(false);
     setUsername("");
     setPassword("");
+    setMenuOpen(false);
   };
 
-  console.log("Renderizando App, token:", !!token);
+  const setSection = (key) => {
+    setActiveSection(key);
+    setMenuOpen(false);
+  };
+
+  const ActiveComponent = SECTION_COMPONENTS[activeSection];
 
   if (!token) {
-    console.log("Renderizando tela de login");
     return (
       <ErrorBoundary>
-        <div className="pwa-container">
-          <div className="login-content">
-            <div className="login-info">
-              <img src="/static/pwa/icons/logo.png" alt="Logo" className="logo" />
-              <h1>Login</h1>
-              <p className="install-tip">
-                Acesse sua conta para gerenciar notificações e configurações do sistema.
-              </p>
-            </div>
-            <div className="login-form">
-              <form onSubmit={handleLogin}>
+        <div className="pwa-app pwa-app--login">
+          <div className="pwa-login">
+            <div className="pwa-card pwa-login__card">
+              <div className="pwa-login__header">
+                <img src="/static/pwa/icons/logo.png" alt="" className="pwa-login__logo" />
+                <h1>Entrar</h1>
+                <p className="pwa-login__tip">
+                  Acesse sua conta para gerenciar notificações e configurações.
+                </p>
+              </div>
+              <form className="pwa-login__form" onSubmit={handleLogin} noValidate>
                 <input
                   type="text"
                   placeholder="Usuário"
                   value={username}
-                  onChange={e => setUsername(e.target.value)}
-                  className="input"
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="pwa-input"
+                  autoComplete="username"
                   autoFocus
                   required
+                  aria-label="Usuário"
                 />
                 <input
                   type="password"
                   placeholder="Senha"
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  className="input"
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="pwa-input"
+                  autoComplete="current-password"
                   required
+                  aria-label="Senha"
                 />
-                <button className="btn-primary" type="submit" disabled={loading}>
-                  {loading ? "Entrando..." : "Entrar"}
+                <button className="pwa-btn pwa-btn--primary pwa-btn--block" type="submit" disabled={loading}>
+                  {loading ? "Entrando…" : "Entrar"}
                 </button>
               </form>
-              {loginError && <p className="error">{loginError}</p>}
+              {loginError && <p className="pwa-login__error" role="alert">{loginError}</p>}
             </div>
           </div>
         </div>
@@ -186,64 +205,65 @@ export default function App() {
     );
   }
 
-  // Menu/dashboard principal
-  console.log("Renderizando dashboard principal");
   return (
     <ErrorBoundary>
-      <div className="pwa-root">
-        <aside className={`sidebar ${sidebarExpanded ? 'expanded' : 'collapsed'}`}>
-          <div className="sidebar-header">
-            <div className="sidebar-logo">
-              <img src="/static/pwa/icons/logo.png" alt="Logo" className="logo" />
-            </div>
-            <button className="sidebar-toggle" onClick={toggleSidebar} title={sidebarExpanded ? "Recolher menu" : "Expandir menu"}>
-              <span className="toggle-icon">{sidebarExpanded ? '◀' : '▶'}</span>
+      <div className="pwa-app">
+        <header className="pwa-nav" role="banner">
+          <div className="pwa-nav__inner">
+            <a href="/" className="pwa-nav__brand" aria-label="Ir para o site">
+              <img src="/static/pwa/icons/logo.png" alt="" className="pwa-nav__logo" />
+              <span className="pwa-nav__title">PDL</span>
+            </a>
+
+            <button
+              type="button"
+              className="pwa-nav__toggle"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-expanded={menuOpen}
+              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+            >
+              {menuOpen ? <FaTimes /> : <FaBars />}
             </button>
-          </div>
-          <nav className="sidebar-menu">
-            {SECTIONS.map(section => (
+
+            <nav className={`pwa-nav__menu ${menuOpen ? "pwa-nav__menu--open" : ""}`} aria-label="Navegação">
+              <ul className="pwa-nav__list">
+                {SECTIONS.map((section) => (
+                  <li key={section.key}>
+                    <button
+                      type="button"
+                      className={`pwa-nav__link ${activeSection === section.key ? "pwa-nav__link--active" : ""}`}
+                      onClick={() => setSection(section.key)}
+                      aria-current={activeSection === section.key ? "page" : undefined}
+                    >
+                      <span className="pwa-nav__icon">{React.createElement(section.icon)}</span>
+                      <span>{section.label}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
               <button
-                key={section.key}
-                className={
-                  "sidebar-btn" + (activeSection === section.key ? " active" : "")
-                }
-                onClick={() => setActiveSection(section.key)}
-                title={section.label}
+                type="button"
+                className="pwa-nav__link pwa-nav__link--logout"
+                onClick={handleLogout}
+                aria-label="Sair"
               >
-                <span className="sidebar-icon">{section.icon}</span>
-                <span className="sidebar-label">{section.label}</span>
+                <span className="pwa-nav__icon"><FaSignOutAlt /></span>
+                <span>Sair</span>
               </button>
-            ))}
-            <button className="sidebar-btn sidebar-logout" onClick={handleLogout} title="Sair">
-              <span className="sidebar-icon"><FaSignOutAlt /></span>
-              <span className="sidebar-label">Sair</span>
-            </button>
-          </nav>
-        </aside>
-        <main className="main-content">
-          <div className="section-content">
-            {SECTIONS.map(section => (
-              activeSection === section.key && (
-                section.key === "user"
-                  ? <UserSection key={section.key} token={token} />
-                : section.key === "server"
-                  ? <ServerSection key={section.key} token={token} />
-                : section.key === "search"
-                  ? <SearchSection key={section.key} token={token} />
-                : section.key === "game"
-                  ? <GameSection key={section.key} token={token} />
-                : section.key === "metrics"
-                  ? <MetricsSection key={section.key} token={token} />
-                : section.key === "admin"
-                  ? <AdminSection key={section.key} token={token} />
-                : section.key === "push"
-                  ? <PushSection key={section.key} token={token} />
-                  : <SectionPlaceholder key={section.key} section={section} />
-              )
-            ))}
+            </nav>
+          </div>
+        </header>
+
+        <main className="pwa-main" role="main">
+          <div className="pwa-main__inner">
+            {ActiveComponent ? (
+              <ActiveComponent key={activeSection} token={token} />
+            ) : (
+              <SectionPlaceholder section={SECTIONS.find((s) => s.key === activeSection) || SECTIONS[0]} />
+            )}
           </div>
         </main>
       </div>
     </ErrorBoundary>
   );
-} 
+}

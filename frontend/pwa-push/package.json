@@ -13,7 +13,9 @@
   },
   "scripts": {
     "start": "webpack serve --mode development --open",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "deploy": "node deploy-pwa.js",
+    "deploy:copy": "node deploy-pwa.js --no-build"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

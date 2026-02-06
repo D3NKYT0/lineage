@@ -186,15 +186,15 @@ export default function UserSection({ token }) {
           <h2>{safeString(userInfo.username || profile?.username || "Usuário")}</h2>
           <div className="user-details">
             <div className="user-detail-item">
-              <FaEnvelope size={16} color="#6c757d" />
+              <FaEnvelope size={16} color="#e6c77d" />
               <span>{safeString(userInfo.email || profile?.email || "email@exemplo.com")}</span>
             </div>
             <div className="user-detail-item">
-              <FaCalendar size={16} color="#6c757d" />
+              <FaCalendar size={16} color="#e6c77d" />
               <span>Membro desde: {formatDate(userInfo.date_joined)}</span>
             </div>
             <div className="user-detail-item">
-              <FaClock size={16} color="#6c757d" />
+              <FaClock size={16} color="#e6c77d" />
               <span>Último login: {formatDate(userInfo.last_login)}</span>
             </div>
           </div>
@@ -213,7 +213,7 @@ export default function UserSection({ token }) {
               {isServerOnline ? "Online" : "Offline"}
             </p>
             <div className="players-info">
-              <FaUsers size={16} color="#6c757d" />
+              <FaUsers size={16} color="#e6c77d" />
               <span>{playersOnline} jogadores online</span>
             </div>
           </div>

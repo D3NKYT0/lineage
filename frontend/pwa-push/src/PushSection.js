@@ -37,10 +37,8 @@ export default function PushSection({ token }) {
   const [pushError, setPushError] = useState("");
 
   const handleSubscribe = async () => {
-    console.log("Clicou em Ativar Push");
     setPushError("");
     const result = await subscribeUserToPush(token);
-    console.log("Resultado subscribeUserToPush:", result);
     if (result && result.success) {
       setSubscribed(true);
       setPermission("granted");
@@ -63,15 +61,15 @@ export default function PushSection({ token }) {
 
   return (
     <div className="push-section">
-      <div className="push-header">
-        <div className="push-icon">
+      <header className="push-header">
+        <div className="push-icon" aria-hidden="true">
           <FaBell size={32} color="#e6c77d" />
         </div>
         <div className="push-title">
-          <h2>Notificações Push</h2>
-          <p>Receba alertas importantes diretamente no seu celular.</p>
+          <h2>Notificações push</h2>
+          <p>Receba alertas do servidor e do jogo neste dispositivo.</p>
         </div>
-      </div>
+      </header>
 
       <div className="push-status-card">
         <PermissionStatus permission={permission} />
@@ -82,8 +80,8 @@ export default function PushSection({ token }) {
               <FaCheck size={24} color="#28a745" />
             </div>
             <div className="subscribed-info">
-              <div className="subscribed-title">Notificações Ativadas!</div>
-              <div className="subscribed-desc">Você receberá alertas importantes deste app.</div>
+              <span className="subscribed-title">Notificações ativadas</span>
+              <span className="subscribed-desc">Você receberá alertas importantes neste dispositivo.</span>
             </div>
           </div>
         )}
@@ -117,15 +115,15 @@ export default function PushSection({ token }) {
         </div>
       )}
 
-      <div className="push-install-tip">
-        <div className="install-icon">
+      <div className="push-install-tip" role="note">
+        <div className="install-icon" aria-hidden="true">
           <FaDownload size={20} color="#e6c77d" />
         </div>
         <div className="install-text">
-          <div className="install-title">Instalar App</div>
-          <div className="install-desc">
-            Use o menu do navegador e escolha <b>"Adicionar à tela inicial"</b>.
-          </div>
+          <span className="install-title">Instalar como app</span>
+          <span className="install-desc">
+            No navegador: menu (⋮) → &quot;Adicionar à tela inicial&quot; ou &quot;Instalar app&quot;.
+          </span>
         </div>
       </div>
     </div>
