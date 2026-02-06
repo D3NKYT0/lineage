@@ -2749,9 +2749,81 @@ hr {
   font-size: 0.98rem;
 }
 
+/* Server: jogadores online detalhe */
+.server-players-detail {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: var(--pdl-text-muted);
+}
 
+/* Server: Boss Jewels */
+.server-boss-jewels .boss-jewel-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.server-boss-jewels .boss-jewel-item {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--pdl-card-border);
+}
+.server-boss-jewels .boss-jewel-item:last-child {
+  border-bottom: none;
+}
+.boss-jewel-name {
+  color: var(--pdl-gold);
+  font-weight: 600;
+}
+.boss-jewel-location {
+  color: var(--pdl-text-muted);
+  font-size: 0.9rem;
+}
 
+/* Server: Siege participantes */
+.siege-participants-btn {
+  margin-top: 0.75rem;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+}
+.siege-participants-list {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(26, 24, 18, 0.6);
+  border-radius: 8px;
+  border: 1px solid var(--pdl-card-border);
+}
+.siege-participants-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.siege-participants-list li {
+  padding: 0.35rem 0;
+  color: var(--pdl-text-muted);
+  font-size: 0.9rem;
+}
+.siege-participants-list p {
+  margin: 0;
+  color: var(--pdl-text-muted);
+  font-size: 0.9rem;
+}
 
+/* Footer com Discord */
+.pwa-footer {
+  margin-top: auto;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  border-top: 1px solid var(--pdl-card-border);
+  color: var(--pdl-text-muted);
+  font-size: 0.9rem;
+}
+.pwa-footer-discord strong {
+  color: var(--pdl-gold);
+}
 
 @media (max-width: 700px) {
   .user-dashboard-stats {

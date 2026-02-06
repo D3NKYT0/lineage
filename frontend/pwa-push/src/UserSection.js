@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaUserCircle, FaEnvelope, FaCalendar, FaClock, FaServer, FaUsers, FaKey } from "react-icons/fa";
+import { FaUserCircle, FaEnvelope, FaCalendar, FaClock, FaServer, FaUsers, FaKey, FaStar, FaTrophy, FaCoins, FaGamepad } from "react-icons/fa";
 
 // Função para converter qualquer valor em string segura
 function safeString(value) {
@@ -43,6 +43,7 @@ export default function UserSection({ token }) {
   const [password2, setPassword2] = useState("");
   const [changeMsg, setChangeMsg] = useState("");
   const [changing, setChanging] = useState(false);
+  const [gameData, setGameData] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -65,10 +66,12 @@ export default function UserSection({ token }) {
           headers: { Authorization: `Bearer ${token}` } 
         });
 
+        let profileData = null;
+        let dashboardData = null;
+
         // Processar cada resposta individualmente
         if (profileRes.ok) {
-          const profileData = await profileRes.json();
-          console.log("Profile data:", profileData);
+          profileData = await profileRes.json();
           setProfile(profileData);
         } else {
           console.warn("Erro ao buscar perfil:", profileRes.status);
@@ -81,8 +84,7 @@ export default function UserSection({ token }) {
         }
 
         if (dashboardRes.ok) {
-          const dashboardData = await dashboardRes.json();
-          console.log("Dashboard data:", dashboardData);
+          dashboardData = await dashboardRes.json();
           setDashboard(dashboardData);
         } else {
           console.warn("Erro ao buscar dashboard:", dashboardRes.status);
@@ -117,11 +119,23 @@ export default function UserSection({ token }) {
         // Buscar status real do servidor
         if (serverStatusRes.ok) {
           const serverStatusData = await serverStatusRes.json();
-          console.log("Server status data:", serverStatusData);
           setServerStatus(serverStatusData);
         } else {
-          console.warn("Erro ao buscar status do servidor:", serverStatusRes.status);
           setServerStatus({ online: false, players: 0 });
+        }
+
+        // Dados do jogo PDL (XP, conquistas, Battle Pass, etc.)
+        const username = profileData?.username || dashboardData?.data?.user_info?.username;
+        if (username) {
+          try {
+            const gameDataRes = await fetch(`/api/v1/user/game-data/?username=${encodeURIComponent(username)}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (gameDataRes.ok) {
+              const gameDataJson = await gameDataRes.json();
+              setGameData(gameDataJson);
+            }
+          } catch (_) {}
         }
 
       } catch (e) {
@@ -219,6 +233,57 @@ export default function UserSection({ token }) {
           </div>
         </div>
       </div>
+
+      {/* Dados do jogo PDL (XP, conquistas, Battle Pass) */}
+      {gameData && (
+        <div className="user-game-stats user-game-data-card">
+          <h3><FaStar color="#e6c77d" /> Dados do jogo PDL</h3>
+          <div className="game-stats-grid">
+            <div className="game-stat-item">
+              <div className="stat-label">Nível</div>
+              <div className="stat-value">{gameData.level ?? "—"}</div>
+            </div>
+            <div className="game-stat-item">
+              <div className="stat-label">XP</div>
+              <div className="stat-value">{gameData.xp ?? "—"}</div>
+            </div>
+            {gameData.xp_for_next_level != null && (
+              <div className="game-stat-item">
+                <div className="stat-label">XP para próximo nível</div>
+                <div className="stat-value">{gameData.xp_for_next_level}</div>
+              </div>
+            )}
+            <div className="game-stat-item">
+              <div className="stat-label"><FaTrophy /> Conquistas</div>
+              <div className="stat-value">{gameData.achievements_count ?? 0} / {gameData.total_achievements ?? 0}</div>
+            </div>
+            {(gameData.battle_pass_level != null || gameData.battle_pass_xp != null) && (
+              <div className="game-stat-item">
+                <div className="stat-label">Battle Pass</div>
+                <div className="stat-value">Nível {gameData.battle_pass_level ?? "—"} {gameData.battle_pass_xp != null ? `(${gameData.battle_pass_xp} XP)` : ""}</div>
+              </div>
+            )}
+            {gameData.fichas != null && (
+              <div className="game-stat-item">
+                <div className="stat-label"><FaCoins /> Fichas</div>
+                <div className="stat-value">{gameData.fichas}</div>
+              </div>
+            )}
+            {gameData.games_played != null && gameData.games_played > 0 && (
+              <div className="game-stat-item">
+                <div className="stat-label"><FaGamepad /> Jogos</div>
+                <div className="stat-value">{gameData.games_played}</div>
+              </div>
+            )}
+            {gameData.xp_ranking_position != null && (
+              <div className="game-stat-item">
+                <div className="stat-label">Posição no ranking XP</div>
+                <div className="stat-value">#{gameData.xp_ranking_position}</div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Estatísticas do Jogo */}
       <div className="user-game-stats">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { FaServer, FaUsers, FaCrown, FaTrophy, FaDragon, FaSkull, FaCoins, FaClock, FaMedal, FaCode } from "react-icons/fa";
+import { FaServer, FaUsers, FaCrown, FaTrophy, FaDragon, FaSkull, FaCoins, FaClock, FaMedal, FaCode, FaGem, FaUserFriends } from "react-icons/fa";
+import { apiFetch } from "./api";
 
 // Função para converter qualquer valor em string segura
 function safeString(value) {
@@ -223,10 +224,15 @@ export default function ServerSection({ token }) {
     rich: [], 
     online: [], 
     olympiad: [], 
-    olympiadHeroes: [] 
+    olympiadHeroes: [],
+    olympiadCurrentHeroes: []
   });
-  const [bosses, setBosses] = useState({ grand: [] });
+  const [bosses, setBosses] = useState({ grand: [], raid: [] });
   const [siege, setSiege] = useState([]);
+  const [playersOnlineDetail, setPlayersOnlineDetail] = useState(null);
+  const [bossJewels, setBossJewels] = useState([]);
+  const [siegeParticipants, setSiegeParticipants] = useState({});
+  const [loadingParticipants, setLoadingParticipants] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -267,9 +273,17 @@ export default function ServerSection({ token }) {
         const grandBossRes = await fetch("/api/v1/server/grandboss-status/", { 
           headers: { Authorization: `Bearer ${token}` } 
         });
+        const raidBossRes = await fetch("/api/v1/server/raidboss-status/", { 
+          headers: { Authorization: `Bearer ${token}` } 
+        });
+        const olympiadCurrentRes = await fetch("/api/v1/server/olympiad-current-heroes/", { 
+          headers: { Authorization: `Bearer ${token}` } 
+        });
         const siegeRes = await fetch("/api/v1/server/siege/", { 
           headers: { Authorization: `Bearer ${token}` } 
         });
+        const playersOnlineRes = await apiFetch("/api/v1/server/players-online/");
+        const bossJewelsRes = await apiFetch("/api/v1/server/boss-jewel-locations/?ids=6656,6657,6658,6659,6660,6661,6662");
 
         // Processar cada resposta
         if (statusRes.ok) {
@@ -364,31 +378,59 @@ export default function ServerSection({ token }) {
         try {
           if (grandBossRes.ok) {
             const grandBossData = await grandBossRes.json();
-            console.log("Grand boss data:", grandBossData);
             setBosses(prev => ({ ...prev, grand: grandBossData.results || grandBossData }));
           } else {
-            console.log("Grand boss API não disponível:", grandBossRes.status);
             setBosses(prev => ({ ...prev, grand: [] }));
           }
-        } catch (error) {
-          console.log("Erro ao processar grand boss:", error.message);
+        } catch (_) {
           setBosses(prev => ({ ...prev, grand: [] }));
         }
 
+        try {
+          if (raidBossRes.ok) {
+            const raidBossData = await raidBossRes.json();
+            setBosses(prev => ({ ...prev, raid: raidBossData.results || raidBossData || [] }));
+          } else {
+            setBosses(prev => ({ ...prev, raid: [] }));
+          }
+        } catch (_) {
+          setBosses(prev => ({ ...prev, raid: [] }));
+        }
 
+        if (olympiadCurrentRes.ok) {
+          try {
+            const currentHeroesData = await olympiadCurrentRes.json();
+            setRankings(prev => ({ ...prev, olympiadCurrentHeroes: currentHeroesData.results || currentHeroesData || [] }));
+          } catch (_) {
+            setRankings(prev => ({ ...prev, olympiadCurrentHeroes: [] }));
+          }
+        } else {
+          setRankings(prev => ({ ...prev, olympiadCurrentHeroes: [] }));
+        }
 
         try {
           if (siegeRes.ok) {
             const siegeData = await siegeRes.json();
-            console.log("Siege data:", siegeData);
             setSiege(siegeData.results || siegeData);
           } else {
-            console.log("Siege API não disponível:", siegeRes.status);
             setSiege([]);
           }
-        } catch (error) {
-          console.log("Erro ao processar siege:", error.message);
+        } catch (_) {
           setSiege([]);
+        }
+
+        if (playersOnlineRes.ok) {
+          try {
+            const po = await playersOnlineRes.json();
+            setPlayersOnlineDetail(po);
+          } catch (_) {}
+        }
+
+        if (bossJewelsRes.ok) {
+          try {
+            const jewels = await bossJewelsRes.json();
+            setBossJewels(Array.isArray(jewels) ? jewels : (jewels.results || []));
+          } catch (_) {}
         }
 
       } catch (e) {
@@ -396,14 +438,28 @@ export default function ServerSection({ token }) {
         setError("Erro ao buscar dados do servidor");
         // Dados padrão
         setStatus({ online: false, players: 0, uptime: 0, version: "1.0.0" });
-        setRankings({ level: [], pvp: [], guild: [], pk: [], rich: [], online: [], olympiad: [], olympiadHeroes: [] });
-        setBosses({ grand: [] });
+        setRankings({ level: [], pvp: [], guild: [], pk: [], rich: [], online: [], olympiad: [], olympiadHeroes: [], olympiadCurrentHeroes: [] });
+        setBosses({ grand: [], raid: [] });
         setSiege([]);
       }
       setLoading(false);
     }
     fetchData();
   }, [token]);
+
+  async function loadSiegeParticipants(castleId) {
+    if (siegeParticipants[castleId] !== undefined) return;
+    setLoadingParticipants(castleId);
+    try {
+      const res = await apiFetch(`/api/v1/server/siege-participants/${castleId}/`);
+      const data = res.ok ? await res.json() : [];
+      const list = Array.isArray(data) ? data : (data.results || []);
+      setSiegeParticipants(prev => ({ ...prev, [castleId]: list }));
+    } catch (_) {
+      setSiegeParticipants(prev => ({ ...prev, [castleId]: [] }));
+    }
+    setLoadingParticipants(null);
+  }
 
   if (loading) return <div className="loading">Carregando dados do servidor...</div>;
 
@@ -442,7 +498,28 @@ export default function ServerSection({ token }) {
             subtitle="versão atual"
           />
         </div>
+        {playersOnlineDetail != null && (playersOnlineDetail.real_players != null || playersOnlineDetail.online_count != null) && (
+          <p className="server-players-detail">
+            Jogadores online: {playersOnlineDetail.real_players ?? playersOnlineDetail.online_count ?? 0} reais
+            {playersOnlineDetail.fake_players != null && playersOnlineDetail.fake_players > 0 && ` (${playersOnlineDetail.fake_players} fake)`}
+          </p>
+        )}
       </div>
+
+      {/* Boss Jewels */}
+      {bossJewels.length > 0 && (
+        <div className="server-bosses server-boss-jewels">
+          <h3><FaGem color="#e6c77d" /> Localizações Boss Jewels</h3>
+          <ul className="boss-jewel-list">
+            {bossJewels.map((j, i) => (
+              <li key={i} className="boss-jewel-item">
+                <span className="boss-jewel-name">{safeString(j.jewel_name)}</span>
+                <span className="boss-jewel-location">{safeString(j.location)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Rankings */}
       <div className="server-rankings">
@@ -494,11 +571,17 @@ export default function ServerSection({ token }) {
           icon={<FaDragon />}
           emptyMessage="Nenhum herói da Olimpíada disponível"
         />
+        <RankingTable
+          title="Heróis atuais da Olimpíada"
+          data={rankings.olympiadCurrentHeroes || []}
+          icon={<FaMedal />}
+          emptyMessage="Nenhum herói atual disponível"
+        />
       </div>
 
-      {/* Bosses */}
+      {/* Grand Bosses */}
       <div className="server-bosses">
-        <h3>Status dos Bosses</h3>
+        <h3>Grand Bosses</h3>
         <div className="boss-grid">
           {(bosses.grand || []).map((boss, index) => (
             <div key={index} className="boss-card">
@@ -523,37 +606,92 @@ export default function ServerSection({ token }) {
               </div>
             </div>
           ))}
-
         </div>
       </div>
+
+      {/* Raid Bosses */}
+      {(bosses.raid || []).length > 0 && (
+        <div className="server-bosses server-bosses--raid">
+          <h3>Raid Bosses</h3>
+          <div className="boss-grid">
+            {(bosses.raid || []).map((boss, index) => (
+              <div key={index} className="boss-card raid-boss">
+                <div className="boss-header">
+                  <FaDragon size={16} color={boss.is_alive ? "#28a745" : "#dc3545"} />
+                  <h4>{safeString(boss.boss_name)}</h4>
+                </div>
+                <div className="boss-status">
+                  <span className={`status ${boss.is_alive ? 'alive' : 'dead'}`}>
+                    {boss.is_alive ? 'Vivo' : 'Morto'}
+                  </span>
+                  {boss.respawn_time && (
+                    <div className="respawn-time">Respawn: {formatDate(boss.respawn_time)}</div>
+                  )}
+                  {boss.location && (
+                    <div className="boss-location">Local: {safeString(boss.location)}</div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Siege */}
       <div className="server-siege">
         <h3>Informações do Siege</h3>
         <div className="siege-info">
-          {(siege || []).map((castle, index) => (
-            <div key={index} className="castle-card">
-              <div className="castle-header">
-                <FaCrown size={16} color="#e6c77d" />
-                <h4>{safeString(castle.castle_name)}</h4>
-              </div>
-              <div className="castle-details">
-                <div className="castle-owner">
-                  <strong>Proprietário:</strong> {safeString(castle.owner_clan) || "Nenhum"}
+          {(siege || []).map((castle, index) => {
+            const cid = castle.castle_id ?? index + 1;
+            const participants = siegeParticipants[cid];
+            const isLoading = loadingParticipants === cid;
+            return (
+              <div key={index} className="castle-card">
+                <div className="castle-header">
+                  <FaCrown size={16} color="#e6c77d" />
+                  <h4>{safeString(castle.castle_name)}</h4>
                 </div>
-                <div className="castle-status">
-                  <span className={`status ${castle.is_under_siege ? 'under-siege' : 'peace'}`}>
-                    {castle.is_under_siege ? 'Sob Cerco' : 'Em Paz'}
-                  </span>
-                </div>
-                {castle.siege_date && (
-                  <div className="siege-date">
-                    Próximo Cerco: {formatDate(castle.siege_date)}
+                <div className="castle-details">
+                  <div className="castle-owner">
+                    <strong>Proprietário:</strong> {safeString(castle.owner_clan) || "Nenhum"}
                   </div>
-                )}
+                  <div className="castle-status">
+                    <span className={`status ${castle.is_under_siege ? 'under-siege' : 'peace'}`}>
+                      {castle.is_under_siege ? 'Sob Cerco' : 'Em Paz'}
+                    </span>
+                  </div>
+                  {castle.siege_date && (
+                    <div className="siege-date">
+                      Próximo Cerco: {formatDate(castle.siege_date)}
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    className="pwa-btn pwa-btn--secondary siege-participants-btn"
+                    onClick={() => loadSiegeParticipants(cid)}
+                    disabled={isLoading}
+                  >
+                    <FaUserFriends /> {participants ? "Participantes" : isLoading ? "Carregando…" : "Ver participantes"}
+                  </button>
+                  {participants && (
+                    <div className="siege-participants-list">
+                      {participants.length === 0 ? (
+                        <p>Nenhum participante inscrito.</p>
+                      ) : (
+                        <ul>
+                          {participants.map((p, i) => (
+                            <li key={i}>
+                              <strong>{safeString(p.clan_name)}</strong> — Líder: {safeString(p.leader_name)} ({p.member_count ?? 0} membros)
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

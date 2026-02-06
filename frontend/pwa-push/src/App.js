@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { subscribeUserToPush, unsubscribeUserFromPush } from "./push";
+import { setTokens, clearTokens, getToken, apiFetch } from "./api";
 import "./App.css";
 import UserSection from "./UserSection";
 import ServerSection from "./ServerSection";
@@ -80,7 +81,7 @@ export default function App() {
     typeof Notification !== "undefined" ? Notification.permission : "default"
   );
   const [subscribed, setSubscribed] = useState(false);
-  const [token, setToken] = useState(() => localStorage.getItem("jwt_token") || "");
+  const [token, setToken] = useState(() => getToken());
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
@@ -88,11 +89,22 @@ export default function App() {
   const [pushError, setPushError] = useState("");
   const [activeSection, setActiveSection] = useState(SECTIONS[0].key);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [discordServer, setDiscordServer] = useState(null);
 
   useEffect(() => {
     const title = SECTIONS.find((s) => s.key === activeSection)?.label || "PDL";
     document.title = activeSection ? `${title} — PDL` : "PDL — Notificações e Painel";
   }, [activeSection]);
+
+  useEffect(() => {
+    if (!token) return;
+    let cancelled = false;
+    apiFetch("/api/v1/discord/server/by-domain/")
+      .then((res) => res.ok ? res.json() : null)
+      .then((data) => { if (!cancelled && data) setDiscordServer(data); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [token]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -106,8 +118,8 @@ export default function App() {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && data.access) {
+        setTokens(data.access, data.refresh);
         setToken(data.access);
-        localStorage.setItem("jwt_token", data.access);
       } else {
         setLoginError(data.detail || "Usuário ou senha inválidos.");
       }
@@ -142,9 +154,15 @@ export default function App() {
     } catch (_) {}
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/v1/auth/logout/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      });
+    } catch (_) {}
+    clearTokens();
     setToken("");
-    localStorage.removeItem("jwt_token");
     setSubscribed(false);
     setUsername("");
     setPassword("");
@@ -262,6 +280,13 @@ export default function App() {
               <SectionPlaceholder section={SECTIONS.find((s) => s.key === activeSection) || SECTIONS[0]} />
             )}
           </div>
+          {discordServer && discordServer.server_name && (
+            <footer className="pwa-footer">
+              <span className="pwa-footer-discord">
+                Comunidade Discord: <strong>{discordServer.server_name}</strong>
+              </span>
+            </footer>
+          )}
         </main>
       </div>
     </ErrorBoundary>
