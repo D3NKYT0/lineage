@@ -76,6 +76,12 @@ class IndexConfigAdmin(BaseModelAdmin):
         }),
     )
 
+    def has_add_permission(self, request):
+        return not IndexConfig.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
     def save_model(self, request, obj, form, change):
         if not change and IndexConfig.objects.exists():
             self.message_user(
@@ -92,6 +98,48 @@ class IndexConfigAdmin(BaseModelAdmin):
             instance.config = form.instance  # Ensure FK is set
             instance.save()
         formset.save_m2m()
+
+
+@admin.register(ComingSoonConfig)
+class ComingSoonConfigAdmin(BaseModelAdmin):
+    list_display = ('title', 'is_active', 'staff_only_login', 'countdown_date', 'overlay_opacity')
+    list_editable = ('is_active', 'staff_only_login')
+    list_filter = ('is_active',)
+    fieldsets = (
+        (_('Ativação'), {
+            'fields': ('is_active', 'staff_only_login'),
+            'description': _('Quando ativo, a página inicial do site exibe a tela Coming Soon. Se "Apenas staff pode fazer login" estiver marcado, somente equipe conseguirá logar durante a contagem.')
+        }),
+        (_('Textos'), {
+            'fields': ('title', 'subtitle')
+        }),
+        (_('Contagem regressiva'), {
+            'fields': ('countdown_date', 'show_seconds')
+        }),
+        (_('Aparência'), {
+            'fields': ('background_image', 'overlay_opacity', 'primary_color', 'secondary_color')
+        }),
+        (_('CSS personalizado'), {
+            'fields': ('custom_css',),
+            'classes': ('collapse',)
+        }),
+    )
+
+    def has_add_permission(self, request):
+        return not ComingSoonConfig.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def save_model(self, request, obj, form, change):
+        if not change and ComingSoonConfig.objects.exists():
+            self.message_user(
+                request,
+                _("Apenas uma configuração de Coming Soon é permitida. Edite a existente."),
+                messages.WARNING
+            )
+            return
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(ServicePrice)

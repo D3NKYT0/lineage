@@ -226,6 +226,80 @@ class IndexConfigTranslation(BaseModel):
         return f"{self.nome_servidor} ({self.language})"
 
 
+class ComingSoonConfig(BaseModel):
+    """Configuração da página Coming Soon (substitui a index quando ativa)."""
+    is_active = models.BooleanField(
+        default=False,
+        verbose_name=_("Ativo"),
+        help_text=_("Quando ativo, a página inicial exibe a tela Coming Soon em vez do conteúdo normal.")
+    )
+    staff_only_login = models.BooleanField(
+        default=False,
+        verbose_name=_("Apenas staff pode fazer login"),
+        help_text=_("Quando ativo junto com a contagem, somente usuários staff (equipe) podem fazer login. Usuários comuns verão mensagem de bloqueio.")
+    )
+    title = models.CharField(
+        max_length=200,
+        default=_("Em Breve"),
+        verbose_name=_("Título principal")
+    )
+    subtitle = models.CharField(
+        max_length=300,
+        blank=True,
+        default=_("Algo incrível está por vir. Fique ligado!"),
+        verbose_name=_("Subtítulo")
+    )
+    countdown_date = models.DateTimeField(
+        verbose_name=_("Data e hora da contagem regressiva"),
+        help_text=_("Data/hora alvo para a contagem regressiva (ex: lançamento do servidor).")
+    )
+    background_image = models.ImageField(
+        upload_to='coming_soon/',
+        blank=True,
+        null=True,
+        verbose_name=_("Imagem de fundo"),
+        help_text=_("Imagem de fundo da página. Deixe em branco para usar gradiente padrão.")
+    )
+    overlay_opacity = models.FloatField(
+        default=0.6,
+        verbose_name=_("Opacidade do overlay"),
+        help_text=_("0 = transparente, 1 = totalmente escuro. Recomendado: 0.4 a 0.7.")
+    )
+    primary_color = models.CharField(
+        max_length=20,
+        default="#00d9ff",
+        verbose_name=_("Cor primária (hex)"),
+        help_text=_("Cor de destaque (título, números, bordas). Ex: #00d9ff")
+    )
+    secondary_color = models.CharField(
+        max_length=20,
+        default="#e83e8c",
+        verbose_name=_("Cor secundária (hex)"),
+        help_text=_("Cor de apoio (brilhos, efeitos). Ex: #e83e8c")
+    )
+    show_seconds = models.BooleanField(
+        default=True,
+        verbose_name=_("Mostrar segundos na contagem")
+    )
+    custom_css = models.TextField(
+        blank=True,
+        verbose_name=_("CSS personalizado"),
+        help_text=_("CSS extra (opcional) para sobrescrever estilos.")
+    )
+
+    class Meta:
+        verbose_name = _("Coming Soon")
+        verbose_name_plural = _("Coming Soon")
+
+    def save(self, *args, **kwargs):
+        if not self.pk and ComingSoonConfig.objects.exists():
+            raise ValidationError(_("Apenas uma configuração de Coming Soon é permitida."))
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return _("Coming Soon") + (" (ativo)" if self.is_active else " (inativo)")
+
+
 class ServicePrice(BaseModel):
     SERVICO_CHOICES = [
         ('CHANGE_NICKNAME', _('Change Nickname')),

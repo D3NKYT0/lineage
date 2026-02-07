@@ -1,0 +1,408 @@
+/* ============================================
+   COMING SOON - Página de contagem regressiva
+   Muitos efeitos: partículas, brilho, grid, ondas
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+.coming-soon-wrap {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #0a0a0f;
+  overflow: hidden;
+}
+
+/* Fallback quando não há imagem: gradiente animado (só sem a classe coming-soon-has-bg) */
+.coming-soon-wrap:not(.coming-soon-has-bg) {
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 25%, #0f0a1a 50%, #0a1528 75%, #0a0a0f 100%);
+  background-size: 400% 400%;
+  animation: cs-gradient-shift 15s ease infinite;
+}
+
+@keyframes cs-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.coming-soon-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.85) 100%);
+  pointer-events: none;
+}
+
+/* Com imagem de fundo: overlay mais suave para a foto aparecer mais */
+.coming-soon-wrap.coming-soon-has-bg .coming-soon-overlay {
+  opacity: 0.35;
+  background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.5) 100%);
+}
+
+/* Grid de fundo animado */
+.cs-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: cs-grid-move 20s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes cs-grid-move {
+  0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+  100% { transform: perspective(500px) rotateX(60deg) translateY(60px); }
+}
+
+/* Orbes de brilho */
+.cs-glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: cs-orb-float 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.cs-glow-1 {
+  width: 400px;
+  height: 400px;
+  background: var(--cs-primary, #00d9ff);
+  top: -100px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.cs-glow-2 {
+  width: 300px;
+  height: 300px;
+  background: var(--cs-secondary, #e83e8c);
+  bottom: -50px;
+  right: -50px;
+  animation-delay: -3s;
+}
+
+.cs-glow-3 {
+  width: 250px;
+  height: 250px;
+  background: var(--cs-primary, #00d9ff);
+  bottom: 20%;
+  left: 10%;
+  animation-delay: -5s;
+}
+
+@keyframes cs-orb-float {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.35; }
+  33% { transform: translate(30px, -30px) scale(1.1); opacity: 0.5; }
+  66% { transform: translate(-20px, 20px) scale(0.95); opacity: 0.4; }
+}
+
+/* Partículas (preenchidas via JS, estilo base) */
+.cs-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cs-particles span {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--cs-primary), 0 0 20px var(--cs-primary);
+  animation: cs-particle-twinkle 3s ease-in-out infinite;
+}
+
+@keyframes cs-particle-twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Conteúdo central */
+.coming-soon-inner {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 2rem;
+  max-width: 900px;
+}
+
+.cs-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 1rem;
+  text-shadow:
+    0 0 20px var(--cs-primary),
+    0 0 40px var(--cs-primary),
+    0 0 60px rgba(0, 217, 255, 0.4);
+  animation: cs-title-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes cs-title-glow {
+  from { text-shadow: 0 0 20px var(--cs-primary), 0 0 40px var(--cs-primary), 0 0 60px rgba(0, 217, 255, 0.3); }
+  to { text-shadow: 0 0 30px var(--cs-primary), 0 0 60px var(--cs-primary), 0 0 90px rgba(0, 217, 255, 0.5); }
+}
+
+.cs-subtitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.05em;
+}
+
+/* Com imagem de fundo: fundo no título e subtítulo para não atrapalhar a leitura */
+.coming-soon-wrap.coming-soon-has-bg .cs-header {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  margin-bottom: 2rem;
+}
+
+.coming-soon-wrap.coming-soon-has-bg .cs-header .cs-subtitle {
+  margin-bottom: 0; /* o espaçamento fica no .cs-header */
+}
+
+/* Contagem regressiva */
+.cs-countdown {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 2vw, 1.5rem);
+  margin-bottom: 2rem;
+}
+
+/* Com imagem de fundo: fundo na área do contador para não atrapalhar a imagem */
+.coming-soon-wrap.coming-soon-has-bg .cs-countdown {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.coming-soon-wrap.coming-soon-has-bg .cs-countdown-block {
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.cs-countdown-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  min-width: 80px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: cs-block-pulse 2s ease-in-out infinite;
+}
+
+.cs-countdown-block:hover {
+  transform: scale(1.05);
+  border-color: var(--cs-primary);
+  box-shadow: 0 0 30px var(--cs-primary), inset 0 0 30px rgba(0, 217, 255, 0.1);
+}
+
+@keyframes cs-block-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(0,0,0,0.3), inset 0 0 20px rgba(255,255,255,0.02); }
+  50% { box-shadow: 0 0 25px rgba(0,217,255,0.2), inset 0 0 25px rgba(255,255,255,0.03); }
+}
+
+.cs-countdown-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 700;
+  color: var(--cs-primary);
+  text-shadow: 0 0 15px var(--cs-primary);
+  line-height: 1.2;
+  display: block;
+}
+
+.cs-countdown-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.25rem;
+}
+
+.cs-countdown-sep {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--cs-secondary);
+  text-shadow: 0 0 10px var(--cs-secondary);
+  animation: cs-sep-blink 1s step-end infinite;
+}
+
+@keyframes cs-sep-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+.cs-finished {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--cs-primary);
+  margin-top: 1rem;
+}
+
+.cs-finished i {
+  margin-right: 0.5rem;
+}
+
+/* Barra de progresso do tempo */
+.cs-progress-wrap {
+  width: 100%;
+  max-width: 500px;
+  height: 6px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.coming-soon-wrap.coming-soon-has-bg .cs-progress-wrap {
+  background: rgba(0, 0, 0, 0.35);
+  padding: 4px;
+  border-radius: 8px;
+  backdrop-filter: blur(8px);
+}
+
+.cs-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--cs-primary), var(--cs-secondary));
+  border-radius: 3px;
+  transition: width 0.5s ease-out;
+  box-shadow: 0 0 15px var(--cs-primary);
+}
+
+/* Ícones flutuantes */
+.cs-float-icons {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cs-float-icon {
+  position: absolute;
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.15);
+  animation: cs-icon-float 15s ease-in-out infinite;
+}
+
+.cs-float-icon:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+.cs-float-icon:nth-child(2) { right: 15%; top: 30%; animation-delay: -2s; }
+.cs-float-icon:nth-child(3) { left: 20%; bottom: 25%; animation-delay: -4s; }
+.cs-float-icon:nth-child(4) { right: 10%; bottom: 20%; animation-delay: -6s; }
+.cs-float-icon:nth-child(5) { left: 50%; top: 15%; animation-delay: -8s; }
+
+@keyframes cs-icon-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.15; }
+  25% { transform: translateY(-20px) translateX(10px) rotate(5deg); opacity: 0.25; }
+  50% { transform: translateY(-10px) translateX(-10px) rotate(-5deg); opacity: 0.2; }
+  75% { transform: translateY(-25px) translateX(5px) rotate(3deg); opacity: 0.22; }
+}
+
+/* Onda decorativa inferior */
+.cs-wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' fill='none'%3E%3Cpath d='M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z' fill='rgba(0,0,0,0.3)'/%3E%3C/svg%3E") no-repeat bottom center;
+  background-size: cover;
+  opacity: 0.8;
+}
+
+/* Scan line sutil */
+.coming-soon-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Shine passando no título a cada 3s */
+.cs-title {
+  position: relative;
+  overflow: hidden;
+}
+
+.cs-title::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  animation: cs-title-shine 4s ease-in-out infinite;
+}
+
+@keyframes cs-title-shine {
+  0% { left: -100%; }
+  50%, 100% { left: 150%; }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .cs-countdown-sep { display: none; }
+  .cs-countdown-block { min-width: 70px; padding: 0.75rem 1rem; }
+}

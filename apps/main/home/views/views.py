@@ -31,7 +31,7 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 
 from apps.lineage.server.utils.crest import attach_crests_to_clans
 from apps.main.home.decorator import conditional_otp_required
-from apps.lineage.server.models import IndexConfig, Apoiador
+from apps.lineage.server.models import IndexConfig, Apoiador, ComingSoonConfig
 from apps.lineage.wallet.models import Wallet
 from apps.lineage.inventory.models import Inventory
 from apps.lineage.auction.models import Auction
@@ -55,6 +55,17 @@ with open('utils/data/index.json', 'r', encoding='utf-8') as file:
 def index(request):
     from django.core.cache import cache
     import time
+
+    # Coming Soon: quando ativo, exibe a tela de contagem regressiva no lugar da index
+    coming_soon = ComingSoonConfig.objects.first()
+    if coming_soon and coming_soon.is_active:
+        context = {
+            'config': coming_soon,
+            'countdown_iso': coming_soon.countdown_date.isoformat() if coming_soon.countdown_date else '',
+        }
+        if coming_soon.background_image:
+            context['background_image_url'] = request.build_absolute_uri(coming_soon.background_image.url)
+        return render(request, 'public/coming_soon.html', context)
     
     # Cache keys para evitar queries repetidas
     cache_timeout = 60  # 1 minuto de cache

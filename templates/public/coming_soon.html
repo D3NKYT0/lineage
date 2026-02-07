@@ -1,0 +1,111 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'pt-br' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>{% trans "Em Breve" %} — {{ config.title }}</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'public/css/coming_soon.css' %}?v=1">
+  <style>
+    :root {
+      --cs-primary: {{ config.primary_color|default:"#00d9ff" }};
+      --cs-secondary: {{ config.secondary_color|default:"#e83e8c" }};
+      --cs-overlay: {{ config.overlay_opacity|default:0.6 }};
+    }
+    {% if config.background_image %}
+    .coming-soon-wrap.coming-soon-has-bg {
+      background-image: url('{{ background_image_url|default:config.background_image.url }}');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    {% endif %}
+    .coming-soon-overlay { opacity: {{ config.overlay_opacity|default:0.6 }}; }
+    {% if config.custom_css %}{{ config.custom_css|safe }}{% endif %}
+  </style>
+</head>
+<body>
+  <div class="coming-soon-wrap {% if config.background_image %}coming-soon-has-bg{% endif %}" id="coming-soon-wrap">
+    <div class="coming-soon-overlay"></div>
+
+    <!-- Partículas / estrelas -->
+    <div class="cs-particles" id="cs-particles" aria-hidden="true"></div>
+
+    <!-- Grid animado de fundo -->
+    <div class="cs-grid-bg" aria-hidden="true"></div>
+
+    <!-- Brilho pulsante -->
+    <div class="cs-glow-orb cs-glow-1"></div>
+    <div class="cs-glow-orb cs-glow-2"></div>
+    <div class="cs-glow-orb cs-glow-3"></div>
+
+    <div class="coming-soon-inner">
+      <!-- Título e subtítulo (com fundo quando há imagem) -->
+      <div class="cs-header">
+        <h1 class="cs-title" id="cs-title">{{ config.title }}</h1>
+        <p class="cs-subtitle">{{ config.subtitle }}</p>
+      </div>
+
+      <!-- Contagem regressiva -->
+      <div class="cs-countdown" id="cs-countdown">
+        <div class="cs-countdown-block">
+          <span class="cs-countdown-num" id="cs-days">00</span>
+          <span class="cs-countdown-label">{% trans "Dias" %}</span>
+        </div>
+        <div class="cs-countdown-sep">:</div>
+        <div class="cs-countdown-block">
+          <span class="cs-countdown-num" id="cs-hours">00</span>
+          <span class="cs-countdown-label">{% trans "Horas" %}</span>
+        </div>
+        <div class="cs-countdown-sep">:</div>
+        <div class="cs-countdown-block">
+          <span class="cs-countdown-num" id="cs-mins">00</span>
+          <span class="cs-countdown-label">{% trans "Min" %}</span>
+        </div>
+        {% if config.show_seconds %}
+        <div class="cs-countdown-sep">:</div>
+        <div class="cs-countdown-block">
+          <span class="cs-countdown-num" id="cs-secs">00</span>
+          <span class="cs-countdown-label">{% trans "Seg" %}</span>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Mensagem quando acabou o tempo -->
+      <p class="cs-finished" id="cs-finished" style="display: none;">
+        <i class="fas fa-check-circle"></i> {% trans "O momento chegou!" %}
+      </p>
+
+      <!-- Barra de progresso visual do tempo -->
+      <div class="cs-progress-wrap" id="cs-progress-wrap">
+        <div class="cs-progress-bar" id="cs-progress-bar"></div>
+      </div>
+
+      <!-- Ícones flutuantes decorativos -->
+      <div class="cs-float-icons">
+        <i class="fas fa-star cs-float-icon"></i>
+        <i class="fas fa-gem cs-float-icon"></i>
+        <i class="fas fa-dragon cs-float-icon"></i>
+        <i class="fas fa-crown cs-float-icon"></i>
+        <i class="fas fa-shield-alt cs-float-icon"></i>
+      </div>
+    </div>
+
+    <!-- Canto: onda decorativa -->
+    <div class="cs-wave-bottom" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    window.COMING_SOON_CONFIG = {
+      countdownEnd: "{{ countdown_iso|escapejs }}",
+      showSeconds: {{ config.show_seconds|yesno:"true,false" }},
+      primaryColor: "{{ config.primary_color|default:'#00d9ff' }}",
+      secondaryColor: "{{ config.secondary_color|default:'#e83e8c' }}"
+    };
+  </script>
+  <script src="{% static 'public/js/coming_soon.js' %}?v=1"></script>
+</body>
+</html>

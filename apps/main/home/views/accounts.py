@@ -262,6 +262,18 @@ class UserLoginView(LoginView):
                 # Fallback para usuários inativos sem registro de suspensão
                 form.add_error(None, _("Sua conta foi desativada. Entre em contato com o suporte para mais informações."))
                 return self.form_invalid(form)
+
+        # Coming Soon: quando ativo com "apenas staff pode fazer login", bloqueia não-staff
+        from apps.lineage.server.models import ComingSoonConfig
+        coming_soon = ComingSoonConfig.objects.first()
+        if coming_soon and coming_soon.is_active and getattr(coming_soon, 'staff_only_login', False):
+            if not (user.is_staff or user.is_superuser):
+                logger.warning(f"[UserLoginView] Login bloqueado: Coming Soon ativo com staff_only para usuário não-staff: {user.username}")
+                form.add_error(
+                    None,
+                    _("O servidor está em período de contagem regressiva. O login está restrito à equipe no momento. Tente novamente após o lançamento.")
+                )
+                return self.form_invalid(form)
         
         # Verifica se o usuário tem 2FA configurado
         totp_device = TOTPDevice.objects.filter(user=user, confirmed=True).first()
