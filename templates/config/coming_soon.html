@@ -1,0 +1,200 @@
+{% extends "layouts/base.html" %}
+{% load static i18n %}
+
+{% block extrastyle %}
+<style>
+.config-bg {
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+  min-height: 100vh;
+  padding: 40px 0;
+}
+.card-glow {
+  background: linear-gradient(180deg, #1a1a2e, #121220);
+  border: 2px solid #6f42c1;
+  border-radius: 16px;
+  box-shadow: 0 0 18px rgba(111,66,193,.5), 0 0 28px rgba(13,202,240,.3);
+}
+.form-label { color: #e2e8f0; }
+.form-control, .form-select { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.15); color: #fff; }
+.form-control:focus, .form-select:focus { background: rgba(255,255,255,.08); border-color: #6f42c1; color: #fff; box-shadow: 0 0 0 0.2rem rgba(111,66,193,.35); }
+.form-check-input { background-color: rgba(255,255,255,.2); border-color: rgba(255,255,255,.4); }
+.form-check-input:checked { background-color: #6f42c1; border-color: #6f42c1; }
+.form-text { color: rgba(255,255,255,.6); }
+.btn-save { background: linear-gradient(90deg, #0dcaf0, #6f42c1); border: 0; color: #fff; }
+.btn-save:hover { color: #fff; opacity: .95; }
+.btn-back-hub {
+  background: rgba(111, 66, 193, 0.25);
+  border: 1px solid #6f42c1;
+  color: #b794f6;
+}
+.btn-back-hub:hover {
+  background: rgba(111, 66, 193, 0.4);
+  border-color: #8b5cf6;
+  color: #e2e8f0;
+}
+.datetime-input-wrap {
+  display: flex;
+  align-items: stretch;
+  max-width: 320px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06);
+}
+.datetime-input-wrap .form-control {
+  border: 0;
+  border-radius: 0;
+  border-right: 1px solid rgba(255,255,255,.15);
+  flex: 1;
+  min-width: 0;
+}
+/* Esconde o ícone nativo do datetime-local para ficar só o nosso botão */
+.datetime-input-wrap input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  width: 48px;
+  height: 100%;
+  cursor: pointer;
+}
+.btn-datetime-picker {
+  background: rgba(111, 66, 193, 0.4);
+  border: 0;
+  color: #e2e8f0;
+  padding: 0 16px;
+  cursor: pointer;
+}
+.btn-datetime-picker:hover {
+  background: rgba(111, 66, 193, 0.6);
+  color: #fff;
+}
+.current-image { max-height: 120px; border-radius: 8px; border: 1px solid rgba(255,255,255,.2); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="config-bg">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="text-white m-0">
+        <i class="bi bi-hourglass-split me-2"></i>{% trans "Coming Soon" %}
+      </h2>
+      <div class="d-flex gap-2">
+        <a href="{% url 'config_hub' %}" class="btn btn-back-hub rounded-pill">
+          <i class="bi bi-arrow-left me-2"></i>{% trans "Voltar ao Hub" %}
+        </a>
+        <a href="{% url 'index' %}" class="btn btn-outline-info rounded-pill" target="_blank">
+          <i class="bi bi-eye me-2"></i>{% trans "Ver página inicial" %}
+        </a>
+      </div>
+    </div>
+
+    <div class="card card-glow text-white">
+      <div class="card-body p-4">
+        <p class="text-white-50 mb-4">
+          {% trans "Quando ativo, a página inicial exibe a tela de contagem regressiva. A contagem desativa automaticamente ao zerar (task Celery Beat)." %}
+        </p>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="form-check form-switch">
+                {{ form.is_active }}
+                <label class="form-check-label" for="id_is_active">{{ form.is_active.label }}</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-check form-switch">
+                {{ form.staff_only_login }}
+                <label class="form-check-label" for="id_staff_only_login">{{ form.staff_only_login.label }}</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="id_title" class="form-label">{{ form.title.label }}</label>
+              {{ form.title }}
+              {% if form.title.errors %}<div class="form-text text-danger">{{ form.title.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label for="id_subtitle" class="form-label">{{ form.subtitle.label }}</label>
+              {{ form.subtitle }}
+              {% if form.subtitle.errors %}<div class="form-text text-danger">{{ form.subtitle.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="col-12">
+              <label for="id_countdown_date" class="form-label">{{ form.countdown_date.label }}</label>
+              <div class="datetime-input-wrap">
+                {{ form.countdown_date }}
+                <button type="button" class="btn-datetime-picker" id="btn-open-datetime" title="{% trans 'Abrir calendário e hora' %}" aria-label="{% trans 'Abrir calendário e hora' %}">
+                  <i class="bi bi-calendar-event"></i>
+                </button>
+              </div>
+              {% if form.countdown_date.help_text %}<div class="form-text">{{ form.countdown_date.help_text }}</div>{% endif %}
+              {% if form.countdown_date.errors %}<div class="form-text text-danger">{{ form.countdown_date.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">{{ form.background_image.label }}</label>
+              {% if config.background_image %}
+                <div class="mb-2">
+                  <img src="{{ config.background_image.url }}" alt="" class="current-image">
+                </div>
+              {% endif %}
+              {{ form.background_image }}
+              {% if form.background_image.help_text %}<div class="form-text">{{ form.background_image.help_text }}</div>{% endif %}
+              {% if form.background_image.errors %}<div class="form-text text-danger">{{ form.background_image.errors.0 }}</div>{% endif %}
+            </div>
+
+            <div class="col-md-4">
+              <label for="id_overlay_opacity" class="form-label">{{ form.overlay_opacity.label }}</label>
+              {{ form.overlay_opacity }}
+              {% if form.overlay_opacity.errors %}<div class="form-text text-danger">{{ form.overlay_opacity.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-4">
+              <label for="id_primary_color" class="form-label">{{ form.primary_color.label }}</label>
+              {{ form.primary_color }}
+            </div>
+            <div class="col-md-4">
+              <label for="id_secondary_color" class="form-label">{{ form.secondary_color.label }}</label>
+              {{ form.secondary_color }}
+            </div>
+
+            <div class="col-12">
+              <div class="form-check form-switch">
+                {{ form.show_seconds }}
+                <label class="form-check-label" for="id_show_seconds">{{ form.show_seconds.label }}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-top border-secondary">
+            <button type="submit" class="btn btn-save btn-lg rounded-pill px-4">
+              <i class="bi bi-check-lg me-2"></i>{% trans "Salvar" %}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+  var btn = document.getElementById('btn-open-datetime');
+  var input = document.getElementById('id_countdown_date');
+  if (btn && input) {
+    btn.addEventListener('click', function() {
+      input.focus();
+      try { if (input.showPicker) input.showPicker(); } catch (e) {}
+    });
+  }
+})();
+</script>
+{% endblock extra_js %}

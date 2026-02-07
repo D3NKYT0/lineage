@@ -36,6 +36,7 @@ urlpatterns = [
     path("public/privacy-policy/", privacy_policy_view, name="privacy_policy"),
     # Config Hub
     path('config/hub/', config_hub_view, name='config_hub'),
+    path('config/coming-soon/', coming_soon_config_view, name='config_coming_soon'),
     path("public/maintenance/", maintenance_view, name="maintenance"),
     path("public/license-expired/", license_expired_view, name="license_expired"),
 

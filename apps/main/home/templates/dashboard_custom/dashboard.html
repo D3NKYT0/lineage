@@ -1068,11 +1068,13 @@
       </div>
     {% endif %}
 
-    <!-- Lembrete do PWA Push Notification -->
+    <!-- Lembrete do PWA Push Notification (só exibe se VAPID estiver configurado) -->
+    {% if vapid_configured %}
     <div class="alert alert-info-custom d-flex align-items-center justify-content-center mb-4 shadow-sm" style="font-size: 1.05rem;">
       <i class="fas fa-bell me-2 text-warning"></i>
       <span><b>Receba alertas instantâneos!</b> Instale nosso <a href="/pwa/" class="fw-bold text-decoration-underline text-info" target="_blank">App de Notificações Push</a> e nunca perca avisos importantes do servidor.</span>
     </div>
+    {% endif %}
 
     <!-- Lembrete de Perfil Incompleto -->
     {% if not request.user.first_name or not request.user.last_name or not request.user.bio %}

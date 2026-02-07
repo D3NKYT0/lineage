@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 
 from ..models import *
 from ..forms import *
+from django.utils import timezone
+from django.views.decorators.http import require_http_methods
+from django.contrib.admin.views.decorators import staff_member_required
 
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
@@ -184,6 +187,38 @@ def verify_2fa_view(request):
     return render_theme_page(request, 'accounts_custom', 'verify-2fa.html', context)
 
 
+@staff_member_required
+@require_http_methods(["GET", "POST"])
+def coming_soon_config_view(request):
+    """Página para editar Coming Soon a partir da Central de Configurações."""
+    from apps.lineage.server.models import ComingSoonConfig
+    from ..forms import ComingSoonConfigForm
+
+    config = ComingSoonConfig.objects.first()
+    if config is None:
+        config = ComingSoonConfig(
+            title=_('Em Breve'),
+            subtitle=_('Algo incrível está por vir. Fique ligado!'),
+            countdown_date=timezone.now() + timedelta(days=7),
+        )
+        config.save()
+
+    if request.method == 'POST':
+        form = ComingSoonConfigForm(request.POST, request.FILES, instance=config)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _('Coming Soon atualizado com sucesso.'))
+            return redirect('config_hub')
+        messages.error(request, _('Corrija os erros abaixo.'))
+    else:
+        form = ComingSoonConfigForm(instance=config)
+
+    return render(request, 'config/coming_soon.html', {
+        'form': form,
+        'config': config,
+    })
+
+
 def config_hub_view(request):
     # Centralizar links de configuração em uma única tela, organizados por categorias
     categories = [
@@ -227,6 +262,7 @@ def config_hub_view(request):
             'icon': 'bi-file-text',
             'color': 'info',
             'entries': [
+                { 'title': _('Coming Soon'), 'url_name': 'config_coming_soon', 'icon': 'bi-hourglass-split', 'description': _('Contagem regressiva na página inicial') },
                 { 'title': _('Calendar Manager'), 'url_name': 'calendary:manager_dashboard', 'icon': 'bi-calendar-event', 'is_new': True, 'description': _('Gerenciar eventos do calendário') },
                 { 'title': _('Roadmap Manager'), 'url_name': 'roadmap:manager_dashboard', 'icon': 'bi-diagram-3', 'is_new': True, 'description': _('Planejamento e atualizações') },
             ]

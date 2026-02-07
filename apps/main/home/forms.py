@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django_ckeditor_5.widgets import CKEditor5Widget
 from django import forms
 from .models import *
+from apps.lineage.server.models import ComingSoonConfig
 from apps.main.home.tasks import send_email_task
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -321,3 +322,45 @@ class CustomUserCreationForm(UserCreationForm):
             'is_2fa_enabled': _('2FA Enabled'),
             'fichas': _('Credits'),
         }
+
+
+class ComingSoonConfigForm(forms.ModelForm):
+    """Formulário para editar Coming Soon na Central de Configurações."""
+    class Meta:
+        model = ComingSoonConfig
+        fields = (
+            'is_active', 'staff_only_login',
+            'title', 'subtitle', 'countdown_date',
+            'background_image', 'overlay_opacity',
+            'primary_color', 'secondary_color',
+            'show_seconds',
+        )
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Em Breve')}),
+            'subtitle': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Algo incrível está por vir. Fique ligado!')}),
+            'countdown_date': forms.DateTimeInput(
+                attrs={'class': 'form-control', 'type': 'datetime-local'},
+                format='%Y-%m-%dT%H:%M',
+            ),
+            'overlay_opacity': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'max': 1, 'step': 0.1}),
+            'primary_color': forms.TextInput(attrs={'class': 'form-control', 'type': 'color', 'style': 'height: 42px; cursor: pointer;'}),
+            'secondary_color': forms.TextInput(attrs={'class': 'form-control', 'type': 'color', 'style': 'height: 42px; cursor: pointer;'}),
+        }
+        labels = {
+            'is_active': _('Ativar Coming Soon na página inicial'),
+            'staff_only_login': _('Apenas staff pode fazer login (quando ativo)'),
+            'title': _('Título principal'),
+            'subtitle': _('Subtítulo'),
+            'countdown_date': _('Data e hora da contagem regressiva'),
+            'background_image': _('Imagem de fundo'),
+            'overlay_opacity': _('Opacidade do overlay (0–1)'),
+            'primary_color': _('Cor primária'),
+            'secondary_color': _('Cor secundária'),
+            'show_seconds': _('Mostrar segundos na contagem'),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['countdown_date'].input_formats = [
+            '%Y-%m-%dT%H:%M', '%Y-%m-%d %H:%M', '%Y-%m-%d %H:%M:%S', '%d/%m/%Y %H:%M'
+        ]

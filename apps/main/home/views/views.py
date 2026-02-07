@@ -879,6 +879,7 @@ def dashboard(request):
             'show_last': show_last,
             'show_first_ellipsis': show_first_ellipsis,
             'show_last_ellipsis': show_last_ellipsis,
+            'vapid_configured': bool(getattr(settings, 'VAPID_PUBLIC_KEY', None) and getattr(settings, 'VAPID_PRIVATE_KEY', None)),
         }
         return render(request, 'dashboard_custom/dashboard.html', context)
     else:
