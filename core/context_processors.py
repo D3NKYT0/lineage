@@ -93,3 +93,20 @@ def social_login_config(request):
         'SOCIAL_LOGIN_DISCORD_ENABLED': getattr(settings, 'SOCIAL_LOGIN_DISCORD_ENABLED', True),
         'SOCIAL_LOGIN_SHOW_SECTION': getattr(settings, 'SOCIAL_LOGIN_SHOW_SECTION', True),
     }
+
+
+def sidebar_segment(request):
+    """
+    Fornece segment e parent para o sidebar quando não definidos pela view.
+    Views podem sobrescrever passando no context.
+    """
+    path = getattr(request, 'path', '') or ''
+    segment = path.strip('/')
+    parent = ''
+    if 'top-' in segment or 'top-level' in segment or 'top-custom' in segment:
+        parent = 'tops'
+    elif 'olympiad' in segment or 'heroes' in segment:
+        parent = 'heroes'
+    elif 'game' in segment or 'roleta' in segment or 'box' in segment:
+        parent = 'games'
+    return {'segment': segment, 'parent': parent}

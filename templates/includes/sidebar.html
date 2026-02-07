@@ -1,4 +1,4 @@
-{% load i18n static admin_volt check_include resource_tags %}
+{% load i18n static admin_volt check_include resource_tags lineage_extras %}
 
 <nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
   <div class="sidebar-inner px-2 pt-2 pb-4">
@@ -466,6 +466,15 @@
                 <span class="sidebar-text">{% trans "Top Online" %}</span>
               </a>
             </li>
+
+            {% get_custom_tops as custom_tops %}
+            {% for ct in custom_tops %}
+            <li class="nav-item {% if request.resolver_match and request.resolver_match.url_name == 'custom_top' and request.resolver_match.kwargs.slug == ct.slug %}active{% endif %}">
+              <a class="nav-link" href="{% url 'server:custom_top' ct.slug %}">
+                <span class="sidebar-text">{{ ct.title }}<span class="custom-top-tag ms-1" title="{% trans 'Ranking exclusivo' %}">Exclusivo</span></span>
+              </a>
+            </li>
+            {% endfor %}
 
           </ul>
         </div>
@@ -948,5 +957,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   #version-check-badge .badge.bg-success {
     animation: none;
+  }
+
+  .custom-top-tag {
+    font-size: 0.6rem;
+    padding: 0.15em 0.4em;
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.3), rgba(139, 92, 246, 0.25));
+    color: rgba(196, 181, 253, 0.95);
+    border-radius: 4px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
   }
 </style>

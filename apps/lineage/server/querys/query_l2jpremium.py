@@ -143,6 +143,29 @@ class LineageStats:
 
     @staticmethod
     @cache_lineage_result(timeout=300)
+    def top_level_with_extra_column(extra_select_sql, limit=20):
+        sql = f"""
+            SELECT 
+                C.char_name, 
+                C.pvpkills, 
+                C.pkkills, 
+                C.online, 
+                C.onlinetime, 
+                C.level,
+                D.clan_name,
+                C.clanid AS clan_id,
+                D.ally_id,
+                {extra_select_sql}
+            FROM characters C
+            LEFT JOIN clan_data D ON D.clan_id = C.clanid
+            WHERE C.accessLevel = '0'
+            ORDER BY level DESC, exp DESC, onlinetime DESC, char_name ASC
+            LIMIT :limit
+        """
+        return LineageStats._run_query(sql, {"limit": limit})
+
+    @staticmethod
+    @cache_lineage_result(timeout=300)
     def top_adena(limit=10, adn_billion_item=0, value_item=1000000):
         # Otimização: usar LEFT JOIN ao invés de subqueries correlacionadas
         # Isso é muito mais rápido pois permite uso de índices

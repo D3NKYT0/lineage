@@ -254,6 +254,7 @@ TEMPLATES = [
                 "core.context_processors.theme_variables",
                 "core.context_processors.slogan_flag",
                 "core.context_processors.social_login_config",
+                "core.context_processors.sidebar_segment",
                 "apps.main.home.context_processors.site_logo",
                 "apps.main.home.context_processors.timestamp_processor",
             ],

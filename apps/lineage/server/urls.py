@@ -1,7 +1,10 @@
 from django.urls import path, include
 from .views.server_views import painel_apoiador, formulario_apoiador, painel_staff, solicitar_comissao, editar_imagem_apoiador, aprovar_apoiador, rejeitar_apoiador, detalhes_apoiador
 from .views.accounts_views import *
-from .views.tops_views import *
+from .views.tops_views import (
+    top_pvp_view, top_pk_view, top_adena_view, top_clans_view,
+    top_level_view, top_online_view, top_raidboss_view, custom_top_view,
+)
 from .views.status_views import *
 from .views.services_views import *
 from .views.inflation_views import (
@@ -26,6 +29,7 @@ urlpatterns = [
     path('status/top-level/', top_level_view, name='top_level'),
     path("status/top-online/", top_online_view, name="top_online"),
     path("status/top-raidboss/", top_raidboss_view, name="top_raidboss"),
+    path("status/top-custom/<slug:slug>/", custom_top_view, name="custom_top"),
     path("status/siege-ranking/", siege_ranking_view, name="siege_ranking"),
     path('status/olympiad-ranking/', olympiad_ranking_view, name='olympiad_ranking'),
     path('status/olympiad-all-heroes/', olympiad_all_heroes_view, name='olympiad_all_heroes'),

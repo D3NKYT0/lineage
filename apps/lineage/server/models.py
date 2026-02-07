@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.text import slugify
+from apps.lineage.server.utils.custom_top_sql import validate_custom_top_column_sql
 from django.utils.translation import gettext_lazy as _
 from core.models import BaseModel
 from apps.main.home.models import User
@@ -659,3 +660,46 @@ class ItemInflationFavorite(BaseModel):
 
     def __str__(self):
         return f"{self.user.username} - {self.item_name or f'Item {self.item_id}'}"
+
+
+class CustomTop(BaseModel):
+    """
+    Top customizado baseado no Top Level, com coluna extra definida via SQL.
+    Permite ao admin criar rankings personalizados adicionando uma nova coluna.
+    """
+    title = models.CharField(max_length=100, verbose_name=_("Título"))
+    slug = models.SlugField(max_length=100, unique=True, verbose_name=_("Slug"))
+    column_sql = models.TextField(
+        verbose_name=_("SQL da coluna extra"),
+        validators=[validate_custom_top_column_sql],
+        help_text=_(
+            "Expressão SQL para a coluna extra. Ex: (SELECT COUNT(*) FROM items WHERE owner_id = C.obj_Id) AS total_items. "
+            "Use C para characters, CS para character_subclasses. Apenas SELECT, sem ; ou DDL/DML."
+        )
+    )
+    column_label = models.CharField(
+        max_length=80,
+        verbose_name=_("Rótulo da coluna"),
+        help_text=_("Nome exibido no cabeçalho da tabela")
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name=_("Ordem"))
+    active = models.BooleanField(default=True, verbose_name=_("Ativo"))
+
+    class Meta:
+        verbose_name = _("Top Customizado")
+        verbose_name_plural = _("Tops Customizados")
+        ordering = ['order', 'title']
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def get_column_key(self):
+        """Extrai o alias da coluna do SQL (após AS)."""
+        import re
+        m = re.search(r'\s+AS\s+(\w+)\s*$', self.column_sql, re.IGNORECASE)
+        return m.group(1) if m else 'custom_col'

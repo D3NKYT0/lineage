@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from apps.main.home.decorator import conditional_otp_required
 from apps.lineage.server.utils.crest import attach_crests_to_clans
 from apps.lineage.server.utils.bosses import enrich_raidboss_status
 from apps.lineage.server.database import LineageDB
-from ..models import ActiveAdenaExchangeItem
+from ..models import ActiveAdenaExchangeItem, CustomTop
+from apps.lineage.server.utils.custom_top_sql import validate_custom_top_column_sql
 
 from utils.dynamic_import import get_query_class  # importa o helper
 LineageStats = get_query_class("LineageStats")  # carrega a classe certa com base no .env
@@ -101,3 +102,42 @@ def top_raidboss_view(request):
     }
 
     return render(request, 'tops/top_grandboss.html', context)
+
+
+def _get_lineage_stats_for_custom_top():
+    """Retorna LineageStats com top_level_with_extra_column (usa query_default como fallback)."""
+    stats = get_query_class("LineageStats")
+    if hasattr(stats, 'top_level_with_extra_column'):
+        return stats
+    from apps.lineage.server.querys.query_default import LineageStats as DefaultStats
+    return DefaultStats
+
+
+@conditional_otp_required
+def custom_top_view(request, slug):
+    custom_top = get_object_or_404(CustomTop, slug=slug, active=True)
+    db = LineageDB()
+
+    if not db.is_connected():
+        result = []
+    else:
+        try:
+            validate_custom_top_column_sql(custom_top.column_sql)
+            stats = _get_lineage_stats_for_custom_top()
+            result = stats.top_level_with_extra_column(
+                extra_select_sql=custom_top.column_sql,
+                limit=20
+            )
+            result = attach_crests_to_clans(result)
+        except Exception:
+            result = []
+
+    context = {
+        'players': result,
+        'custom_top': custom_top,
+        'column_label': custom_top.column_label,
+        'column_key': custom_top.get_column_key(),
+        'segment': 'top-custom',
+        'parent': 'tops',
+    }
+    return render(request, 'tops/top_custom.html', context)

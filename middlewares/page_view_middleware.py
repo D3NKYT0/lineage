@@ -28,6 +28,7 @@ class PageViewMiddleware:
             '/status/top-level/',
             '/status/top-online/',
             '/status/top-raidboss/',
+            '/status/top-custom/',
             '/public/tops/',
             '/public/tops/pvp/',
             '/public/tops/pk/',

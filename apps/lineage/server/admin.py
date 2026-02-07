@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import *
+from .models import (
+    ApiEndpointToggle, IndexConfig, IndexConfigTranslation, ComingSoonConfig,
+    ServicePrice, ActiveAdenaExchangeItem, Apoiador, Comissao, ApoiadorDefault,
+    ManagedLineageAccount, AccountLinkSlot, CustomTop,
+    ItemInflationCategory, ItemInflationSnapshot, ItemInflationSnapshotDetail,
+    ItemInflationStats, ItemInflationFavorite,
+)
 from core.admin import BaseModelAdmin
 from django.contrib import messages
 from django.utils import timezone
@@ -309,6 +315,29 @@ class ItemInflationStatsAdmin(BaseModelAdmin):
     list_filter = ('location', 'category', 'calculated_at')
     search_fields = ('item_name', 'item_id')
     readonly_fields = ('item_id', 'item_name', 'location', 'current_quantity', 'previous_quantity', 'quantity_change', 'change_percentage', 'calculated_at', 'created_at', 'updated_at')
+
+
+@admin.register(CustomTop)
+class CustomTopAdmin(BaseModelAdmin):
+    list_display = ('title', 'slug', 'column_label', 'order', 'active')
+    list_filter = ('active',)
+    search_fields = ('title', 'slug', 'column_label')
+    list_editable = ('order', 'active')
+    prepopulated_fields = {'slug': ('title',)}
+
+    fieldsets = (
+        (_('Informações'), {
+            'fields': ('title', 'slug', 'order', 'active')
+        }),
+        (_('Coluna extra'), {
+            'fields': ('column_sql', 'column_label'),
+            'description': _(
+                'O SQL deve ser uma expressão SELECT válida (subquery, coluna ou função). '
+                'Use C para characters, CS para character_subclasses, D para clan_subpledges. '
+                'Ex: (SELECT COUNT(*) FROM items WHERE owner_id = C.obj_Id) AS total_items'
+            )
+        }),
+    )
 
 
 @admin.register(ItemInflationFavorite)
