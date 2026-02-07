@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from .models import CharacterTransfer
 from .services import MarketplaceService
+from .character_profile import get_character_profile
 from apps.lineage.server.database import LineageDB
 from utils.dynamic_import import get_query_class
 from utils.resources import get_class_name
@@ -35,17 +36,21 @@ def marketplace_list(request):
 
 def character_detail(request, transfer_id):
     """
-    Mostra detalhes de um personagem à venda.
+    Mostra detalhes de um personagem à venda: status completo do L2,
+    inventário, equipamento e linha do tempo (biografia do personagem).
     """
     transfer = get_object_or_404(CharacterTransfer, id=transfer_id)
-    
-    # Adicionar nome da classe
-    if transfer.char_class is not None:
-        transfer.class_name = get_class_name(transfer.char_class)
-    else:
-        transfer.class_name = '-'
-    
-    return render(request, 'marketplace/character_detail.html', {'transfer': transfer})
+    profile = get_character_profile(transfer)
+
+    context = {
+        'transfer': transfer,
+        'char_details': profile['char_details'],
+        'equipment': profile['equipment'],
+        'inventory': profile['inventory'],
+        'timeline_events': profile['timeline_events'],
+        'has_l2_data': profile['has_l2_data'],
+    }
+    return render(request, 'marketplace/character_detail.html', context)
 
 
 @login_required

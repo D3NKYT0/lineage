@@ -1,0 +1,188 @@
+/* ============================================
+   CHARACTER PROFILE - Marketplace
+   Detalhes do personagem: status, equipamento,
+   inventário e linha do tempo (biografia)
+   ============================================ */
+
+.character-profile-page .character-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.character-profile-page .detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.character-profile-page .detail-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.character-profile-page .detail-value {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Equipamento - grid de itens equipados */
+.character-equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 1rem;
+}
+
+.equipment-item,
+.inventory-item {
+  text-align: center;
+}
+
+.equipment-item-icon,
+.inventory-item-icon {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 0.35rem;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.equipment-item-icon img,
+.inventory-item-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.enchant-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #00d9ff;
+  text-shadow: 0 0 4px #000;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+.equipment-item-name,
+.inventory-item-name {
+  display: block;
+  font-size: 0.75rem;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inventory-item-count {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Inventário - grid mais compacto */
+.character-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 0.75rem;
+}
+
+.inventory-item .inventory-item-icon {
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Linha do tempo */
+.character-timeline {
+  position: relative;
+  padding-left: 1.5rem;
+  border-left: 2px solid rgba(111, 66, 193, 0.5);
+  margin-left: 0.5rem;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 1.25rem;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -1.75rem;
+  top: 0.1rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6f42c1, #0dcaf0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #fff;
+  box-shadow: 0 0 12px rgba(111, 66, 193, 0.5);
+}
+
+.timeline-item-level .timeline-marker { background: linear-gradient(135deg, #6f42c1, #8b5cf6); }
+.timeline-item-clan .timeline-marker { background: linear-gradient(135deg, #0d9488, #14b8a6); }
+.timeline-item-pvp .timeline-marker { background: linear-gradient(135deg, #dc2626, #ef4444); }
+.timeline-item-pk .timeline-marker { background: linear-gradient(135deg, #4b5563, #6b7280); }
+.timeline-item-last_access .timeline-marker { background: linear-gradient(135deg, #0ea5e9, #38bdf8); }
+.timeline-item-listed .timeline-marker { background: linear-gradient(135deg, #eab308, #facc15); }
+
+.timeline-content {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.timeline-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--bs-light);
+  margin-bottom: 0.25rem;
+}
+
+.timeline-description {
+  font-size: 0.85rem;
+  color: var(--bs-secondary);
+}
+
+.timeline-date {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+/* Card de compra sticky */
+.character-purchase-card.sticky-top {
+  top: 20px;
+}
+
+/* Responsivo */
+@media (max-width: 991.98px) {
+  .character-equipment-grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+  .character-inventory-grid {
+    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  }
+}
+
+@media (max-width: 575.98px) {
+  .character-profile-page .character-detail-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

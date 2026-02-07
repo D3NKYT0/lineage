@@ -4,12 +4,13 @@
 
 {% block extrastyle %}
 <link rel="stylesheet" href="{% static 'marketplace/css/marketplace.css' %}?v=1.0">
+<link rel="stylesheet" href="{% static 'marketplace/css/character_profile.css' %}?v=1.0">
 {% endblock %}
 
 {% block content %}
-<div class="reports-container">
+<div class="reports-container character-profile-page">
   <div class="container">
-    <!-- Header Compacto -->
+    <!-- Header -->
     <div class="marketplace-header">
       <div class="marketplace-header-icon">
         <i class="fas fa-user-ninja"></i>
@@ -17,6 +18,9 @@
       <h1 class="marketplace-title">{{ transfer.char_name }}</h1>
       <p class="marketplace-subtitle">
         {% trans "Level" %} {{ transfer.char_level }} • {{ transfer.class_name }}
+        {% if has_l2_data and transfer.clan_name %}
+          • {% trans "Clã" %}: {{ transfer.clan_name }}
+        {% endif %}
       </p>
     </div>
 
@@ -33,15 +37,15 @@
       </ol>
     </nav>
 
-    <!-- Character Details -->
     <div class="row">
-      <!-- Left Column - Character Info -->
+      <!-- Coluna principal: Status, Equipamento, Inventário, Timeline -->
       <div class="col-lg-8">
+        <!-- Estatísticas e status do personagem -->
         <div class="reports-card mb-4">
           <div class="reports-card-header">
             <i class="fas fa-chart-bar reports-icon"></i>
-            <h2 class="reports-card-title">{% trans "Estatísticas" %}</h2>
-            <p class="reports-card-description">{% trans "Informações do personagem" %}</p>
+            <h2 class="reports-card-title">{% trans "Status do Personagem" %}</h2>
+            <p class="reports-card-description">{% trans "Informações e estatísticas do jogo" %}</p>
           </div>
           <div class="reports-card-body">
             <div class="character-detail-grid">
@@ -65,6 +69,18 @@
                 <span class="detail-label">{% trans "PK" %}:</span>
                 <span class="detail-value">{{ transfer.pk_count|default:"0" }}</span>
               </div>
+              {% if has_l2_data and transfer.clan_name %}
+              <div class="detail-item">
+                <span class="detail-label">{% trans "Clã" %}:</span>
+                <span class="detail-value">{{ transfer.clan_name }}</span>
+              </div>
+              {% endif %}
+              {% if has_l2_data and transfer.last_access %}
+              <div class="detail-item">
+                <span class="detail-label">{% trans "Último acesso" %}:</span>
+                <span class="detail-value character-last-access">{{ transfer.last_access }}</span>
+              </div>
+              {% endif %}
               <div class="detail-item">
                 <span class="detail-label">{% trans "Status" %}:</span>
                 <span class="detail-value">
@@ -77,14 +93,109 @@
 
             {% if transfer.notes %}
             <div class="character-notes mt-3">
-              <h4><i class="fas fa-comment-dots me-2"></i>{% trans "Observações" %}</h4>
+              <h4><i class="fas fa-comment-dots me-2"></i>{% trans "Observações do vendedor" %}</h4>
               <p>{{ transfer.notes }}</p>
             </div>
             {% endif %}
           </div>
         </div>
 
-        <!-- Seller Info -->
+        {% if has_l2_data %}
+        <!-- Equipamento (paperdoll) -->
+        <div class="reports-card mb-4">
+          <div class="reports-card-header">
+            <i class="fas fa-vest reports-icon"></i>
+            <h2 class="reports-card-title">{% trans "Equipamento" %}</h2>
+            <p class="reports-card-description">{% trans "Itens equipados no personagem" %}</p>
+          </div>
+          <div class="reports-card-body">
+            {% if equipment %}
+            <div class="character-equipment-grid">
+              {% for item in equipment %}
+              <div class="equipment-item" title="{{ item.item_name|default:'' }} {% if item.enchant_level %}+{{ item.enchant_level }}{% endif %}">
+                <div class="equipment-item-icon">
+                  <img src="{% item_image_url item.item_id %}" alt="{{ item.item_name|default:item.item_id }}" loading="lazy">
+                  {% if item.enchant_level and item.enchant_level > 0 %}
+                  <span class="enchant-badge">+{{ item.enchant_level }}</span>
+                  {% endif %}
+                </div>
+                <div class="equipment-item-name">{% if item.item_name %}{{ item.item_name }}{% else %}Item #{{ item.item_id }}{% endif %}{% if item.count > 1 %} x{{ item.count }}{% endif %}</div>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">{% trans "Nenhum item equipado ou dados não disponíveis." %}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Inventário -->
+        <div class="reports-card mb-4">
+          <div class="reports-card-header">
+            <i class="fas fa-box-open reports-icon"></i>
+            <h2 class="reports-card-title">{% trans "Inventário" %}</h2>
+            <p class="reports-card-description">{% trans "Itens na mochila do personagem" %} ({{ inventory|length }} {% trans "itens" %})</p>
+          </div>
+          <div class="reports-card-body">
+            {% if inventory %}
+            <div class="character-inventory-grid" id="inventory-grid">
+              {% for item in inventory %}
+              <div class="inventory-item" title="{{ item.item_name|default:'' }} {% if item.enchant_level %}+{{ item.enchant_level }}{% endif %}">
+                <div class="inventory-item-icon">
+                  <img src="{% item_image_url item.item_id %}" alt="{{ item.item_name|default:item.item_id }}" loading="lazy">
+                  {% if item.enchant_level and item.enchant_level > 0 %}
+                  <span class="enchant-badge">+{{ item.enchant_level }}</span>
+                  {% endif %}
+                </div>
+                <span class="inventory-item-name">{% if item.item_name %}{{ item.item_name }}{% else %}Item #{{ item.item_id }}{% endif %}</span>
+                {% if item.count > 1 %}<span class="inventory-item-count">x{{ item.count }}</span>{% endif %}
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">{% trans "Inventário vazio ou dados não disponíveis." %}</p>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Linha do tempo / Biografia do personagem -->
+        <div class="reports-card mb-4">
+          <div class="reports-card-header">
+            <i class="fas fa-history reports-icon"></i>
+            <h2 class="reports-card-title">{% trans "Linha do tempo" %}</h2>
+            <p class="reports-card-description">{% trans "Histórico e marcos do personagem no servidor" %}</p>
+          </div>
+          <div class="reports-card-body">
+            <div class="character-timeline">
+              {% for event in timeline_events %}
+              <div class="timeline-item timeline-item-{{ event.type }}">
+                <div class="timeline-marker">
+                  <i class="fas {{ event.icon }}"></i>
+                </div>
+                <div class="timeline-content">
+                  <h5 class="timeline-title">{{ event.title }}</h5>
+                  <p class="timeline-description mb-0">{{ event.description }}</p>
+                  {% if event.date %}
+                  <small class="timeline-date text-muted">{{ event.date|date:"d/m/Y H:i" }}</small>
+                  {% endif %}
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="reports-card mb-4">
+          <div class="reports-card-body">
+            <p class="text-muted mb-0">
+              <i class="fas fa-info-circle me-2"></i>
+              {% trans "Equipamento, inventário e linha do tempo estão disponíveis quando o servidor do jogo está conectado." %}
+            </p>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Vendedor -->
         <div class="reports-card">
           <div class="reports-card-header">
             <i class="fas fa-user-tag reports-icon"></i>
@@ -105,9 +216,9 @@
         </div>
       </div>
 
-      <!-- Right Column - Purchase Info -->
+      <!-- Coluna lateral: Comprar -->
       <div class="col-lg-4">
-        <div class="reports-card sticky-top" style="top: 20px;">
+        <div class="reports-card sticky-top character-purchase-card">
           <div class="reports-card-header">
             <i class="fas fa-wallet reports-icon"></i>
             <h2 class="reports-card-title">{% trans "Comprar" %}</h2>
@@ -158,7 +269,6 @@
       </div>
     </div>
 
-    <!-- Return Button -->
     <div class="text-center mt-4">
       <a href="{% url 'marketplace:list' %}" class="report-back-button">
         <i class="fas fa-arrow-left me-2"></i>{% trans "Voltar ao Marketplace" %}
@@ -171,4 +281,3 @@
 {% block extrajs %}
 <script src="{% static 'marketplace/js/marketplace.js' %}?v=1.0"></script>
 {% endblock %}
-
