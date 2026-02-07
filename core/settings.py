@@ -571,6 +571,10 @@ else:
             'task': 'apps.lineage.games.tasks.desativar_temporadas_expiradas',
             'schedule': crontab(minute='*/1'),  # A cada minuto
         },
+        'desativar-coming-soon-zerado': {
+            'task': 'apps.lineage.server.tasks.desativar_coming_soon_expirado',
+            'schedule': crontab(minute='*/1'),  # A cada minuto: desativa Coming Soon quando a contagem zera
+        },
     }
 
 CELERY_ACCEPT_CONTENT = ['application/json']
