@@ -249,9 +249,9 @@ def config_hub_view(request):
                 { 'title': _('Daily Bonus Manager'), 'url_name': 'games:daily_bonus_manager', 'icon': 'bi-calendar-week', 'description': _('Gerenciar bônus diários') },
                 { 'title': _('Roulette Manager'), 'url_name': 'games:roulette_manager', 'icon': 'bi-shuffle', 'description': _('Configurar roleta e prêmios') },
                 { 'title': _('Economy Manager'), 'url_name': 'games:economy_manager', 'icon': 'bi-lightning-charge', 'description': _('Gerenciar economia do jogo') },
-                { 'title': _('Battle Pass Manager'), 'url_name': 'games:battle_pass_manager', 'icon': 'bi-trophy', 'is_new': True, 'description': _('Configurar temporadas e recompensas') },
-                { 'title': _('Achievement Rewards Manager'), 'url_name': 'games:achievement_rewards_manager', 'icon': 'bi-award', 'is_new': True, 'description': _('Premiações de conquistas') },
-                { 'title': _('Level Rewards Manager'), 'url_name': 'games:level_rewards_manager', 'icon': 'bi-star', 'is_new': True, 'description': _('Recompensas por nível') },
+                { 'title': _('Battle Pass Manager'), 'url_name': 'games:battle_pass_manager', 'icon': 'bi-trophy', 'description': _('Configurar temporadas e recompensas') },
+                { 'title': _('Achievement Rewards Manager'), 'url_name': 'games:achievement_rewards_manager', 'icon': 'bi-award', 'description': _('Premiações de conquistas') },
+                { 'title': _('Level Rewards Manager'), 'url_name': 'games:level_rewards_manager', 'icon': 'bi-star', 'description': _('Recompensas por nível') },
                 { 'title': _('Slot Machine Manager'), 'url_name': 'games:slot_machine_manager', 'icon': 'bi-dice-6', 'description': _('Configurar máquina de slots') },
                 { 'title': _('Dice Game Manager'), 'url_name': 'games:dice_game_manager', 'icon': 'bi-dice-5', 'description': _('Gerenciar jogo de dados') },
                 { 'title': _('Fishing Game Manager'), 'url_name': 'games:fishing_game_manager', 'icon': 'bi-water', 'description': _('Configurar pescaria e recompensas') },
@@ -262,9 +262,9 @@ def config_hub_view(request):
             'icon': 'bi-file-text',
             'color': 'info',
             'entries': [
-                { 'title': _('Coming Soon'), 'url_name': 'config_coming_soon', 'icon': 'bi-hourglass-split', 'description': _('Contagem regressiva na página inicial') },
-                { 'title': _('Calendar Manager'), 'url_name': 'calendary:manager_dashboard', 'icon': 'bi-calendar-event', 'is_new': True, 'description': _('Gerenciar eventos do calendário') },
-                { 'title': _('Roadmap Manager'), 'url_name': 'roadmap:manager_dashboard', 'icon': 'bi-diagram-3', 'is_new': True, 'description': _('Planejamento e atualizações') },
+                { 'title': _('Coming Soon'), 'url_name': 'config_coming_soon', 'icon': 'bi-hourglass-split', 'is_new': True, 'description': _('Contagem regressiva na página inicial') },
+                { 'title': _('Calendar Manager'), 'url_name': 'calendary:manager_dashboard', 'icon': 'bi-calendar-event', 'description': _('Gerenciar eventos do calendário') },
+                { 'title': _('Roadmap Manager'), 'url_name': 'roadmap:manager_dashboard', 'icon': 'bi-diagram-3', 'description': _('Planejamento e atualizações') },
             ]
         },
         {
@@ -282,7 +282,7 @@ def config_hub_view(request):
             'color': 'danger',
             'entries': [
                 { 'title': _('Licenças'), 'url_name': 'licence:dashboard', 'icon': 'bi-patch-check', 'description': _('Gerenciar licenças do sistema') },
-                { 'title': _('Gerenciador de Notificações'), 'url_name': 'notification:manager_dashboard', 'icon': 'bi-bell', 'is_new': True, 'description': _('Criar e gerenciar notificações com prêmios') },
+                { 'title': _('Gerenciador de Notificações'), 'url_name': 'notification:manager_dashboard', 'icon': 'bi-bell', 'description': _('Criar e gerenciar notificações com prêmios') },
                 { 'title': _('Enviar Push'), 'url_name': 'notification:send_push', 'icon': 'bi-bell-fill', 'description': _('Enviar notificações push') },
                 { 'title': _('Verificações'), 'url_name': 'social:verification_admin_list', 'icon': 'bi-shield-check', 'description': _('Aprovar verificações de usuários') },
             ]
