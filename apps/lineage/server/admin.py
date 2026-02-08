@@ -239,7 +239,7 @@ class AccountLinkSlotAdmin(BaseModelAdmin):
     
     fieldsets = (
         ("Informações da Compra", {
-            "fields": ("user", "slots_purchased", "purchase_price", "purchase_date")
+            "fields": ("user", "slots_purchased", "purchase_price")
         }),
         ("Observações", {
             "fields": ("notes",),
