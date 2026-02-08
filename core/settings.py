@@ -846,6 +846,9 @@ PROJECT_INSTAGRAM_URL = os.getenv('PROJECT_INSTAGRAM_URL', 'https://www.instagra
 SLOGAN = str2bool(os.getenv('SLOGAN', True))
 LINEAGE_QUERY_MODULE = os.getenv('LINEAGE_QUERY_MODULE', 'dreamv3')
 
+# Quantidade de slots gratuitos de vinculação de contas por usuário
+ACCOUNT_LINK_FREE_SLOTS = int(os.environ.get('ACCOUNT_LINK_FREE_SLOTS', 3))
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',

@@ -736,6 +736,14 @@ EOF
     exit 1
   fi
   
+  # Garantir ACCOUNT_LINK_FREE_SLOTS (slots gratuitos de vinculação de contas)
+  if ! grep -qE "^ACCOUNT_LINK_FREE_SLOTS\s*=" .env 2>/dev/null; then
+    echo "" >> .env
+    echo "# Slots gratuitos de vinculação de contas por usuário" >> .env
+    echo "ACCOUNT_LINK_FREE_SLOTS=3" >> .env
+    log_success "ACCOUNT_LINK_FREE_SLOTS adicionada ao .env (padrão: 3)."
+  fi
+  
   touch "$INSTALL_DIR/env_created"
   log_success "Arquivo .env criado e validado com sucesso."
 fi
@@ -771,6 +779,14 @@ EOF
   fi
 elif [ -f ".env" ] && grep -qE "^ENCRYPTION_KEY\s*=" .env 2>/dev/null; then
   log_info "ENCRYPTION_KEY já existe no .env (preservada para manter dados criptografados)."
+fi
+
+# Garantir ACCOUNT_LINK_FREE_SLOTS mesmo se .env já existia (instalações antigas ou upgrades)
+if [ -f ".env" ] && ! grep -qE "^ACCOUNT_LINK_FREE_SLOTS\s*=" .env 2>/dev/null; then
+  echo "" >> .env
+  echo "# Slots gratuitos de vinculação de contas por usuário" >> .env
+  echo "ACCOUNT_LINK_FREE_SLOTS=3" >> .env
+  log_success "ACCOUNT_LINK_FREE_SLOTS adicionada ao .env existente (padrão: 3)."
 fi
 
 if [ ! -f "$INSTALL_DIR/htpasswd_created" ]; then

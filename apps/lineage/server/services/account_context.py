@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Tuple
 
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -480,19 +481,19 @@ def count_linked_accounts(user) -> int:
 def get_total_link_slots(user) -> int:
     """
     Retorna o total de slots de vinculação disponíveis para o usuário.
-    Padrão: 3 slots gratuitos + slots comprados.
+    Slots gratuitos configuráveis em ACCOUNT_LINK_FREE_SLOTS + slots comprados.
     """
-    DEFAULT_FREE_SLOTS = 3
+    free_slots = getattr(settings, 'ACCOUNT_LINK_FREE_SLOTS', 3)
     
     if not user or not user.is_authenticated:
-        return DEFAULT_FREE_SLOTS
+        return free_slots
     
     from apps.lineage.server.models import AccountLinkSlot
     purchased_slots = AccountLinkSlot.objects.filter(user=user).aggregate(
         total=models.Sum('slots_purchased')
     )['total'] or 0
     
-    return DEFAULT_FREE_SLOTS + purchased_slots
+    return free_slots + purchased_slots
 
 
 def get_used_link_slots(user) -> int:

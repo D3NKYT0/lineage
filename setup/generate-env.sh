@@ -561,16 +561,20 @@ generate_required() {
     local existing_lineage_db=$(get_existing_value "LINEAGE_DB_ENABLED" 2>/dev/null || echo "False")
     local existing_theme_errors=$(get_existing_value "SHOW_THEME_ERRORS_TO_USERS" 2>/dev/null || echo "True")
     
+    local existing_account_link_free_slots=$(get_existing_value "ACCOUNT_LINK_FREE_SLOTS" 2>/dev/null || echo "3")
+    
     if [ "$edit_mode" = "true" ]; then
         update_var "RUNNING_IN_DOCKER" "$existing_docker"
         update_var "SLOGAN" "$existing_slogan"
         update_var "LINEAGE_DB_ENABLED" "$existing_lineage_db"
         update_var "SHOW_THEME_ERRORS_TO_USERS" "$existing_theme_errors"
+        update_var "ACCOUNT_LINK_FREE_SLOTS" "$existing_account_link_free_slots"
     else
         add_var "RUNNING_IN_DOCKER" "$existing_docker"
         add_var "SLOGAN" "$existing_slogan"
         add_var "LINEAGE_DB_ENABLED" "$existing_lineage_db"
         add_var "SHOW_THEME_ERRORS_TO_USERS" "$existing_theme_errors"
+        add_var "ACCOUNT_LINK_FREE_SLOTS" "$existing_account_link_free_slots"
     fi
 }
 
