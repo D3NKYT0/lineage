@@ -23,13 +23,13 @@ LINEAGE_QUERY_MODULE=dreamv3
 
 ### 2. Testar primeiro
 ```bash
-docker-compose exec site python3 manage.py migrate_l2_accounts --dry-run
+docker compose exec site_http python3 manage.py migrate_l2_accounts --dry-run
 ```
 
 ### 3. Executar migração
 ```bash
 # Opção 1: Comando direto (dentro do container)
-docker-compose exec site python3 manage.py migrate_l2_accounts
+docker compose exec site_http python3 manage.py migrate_l2_accounts
 
 # Opção 2: Script seguro (recomendado)
 chmod +x setup/migrate_l2_safe.sh
@@ -47,16 +47,16 @@ chmod +x setup/migrate_l2_safe.sh
 
 ```bash
 # Teste básico
-docker-compose exec site python3 manage.py migrate_l2_accounts --dry-run
+docker compose exec site_http python3 manage.py migrate_l2_accounts --dry-run
 
 # Com prefixo customizado
-docker-compose exec site python3 manage.py migrate_l2_accounts --prefix "MIGRATED_" --dry-run
+docker compose exec site_http python3 manage.py migrate_l2_accounts --prefix "MIGRATED_" --dry-run
 
 # Com senhas mais curtas
-docker-compose exec site python3 manage.py migrate_l2_accounts --password-length 32
+docker compose exec site_http python3 manage.py migrate_l2_accounts --password-length 32
 
 # Em lotes menores
-docker-compose exec site python3 manage.py migrate_l2_accounts --batch-size 50
+docker compose exec site_http python3 manage.py migrate_l2_accounts --batch-size 50
 ```
 
 ## Saída esperada
@@ -119,7 +119,7 @@ Erro ao buscar contas do L2: ModuleNotFoundError
 python test/test_migration.py
 
 # Ou execute diretamente o comando no container
-docker-compose exec site python3 manage.py migrate_l2_accounts --help
+docker compose exec site_http python3 manage.py migrate_l2_accounts --help
 ```
 
 ---

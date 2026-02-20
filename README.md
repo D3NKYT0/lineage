@@ -215,7 +215,7 @@ git pull origin main
 ### 📚 Documentação Completa
 
 Para mais detalhes sobre o `install.sh`, consulte:
-- [Guia Completo do install.sh](docs/INSTALL_SH_GUIDE.md)
+- [Guia Completo do install.sh](docs/installation/INSTALL_SH_GUIDE.md)
 
 
 ## 🔄 Como Atualizar o Projeto
@@ -539,7 +539,7 @@ Quando um arquivo de template é carregado no controlador, o `Django` escaneia t
    - Acessíveis em todos os templates via context processor
    - Customizáveis via painel administrativo
 
-📚 Documentação completa: docs/THEME_SYSTEM.md, docs/GUIDE_CREATE_THEME.md
+📚 Documentação completa: [docs/themes/THEME_SYSTEM.md](docs/themes/THEME_SYSTEM.md), [docs/themes/GUIDE_CREATE_THEME.md](docs/themes/GUIDE_CREATE_THEME.md)
    
 |-- ************************************************************************
 ```
