@@ -1549,32 +1549,30 @@ class ServerStatusView(APIView):
     serializer_class = ServerStatusSerializer
     
     def get(self, request):
+        status_data = {
+            'server_name': getattr(settings, 'PROJECT_TITLE', 'Lineage 2 Server'),
+            'status': 'offline',
+            'players_online': 0,
+            'max_players': 1000,
+            'uptime': '',
+            'last_update': timezone.now(),
+            'version': getattr(settings, 'VERSION', '1.0.0'),
+            'maintenance_mode': False,
+        }
         try:
-            # Verifica status do servidor
-            game_server_status = LineageStats.check_server_status() if hasattr(LineageStats, 'check_server_status') else True
-            
-            status_data = {
-                'server_name': getattr(settings, 'PROJECT_TITLE', 'Lineage 2 Server'),
-                'status': 'online' if game_server_status else 'offline',
-                'players_online': LineageStats.players_online()[0].get('quant', 0) if LineageStats.players_online() else 0,
-                'max_players': 1000,  # Configurável
-                'uptime': '24h 30m',  # Implementar cálculo real
-                'last_update': timezone.now(),
-                'version': getattr(settings, 'VERSION', '1.0.0'),
-                'maintenance_mode': False,
-            }
-            
-            serializer = ServerStatusSerializer(status_data)
-            return Response({
-                'success': True,
-                'data': serializer.data,
-                'timestamp': timezone.now().isoformat(),
-            })
-        except Exception as e:
-            return Response(
-                {'error': 'Erro ao verificar status do servidor'},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            game_server_status = LineageStats.check_server_status() if hasattr(LineageStats, 'check_server_status') else False
+            if game_server_status:
+                players = LineageStats.players_online()
+                status_data['status'] = 'online'
+                status_data['players_online'] = players[0].get('quant', 0) if players else 0
+        except Exception:
+            pass
+        serializer = ServerStatusSerializer(status_data)
+        return Response({
+            'success': True,
+            'data': serializer.data,
+            'timestamp': timezone.now().isoformat(),
+        })
 
 
 # =========================== API INFO VIEWS ===========================

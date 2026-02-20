@@ -8,28 +8,80 @@ function safeString(value) {
   return String(value);
 }
 
-// Função para formatar data
 function formatDate(dateString) {
-  if (!dateString) return "N/A";
+  if (dateString == null || dateString === "") return "—";
   try {
     const date = new Date(dateString);
-    return date.toLocaleString('pt-BR');
+    if (Number.isNaN(date.getTime())) return "—";
+    return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
   } catch (e) {
-    return dateString;
+    return "—";
   }
 }
 
-// Função para extrair dados do JSON
+// Normaliza resposta da API: backend pode retornar { data: {...} } ou objeto direto
 function extractUserData(data) {
   if (!data) return {};
-  
-  // Se data é um objeto com 'data' dentro
-  if (data.data && typeof data.data === 'object') {
-    return data.data;
-  }
-  
-  // Se data é diretamente o objeto
+  if (data.data && typeof data.data === "object") return data.data;
   return data;
+}
+
+// Dados do usuário: dashboard retorna flat { username, email, date_joined, last_login }; profile idem
+function buildUserInfo(dashboard, profile) {
+  const fromDashboard = extractUserData(dashboard);
+  const userInfo = fromDashboard?.user_info || (fromDashboard && !fromDashboard.error ? {
+    username: fromDashboard.username,
+    email: fromDashboard.email,
+    date_joined: fromDashboard.date_joined,
+    last_login: fromDashboard.last_login,
+  } : {});
+  if (profile && !profile.error) {
+    return {
+      username: profile.username ?? userInfo.username,
+      email: profile.email ?? userInfo.email,
+      date_joined: profile.date_joined ?? userInfo.date_joined,
+      last_login: profile.last_login ?? userInfo.last_login,
+    };
+  }
+  return userInfo;
+}
+
+// Status do servidor: API retorna { success, data: { status, players_online } }
+function buildServerStatus(serverStatusRes) {
+  const data = serverStatusRes?.data ?? serverStatusRes;
+  if (!data) return { online: false, playersOnline: 0 };
+  const status = data.status ?? (data.online ? "online" : "offline");
+  return {
+    online: status === "online",
+    playersOnline: data.players_online ?? data.players ?? 0,
+  };
+}
+
+// Estatísticas do jogo: API user/stats retorna flat { characters_count, total_level, ... }; dashboard pode ter mais
+function buildGameStats(statsRes, dashboardRes) {
+  const stats = statsRes && !statsRes.error ? statsRes : {};
+  const dash = extractUserData(dashboardRes) || {};
+  const skipKeys = ["username", "email", "date_joined", "last_login", "server_online", "players_online", "error"];
+  const fromDash = {};
+  Object.keys(dash).forEach((k) => {
+    if (skipKeys.includes(k)) return;
+    const v = dash[k];
+    if (v !== undefined && v !== null && typeof v !== "object") fromDash[k] = v;
+  });
+  const labels = {
+    characters_count: "Personagens",
+    total_level: "Nível total",
+    total_online_time: "Tempo online",
+    total_pvp: "PvP",
+    total_pk: "PK",
+  };
+  const result = {};
+  [...Object.entries(stats), ...Object.entries(fromDash)].forEach(([key, value]) => {
+    if (value === undefined || value === null) return;
+    const label = labels[key] || key.replace(/_/g, " ");
+    result[label] = typeof value === "number" ? value.toLocaleString("pt-BR") : String(value);
+  });
+  return result;
 }
 
 export default function UserSection({ token }) {
@@ -50,8 +102,6 @@ export default function UserSection({ token }) {
       setLoading(true);
       setError("");
       try {
-        console.log("Buscando dados do usuário...");
-        
         // Buscar dados individualmente para evitar que um erro quebre tudo
         const profileRes = await fetch("/api/v1/user/profile/", { 
           headers: { Authorization: `Bearer ${token}` } 
@@ -74,58 +124,30 @@ export default function UserSection({ token }) {
           profileData = await profileRes.json();
           setProfile(profileData);
         } else {
-          console.warn("Erro ao buscar perfil:", profileRes.status);
-          setProfile({ 
-            username: "admin", 
-            email: "admin@exemplo.com",
-            first_name: "Administrador",
-            last_name: "Sistema"
-          });
+          setProfile(null);
         }
 
         if (dashboardRes.ok) {
           dashboardData = await dashboardRes.json();
           setDashboard(dashboardData);
         } else {
-          console.warn("Erro ao buscar dashboard:", dashboardRes.status);
-          setDashboard({ 
-            success: true,
-            data: {
-              user_info: {
-                username: "admin",
-                email: "admin@exemplo.com",
-                date_joined: new Date().toISOString(),
-                last_login: new Date().toISOString()
-              },
-              game_stats: {},
-              server_status: { online: true, players_online: 0 }
-            }
-          });
+          setDashboard(null);
         }
 
         if (statsRes.ok) {
-          const statsData = await statsRes.json();
-          console.log("Stats data:", statsData);
-          setStats(statsData);
+          setStats(await statsRes.json());
         } else {
-          console.warn("Erro ao buscar estatísticas:", statsRes.status);
-          setStats({ 
-            success: true,
-            data: {},
-            timestamp: new Date().toISOString()
-          });
+          setStats(null);
         }
 
-        // Buscar status real do servidor
         if (serverStatusRes.ok) {
-          const serverStatusData = await serverStatusRes.json();
-          setServerStatus(serverStatusData);
+          setServerStatus(await serverStatusRes.json());
         } else {
-          setServerStatus({ online: false, players: 0 });
+          setServerStatus(null);
         }
 
-        // Dados do jogo PDL (XP, conquistas, Battle Pass, etc.)
-        const username = profileData?.username || dashboardData?.data?.user_info?.username;
+        const dashData = dashboardData && !dashboardData.error ? (dashboardData.data || dashboardData) : {};
+        const username = profileData?.username || dashData?.username;
         if (username) {
           try {
             const gameDataRes = await fetch(`/api/v1/user/game-data/?username=${encodeURIComponent(username)}`, {
@@ -140,12 +162,11 @@ export default function UserSection({ token }) {
 
       } catch (e) {
         console.error("Erro ao buscar dados:", e);
-        setError("Erro ao buscar dados do usuário");
-        // Definir dados padrão em caso de erro
-        setProfile({ username: "admin", email: "admin@exemplo.com" });
-        setDashboard({ success: true, data: { user_info: {}, game_stats: {}, server_status: {} } });
-        setStats({ success: true, data: {} });
-        setServerStatus({ online: false, players: 0 });
+        setError("Não foi possível carregar alguns dados. Tente recarregar.");
+        setProfile(null);
+        setDashboard(null);
+        setStats(null);
+        setServerStatus(null);
       }
       setLoading(false);
     }
@@ -181,13 +202,9 @@ export default function UserSection({ token }) {
 
   if (loading) return <div className="loading">Carregando dados do usuário...</div>;
 
-  // Extrair dados estruturados
-  const userInfo = extractUserData(dashboard)?.user_info || {};
-  const gameStats = extractUserData(dashboard)?.game_stats || {};
-  
-  // Usar status real do servidor em vez do dashboard
-  const isServerOnline = serverStatus?.online || false;
-  const playersOnline = serverStatus?.players || serverStatus?.players_online || 0;
+  const userInfo = buildUserInfo(dashboard, profile);
+  const gameStats = buildGameStats(stats, dashboard);
+  const { online: isServerOnline, playersOnline } = buildServerStatus(serverStatus);
 
   return (
     <div className="user-section">
@@ -197,11 +214,11 @@ export default function UserSection({ token }) {
           <FaUserCircle size={80} color="#e6c77d" />
         </div>
         <div className="user-info">
-          <h2>{safeString(userInfo.username || profile?.username || "Usuário")}</h2>
+          <h2>{safeString(userInfo.username || "Usuário")}</h2>
           <div className="user-details">
             <div className="user-detail-item">
               <FaEnvelope size={16} color="#e6c77d" />
-              <span>{safeString(userInfo.email || profile?.email || "email@exemplo.com")}</span>
+              <span>{userInfo.email ? safeString(userInfo.email) : "—"}</span>
             </div>
             <div className="user-detail-item">
               <FaCalendar size={16} color="#e6c77d" />
@@ -285,7 +302,7 @@ export default function UserSection({ token }) {
         </div>
       )}
 
-      {/* Estatísticas do Jogo */}
+      {/* Estatísticas do Jogo (personagens, nível, PvP, etc.) */}
       <div className="user-game-stats">
         <h3>Estatísticas do Jogo</h3>
         <div className="game-stats-grid">
@@ -298,7 +315,7 @@ export default function UserSection({ token }) {
             ))
           ) : (
             <div className="no-stats">
-              <p>Nenhuma estatística disponível</p>
+              <p>Conecte-se ao servidor do jogo para ver personagens e estatísticas aqui, ou elas ainda não foram carregadas.</p>
             </div>
           )}
         </div>
