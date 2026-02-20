@@ -53,6 +53,14 @@ def log_action(
         parts.append(extra_str)
     log_message = " ".join(parts)
     logger.log(level, log_message, exc_info=exc_info)
+    # Telemetria: contador de eventos de negócio (se TELEMETRY_ENABLED)
+    try:
+        from django.conf import settings
+        if getattr(settings, "TELEMETRY_ENABLED", False):
+            from core.telemetry import record_business_event
+            record_business_event(action, status)
+    except Exception:
+        pass
 
 
 def log_request(

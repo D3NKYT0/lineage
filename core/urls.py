@@ -6,12 +6,14 @@ from django.views.i18n import JavaScriptCatalog
 from django.shortcuts import redirect
 from django.http import FileResponse, Http404, HttpResponse
 from django.views.decorators.cache import cache_control
+from django.views.decorators.http import require_GET
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularSwaggerView,
     SpectacularRedocView,
 )
 from apps.media_storage.views import serve_media
+from core.telemetry_views import metrics_view
 from django.utils.functional import cached_property
 import os
 
@@ -137,6 +139,8 @@ urlpatterns = [
     # Core
     path("admin/login/", admin_login_redirect, name="admin_login"),
     path("admin/", admin.site.urls),
+    # Telemetria (métricas Prometheus) - path configurável em TELEMETRY_METRICS_PATH
+    path("internal/metrics/", require_GET(metrics_view), name="telemetry_metrics"),
     path("ckeditor5/", include("django_ckeditor_5.urls")),
     path("jsi18n/", JavaScriptCatalog.as_view(), name="jsi18n"),
     path("accounts/", include("allauth.urls")),

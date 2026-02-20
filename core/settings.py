@@ -201,6 +201,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "middlewares.request_id_middleware.RequestIdMiddleware",
+    "middlewares.telemetry_middleware.TelemetryMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django_otp.middleware.OTPMiddleware",
@@ -661,6 +662,21 @@ AUDITOR_MIDDLEWARE_RESTRICT_PATHS = [
 ]
 AUDITOR_MIDDLEWARE_MAX_RETRIES = 3
 AUDITOR_MIDDLEWARE_RETRY_DELAY = 0.1
+
+# =========================== TELEMETRY CONFIGS ===========================
+# Métricas Prometheus (request count, latency). Endpoint: TELEMETRY_METRICS_PATH
+TELEMETRY_ENABLED = str2bool(os.environ.get("TELEMETRY_ENABLED", "False"))
+TELEMETRY_METRICS_PATH = os.environ.get("TELEMETRY_METRICS_PATH", "/internal/metrics")
+# Paths que não entram nas métricas (reduz cardinalidade e ruído)
+TELEMETRY_EXCLUDE_PATHS = [
+    "/static/",
+    "/media/",
+    "/favicon.ico",
+    "/__debug__/",
+    "/admin/jsi18n/",
+]
+# Token opcional para scrape remoto: header X-Metrics-Token
+TELEMETRY_SCRAPE_TOKEN = os.environ.get("TELEMETRY_SCRAPE_TOKEN", "")
 
 # =========================== EXTRA CONFIGS ===========================
 

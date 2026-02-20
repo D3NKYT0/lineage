@@ -104,6 +104,10 @@ Os seguintes eventos são registrados com `log_action` para auditoria e análise
 
 Para buscar em arquivos de log: `grep "\[wallet_transfer_p2p\]" logs/info.log` ou pelo request_id.
 
+## Telemetria (métricas)
+
+Com `TELEMETRY_ENABLED=True`, cada `log_action(...)` também alimenta o contador Prometheus `pdl_business_events_total`. Ver [TELEMETRY.md](TELEMETRY.md).
+
 ## Log em JSON (futuro)
 
 O módulo `core.logger` define um formatter `json`. Para ativar em produção (ex.: CloudWatch, ELK), troque o `formatter` dos handlers desejados para `"json"` em `core/logger.py`.
