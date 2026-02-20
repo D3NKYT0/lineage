@@ -246,21 +246,22 @@ class HealthCheck:
     
     @staticmethod
     def full_health_check():
-        """Executa verificação completa de saúde"""
+        """
+        Executa verificação completa de saúde.
+        Status geral = healthy apenas se banco e cache estiverem OK.
+        Servidor do jogo é informativo (não derruba o health para load balancers).
+        """
         checks = {
-            'database': HealthCheck.check_database(),
-            'cache': HealthCheck.check_cache(),
-            'game_server': HealthCheck.check_game_server(),
+            "database": HealthCheck.check_database(),
+            "cache": HealthCheck.check_cache(),
+            "game_server": HealthCheck.check_game_server(),
         }
-        
-        overall_status = 'healthy'
-        if any(check['status'] == 'unhealthy' for check in checks.values()):
-            overall_status = 'unhealthy'
-        
+        critical = [checks["database"], checks["cache"]]
+        overall_status = "healthy" if all(c["status"] == "healthy" for c in critical) else "unhealthy"
         return {
-            'status': overall_status,
-            'timestamp': timezone.now().isoformat(),
-            'checks': checks,
+            "status": overall_status,
+            "timestamp": timezone.now().isoformat(),
+            "checks": checks,
         }
 
 

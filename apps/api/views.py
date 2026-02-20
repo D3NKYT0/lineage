@@ -1629,11 +1629,11 @@ class APIInfoView(APIView):
             )
 
 # =========================== MONITORING VIEWS ===========================
+# Health check não usa @endpoint_enabled para estar sempre disponível (load balancers, K8s, etc.)
 
-@endpoint_enabled('health_check')
 @extend_schema(
     summary="Health Check",
-    description="Verifica a saúde de todos os sistemas da API",
+    description="Verifica a saúde dos sistemas da API (banco, cache, servidor do jogo). Sempre acessível.",
     responses={
         status.HTTP_200_OK: APIResponseSerializer,
         status.HTTP_503_SERVICE_UNAVAILABLE: APIResponseSerializer,
@@ -1642,35 +1642,35 @@ class APIInfoView(APIView):
     auth=[]
 )
 class HealthCheckView(APIView):
-    """View para health check da API"""
+    """View para health check da API - sempre ativa, independente de ApiEndpointToggle."""
     permission_classes = [AllowAny]
     serializer_class = APIResponseSerializer
-    
+
     def get(self, request):
         """Executa verificação completa de saúde"""
         try:
             from .monitoring import HealthCheck
-            
+
             health_status = HealthCheck.full_health_check()
-            
-            if health_status['status'] == 'healthy':
+
+            # 503 apenas se componentes críticos (DB ou cache) falharem
+            if health_status["status"] == "healthy":
                 return Response({
-                    'success': True,
-                    'data': health_status,
-                    'timestamp': timezone.now().isoformat(),
+                    "success": True,
+                    "data": health_status,
+                    "timestamp": timezone.now().isoformat(),
                 })
-            else:
-                return Response({
-                    'success': False,
-                    'data': health_status,
-                    'timestamp': timezone.now().isoformat(),
-                }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
-                
+            return Response({
+                "success": False,
+                "data": health_status,
+                "timestamp": timezone.now().isoformat(),
+            }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+
         except Exception as e:
             return Response({
-                'success': False,
-                'error': f'Erro ao executar health check: {str(e)}',
-                'timestamp': timezone.now().isoformat(),
+                "success": False,
+                "error": str(e),
+                "timestamp": timezone.now().isoformat(),
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
