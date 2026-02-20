@@ -328,14 +328,14 @@ export default function MetricsSection({ token }) {
           <div className="health-cards">
             <MetricsCard
               title="Status"
-              value={health.status === "healthy" ? "Saudável" : "Problemas"}
+              value={(health.data?.status ?? health.status) === "healthy" ? "Saudável" : "Problemas"}
               icon={<FaServer size={24} />}
               color={health.status === "healthy" ? "#28a745" : "#dc3545"}
               subtitle="estado atual"
             />
             <MetricsCard
               title="Uptime"
-              value={formatResponseTime(health.uptime * 1000)}
+              value={formatResponseTime((health.data?.uptime ?? health.uptime ?? 0) * 1000)}
               icon={<FaHistory size={24} />}
               color="#17a2b8"
               subtitle="tempo ativo"

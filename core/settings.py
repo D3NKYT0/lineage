@@ -202,6 +202,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "middlewares.request_id_middleware.RequestIdMiddleware",
     "middlewares.telemetry_middleware.TelemetryMiddleware",
+    "middlewares.api_metrics_middleware.APIMetricsMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django_otp.middleware.OTPMiddleware",

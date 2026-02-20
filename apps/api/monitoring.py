@@ -201,6 +201,10 @@ def monitor_api_request(func):
     return wrapper
 
 
+# Timestamp de inicialização (quando o módulo é carregado) para cálculo de uptime
+_process_start_time = time.time()
+
+
 class HealthCheck:
     """Sistema de health check para a API"""
     
@@ -258,9 +262,11 @@ class HealthCheck:
         }
         critical = [checks["database"], checks["cache"]]
         overall_status = "healthy" if all(c["status"] == "healthy" for c in critical) else "unhealthy"
+        uptime_seconds = round(time.time() - _process_start_time, 1)
         return {
             "status": overall_status,
             "timestamp": timezone.now().isoformat(),
+            "uptime": uptime_seconds,
             "checks": checks,
         }
 
@@ -278,9 +284,13 @@ class APIPerformance:
                 cache_key = f"api_metrics_{timezone.now().strftime('%Y%m%d')}_{hour:02d}"
                 metrics = cache.get(cache_key, [])
                 
-                # Filtra queries lentas (> 1 segundo)
-                slow = [m for m in metrics if m['duration_ms'] > 1000]
-                slow_queries.extend(slow)
+            # Filtra queries lentas (> 1 segundo)
+            slow = [m for m in metrics if m['duration_ms'] > 1000]
+            # PWA espera execution_time ou time (ms)
+            slow_queries.extend([
+                {**m, 'execution_time': m['duration_ms'], 'time': m['duration_ms']}
+                for m in slow
+            ])
             
             # Ordena por duração e retorna as mais lentas
             slow_queries.sort(key=lambda x: x['duration_ms'], reverse=True)
@@ -315,9 +325,10 @@ class APIPerformance:
                     if m['status_code'] >= 400:
                         endpoint_metrics[path]['errors'] += 1
             
-            # Calcula médias
+            # Calcula médias (avg_time compatível com PWA MetricsSection)
             for path, data in endpoint_metrics.items():
                 data['avg_duration'] = round(data['total_duration'] / data['count'], 2)
+                data['avg_time'] = data['avg_duration']  # PWA espera avg_time em ms
                 data['error_rate'] = round((data['errors'] / data['count']) * 100, 2)
             
             return endpoint_metrics
