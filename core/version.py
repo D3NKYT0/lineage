@@ -1,4 +1,4 @@
 ﻿# Versao do sistema - WORKFLOW.BAT
 
-__version__ = '1.17.91'
+__version__ = '1.17.95'
 
