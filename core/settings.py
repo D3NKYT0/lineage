@@ -52,23 +52,23 @@ LOGGING = is_LOGGING
 if 'loggers' not in LOGGING:
     LOGGING['loggers'] = {}
 
-# Loggers de autenticação com handlers seguros
+# Loggers de autenticação: mesmo formato e arquivos que o resto (com request_id)
 LOGGING['loggers'].update({
     'core.backends': {
-        'handlers': ['console'],
+        'handlers': ['file_info', 'file_warning', 'file_error', 'console'],
         'level': 'DEBUG',
         'propagate': False,
     },
     'apps.main.home.views.accounts': {
-        'handlers': ['console'],
+        'handlers': ['file_info', 'file_warning', 'file_error', 'console'],
         'level': 'DEBUG',
         'propagate': False,
     },
     'apps.main.home.views.commons': {
-        'handlers': ['console'],
+        'handlers': ['file_info', 'file_warning', 'file_error', 'console'],
         'level': 'DEBUG',
         'propagate': False,
-    }
+    },
 })
 
 # =========================== CORS CONFIGS ===========================
@@ -200,6 +200,7 @@ MIDDLEWARE = [
 
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "middlewares.request_id_middleware.RequestIdMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django_otp.middleware.OTPMiddleware",

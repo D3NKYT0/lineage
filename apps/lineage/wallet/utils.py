@@ -1,9 +1,13 @@
-from django.db import transaction
-from .models import *
-from .signals import aplicar_transacao
-from django.utils.translation import gettext as _
+import logging
 from decimal import Decimal
+from django.db import transaction
+from django.utils.translation import gettext as _
+
+from core.log_utils import log_action
 from .models import Wallet, TransacaoWallet, TransacaoBonus, CoinPurchaseBonus
+from .signals import aplicar_transacao
+
+logger = logging.getLogger(__name__)
 
 
 def calcular_bonus_compra(valor_compra):
@@ -31,14 +35,10 @@ def aplicar_compra_com_bonus(wallet, valor_compra, metodo_pagamento, descricao_e
     Retorna: (valor_total_creditado, valor_bonus, descricao_bonus)
     """
     from .signals import aplicar_transacao, aplicar_transacao_bonus
-    
-    # Garante que valor_compra seja Decimal
+
     valor_compra = Decimal(str(valor_compra))
-    
-    # Calcula o bônus
     valor_bonus, descricao_bonus, percentual_bonus = calcular_bonus_compra(valor_compra)
-    
-    # Aplica a transação principal na carteira normal
+
     descricao_base = f"Compra de moedas via {metodo_pagamento}"
     if descricao_extra:
         descricao_base = f"{descricao_base} {descricao_extra}"
@@ -62,7 +62,14 @@ def aplicar_compra_com_bonus(wallet, valor_compra, metodo_pagamento, descricao_e
             origem="Sistema de Bônus",
             destino=wallet.usuario.username
         )
-    
+
+    log_action(
+        logger, "wallet_compra_moedas", "sucesso",
+        username=wallet.usuario.username,
+        valor_compra=str(valor_compra),
+        valor_bonus=str(valor_bonus),
+        metodo=metodo_pagamento,
+    )
     return valor_compra + valor_bonus, valor_bonus, descricao_bonus
 
 
@@ -79,10 +86,16 @@ def transferir_para_jogador(wallet_origem, wallet_destino, valor, descricao=""):
         wallet_origem = Wallet.objects.select_for_update().get(id=wallet_origem.id)
         wallet_destino = Wallet.objects.select_for_update().get(id=wallet_destino.id)
         
-        # Valida saldo dentro da transação (com lock)
         if wallet_origem.saldo < valor:
+            log_action(
+                logger, "wallet_transfer_p2p", "saldo_insuficiente",
+                remetente=wallet_origem.usuario.username,
+                destinatario=wallet_destino.usuario.username,
+                valor=str(valor),
+                saldo_origem=str(wallet_origem.saldo),
+            )
             raise ValueError("Saldo insuficiente.")
-        
+
         aplicar_transacao(
             wallet=wallet_origem,
             tipo="SAIDA",
@@ -100,6 +113,12 @@ def transferir_para_jogador(wallet_origem, wallet_destino, valor, descricao=""):
             origem=wallet_origem.usuario.username,
             destino=wallet_destino.usuario.username
         )
+    log_action(
+        logger, "wallet_transfer_p2p", "sucesso",
+        remetente=wallet_origem.usuario.username,
+        destinatario=wallet_destino.usuario.username,
+        valor=str(valor),
+    )
 
 
 def transferir_bonus_para_jogador(wallet_origem, wallet_destino, valor, descricao=""):
@@ -115,10 +134,16 @@ def transferir_bonus_para_jogador(wallet_origem, wallet_destino, valor, descrica
         wallet_origem = Wallet.objects.select_for_update().get(id=wallet_origem.id)
         wallet_destino = Wallet.objects.select_for_update().get(id=wallet_destino.id)
         
-        # Valida saldo bônus dentro da transação (com lock)
         if wallet_origem.saldo_bonus < valor:
+            log_action(
+                logger, "wallet_transfer_bonus_p2p", "saldo_bonus_insuficiente",
+                remetente=wallet_origem.usuario.username,
+                destinatario=wallet_destino.usuario.username,
+                valor=str(valor),
+                saldo_bonus_origem=str(wallet_origem.saldo_bonus),
+            )
             raise ValueError("Saldo de bônus insuficiente.")
-        
+
         aplicar_transacao_bonus(
             wallet=wallet_origem,
             tipo="SAIDA",
@@ -136,3 +161,9 @@ def transferir_bonus_para_jogador(wallet_origem, wallet_destino, valor, descrica
             origem=wallet_origem.usuario.username,
             destino=wallet_destino.usuario.username
         )
+    log_action(
+        logger, "wallet_transfer_bonus_p2p", "sucesso",
+        remetente=wallet_origem.usuario.username,
+        destinatario=wallet_destino.usuario.username,
+        valor=str(valor),
+    )

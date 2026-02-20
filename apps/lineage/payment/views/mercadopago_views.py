@@ -13,9 +13,10 @@ import logging
 import hmac
 import hashlib
 import urllib.parse
-from utils.notifications import send_notification
 from django.utils import timezone
 
+from core.log_utils import log_action
+from utils.notifications import send_notification
 
 logger = logging.getLogger(__name__)
 
@@ -194,13 +195,20 @@ def pagamento_sucesso(request):
                         pedido.status = 'CONCLUÍDO'
                         pedido.save()
 
-                    # Registro do fallback para auditoria (de-duplicado)
                     if not WebhookLog.objects.filter(tipo="payment_fallback", data_id=str(payment_id)).exists():
                         WebhookLog.objects.create(
                             tipo="payment_fallback",
                             data_id=str(payment_id),
                             payload=pagamento_info
                         )
+                    log_action(
+                        logger, "payment_mercadopago", "aprovado_redirect",
+                        username=pagamento.usuario.username,
+                        pagamento_id=pagamento_id,
+                        payment_id_mp=payment_id,
+                        valor=str(pagamento.valor),
+                        valor_bonus=str(valor_bonus),
+                    )
 
         return render(request, 'mp/pagamento_sucesso.html')
 
@@ -313,17 +321,23 @@ def notificacao_mercado_pago(request):
                                     pedido.save()
 
                                 try:
-                                    # Notificação para staff
                                     send_notification(
                                         user=None,
                                         notification_type='staff',
                                         message=f"Pagamento aprovado para {pagamento.usuario.username} no valor de R$ {pagamento.valor:.2f}.",
-                                        created_by=None  # Notificação pública staff sem created_by
+                                        created_by=None
                                     )
                                 except Exception as e:
                                     logger.error(f"Erro ao criar notificação: {str(e)}")
+                                log_action(
+                                    logger, "payment_mercadopago_webhook", "aprovado",
+                                    username=pagamento.usuario.username,
+                                    pagamento_id=pagamento_id,
+                                    data_id=data_id,
+                                    valor=str(pagamento.valor),
+                                    valor_bonus=str(valor_bonus),
+                                )
 
-                        # Já estava processado: responde OK sem duplicar
                         return HttpResponse("OK", status=200)
 
                     except Pagamento.DoesNotExist:
@@ -375,8 +389,15 @@ def notificacao_mercado_pago(request):
                                         )
                                     except Exception as e:
                                         logger.error(f"Erro ao criar notificação: {str(e)}")
+                                    log_action(
+                                        logger, "payment_mercadopago_webhook", "aprovado_merchant_order",
+                                        username=pagamento.usuario.username,
+                                        pagamento_id=str(pagamento.id),
+                                        data_id=data_id,
+                                        valor=str(pagamento.valor),
+                                        valor_bonus=str(valor_bonus),
+                                    )
 
-                            # Mesmo se já processado, responder OK para o webhook
                             return HttpResponse("OK", status=200)
                         except Pagamento.DoesNotExist:
                             return HttpResponse("Pagamento não encontrado pela referência", status=404)

@@ -15,6 +15,8 @@ from decimal import Decimal
 from django.urls import reverse
 import logging
 
+from core.log_utils import log_action
+
 logger = logging.getLogger(__name__)
 
 # Configura a chave do Stripe apenas se estiver configurada
@@ -137,6 +139,14 @@ def criar_ou_reaproveitar_pedido(request):
                 total_creditado=total_creditado,
                 metodo=metodo,
                 status='PENDENTE'
+            )
+            log_action(
+                logger, "payment_pedido", "criado",
+                username=usuario.username,
+                pedido_id=novo_pedido.id,
+                valor=str(valor),
+                metodo=metodo,
+                total_creditado=str(total_creditado),
             )
 
             perfil, _ = PerfilGamer.objects.get_or_create(user=request.user)

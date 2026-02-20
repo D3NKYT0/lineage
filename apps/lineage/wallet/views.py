@@ -24,6 +24,7 @@ import time
 import logging
 from django.conf import settings
 
+from core.log_utils import log_action
 from apps.main.home.models import PerfilGamer
 
 from utils.dynamic_import import get_query_class
@@ -262,12 +263,31 @@ def transfer_from_server(request):
                 )
 
         except Exception as e:
+            log_action(
+                logger, "wallet_retirada_servidor", "erro",
+                username=request.user.username,
+                char_id=char_id,
+                quantidade_moedas=quantidade_moedas,
+                valor_liquido=str(valor_liquido),
+                erro=str(e),
+                level=logging.ERROR,
+                exc_info=True,
+            )
             messages.error(request, f"Ocorreu um erro durante a retirada: {str(e)}")
             return redirect('wallet:transfer_from_server')
 
         perfil, created = PerfilGamer.objects.get_or_create(user=request.user)
         perfil.adicionar_xp(40)
 
+        log_action(
+            logger, "wallet_retirada_servidor", "sucesso",
+            username=request.user.username,
+            char_id=char_id,
+            quantidade_moedas=quantidade_moedas,
+            valor_bruto=str(valor_bruto),
+            taxa_percentual=str(taxa_percentual),
+            valor_liquido=str(valor_liquido),
+        )
         messages.success(request, _(
             f"Retirada realizada com sucesso! "
             f"R${valor_bruto:.2f} retirados (Taxa: R${taxa_valor:.2f} - {taxa_percentual}%). "
@@ -307,7 +327,7 @@ def coin_config_panel(request):
                     # Ativa a moeda selecionada usando save() para garantir que a lógica do modelo seja executada
                     moeda_para_ativar.ativa = True
                     moeda_para_ativar.save()
-                    
+                    log_action(logger, "wallet_coin_config", "moeda_ativada", coin_id=coin_id, nome=moeda_para_ativar.nome, staff=request.user.username)
                     messages.success(request, f'Moeda "{moeda_para_ativar.nome}" ativada com sucesso!')
                 except CoinConfig.DoesNotExist:
                     messages.error(request, 'Moeda não encontrada.')
@@ -346,6 +366,7 @@ def coin_config_panel(request):
                         taxa_retirada=taxa_retirada,
                         ativa=False
                     )
+                    log_action(logger, "wallet_coin_config", "moeda_criada", nome=nova_moeda.nome, coin_id=coin_id, staff=request.user.username)
                     messages.success(request, f'Moeda "{nova_moeda.nome}" criada com sucesso!')
                 except Exception as e:
                     messages.error(request, f'Erro ao criar moeda: {str(e)}')
@@ -371,6 +392,7 @@ def coin_config_panel(request):
                     
                     moeda.taxa_retirada = taxa_retirada
                     moeda.save()
+                    log_action(logger, "wallet_coin_config", "taxa_atualizada", nome=moeda.nome, taxa_retirada=str(taxa_retirada), staff=request.user.username)
                     messages.success(request, f'Taxa de retirada da moeda "{moeda.nome}" atualizada para {taxa_retirada}%!')
                 except CoinConfig.DoesNotExist:
                     messages.error(request, 'Moeda não encontrada.')
@@ -385,12 +407,11 @@ def coin_config_panel(request):
                 try:
                     moeda = CoinConfig.objects.get(id=coin_id)
                     nome_moeda = moeda.nome
-                    
-                    # Verifica se é a moeda ativa
-                    if moeda.ativa:
+                    estava_ativa = moeda.ativa
+                    if estava_ativa:
                         messages.warning(request, f'Moeda "{nome_moeda}" estava ativa e foi removida.')
-                    
                     moeda.delete()
+                    log_action(logger, "wallet_coin_config", "moeda_excluida", nome=nome_moeda, estava_ativa=estava_ativa, staff=request.user.username)
                     messages.success(request, f'Moeda "{nome_moeda}" excluída com sucesso!')
                 except CoinConfig.DoesNotExist:
                     messages.error(request, 'Moeda não encontrada.')
@@ -492,9 +513,14 @@ def comprar_fichas_wallet(request):
                 }
             )
             
-            # Atualiza o wallet para retornar os saldos atualizados
             wallet.refresh_from_db()
-            
+            log_action(
+                logger, "wallet_compra_fichas", "sucesso",
+                username=request.user.username,
+                quantidade=quantidade,
+                total=str(total),
+                origem_saldo=origem_saldo,
+            )
             return JsonResponse({
                 'success': True, 
                 'fichas': request.user.fichas,

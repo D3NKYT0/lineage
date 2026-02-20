@@ -25,6 +25,8 @@ from utils.dynamic_import import get_query_class
 from django.utils.translation import gettext as _
 from django.contrib.auth import authenticate
 
+from core.log_utils import log_action
+
 logger = logging.getLogger(__name__)
 
 TransferFromWalletToChar = get_query_class("TransferFromWalletToChar")
@@ -210,7 +212,14 @@ def process_transfer_to_server(user, nome_personagem, valor, origem_saldo, activ
             perfil, created = PerfilGamer.objects.get_or_create(user=user)
             perfil.adicionar_xp(40)
 
-            logger.info(f"Transferência concluída com sucesso: usuário={user.username}, personagem={nome_personagem}, valor={valor}")
+            log_action(
+                logger, "wallet_transfer_servidor", "sucesso",
+                username=user.username,
+                personagem=nome_personagem,
+                valor=str(valor),
+                origem_saldo=origem_saldo,
+                moedas=amount,
+            )
 
             # Notifica staff (push) sobre envio para o servidor
             try:
@@ -929,7 +938,12 @@ def process_transfer_to_player(user, nome_jogador, valor, senha=None, skip_dupli
             perfil, created = PerfilGamer.objects.get_or_create(user=user)
             perfil.adicionar_xp(40)
 
-            logger.info(f"Transferência entre jogadores concluída com sucesso: remetente={user.username}, destinatário={nome_jogador}, valor={valor}")
+            log_action(
+                logger, "wallet_transfer_p2p", "sucesso",
+                remetente=user.username,
+                destinatario=nome_jogador,
+                valor=str(valor),
+            )
 
             message = f"Transferência de R${valor:.2f} para {destinatario.username} realizada com sucesso."
             

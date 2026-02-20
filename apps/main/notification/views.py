@@ -16,6 +16,10 @@ import json
 from pywebpush import webpush, WebPushException
 import logging
 
+from core.log_utils import log_action
+
+logger = logging.getLogger(__name__)
+
 
 @conditional_otp_required
 def get_notifications(request):
@@ -355,14 +359,22 @@ def claim_rewards(request, pk):
     success, error_message = claim_notification_rewards(notification, request.user, request)
     
     if success:
-        # Verifica se há fichas nos prêmios
         has_fichas = notification.rewards.filter(fichas_amount__gt=0).exists()
+        rewards_count = notification.rewards.count()
+        log_action(
+            logger, "notification_claim_rewards", "sucesso",
+            username=request.user.username,
+            notification_id=notification.pk,
+            notification_type=notification.notification_type,
+            rewards_count=rewards_count,
+            has_fichas=has_fichas,
+        )
         message = 'Prêmios reclamados com sucesso!'
         if has_fichas:
             message += ' Verifique sua bag e suas fichas.'
         else:
             message += ' Verifique sua bag.'
-        
+
         return JsonResponse({
             'status': 'success',
             'message': message

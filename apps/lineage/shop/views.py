@@ -9,9 +9,12 @@ from apps.lineage.wallet.signals import aplicar_transacao
 from apps.lineage.inventory.models import InventoryItem, Inventory
 from apps.lineage.wallet.models import Wallet
 from django.core.paginator import Paginator
+import logging
 
 from apps.main.home.models import PerfilGamer
+from core.log_utils import log_action
 
+logger = logging.getLogger(__name__)
 from utils.dynamic_import import get_query_class
 from apps.lineage.server.services.account_context import (
     get_active_login,
@@ -351,8 +354,16 @@ def checkout(request):
                         nome_pacote=cart_package.pacote.nome
                     )
 
-            # Limpar o carrinho
             cart.limpar()
+            log_action(
+                logger, "shop_checkout", "sucesso",
+                username=request.user.username,
+                purchase_id=purchase.id,
+                total=str(total),
+                valor_bonus_usado=str(valor_bonus_usado),
+                valor_dinheiro_usado=str(valor_dinheiro_usado),
+                personagem=personagem,
+            )
 
             # Notifica staff (push) sobre compra na loja
             try:

@@ -5,11 +5,13 @@ from django.views.decorators.csrf import csrf_exempt
 from apps.lineage.wallet.signals import aplicar_transacao
 from apps.lineage.wallet.models import Wallet
 from utils.notifications import send_notification
-from ..models import Pagamento, WebhookLog
-import logging
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
+from core.log_utils import log_action
+from ..models import Pagamento, WebhookLog
+
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -110,7 +112,14 @@ def stripe_webhook(request):
                         user=None,
                         notification_type='staff',
                         message=f"Pagamento aprovado para {pagamento.usuario.username} no valor de R$ {valor:.2f}.",
-                        created_by=None  # Notificação pública staff sem created_by
+                        created_by=None
+                    )
+                    log_action(
+                        logger, "payment_stripe_webhook", "checkout_completed",
+                        username=pagamento.usuario.username,
+                        pagamento_id=pagamento_id,
+                        valor=str(valor),
+                        valor_bonus=str(valor_bonus),
                     )
             except Pagamento.DoesNotExist:
                 logger.error(f"Pagamento ID {pagamento_id} não encontrado.")
@@ -140,6 +149,13 @@ def stripe_webhook(request):
                         pedido.total_creditado = valor_total
                         pedido.status = "CONCLUÍDO"
                         pedido.save()
+                    log_action(
+                        logger, "payment_stripe_webhook", "payment_intent_succeeded",
+                        username=pagamento.usuario.username,
+                        pagamento_id=pagamento_id,
+                        valor=str(pagamento.valor),
+                        valor_bonus=str(valor_bonus),
+                    )
             except Pagamento.DoesNotExist:
                 logger.error(f"Pagamento ID {pagamento_id} (PI) não encontrado.")
 
@@ -192,6 +208,14 @@ def stripe_pagamento_sucesso(request):
                 tipo="payment_fallback",
                 data_id=session_id,
                 payload=session
+            )
+            log_action(
+                logger, "payment_stripe", "aprovado_redirect",
+                username=pagamento.usuario.username,
+                pagamento_id=pagamento_id,
+                session_id=session_id,
+                valor=str(pagamento.valor),
+                valor_bonus=str(valor_bonus),
             )
 
         return render(request, "stripe/pagamento_sucesso.html")

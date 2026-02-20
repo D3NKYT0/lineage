@@ -1,7 +1,12 @@
+import logging
 from django.db import transaction
 from django.utils.translation import gettext as _
 from django.urls import reverse
+
+from core.log_utils import log_action
 from .models import Bid
+
+logger = logging.getLogger(__name__)
 from apps.lineage.wallet.models import Wallet
 from apps.lineage.wallet.signals import aplicar_transacao
 from apps.lineage.inventory.models import InventoryItem, Inventory
@@ -56,12 +61,20 @@ def place_bid(auction, bidder, bid_amount, character_name):
     auction.highest_bidder = bidder
     auction.save()
 
-    return Bid.objects.create(
+    bid = Bid.objects.create(
         auction=auction,
         bidder=bidder,
         amount=bid_amount,
         character_name=character_name
     )
+    log_action(
+        logger, "auction_lance", "sucesso",
+        auction_id=auction.id,
+        bidder=bidder.username,
+        amount=str(bid_amount),
+        character_name=character_name,
+    )
+    return bid
 
 
 @transaction.atomic
@@ -80,10 +93,16 @@ def finish_auction(auction: Auction):
             origem=str(auction.highest_bidder)
         )
 
-        # Entrega o item ao comprador
         winning_bid = auction.bids.order_by('-amount', '-created_at').first()
         if not winning_bid:
             raise ValueError(_("Não foi possível determinar o lance vencedor."))
+        log_action(
+            logger, "auction_finalizado", "venda",
+            auction_id=auction.id,
+            seller=auction.seller.username,
+            winner=auction.highest_bidder.username,
+            amount=str(auction.current_bid),
+        )
 
         dest_inventory = Inventory.objects.get(
             user=auction.highest_bidder,

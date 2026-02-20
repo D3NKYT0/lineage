@@ -17,6 +17,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.vary import vary_on_cookie
 
 import logging
+
+from core.log_utils import log_action
+
 logger = logging.getLogger(__name__)
 
 
@@ -58,8 +61,8 @@ def send_friend_request(request, user_id):
     if Friendship.objects.filter(user=friend, friend=request.user, accepted=False).exists():
         return redirect('message:friends_list')
 
-    # Cria um novo pedido de amizade
     Friendship.objects.create(user=request.user, friend=friend)
+    log_action(logger, "message_amizade", "pedido_enviado", user=request.user.username, friend=friend.username)
 
     # Ganha XP e verifica conquista
     if request.user.is_authenticated:
@@ -97,12 +100,10 @@ def send_friend_request(request, user_id):
 def accept_friend_request(request, friendship_id):
     friendship = Friendship.objects.get(id=friendship_id)
 
-    # Aceita a amizade
     friendship.accepted = True
     friendship.save()
-
-    # Cria a relação bidirecional
     Friendship.objects.get_or_create(user=friendship.friend, friend=friendship.user, accepted=True)
+    log_action(logger, "message_amizade", "aceito", user=request.user.username, friend=friendship.user.username if friendship.friend == request.user else friendship.friend.username)
 
     # Ganha XP e verifica conquistas
     if request.user.is_authenticated:
@@ -119,7 +120,10 @@ def accept_friend_request(request, friendship_id):
 @conditional_otp_required
 def reject_friend_request(request, friendship_id):
     friendship = Friendship.objects.get(id=friendship_id)
-    friendship.delete()  # Remove a solicitação de amizade
+    requester = friendship.user.username
+    target = friendship.friend.username
+    friendship.delete()
+    log_action(logger, "message_amizade", "recusado", user=request.user.username, requester=requester, target=target)
     return redirect('message:friends_list')
 
 

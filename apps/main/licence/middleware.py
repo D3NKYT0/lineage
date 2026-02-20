@@ -1,8 +1,13 @@
-from django.shortcuts import redirect
-from django.contrib import messages
-from django.urls import reverse
+import logging
 from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.urls import reverse
+
+from core.log_utils import log_action
 from .manager import license_manager
+
+logger = logging.getLogger(__name__)
 
 
 class LicenseMiddleware:
@@ -59,13 +64,11 @@ class LicenseMiddleware:
                 
                 # Se a licença for inválida, redireciona baseado no tipo de usuário
                 if not is_valid:
-                    # Verifica se o usuário está autenticado e é superusuário
+                    log_action(logger, "licence", "licenca_invalida", path=path, redirect_to="license_expired_or_maintenance")
                     if hasattr(request, 'user') and request.user.is_authenticated and request.user.is_superuser:
-                        # Superusuário - redireciona para página de licença expirada
                         if not path.startswith('/public/license-expired/'):
                             return redirect('license_expired')
                     else:
-                        # Usuário comum ou não autenticado - redireciona para manutenção
                         if not path.startswith('/public/maintenance/'):
                             return redirect('maintenance')
                 
@@ -73,10 +76,8 @@ class LicenseMiddleware:
                 if not is_valid:
                     request.license_status['show_warning'] = True
             else:
-                # Não há licença ativa
                 request.license_status['show_warning'] = True
-                
-                # Redireciona baseado no tipo de usuário
+                log_action(logger, "licence", "sem_licenca", path=path)
                 if hasattr(request, 'user') and request.user.is_authenticated and request.user.is_superuser:
                     # Superusuário - redireciona para página de licença expirada
                     if not path.startswith('/public/license-expired/'):

@@ -14,9 +14,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.utils import timezone
 from datetime import datetime, timedelta
+import logging
 import re
 
+from core.log_utils import log_action
 from .models import Post, Comment, Like, Follow, UserProfile, Share, Hashtag, PostHashtag, CommentLike, Report, ModerationAction, ContentFilter, ModerationLog, VerificationRequest
+
+logger = logging.getLogger(__name__)
 from apps.main.message.models import Friendship
 from .forms import PostForm, CommentForm, UserProfileForm, SearchForm, ShareForm, ReactionForm, HashtagForm, ReportForm, SearchReportForm, BulkModerationForm, ModerationActionForm, ContentFilterForm
 
@@ -477,10 +481,9 @@ def share_post(request, post_id):
             comment=form.cleaned_data.get('comment', '')
         )
         
-        # Atualizar contador de compartilhamentos
         original_post.shares_count += 1
         original_post.save(update_fields=['shares_count'])
-        
+        log_action(logger, "social_share", "sucesso", username=request.user.username, original_post_id=original_post.id, novo_post_id=post.id)
         messages.success(request, _('Post compartilhado com sucesso!'))
         return redirect('social:feed')
     
@@ -493,10 +496,6 @@ def share_post(request, post_id):
 def follow_user(request, user_id):
     """Seguir/deixar de seguir um usuário"""
     try:
-        # Log para debug
-        print(f"Tentando seguir usuário com ID: {user_id} (tipo: {type(user_id)})")
-        
-        # Garantir que user_id seja um inteiro
         try:
             user_id = int(user_id)
         except (ValueError, TypeError):
@@ -504,27 +503,24 @@ def follow_user(request, user_id):
                 'error': f'ID de usuário inválido: {user_id}',
                 'success': False
             }, status=400)
-        
+
         user_to_follow = get_object_or_404(User, id=user_id)
-        
-        # Log adicional para debug
-        print(f"Usuário encontrado: {user_to_follow.username} (ID: {user_to_follow.id})")
-        print(f"Usuário atual: {request.user.username} (ID: {request.user.id})")
-        
+
         if user_to_follow == request.user:
             return JsonResponse({'error': _('Você não pode seguir a si mesmo')}, status=400)
-        
+
         follow, created = Follow.objects.get_or_create(
             follower=request.user,
             following=user_to_follow
         )
-        
+
         if not created:
-            # Se já existe, remover o follow
             follow.delete()
             following = False
+            log_action(logger, "social_follow", "unfollow", follower=request.user.username, following=user_to_follow.username)
         else:
             following = True
+            log_action(logger, "social_follow", "follow", follower=request.user.username, following=user_to_follow.username)
         
         # Calcular contadores atualizados
         followers_count = user_to_follow.followers.count()
@@ -847,16 +843,14 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         response = super().form_valid(form)
-        
-        # Processar hashtags do conteúdo
+
         hashtags_from_content = form.instance.extract_hashtags_from_content()
-        
-        # Adicionar hashtags ao post
         for hashtag_name in hashtags_from_content:
             hashtag, created = Hashtag.objects.get_or_create(name=hashtag_name)
             PostHashtag.objects.create(post=form.instance, hashtag=hashtag)
             hashtag.update_posts_count()
-        
+
+        log_action(logger, "social_post", "criado", username=self.request.user.username, post_id=form.instance.id)
         messages.success(self.request, _('Post criado com sucesso!'))
         return response
 
@@ -1023,7 +1017,14 @@ def report_content(request, content_type, content_id):
                     })
                 
                 report.save()
-                
+                log_action(
+                    logger, "social_report", "criado",
+                    reporter=request.user.username,
+                    content_type=content_type,
+                    content_id=content_id,
+                    report_type=str(getattr(report, 'report_type', '')),
+                )
+
                 # Verificar se há denúncias similares
                 similar_reports = Report.objects.filter(
                     report_type=report.report_type,
@@ -2369,10 +2370,18 @@ def bulk_moderation_action(request):
                     # Aplicar ação
                     action.apply_action()
                     
-                    # Resolver denúncia
                     report.resolve(request.user, action.get_action_type_display(), reason)
+                    log_action(
+                        logger, "social_moderacao", "acao_aplicada",
+                        moderator=request.user.username,
+                        action_type=action_type,
+                        report_id=report.id,
+                        target_post_id=report.reported_post_id,
+                        target_comment_id=report.reported_comment_id,
+                        target_user_id=target_user.id if target_user else None,
+                    )
                     processed_count += 1
-                
+
                 else:
                     # Ação não reconhecida
                     raise ValueError(_('Tipo de ação não reconhecido: %(action)s') % {'action': action_type})
