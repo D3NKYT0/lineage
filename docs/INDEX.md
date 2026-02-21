@@ -112,6 +112,7 @@ Escolha o guia adequado ao seu perfil:
 | [GUIDE_CREATE_THEME](themes/GUIDE_CREATE_THEME.md) | Tutorial completo para criar um tema |
 | [THEME_ERROR_HANDLING](themes/THEME_ERROR_HANDLING.md) | Tratamento de erros em temas |
 | [THEME_TEMPLATES_ROUTES](themes/THEME_TEMPLATES_ROUTES.md) | Rotas e templates do sistema de temas |
+| [THEME_INDEX_CONTEXT](themes/THEME_INDEX_CONTEXT.md) | Guia avançado de variáves de contexto do index.html |
 
 ---
 

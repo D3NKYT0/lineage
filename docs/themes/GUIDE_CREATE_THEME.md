@@ -212,6 +212,8 @@ O `base.html` é o template principal que define a estrutura HTML:
 
 ### Página Inicial (index.html)
 
+*(**Nota:** Esta página recebe um aglomerado massivo de dados únicos do servidor, como contadores, clãs e status dinâmico. [Acesse o THEME_INDEX_CONTEXT.md](THEME_INDEX_CONTEXT.md) para ver a lista de todas as variáveis de contexto e exemplos.)*
+
 ```html
 {% extends 'layouts/public.html' %}
 {% load static i18n %}
@@ -729,7 +731,7 @@ O sistema verifica:
 - ✅ Arquivo `theme.json` presente
 - ✅ Campos obrigatórios preenchidos
 - ✅ Extensões de arquivo permitidas
-- ✅ Tamanho máximo (30MB)
+- ✅ Tamanho máximo (50MB)
 - ✅ Segurança contra path traversal
 
 ### 4. Ativação

@@ -13,7 +13,7 @@ O sistema de temas permite customizar a aparência do site enviando pacotes ZIP 
 - **Validação:** O ZIP deve conter `theme.json` com metadados obrigatórios (`name`, `slug`, etc.)
 - **Extração:** Arquivos são extraídos para `themes/installed/<slug>/`
 - **Ativação:** Apenas um tema pode estar ativo por vez. Ao ativar um tema, os demais são desativados
-- **Remoção:** Ao excluir um tema, o ZIP e a pasta extraída são removidos
+- **Remoção:** Ao excluir um tema, tanto o arquivo ZIP original do upload quanto a pasta correspondente já extraída em `themes/installed/<slug>` são removidos definitivamente para manter o sistema limpo.
 
 ---
 
@@ -43,8 +43,9 @@ O sistema de temas permite customizar a aparência do site enviando pacotes ZIP 
 ---
 
 ## Variáveis de Tema
-- Definidas em `theme.json` e salvas como `ThemeVariable`
-- Suporte a internacionalização (`valor_pt`, `valor_en`, `valor_es`)
+- Definidas em `theme.json` e salvas no banco de dados como o modelo `ThemeVariable`, automaticamente prefixadas com o slug do tema.
+- Suporte nativo a tipos específicos (`string`, `int`, `boolean`), com conversão automática através do método `get_valor_convertido()` ao serem chamadas nos templates.
+- Suporte a internacionalização (`valor_pt`, `valor_en`, `valor_es`) com fallback para o português (`valor_pt`).
 - Disponível no contexto dos templates via context processor
 - Exemplo de uso no template:
   ```django
@@ -84,7 +85,7 @@ O context processor `background_setting` injeta a imagem de fundo ativa.
 ## Segurança
 - Apenas extensões permitidas são extraídas
 - Caminhos validados para evitar path traversal
-- Tamanho máximo do ZIP: 30MB
+- Tamanho máximo do ZIP: 50MB
 
 ---
 

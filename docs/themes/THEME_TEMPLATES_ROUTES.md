@@ -20,7 +20,7 @@ Este documento lista todas as rotas que podem ser substituídas por arquivos de 
 
 ### Página Inicial
 - **Rota**: `/`
-- **Template do Tema**: `index.html`
+- **Template do Tema**: `index.html` *(Consulte as [variáveis de contexto específicas aqui](THEME_INDEX_CONTEXT.md))*
 - **Template Padrão**: `public/index.html`
 
 ### Páginas Legais

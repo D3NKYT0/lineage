@@ -97,13 +97,13 @@ Injeta informações do tema ativo:
 ```
 
 ### theme_variables
-Injeta todas as variáveis do tema com conversão de tipo:
+Injeta todas as variáveis do tema com conversão de tipo baseada no campo `tipo` (`string`, `int`, `boolean`):
 ```python
 # Para cada variável no theme.json
 {
     'meu_tema_texto': 'valor em texto',
-    'meu_tema_numero': 123,  # Convertido para int
-    'meu_tema_booleano': True  # Convertido para boolean
+    'meu_tema_numero': 123,  # Convertido para float/int internamente em tempo real
+    'meu_tema_booleano': True  # Valores como 'true', '1', 'yes' são convertidos nativamente para booleano
 }
 ```
 
@@ -122,6 +122,15 @@ Injeta background ativo:
 ```python
 {
     'background_url': '/media/backgrounds/bg.jpg'
+}
+```
+
+### sidebar_segment
+Injeta variáveis para auxiliar na funcionalidade de item ativo do menu lateral / navegação condicional:
+```python
+{
+    'segment': 'games', # String baseada no path atual (ex: /games/roleta -> 'games')
+    'parent': 'games'   # Determina o grupo pai correspondente (ex: 'tops', 'heroes', 'games')
 }
 ```
 
@@ -465,7 +474,7 @@ seu-tema/
 ## ⚠️ Limitações e Restrições {#limitacoes-restricoes}
 
 ### Restrições de Segurança
-- **Tamanho máximo**: 30MB por ZIP
+- **Tamanho máximo**: 50MB por ZIP
 - **Extensões permitidas**: Apenas as listadas acima
 - **Path traversal**: Bloqueado automaticamente
 - **Execução de código**: Não é possível executar PHP, Python, etc.
