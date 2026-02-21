@@ -1,6 +1,6 @@
 ﻿# PDL 1.11.0 – Sistema Matriz-Filial de Contas (Explicação Técnica)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## Visão Geral
 O recurso Matriz-Filial permite que múltiplos servidores Lineage 2 (filiais) sejam gerenciados sob uma estrutura centralizada (matriz), compartilhando ou isolando dados conforme a necessidade do projeto. O sistema foi desenhado para ser flexível, seguro e facilmente integrável a diferentes arquiteturas.

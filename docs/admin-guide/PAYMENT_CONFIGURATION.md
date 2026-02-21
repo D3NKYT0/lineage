@@ -1,6 +1,6 @@
 # 💳 Configuração de Pagamentos (MercadoPago + Stripe)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O PDL suporta dois gateways de pagamento para depósitos na Carteira dos jogadores: **Mercado Pago** (foco no Brasil) e **Stripe** (internacional). Ambos são configurados via variáveis de ambiente e ativados no `settings.py`.
 

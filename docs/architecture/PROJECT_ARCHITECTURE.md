@@ -1,6 +1,6 @@
 ﻿# Documento de Arquitetura do Projeto
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## 1. Visão Geral
 

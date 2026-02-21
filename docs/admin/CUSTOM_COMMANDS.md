@@ -1,6 +1,6 @@
 ﻿# Comandos Customizados do Projeto PDL
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Este documento lista todos os comandos Django customizados disponíveis no projeto PDL, organizados por categoria e funcionalidade.
 
@@ -724,9 +724,4 @@ python manage.py migrate_l2_accounts
 
 ---
 
-*Documentação atualizada em: Dezembro 2024*
-
----
-
 [ Voltar ao Índice](../INDEX.md)
-

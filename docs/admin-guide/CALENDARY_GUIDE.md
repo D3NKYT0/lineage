@@ -1,6 +1,6 @@
 # 📅 Calendário de Eventos — Guia do Administrador
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O **Calendário do PDL** exibe os eventos do servidor para os jogadores, como raids, eventos especiais, manutenções e promoções. O administrador controla quais eventos são exibidos e quando.
 

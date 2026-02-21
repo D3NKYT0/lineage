@@ -1,6 +1,6 @@
 # 🛒 Gerenciando a Loja — Guia do Administrador
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O administrador da loja pode cadastrar itens, criar pacotes, gerenciar promoções e cupons de desconto diretamente pelo painel de gerenciamento.
 

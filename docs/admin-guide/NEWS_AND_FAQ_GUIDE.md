@@ -1,6 +1,6 @@
 # 📰 Gerenciando Notícias e FAQ — Guia do Administrador
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O PDL possui módulos de **Notícias** e **FAQ** para comunicar informações importantes e responder dúvidas recorrentes dos jogadores.
 

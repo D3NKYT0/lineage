@@ -1,6 +1,6 @@
 ﻿# Diagrama de Arquitetura
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Este diagrama representa a arquitetura do projeto PDL, do acesso do usuário ao banco de dados, incluindo todos os serviços orquestrados pelo Docker Compose.
 

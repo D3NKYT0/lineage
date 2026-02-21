@@ -1,6 +1,6 @@
 # 🛠️ Visão Geral do Painel de Administração
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Este guia oferece uma visão geral de todas as ferramentas disponíveis para administradores do servidor PDL.
 

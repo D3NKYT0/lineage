@@ -1,6 +1,6 @@
 # Gerenciamento de Chamados (Helpdesk)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Este guia orienta Administradores (Staff) sobre como monitorar, responder e gerenciar de ponta a ponta as solicitações de suporte abertas pelos jogadores no PDL.
 

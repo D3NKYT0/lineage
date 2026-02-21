@@ -1,6 +1,6 @@
 ﻿# API Configuration Panel
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## Visão Geral
 
@@ -48,6 +48,7 @@ DELETE /api/v1/admin/config/panel/
 ### Modelo ApiEndpointToggle
 ```python
 class ApiEndpointToggle(BaseModel):
+    # API Server Endpoints
     players_online = models.BooleanField(default=True)
     top_pvp = models.BooleanField(default=True)
     top_pk = models.BooleanField(default=True)
@@ -56,13 +57,29 @@ class ApiEndpointToggle(BaseModel):
     top_online = models.BooleanField(default=True)
     top_level = models.BooleanField(default=True)
     olympiad_ranking = models.BooleanField(default=True)
-    olympiad_all_heroes = models.BooleanField(default=True)
-    olympiad_current_heroes = models.BooleanField(default=True)
-    grandboss_status = models.BooleanField(default=True)
-    raidboss_status = models.BooleanField(default=True)
-    siege = models.BooleanField(default=True)
-    siege_participants = models.BooleanField(default=True)
-    boss_jewel_locations = models.BooleanField(default=True)
+    # ... (bosses, sieges, etc)
+    
+    # API Authentication Endpoints
+    auth_login = models.BooleanField(default=True)
+    auth_refresh = models.BooleanField(default=True)
+    auth_logout = models.BooleanField(default=True)
+    
+    # API User Profile & Dashboard
+    user_profile = models.BooleanField(default=True)
+    user_dashboard = models.BooleanField(default=True)
+    user_game_data = models.BooleanField(default=True)
+    
+    # API Search & Ingame Data
+    search_character = models.BooleanField(default=True)
+    search_item = models.BooleanField(default=True)
+    clan_detail = models.BooleanField(default=True)
+    auction_items = models.BooleanField(default=True)
+    
+    # API Monitoring & Admin
+    health_check = models.BooleanField(default=True)
+    hourly_metrics = models.BooleanField(default=True)
+    api_config_panel = models.BooleanField(default=True)
+    # ... Entre outros mais de 35 toggles gerenciais.
 ```
 
 ## Como Usar
@@ -295,29 +312,6 @@ logger.debug(f"Config data: {config_data}")
 - **Tempo de atualização**: < 500ms para alterações
 - **Uso de memória**: Mínimo impacto no cache
 
-## Roadmap
-
-### Melhorias Futuras
-- [ ] Interface mais moderna com React/Vue
-- [ ] Histórico de alterações
-- [ ] Configurações por ambiente (dev/prod)
-- [ ] Notificações em tempo real
-- [ ] Backup automático de configurações
-- [ ] API para integração externa
-- [ ] Métricas de uso por endpoint
-- [ ] Sistema de templates de configuração
-
-## Contribuição
-
-Para contribuir com melhorias:
-1. Fork o projeto
-2. Crie uma branch para sua feature
-3. Implemente as mudanças
-4. Adicione testes
-5. Documente as alterações
-6. Submeta um pull request
-
 ---
 
 [ Voltar ao Índice](../INDEX.md)
-

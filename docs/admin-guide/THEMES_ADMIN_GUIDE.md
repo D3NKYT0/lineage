@@ -1,6 +1,6 @@
 # Gerenciamento de Temas (Themes)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O PDL oferece flexibilidade absurda através do app nativo de *Themes*. O sistema não depende de injetores complexos e os administradores podem transitar de designs minimalistas para layouts profundos baseados num simples clique.
 

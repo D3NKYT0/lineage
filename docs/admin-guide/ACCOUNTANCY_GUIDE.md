@@ -1,6 +1,6 @@
 # 📊 Guia do Módulo Financeiro (Accountancy)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O módulo **Accountancy** é o centro de análise financeira do PDL para administradores. Acesse `/app/accountancy/` para visualizar o dashboard e todos os relatórios.
 

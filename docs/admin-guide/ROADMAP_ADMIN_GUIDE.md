@@ -1,6 +1,6 @@
 # 🗺️ Roadmap do Servidor — Guia do Administrador
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O **Roadmap** do PDL permite ao administrador publicar os planos futuros e o status de desenvolvimento do servidor para que os jogadores acompanhem o progresso.
 

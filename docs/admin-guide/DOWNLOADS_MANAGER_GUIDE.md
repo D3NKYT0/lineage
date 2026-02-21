@@ -1,6 +1,6 @@
 # Gerenciador de Downloads (Patchers e Clients)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O Lineage 2 é pesado e frequentemente seus servidores mudarão. Um patcher (Launcher) precisa ter espelhos de download infalíveis. A Central de Downloads serve para o Administrador controlar Links Dinâmicos na página Inicial e estatísticas públicas de banda.
 

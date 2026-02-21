@@ -1,6 +1,6 @@
 ﻿# Assistente Virtual com IA do PDL: Como Funciona
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## Da Explicação Simples à Implementação Técnica
 

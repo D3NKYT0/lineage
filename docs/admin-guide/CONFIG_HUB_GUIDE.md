@@ -1,6 +1,6 @@
 # Central de Configurações (Config Hub)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O **Config Hub** (`/config/hub/`) atua como a espinha dorsal de parametrização dinâmica do PDL. Diferente do Painel Django nativo, a Central de Configurações visa oferecer um design Neumorphic moderno para os Donos de Servidor gerenciarem a balança de poder, tabelas de prêmios e gatilhos sociais em dezenas de submódulos interativos, sem que precisem tocar em bancos de dados.
 

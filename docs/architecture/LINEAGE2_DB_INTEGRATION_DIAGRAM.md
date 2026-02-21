@@ -1,6 +1,6 @@
 ﻿# Diagrama de Integração: Django x Banco L2
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Este diagrama ilustra como o app `apps.lineage.server` conecta o Django ao banco de dados do Lineage 2 (L2), detalhando o fluxo de dados e as responsabilidades de cada camada.
 

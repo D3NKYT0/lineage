@@ -1,6 +1,6 @@
 # 📚 Wiki do Servidor — Guia do Administrador
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 A **Wiki** do PDL permite criar páginas de conteúdo público para os jogadores do seu servidor: guias de classes, dungeons, regras, FAQs avançados e atualizações do servidor (patch notes).
 

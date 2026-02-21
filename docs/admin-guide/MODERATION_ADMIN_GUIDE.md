@@ -1,6 +1,6 @@
 # Guia Prático de Moderação
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O PDL conta com canais de moderação que englobam isolamento de contas no jogo (L2J), exclusões do banco no painel Web e moderação passiva da rede social. Este guia orienta o Administrador neste ecossistema.
 

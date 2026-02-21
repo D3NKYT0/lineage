@@ -1,6 +1,6 @@
 # Central do Auditor e Anti-Fraude
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O Lineage Definitivo Painel carrega um arsenal robusto sob o aplicativo `apps/auditor`. A sua função como Administrador (Staff) não é apenas ler tabelas de bans, mas agir preventivamente contra roubos, RMT e Múltiplas Contas falsas do painel inteiro.
 
