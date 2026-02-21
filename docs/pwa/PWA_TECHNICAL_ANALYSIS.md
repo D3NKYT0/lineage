@@ -169,6 +169,8 @@ const subscription = await registration.pushManager.subscribe({
 - **Input Validation**: Validação de formulários
 
 ### Otimizações de Performance
+- **Automated Build Cleanup**: Limpeza automática de bundles antigos da pasta `static/pwa/` a cada novo build.
+- **Auto Template Injection**: Atualização automática das referências de bundles no `index.html` servido pelo Django.
 - **Code Splitting**: Webpack chunks
 - **Lazy Loading**: Componentes sob demanda
 - **Caching**: Service Worker cache
@@ -231,9 +233,10 @@ const subscription = await registration.pushManager.subscribe({
 
 ### Build Process
 1. **Development**: `npm start` (hot reload)
-2. **Production**: `npm run build` (otimizado)
-3. **Static Files**: Servidos via Django
-4. **CDN**: Assets otimizados
+2. **Production**: `npm run build` (otimizado, com remoção de bundles antigos)
+3. **Template Sync**: Atualização automática do `index.html` com os novos arquivos gerados
+4. **Static Files**: Servidos de forma automática via Django na pasta `static/pwa/`
+5. **CDN**: Assets otimizados
 
 ### Estrutura de Deploy
 ```

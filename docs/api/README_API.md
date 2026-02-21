@@ -84,9 +84,11 @@ apps/api/
 - **Bosses**: 1 minuto
 - **Cercos**: 5 minutos
 
-### Documentação
+### Gateway & Documentação
+- **API Gateway Moderno**: Landing page informativa (`/api/`) com design estilizado (Tailwind CSS, Glassmorphism) listando metadados (versão, rate limits, count endpoints).
 - Documentação automática com DRF Spectacular
 - Swagger UI disponível em `/api/v1/schema/swagger/`
+- ReDoc disponível em `/api/v1/schema/redoc/`
 - OpenAPI 3.0 schema em `/api/v1/schema/`
 
 ### Validação

@@ -1,10 +1,8 @@
-﻿# 🎨 PDL 1.14.5 - Nova Era Visual e Rede Social
+# 🎨 Nova Era Visual e Rede Social no PDL
 
 > **Última atualização:** 20/02/2026
 
-## 🚀 Lançamento da Versão 1.14.5
-
-A equipe PDL tem o prazer de anunciar o lançamento da **versão 1.14.5**, uma atualização revolucionária que redefine completamente a experiência do usuário e introduz uma rede social integrada que transformará a forma como nossa comunidade interage.
+Temos o prazer de anunciar uma grande atualização para o painel PDL, uma mudança revolucionária que redefine completamente a experiência do usuário e introduz uma rede social integrada que transformará a forma como nossa comunidade interage.
 
 ---
 
@@ -66,7 +64,7 @@ A equipe PDL tem o prazer de anunciar o lançamento da **versão 1.14.5**, uma a
 
 ---
 
-## 📊 Números impressionantes desta atualização:
+## 📊 Números impressionantes:
 
 - **🎨 100%** da interface redesenhada
 - **📱 6 tipos** de reações disponíveis
@@ -78,7 +76,7 @@ A equipe PDL tem o prazer de anunciar o lançamento da **versão 1.14.5**, uma a
 
 ## 🔮 O que vem por aí?
 
-Esta é apenas o começo! Nas próximas versões, você pode esperar:
+Esta é apenas o começo! Continuamos trabalhando para trazer mais novidades:
 
 - **Stories de 24 horas** para compartilhar momentos temporários
 - **Chat em tempo real** entre membros da comunidade
@@ -106,7 +104,7 @@ Sua opinião é fundamental para continuarmos melhorando. Compartilhe conosco:
 
 ## 🎉 Agradecimentos
 
-Queremos agradecer a toda a comunidade PDL pelo apoio contínuo e feedback valioso que nos ajudou a criar esta versão incrível. Vocês são o coração desta plataforma!
+Queremos agradecer a toda a comunidade PDL pelo apoio contínuo e feedback valioso que nos ajudou a criar estas melhorias incríveis. Vocês são o coração desta plataforma!
 
 ### **Equipe PDL:**
 - **Daniel Amaral** - Desenvolvedor FullStack/FullCycle
@@ -114,9 +112,9 @@ Queremos agradecer a toda a comunidade PDL pelo apoio contínuo e feedback valio
 
 ---
 
-## 🚀 Atualize agora!
+## 🚀 Como Atualizar
 
-Para usuários existentes, a atualização é automática. Basta executar:
+Para usuários existentes, basta executar o script de build para obter a versão mais recente contendo essas novidades:
 
 ```bash
 cd /var/pdl/lineage
@@ -127,6 +125,6 @@ Para novos usuários, siga o guia de instalação em nossa documentação.
 
 ---
 
-**A nova era do PDL chegou! 🎨📱✨**
+**A nova era do PDL! 🎨📱✨**
 
 *Desenvolvido com ❤️ pela equipe PDL*

@@ -579,12 +579,15 @@ As APIs utilizam cache para melhorar a performance:
 - **Bosses**: 1 minuto
 - **Cercos**: 5 minutos
 
-## Documentação Interativa
+## API Gateway e Documentação Interativa
 
-Acesse a documentação interativa da API em:
-```
-https://seu-dominio.com/api/v1/schema/swagger/
-```
+A API conta com um **API Gateway** moderno que serve como portal de entrada para desenvolvedores. O Gateway exibe informações do sistema, limites, status e opções de documentação interativa.
+
+Acesse o Gateway e as opções de documentação abaixo:
+- **API Gateway**: `https://seu-dominio.com/api/`
+- **Swagger UI**: `https://seu-dominio.com/api/v1/schema/swagger/`
+- **ReDoc**: `https://seu-dominio.com/api/v1/schema/redoc/`
+- **OpenAPI Schema**: `https://seu-dominio.com/api/v1/schema/`
 
 ## Suporte
 

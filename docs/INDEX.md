@@ -187,7 +187,7 @@ Escolha o guia adequado ao seu perfil:
 | Documento | Descrição |
 |-----------|-----------|
 | [NOTIFICATIONS_README](notifications/NOTIFICATIONS_README.md) | Sistema de notificações |
-| [POST_1.14.5_NEWS](notifications/POST_1.14.5_NEWS.md) | Notícias pós-versão 1.14.5 |
+| [VISUAL_AND_SOCIAL_UPDATES](notifications/VISUAL_AND_SOCIAL_UPDATES.md) | Nova Era Visual e Rede Social |
 
 ---
 
@@ -227,6 +227,7 @@ Escolha o guia adequado ao seu perfil:
 |-----------|-----------|
 | [LOGGING](observability/LOGGING.md) | Sistema de logging |
 | [TELEMETRY](observability/TELEMETRY.md) | Telemetria e métricas |
+| [TECHNICAL_IMPROVEMENTS](observability/TECHNICAL_IMPROVEMENTS.md) | Melhorias Técnicas e Monitoramento |
 
 ---
 
@@ -238,23 +239,14 @@ Escolha o guia adequado ao seu perfil:
 | [PWA_TECHNICAL_ANALYSIS](pwa/PWA_TECHNICAL_ANALYSIS.md) | Análise técnica da PWA |
 | [PWA_EXECUTIVE_SUMMARY](pwa/PWA_EXECUTIVE_SUMMARY.md) | Resumo executivo da PWA |
 
----
 
-## 📦 Releases e Changelogs
-> Histórico de versões e changelogs.
-
-| Documento | Descrição |
-|-----------|-----------|
-| [CHANGELOG_2026_02](releases/CHANGELOG_2026_02.md) | Changelog de fevereiro de 2026 |
-
----
 
 ## 🔧 Troubleshooting
 > Diagnóstico e resolução de problemas.
 
 | Documento | Descrição |
 |-----------|-----------|
-| [TROUBLESHOOTING_BUTTONS](troubleshooting/TROUBLESHOOTING_BUTTONS.md) | Diagnóstico de problemas com botões |
+| [DEBUGGING_GUIDE](troubleshooting/DEBUGGING_GUIDE.md) | Guia geral de diagnósticos e debugging da aplicação |
 
 ---
 
