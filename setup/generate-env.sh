@@ -979,6 +979,54 @@ generate_telemetry_config() {
     fi
 }
 
+# Função para gerar configuração de Regras de Jogo e Visuais
+generate_game_rules_config() {
+    local edit_mode="${1:-false}"
+    if [ "$edit_mode" = "false" ]; then
+        add_section "GAME RULES & VISUALS"
+    fi
+    
+    local existing_players_online=$(get_existing_value "CONFIG_SHOW_PLAYERS_ONLINE" 2>/dev/null || echo "True")
+    local players_online_default=$(echo "$existing_players_online" | tr '[:upper:]' '[:lower:]')
+    
+    if ask_yes_no "Exibir o contador de Jogadores Online na Homepage?" "$players_online_default"; then
+        if [ "$edit_mode" = "true" ]; then update_var "CONFIG_SHOW_PLAYERS_ONLINE" "True"; else add_var "CONFIG_SHOW_PLAYERS_ONLINE" "True"; fi
+    else
+        if [ "$edit_mode" = "true" ]; then update_var "CONFIG_SHOW_PLAYERS_ONLINE" "False"; else add_var "CONFIG_SHOW_PLAYERS_ONLINE" "False"; fi
+    fi
+    
+    local existing_boss_time=$(get_existing_value "CONFIG_GRANDBOSS_SHOW_TIME" 2>/dev/null || echo "True")
+    local boss_time_default=$(echo "$existing_boss_time" | tr '[:upper:]' '[:lower:]')
+    
+    if ask_yes_no "Exibir a Hora e os Minutos precisos do respawn dos Grand Bosses? (Não criará mistério)" "$boss_time_default"; then
+        if [ "$edit_mode" = "true" ]; then update_var "CONFIG_GRANDBOSS_SHOW_TIME" "True"; else add_var "CONFIG_GRANDBOSS_SHOW_TIME" "True"; fi
+    else
+        if [ "$edit_mode" = "true" ]; then update_var "CONFIG_GRANDBOSS_SHOW_TIME" "False"; else add_var "CONFIG_GRANDBOSS_SHOW_TIME" "False"; fi
+    fi
+    
+    local existing_email_verif=$(get_existing_value "ACCOUNT_EMAIL_VERIFICATION" 2>/dev/null || echo "none")
+    echo
+    log_info "Regras de Email para Cadastro:"
+    echo "  none: O jogador cadastra e entra no painel na mesma hora."
+    echo "  mandatory: O jogador precisa clicar no link enviado por email."
+    ACCOUNT_EMAIL_VERIFICATION=$(ask_value "Digite a regra de verificação" "$existing_email_verif")
+    
+    if [ "$edit_mode" = "true" ]; then
+        update_var "ACCOUNT_EMAIL_VERIFICATION" "$ACCOUNT_EMAIL_VERIFICATION"
+    else
+        add_var "ACCOUNT_EMAIL_VERIFICATION" "$ACCOUNT_EMAIL_VERIFICATION"
+    fi
+    
+    local existing_account_link_free_slots=$(get_existing_value "ACCOUNT_LINK_FREE_SLOTS" 2>/dev/null || echo "3")
+    ACCOUNT_LINK_FREE_SLOTS=$(ask_value "Quantidade máxima de contas Master que cada Painel pode abrigar" "$existing_account_link_free_slots")
+    
+    if [ "$edit_mode" = "true" ]; then
+        update_var "ACCOUNT_LINK_FREE_SLOTS" "$ACCOUNT_LINK_FREE_SLOTS"
+    else
+        add_var "ACCOUNT_LINK_FREE_SLOTS" "$ACCOUNT_LINK_FREE_SLOTS"
+    fi
+}
+
 # Função principal
 main() {
     clear
@@ -1086,6 +1134,11 @@ main() {
     # VAPID
     if ask_yes_no "Incluir configuração de VAPID (Web Push)?" "n"; then
         generate_vapid_config "$edit_mode"
+    fi
+    
+    # Game Rules & Visuals
+    if ask_yes_no "Incluir configuração de Regras de Jogo e Estética Visual?" "y"; then
+        generate_game_rules_config "$edit_mode"
     fi
     
     # Telemetria / Prometheus
