@@ -41,6 +41,7 @@ Escolha o guia adequado ao seu perfil:
 | Documento | Descrição |
 |-----------|-----------|
 | [ADMIN_OVERVIEW](admin-guide/ADMIN_OVERVIEW.md) | 🗂️ Visão geral de todas as ferramentas de admin |
+| [CONFIG_HUB_GUIDE](admin-guide/CONFIG_HUB_GUIDE.md) | ⚙️ Central de Configurações (Config Hub) e seus 25 Módulos Ocultos |
 | [SHOP_ADMIN_GUIDE](admin-guide/SHOP_ADMIN_GUIDE.md) | 🛒 Gerenciar itens, pacotes e cupons de desconto |
 | [PAYMENT_CONFIGURATION](admin-guide/PAYMENT_CONFIGURATION.md) | 💳 Configurar MercadoPago e Stripe |
 | [ACCOUNTANCY_GUIDE](admin-guide/ACCOUNTANCY_GUIDE.md) | 📊 Relatórios financeiros e fluxo de caixa |
