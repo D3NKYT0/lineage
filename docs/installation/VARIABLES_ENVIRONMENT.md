@@ -1,4 +1,6 @@
-# Variáveis de Ambiente - Lineage 2 PDL
+﻿# Variáveis de Ambiente - Lineage 2 PDL
+
+> **Última atualização:** 20/02/2026
 
 Este documento lista todas as variáveis de ambiente possíveis utilizadas no projeto Lineage 2 PDL.
 

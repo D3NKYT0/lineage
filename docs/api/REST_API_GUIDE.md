@@ -1,4 +1,6 @@
-# Documentação da API REST
+﻿# Documentação da API REST
+
+> **Última atualização:** 20/02/2026
 
 ## Autenticação
 - A maioria dos endpoints da API utiliza **JWT (JSON Web Tokens)**

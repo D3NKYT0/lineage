@@ -1,4 +1,6 @@
-# 🎮 Marketplace de Personagens - PDL
+﻿# 🎮 Marketplace de Personagens - PDL
+
+> **Última atualização:** 20/02/2026
 
 ## 📋 Índice
 

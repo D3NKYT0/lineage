@@ -1,4 +1,4 @@
-# Guia de Uso do install.sh
+﻿# Guia de Uso do install.sh
 
 ## 📋 Índice
 
@@ -515,8 +515,8 @@ git pull origin main
 ## 📖 Recursos Adicionais
 
 - [README.md](../README.md) - Documentação principal do projeto
-- [INSTALLATION_AND_DEPLOY.md](INSTALLATION_AND_DEPLOY.md) - Guia de instalação detalhado
-- [VARIABLES_ENVIRONMENT.md](VARIABLES_ENVIRONMENT.md) - Variáveis de ambiente
+- [INSTALLATION_AND_DEPLOY.md](../installation/INSTALLATION_AND_DEPLOY.md) - Guia de instalação detalhado
+- [VARIABLES_ENVIRONMENT.md](../installation/VARIABLES_ENVIRONMENT.md) - Variáveis de ambiente
 
 ---
 

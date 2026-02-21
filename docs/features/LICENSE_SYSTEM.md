@@ -1,4 +1,6 @@
-# Sistema de Licenciamento PDL
+﻿# Sistema de Licenciamento PDL
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 

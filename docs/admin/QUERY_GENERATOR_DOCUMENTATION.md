@@ -1,4 +1,6 @@
-# 📚 Documentação do Gerador Automático de Queries para Lineage 2
+﻿# 📚 Documentação do Gerador Automático de Queries para Lineage 2
+
+> **Última atualização:** 20/02/2026
 
 ## 📋 Índice
 1. [Visão Geral](#visão-geral)

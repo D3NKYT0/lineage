@@ -1,4 +1,6 @@
-# Diagrama de Fluxo do Sistema de Temas
+﻿# Diagrama de Fluxo do Sistema de Temas
+
+> **Última atualização:** 20/02/2026
 
 Este diagrama mostra o fluxo completo do sistema de temas, do upload do ZIP até a renderização da página com o tema ativo.
 

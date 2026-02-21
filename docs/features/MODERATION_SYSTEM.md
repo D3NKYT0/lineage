@@ -1,4 +1,6 @@
-# 🛡️ Sistema de Moderação e Filtros
+﻿# 🛡️ Sistema de Moderação e Filtros
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 
@@ -253,6 +255,5 @@ Para dúvidas ou problemas:
 
 ---
 
-**Última atualização**: Dezembro 2024  
-**Versão**: 2.0  
-**Compatibilidade**: Django 4.x+
+**Compatibilidade:** Django 5.2+  
+**App:** `apps.main.social`

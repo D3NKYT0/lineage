@@ -1,4 +1,6 @@
-# Changelog — Melhorias Técnicas e Monitoramento (Fev 2026)
+﻿# Changelog — Melhorias Técnicas e Monitoramento (Fev 2026)
+
+> **Última atualização:** 20/02/2026
 
 Documentação das alterações realizadas no sistema PDL: logs, telemetria, API, PWA e ajustes técnicos.
 
@@ -27,7 +29,7 @@ Integrado em apps como: wallet, payment, social, notification, message, shop, au
 
 ### Documentação
 
-- `docs/LOGGING.md`
+- `../observability/LOGGING.md`
 
 ---
 
@@ -63,7 +65,7 @@ TELEMETRY_ENABLED=True
 
 ### Documentação
 
-- `docs/TELEMETRY.md`
+- `../observability/TELEMETRY.md`
 
 ---
 
@@ -166,4 +168,4 @@ python scripts/generate_api_traffic.py --base-url http://127.0.0.1:6085 --reques
 | **Infra** | `core/settings.py`, `nginx/django.conf` |
 | **Scripts** | `scripts/generate_api_traffic.py` |
 | **Apps** | `apps/main/resources/apps.py` |
-| **Docs** | `docs/LOGGING.md`, `docs/TELEMETRY.md`, `docs/CHANGELOG_2026_02.md` |
+| **Docs** | `../observability/LOGGING.md`, `../observability/TELEMETRY.md`, `CHANGELOG_2026_02.md` |

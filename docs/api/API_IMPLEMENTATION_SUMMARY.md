@@ -1,4 +1,6 @@
-# 🚀 Resumo da Implementação - API Lineage 2 Padronizada
+﻿# 🚀 Resumo da Implementação - API Lineage 2 Padronizada
+
+> **Última atualização:** 20/02/2026
 
 ## 📋 Visão Geral
 
@@ -108,7 +110,7 @@ REST_FRAMEWORK = {
 - `apps/api/schema.py` - Documentação OpenAPI/Swagger
 
 ### Documentação
-- `docs/API_ENDPOINTS.md` - Documentação completa
+- `../api/API_ENDPOINTS.md` - Documentação completa
 - `docs/Lineage2_API.postman_collection.json` - Coleção Postman
 - `test/api_examples.py` - Exemplos de uso em Python
 

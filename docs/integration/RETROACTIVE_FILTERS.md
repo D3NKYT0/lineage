@@ -1,4 +1,4 @@
-# 🔄 Sistema de Filtros Retroativos
+﻿# 🔄 Sistema de Filtros Retroativos
 
 ## Visão Geral
 

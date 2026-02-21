@@ -1,4 +1,6 @@
-# 🎉 Sistema de Notificações Flutuantes
+﻿# 🎉 Sistema de Notificações Flutuantes
+
+> **Última atualização:** 20/02/2026
 
 ## ✨ Características Principais
 

@@ -1,4 +1,6 @@
-# Implementação do Assistente Virtual de IA - PDL
+﻿# Implementação do Assistente Virtual de IA - PDL
+
+> **Última atualização:** 20/02/2026
 
 ## 📋 Resumo
 

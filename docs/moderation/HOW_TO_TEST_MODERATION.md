@@ -1,4 +1,6 @@
-# 🧪 Como Testar o Sistema de Moderação
+﻿# 🧪 Como Testar o Sistema de Moderação
+
+> **Última atualização:** 20/02/2026
 
 ## Problema Resolvido ✅
 

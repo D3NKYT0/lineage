@@ -1,4 +1,6 @@
-# Guia Completo: Como Criar Temas para o PDL
+﻿# Guia Completo: Como Criar Temas para o PDL
+
+> **Última atualização:** 20/02/2026
 
 ## 📋 Índice
 1. [Visão Geral do Sistema de Temas](#visão-geral)
@@ -945,7 +947,7 @@ print(os.listdir(theme_path))
 ## 📚 Recursos Adicionais
 
 ### Documentação do Sistema
-- `docs/THEME_SYSTEM.md` - Visão geral técnica
+- `../themes/THEME_SYSTEM.md` - Visão geral técnica
 - `docs/THEME_SYSTEM_FLOW_DIAGRAM.md` - Fluxo do sistema
 
 ### Arquivos de Referência

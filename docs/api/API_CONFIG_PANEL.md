@@ -1,4 +1,6 @@
-# API Configuration Panel
+﻿# API Configuration Panel
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 

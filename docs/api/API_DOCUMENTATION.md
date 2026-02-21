@@ -1,4 +1,6 @@
-# API Documentation - Lineage 2 PDL
+﻿# API Documentation - Lineage 2 PDL
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 

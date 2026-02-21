@@ -1,4 +1,6 @@
-# 🎮 Implementação dos Novos Jogos
+﻿# 🎮 Implementação dos Novos Jogos
+
+> **Última atualização:** 20/02/2026
 
 ## Jogos Implementados
 

@@ -1,4 +1,6 @@
-# Integração Bot Discord - PDL
+﻿# Integração Bot Discord - PDL
+
+> **Última atualização:** 20/02/2026
 
 Este documento descreve a integração do bot Discord global com as instâncias do site PDL.
 

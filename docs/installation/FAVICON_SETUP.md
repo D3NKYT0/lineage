@@ -1,4 +1,6 @@
-# Configuração do Favicon no Django
+﻿# Configuração do Favicon no Django
+
+> **Última atualização:** 20/02/2026
 
 ## Implementação Atual
 

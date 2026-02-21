@@ -1,4 +1,6 @@
-# Guia de Instalação e Implantação
+﻿# Guia de Instalação e Implantação
+
+> **Última atualização:** 20/02/2026
 
 ## Pré-requisitos
 - **Python** 3.10+ (recomendado 3.14)
@@ -102,5 +104,5 @@ docker compose restart
 ```
 
 ## Documentação Relacionada
-- [Guia Completo do install.sh](INSTALL_SH_GUIDE.md)
-- [Variáveis de Ambiente](VARIABLES_ENVIRONMENT.md)
+- [Guia Completo do install.sh](../installation/INSTALL_SH_GUIDE.md)
+- [Variáveis de Ambiente](../installation/VARIABLES_ENVIRONMENT.md)

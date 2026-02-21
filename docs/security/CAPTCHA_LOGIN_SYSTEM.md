@@ -1,4 +1,6 @@
-# Sistema de Captcha no Login
+﻿# Sistema de Captcha no Login
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 

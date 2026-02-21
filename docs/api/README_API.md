@@ -1,4 +1,6 @@
-# API App - Lineage 2 PDL
+﻿# API App - Lineage 2 PDL
+
+> **Última atualização:** 20/02/2026
 
 Este app fornece APIs públicas para o servidor Lineage 2 usando Django REST Framework (DRF).
 

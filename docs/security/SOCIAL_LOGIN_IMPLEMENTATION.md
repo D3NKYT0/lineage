@@ -1,4 +1,6 @@
-# Implementação do Sistema de Configuração de Login Social
+﻿# Implementação do Sistema de Configuração de Login Social
+
+> **Última atualização:** 20/02/2026
 
 ## Resumo das Mudanças
 

@@ -1,4 +1,6 @@
-# Configuração do AWS S3 no Django
+﻿# Configuração do AWS S3 no Django
+
+> **Última atualização:** 20/02/2026
 
 Este guia explica como configurar e usar o Amazon S3 para armazenamento de arquivos estáticos e de mídia no Django.
 

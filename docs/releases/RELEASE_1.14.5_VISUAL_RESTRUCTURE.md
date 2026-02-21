@@ -1,4 +1,6 @@
-# 🎨 PDL 1.14.5 - Reestruturação Visual Completa e Rede Social Avançada
+﻿# 🎨 PDL 1.14.5 - Reestruturação Visual Completa e Rede Social Avançada
+
+> **Última atualização:** 20/02/2026
 
 ## 📅 Data de Lançamento
 **15 de Janeiro de 2025**

@@ -1,4 +1,6 @@
-# Troubleshooting - Botões não funcionam
+﻿# Troubleshooting - Botões não funcionam
+
+> **Última atualização:** 20/02/2026
 
 ## Problema
 Os botões na página de amigos não estão funcionando quando clicados.

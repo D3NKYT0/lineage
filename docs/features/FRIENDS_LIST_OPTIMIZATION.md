@@ -1,4 +1,6 @@
-# Otimização do Endpoint Friends List
+﻿# Otimização do Endpoint Friends List
+
+> **Última atualização:** 20/02/2026
 
 ## Problema Identificado
 

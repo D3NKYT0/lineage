@@ -1,4 +1,6 @@
-# 📚 Documentação — Painel Definitivo Lineage (PDL)
+﻿# 📚 Documentação — Painel Definitivo Lineage (PDL)
+
+> **Última atualização:** 20/02/2026
 
 > Índice geral da documentação. Para começar, consulte o [README do projeto](../README.md).
 
@@ -67,10 +69,10 @@
 |-----------|-----------|
 | [MARKETPLACE](features/MARKETPLACE.md) | Sistema de marketplace entre jogadores |
 | [INFLATION_SYSTEM](features/INFLATION_SYSTEM.md) | Sistema anti-inflação |
-| [SISTEMA_BONUS_COMPRAS](features/SISTEMA_BONUS_COMPRAS.md) | Sistema de bônus em compras |
-| [SISTEMA_MODERACAO](features/SISTEMA_MODERACAO.md) | Sistema de moderação |
-| [SISTEMA_NOTIFICACAO_MODERACAO](features/SISTEMA_NOTIFICACAO_MODERACAO.md) | Notificações do sistema de moderação |
-| [SISTEMA_NOTIFICACOES_FLUTUANTES](features/SISTEMA_NOTIFICACOES_FLUTUANTES.md) | Notificações flutuantes |
+| [PURCHASE_BONUS_SYSTEM](features/PURCHASE_BONUS_SYSTEM.md) | Sistema de bônus em compras |
+| [MODERATION_SYSTEM](features/MODERATION_SYSTEM.md) | Sistema de moderação |
+| [MODERATION_NOTIFICATION_SYSTEM](features/MODERATION_NOTIFICATION_SYSTEM.md) | Notificações do sistema de moderação |
+| [FLOATING_NOTIFICATIONS_SYSTEM](features/FLOATING_NOTIFICATIONS_SYSTEM.md) | Notificações flutuantes |
 | [SOCIAL_NETWORK_GUIDE](features/SOCIAL_NETWORK_GUIDE.md) | Guia da rede social integrada |
 | [FRIENDS_LIST_OPTIMIZATION](features/FRIENDS_LIST_OPTIMIZATION.md) | Otimização da lista de amigos |
 | [MULTI_ACCOUNT_MANAGEMENT](features/MULTI_ACCOUNT_MANAGEMENT.md) | Gerenciamento de múltiplas contas |
@@ -79,8 +81,8 @@
 | [BANNER_CONFIGURATION](features/BANNER_CONFIGURATION.md) | Configuração de banners |
 | [SHOW_PLAYERS_ONLINE_CONFIG](features/SHOW_PLAYERS_ONLINE_CONFIG.md) | Exibição de jogadores online |
 | [GRANDBOSS_TIME_CONFIG](features/GRANDBOSS_TIME_CONFIG.md) | Configuração de horários de Grand Boss |
-| [DOWNLOADS_INTERNOS](features/DOWNLOADS_INTERNOS.md) | Sistema de downloads internos |
-| [GUIA_USUARIO_FINANCEIRO](features/GUIA_USUARIO_FINANCEIRO.md) | Guia financeiro para usuários |
+| [INTERNAL_DOWNLOADS](features/INTERNAL_DOWNLOADS.md) | Sistema de downloads internos |
+| [FINANCIAL_USER_GUIDE](features/FINANCIAL_USER_GUIDE.md) | Guia financeiro para usuários |
 | [DISCORD_BOT_INTEGRATION](features/DISCORD_BOT_INTEGRATION.md) | Integração com bot Discord |
 | [SOLICITATION_IMPROVEMENTS](features/SOLICITATION_IMPROVEMENTS.md) | Melhorias no sistema de solicitações |
 | [TOPS_TABLES_IMPROVEMENTS](features/TOPS_TABLES_IMPROVEMENTS.md) | Melhorias nas tabelas de tops |
@@ -94,7 +96,7 @@
 | Documento | Descrição |
 |-----------|-----------|
 | [NEW_GAMES_IMPLEMENTATION](games/NEW_GAMES_IMPLEMENTATION.md) | Implementação de novos minigames |
-| [COMO_USAR_NOVOS_JOGOS](games/COMO_USAR_NOVOS_JOGOS.md) | Como usar os minigames |
+| [HOW_TO_USE_NEW_GAMES](games/HOW_TO_USE_NEW_GAMES.md) | Como usar os minigames |
 
 ---
 
@@ -119,7 +121,7 @@
 | [LINEAGE_SERVER_INTEGRATION](integration/LINEAGE_SERVER_INTEGRATION.md) | Integração com servidor Lineage 2 |
 | [MIGRATION_L2_TO_PDL](integration/MIGRATION_L2_TO_PDL.md) | Migração de dados L2 para o PDL |
 | [README_MIGRATION](integration/README_MIGRATION.md) | README de migrações |
-| [FILTROS_RETROATIVOS](integration/FILTROS_RETROATIVOS.md) | Filtros retroativos de dados |
+| [RETROACTIVE_FILTERS](integration/RETROACTIVE_FILTERS.md) | Filtros retroativos de dados |
 
 ---
 
@@ -130,7 +132,7 @@
 |-----------|-----------|
 | [README_MEDIA_APP](media/README_MEDIA_APP.md) | README do app de mídia |
 | [README_S3](media/README_S3.md) | Integração com AWS S3 |
-| [COMANDOS_LIMPEZA_MIDIA](media/COMANDOS_LIMPEZA_MIDIA.md) | Comandos de limpeza de mídia |
+| [MEDIA_CLEANUP_COMMANDS](media/MEDIA_CLEANUP_COMMANDS.md) | Comandos de limpeza de mídia |
 
 ---
 
@@ -139,8 +141,8 @@
 
 | Documento | Descrição |
 |-----------|-----------|
-| [README_NOTIFICACOES](notifications/README_NOTIFICACOES.md) | Sistema de notificações |
-| [POST_1.14.5_NOTICIAS](notifications/POST_1.14.5_NOTICIAS.md) | Notícias pós-versão 1.14.5 |
+| [NOTIFICATIONS_README](notifications/NOTIFICATIONS_README.md) | Sistema de notificações |
+| [POST_1.14.5_NEWS](notifications/POST_1.14.5_NEWS.md) | Notícias pós-versão 1.14.5 |
 
 ---
 
@@ -158,8 +160,8 @@
 
 | Documento | Descrição |
 |-----------|-----------|
-| [EXPORT_LOGS_MODERACAO](moderation/EXPORT_LOGS_MODERACAO.md) | Exportação de logs de moderação |
-| [COMO_TESTAR_MODERACAO](moderation/COMO_TESTAR_MODERACAO.md) | Como testar o sistema de moderação |
+| [EXPORT_MODERATION_LOGS](moderation/EXPORT_MODERATION_LOGS.md) | Exportação de logs de moderação |
+| [HOW_TO_TEST_MODERATION](moderation/HOW_TO_TEST_MODERATION.md) | Como testar o sistema de moderação |
 
 ---
 
@@ -168,8 +170,8 @@
 
 | Documento | Descrição |
 |-----------|-----------|
-| [COMANDOS_CUSTOMIZADOS](admin/COMANDOS_CUSTOMIZADOS.md) | Comandos customizados do Django |
-| [DOCUMENTACAO_GERADOR_QUERY](admin/DOCUMENTACAO_GERADOR_QUERY.md) | Gerador de queries SQL |
+| [CUSTOM_COMMANDS](admin/CUSTOM_COMMANDS.md) | Comandos customizados do Django |
+| [QUERY_GENERATOR_DOCUMENTATION](admin/QUERY_GENERATOR_DOCUMENTATION.md) | Gerador de queries SQL |
 
 ---
 
@@ -188,8 +190,8 @@
 
 | Documento | Descrição |
 |-----------|-----------|
-| [ANALISE_TECNICA_PWA](pwa/ANALISE_TECNICA_PWA.md) | Análise técnica da PWA |
-| [RESUMO_EXECUTIVO_PWA](pwa/RESUMO_EXECUTIVO_PWA.md) | Resumo executivo da PWA |
+| [PWA_TECHNICAL_ANALYSIS](pwa/PWA_TECHNICAL_ANALYSIS.md) | Análise técnica da PWA |
+| [PWA_EXECUTIVE_SUMMARY](pwa/PWA_EXECUTIVE_SUMMARY.md) | Resumo executivo da PWA |
 
 ---
 
@@ -199,9 +201,9 @@
 | Documento | Descrição |
 |-----------|-----------|
 | [CHANGELOG_2026_02](releases/CHANGELOG_2026_02.md) | Changelog de fevereiro de 2026 |
-| [RELEASE_1.11.0_MATRIZ_FILIAL](releases/RELEASE_1.11.0_MATRIZ_FILIAL.md) | Release Matriz/Filial v1.11.0 |
-| [RELEASE_1.14.5_RESTRUTURACAO_VISUAL](releases/RELEASE_1.14.5_RESTRUTURACAO_VISUAL.md) | Release Reestruturação Visual v1.14.5 |
-| [RELEASE_1.16.0_CONTAS_VINCULADAS](releases/RELEASE_1.16.0_CONTAS_VINCULADAS.md) | Release Contas Vinculadas v1.16.0 |
+| [RELEASE_1.11.0_BRANCH_MATRIX](releases/RELEASE_1.11.0_BRANCH_MATRIX.md) | Release Matriz/Filial v1.11.0 |
+| [RELEASE_1.14.5_VISUAL_RESTRUCTURE](releases/RELEASE_1.14.5_VISUAL_RESTRUCTURE.md) | Release Reestruturação Visual v1.14.5 |
+| [RELEASE_1.16.0_LINKED_ACCOUNTS](releases/RELEASE_1.16.0_LINKED_ACCOUNTS.md) | Release Contas Vinculadas v1.16.0 |
 
 ---
 
@@ -219,7 +221,7 @@
 
 | Documento | Descrição |
 |-----------|-----------|
-| [ARTIGO_IA_PDL](articles/ARTIGO_IA_PDL.md) | Artigo sobre IA no PDL |
+| [AI_PDL_ARTICLE](articles/AI_PDL_ARTICLE.md) | Artigo sobre IA no PDL |
 
 ---
 

@@ -1,4 +1,6 @@
-# 🎮 Como Usar os Novos Jogos - Guia Rápido
+﻿# 🎮 Como Usar os Novos Jogos - Guia Rápido
+
+> **Última atualização:** 20/02/2026
 
 ## 🚨 IMPORTANTE - Primeiro Passo
 

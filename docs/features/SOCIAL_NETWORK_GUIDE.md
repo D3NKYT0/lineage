@@ -1,4 +1,6 @@
-# 📱 Guia Completo da Rede Social (app.main.social)
+﻿# 📱 Guia Completo da Rede Social (app.main.social)
+
+> **Última atualização:** 20/02/2026
 
 ## 🎯 **Funcionalidades Implementadas**
 

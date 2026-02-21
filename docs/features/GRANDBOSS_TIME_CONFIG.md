@@ -1,4 +1,6 @@
-# Configuração de Exibição de Tempo dos Grand Bosses
+﻿# Configuração de Exibição de Tempo dos Grand Bosses
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 

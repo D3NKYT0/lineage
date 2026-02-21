@@ -1,4 +1,6 @@
-# Logging no projeto PDL
+﻿# Logging no projeto PDL
+
+> **Última atualização:** 20/02/2026
 
 ## O que mudou
 

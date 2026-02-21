@@ -1,4 +1,6 @@
-# Documentação do apps.lineage.server
+﻿# Documentação do apps.lineage.server
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 

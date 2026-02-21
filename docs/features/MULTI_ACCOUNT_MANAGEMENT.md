@@ -1,4 +1,4 @@
-## Gerenciamento de múltiplas contas (Contra Mestre)
+﻿## Gerenciamento de múltiplas contas (Contra Mestre)
 
 Este recurso permite que um usuário delegue diferentes contas do Lineage 2 para outros membros da equipe (contra mestres) dentro do painel PDL, mantendo auditoria e troca rápida entre contas.
 

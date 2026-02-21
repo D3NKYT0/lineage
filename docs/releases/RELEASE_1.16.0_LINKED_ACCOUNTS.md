@@ -1,4 +1,6 @@
-# 🔗 PDL 1.16.0 — Era das Contas Vinculadas
+﻿# 🔗 PDL 1.16.0 — Era das Contas Vinculadas
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 A atualização 1.16.0 é inteiramente dedicada ao ecossistema de contas vinculadas: o painel identifica automaticamente o dono mestre de cada e-mail, permite alternar a conta ativa do jogo em segundos, traz delegação guiada para contra mestres e acrescenta slots/compras para quem precisa ir além do limite padrão. Tudo abaixo está escrito para jogadores e gestores não técnicos, mas cada item aponta exatamente para o trecho do código/template em que o recurso foi implementado.

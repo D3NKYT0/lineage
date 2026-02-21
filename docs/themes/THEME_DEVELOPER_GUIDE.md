@@ -1,4 +1,6 @@
-# Guia do Desenvolvedor: Recursos do Sistema de Temas PDL
+﻿# Guia do Desenvolvedor: Recursos do Sistema de Temas PDL
+
+> **Última atualização:** 20/02/2026
 
 ## 📋 Índice
 1. [Variáveis do Sistema](#variaveis-sistema)
@@ -546,7 +548,7 @@ seu-tema/
 - `core/context_processors.py` - Processadores de contexto
 - `apps/main/administrator/models.py` - Modelos Theme e ThemeVariable
 - `utils/render_theme_page.py` - Função de renderização
-- `docs/THEME_SYSTEM.md` - Documentação técnica
+- `../themes/THEME_SYSTEM.md` - Documentação técnica
 - `docs/THEME_SYSTEM_FLOW_DIAGRAM.md` - Fluxo do sistema
 
 ### Exemplo Funcional

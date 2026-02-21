@@ -1,4 +1,4 @@
-# 📊 Sistema de Export de Logs de Moderação
+﻿# 📊 Sistema de Export de Logs de Moderação
 
 ## Visão Geral
 

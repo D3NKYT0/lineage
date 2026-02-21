@@ -1,4 +1,6 @@
-# Melhorias no Sistema de Solicitação (Helpdesk)
+﻿# Melhorias no Sistema de Solicitação (Helpdesk)
+
+> **Última atualização:** 20/02/2026
 
 ## Resumo das Melhorias Implementadas
 

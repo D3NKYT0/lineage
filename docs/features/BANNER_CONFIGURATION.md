@@ -1,4 +1,6 @@
-# Configuração do Banner Editável
+﻿# Configuração do Banner Editável
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 

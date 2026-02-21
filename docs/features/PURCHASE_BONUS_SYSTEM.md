@@ -1,4 +1,6 @@
-# Sistema de Bônus para Compras de Moedas
+﻿# Sistema de Bônus para Compras de Moedas
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 

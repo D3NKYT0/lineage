@@ -1,4 +1,6 @@
-# Configuração de Exibição de Jogadores Online na Página Inicial
+﻿# Configuração de Exibição de Jogadores Online na Página Inicial
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 

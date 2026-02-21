@@ -1,4 +1,6 @@
-# Sistema de Inflação de Itens - Documentação Completa
+﻿# Sistema de Inflação de Itens - Documentação Completa
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 
@@ -687,8 +689,6 @@ Para dúvidas ou problemas:
 
 ## Referências
 
-- [Documentação de Integração do Servidor Lineage](LINEAGE_SERVER_INTEGRATION.md)
-- [Sistema de Inventário](README_INVENTORY.md)
+- [Documentação de Integração do Servidor Lineage](../integration/LINEAGE_SERVER_INTEGRATION.md)
 - [Modelos Django - Server](apps/lineage/server/models.py)
 - [Queries - Server](apps/lineage/server/querys/)
-

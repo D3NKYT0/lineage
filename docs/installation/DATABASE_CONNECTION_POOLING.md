@@ -1,4 +1,6 @@
-# Gerenciamento de Conexões de Banco de Dados
+﻿# Gerenciamento de Conexões de Banco de Dados
+
+> **Última atualização:** 20/02/2026
 
 ## 🎯 Problema: "Too many connections"
 

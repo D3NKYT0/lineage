@@ -1,4 +1,6 @@
-# 🚨 Sistema de Tratamento de Erros de Tema
+﻿# 🚨 Sistema de Tratamento de Erros de Tema
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 
@@ -261,7 +263,7 @@ Possíveis melhorias para versões futuras:
 - [Guia do Sistema de Temas](THEME_SYSTEM.md)
 - [Guia do Desenvolvedor de Temas](THEME_DEVELOPER_GUIDE.md)
 - [Configuração de URLs](API_ENDPOINTS.md)
-- [Sistema de Templates](DEVELOPMENT_GUIDE.md)
+- [Sistema de Templates](../installation/DEVELOPMENT_GUIDE.md)
 
 ---
 

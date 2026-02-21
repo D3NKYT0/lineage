@@ -1,4 +1,6 @@
-# 📚 Documentação da API - Lineage 2
+﻿# 📚 Documentação da API - Lineage 2
+
+> **Última atualização:** 20/02/2026
 
 ## 🌐 Base URL
 ```

@@ -1,4 +1,4 @@
-## Guia do Usuário – Pagamentos, Bônus e Carteira
+﻿## Guia do Usuário – Pagamentos, Bônus e Carteira
 
 Este guia explica como adicionar saldo, entender o bônus, acompanhar pagamentos e usar sua carteira para transferências. Tudo aqui é pensado para usuários (não precisa ser técnico).
 

@@ -1,4 +1,6 @@
-# Sistema de Temas e Templates
+﻿# Sistema de Temas e Templates
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 O sistema de temas permite customizar a aparência do site enviando pacotes ZIP contendo templates, estilos, scripts e assets. Cada tema pode ser ativado/desativado e possui variáveis configuráveis para internacionalização e personalização visual.

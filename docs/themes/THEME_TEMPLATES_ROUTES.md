@@ -1,4 +1,4 @@
-# Rotas Suportadas por Temas - PDL
+﻿# Rotas Suportadas por Temas - PDL
 
 Este documento lista todas as rotas que podem ser substituídas por arquivos de tema no sistema PDL (Private Development Lineage).
 
@@ -328,8 +328,8 @@ Alguns templates têm nomes similares (ex: `home.html` para tops e wiki). O sist
 ### Desenvolvimento
 Para desenvolver temas, consulte:
 - `docs/THEME_DEVELOPER_GUIDE.md` - Guia completo para desenvolvedores
-- `docs/GUIDE_CREATE_THEME.md` - Como criar temas
-- `docs/THEME_SYSTEM.md` - Visão geral do sistema de temas
+- `../themes/GUIDE_CREATE_THEME.md` - Como criar temas
+- `../themes/THEME_SYSTEM.md` - Visão geral do sistema de temas
 
 ---
 

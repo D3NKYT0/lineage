@@ -1,4 +1,6 @@
-# Configuração do FFmpeg no Windows
+﻿# Configuração do FFmpeg no Windows
+
+> **Última atualização:** 20/02/2026
 
 Este documento explica como configurar o FFmpeg para validação de vídeos na aplicação.
 

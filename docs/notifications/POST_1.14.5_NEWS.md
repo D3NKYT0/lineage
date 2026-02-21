@@ -1,4 +1,6 @@
-# 🎨 PDL 1.14.5 - Nova Era Visual e Rede Social
+﻿# 🎨 PDL 1.14.5 - Nova Era Visual e Rede Social
+
+> **Última atualização:** 20/02/2026
 
 ## 🚀 Lançamento da Versão 1.14.5
 

@@ -1,4 +1,4 @@
-# Sistema de Notificação de Moderação
+﻿# Sistema de Notificação de Moderação
 
 ## 📋 Visão Geral
 

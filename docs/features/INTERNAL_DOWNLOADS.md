@@ -1,4 +1,6 @@
-# Hub de Downloads Interno
+﻿# Hub de Downloads Interno
+
+> **Última atualização:** 20/02/2026
 
 ## Visão Geral
 

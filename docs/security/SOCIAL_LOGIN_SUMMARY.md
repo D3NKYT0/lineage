@@ -1,4 +1,6 @@
-# Resumo da Implementação - Login Social Configurável
+﻿# Resumo da Implementação - Login Social Configurável
+
+> **Última atualização:** 20/02/2026
 
 ## Mudanças Realizadas
 

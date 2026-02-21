@@ -1,4 +1,6 @@
-# Comandos Customizados do Projeto PDL
+﻿# Comandos Customizados do Projeto PDL
+
+> **Última atualização:** 20/02/2026
 
 Este documento lista todos os comandos Django customizados disponíveis no projeto PDL, organizados por categoria e funcionalidade.
 
