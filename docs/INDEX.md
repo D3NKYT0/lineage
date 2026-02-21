@@ -29,6 +29,8 @@ Escolha o guia adequado ao seu perfil:
 | [AUCTION_GUIDE](user-guide/AUCTION_GUIDE.md) | 🏷️ Como dar lances e criar leilões |
 | [MARKETPLACE_USER_GUIDE](user-guide/MARKETPLACE_USER_GUIDE.md) | 🛍️ Comprar e vender personagens no Marketplace |
 | [SOCIAL_USER_GUIDE](user-guide/SOCIAL_USER_GUIDE.md) | 📱 Rede social: posts, reações, hashtags |
+| [SUPPORT_USER_GUIDE](user-guide/SUPPORT_USER_GUIDE.md) | 🎧 Central de Ajuda: tickets e atendimento IA |
+| [TOPS_AND_GAME_STATS](user-guide/TOPS_AND_GAME_STATS.md) | 🏆 Estatísticas, rankings de PVP e Bosses |
 | [NOTIFICATION_AND_MESSAGES](user-guide/NOTIFICATION_AND_MESSAGES.md) | 🔔 Notificações, chat e lista de amigos |
 
 ---
@@ -46,6 +48,9 @@ Escolha o guia adequado ao seu perfil:
 | [CALENDARY_GUIDE](admin-guide/CALENDARY_GUIDE.md) | 📅 Gerenciar eventos no calendário |
 | [ROADMAP_ADMIN_GUIDE](admin-guide/ROADMAP_ADMIN_GUIDE.md) | 🗺️ Publicar planos de desenvolvimento |
 | [NEWS_AND_FAQ_GUIDE](admin-guide/NEWS_AND_FAQ_GUIDE.md) | 📰 Publicar notícias e gerenciar FAQ |
+| [HELPDESK_ADMIN_GUIDE](admin-guide/HELPDESK_ADMIN_GUIDE.md) | 🎧 Gerenciar abertura de tickets e atendimento |
+| [MODERATION_ADMIN_GUIDE](admin-guide/MODERATION_ADMIN_GUIDE.md) | 🛡️ Aplicar banimentos e deletar logs sociais |
+| [THEMES_ADMIN_GUIDE](admin-guide/THEMES_ADMIN_GUIDE.md) | 🎨 Configurar templates e Dark/Light Mode |
 
 ---
 
