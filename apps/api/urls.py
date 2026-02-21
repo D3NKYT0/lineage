@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 from django.urls import path, include
 from . import views
 from apps.main.notification import views as notification_views
-from .views import PushSubscriptionView, VapidPublicKeyView
+from .views import PushSubscriptionView, VapidPublicKeyView, ServerInfoView
 
 app_name = 'api'
 
@@ -10,6 +10,9 @@ app_name = 'api'
 v1_patterns = [
     # =========================== API INFO ===========================
     path('', views.APIInfoView.as_view(), name='api_info'),
+    
+    # =========================== SERVER INFO (público, sem auth) ===========================
+    path('server/info/', ServerInfoView.as_view(), name='server_info'),
     
     # =========================== AUTHENTICATION ===========================
     path('auth/login/', views.LoginView.as_view(), name='login'),

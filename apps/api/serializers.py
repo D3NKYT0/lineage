@@ -273,3 +273,22 @@ class UserGameDataSerializer(serializers.Serializer):
     games_played = serializers.IntegerField(required=False, default=0)
     fichas = serializers.IntegerField(required=False, default=0)
     xp_ranking_position = serializers.IntegerField(required=False, allow_null=True) 
+
+
+# =========================== SERVER INFO SERIALIZER ===========================
+
+class ServerInfoSerializer(serializers.Serializer):
+    """Serializer para informações públicas do servidor (usado pelo PWA)"""
+    name = serializers.CharField()
+    short_name = serializers.CharField()
+    description = serializers.CharField()
+    version = serializers.CharField()
+    chronicle = serializers.CharField(required=False, allow_blank=True)
+    logo_url = serializers.CharField(required=False, allow_blank=True)
+    discord_url = serializers.CharField(required=False, allow_blank=True)
+    youtube_url = serializers.CharField(required=False, allow_blank=True)
+    facebook_url = serializers.CharField(required=False, allow_blank=True)
+    instagram_url = serializers.CharField(required=False, allow_blank=True)
+    rates = serializers.DictField(required=False)
+    features = serializers.DictField(required=False)
+    theme_color = serializers.CharField(required=False, allow_blank=True)

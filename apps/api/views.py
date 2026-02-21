@@ -24,7 +24,7 @@ from .serializers import (
     UserProfileSerializer, ChangePasswordSerializer, CharacterSerializer,
     ItemSerializer, ClanDetailSerializer, AuctionItemSerializer,
     APIResponseSerializer, ServerStatusSerializer, DiscordServerSerializer,
-    UserGameDataSerializer
+    UserGameDataSerializer, ServerInfoSerializer
 )
 from .forms import ApiEndpointToggleForm
 from .permissions import IsSuperUser, IsAPIAdmin, IsMonitoringAdmin
@@ -48,6 +48,71 @@ LineageStats = get_query_class("LineageStats")
 class PublicAPIRateThrottle(AnonRateThrottle):
     """Rate limit para APIs públicas: 30 requisições por minuto"""
     rate = '30/minute'
+
+
+# =========================== SERVER INFO VIEW ===========================
+
+class ServerInfoView(APIView):
+    """
+    Endpoint público com metadados do servidor PDL.
+    Usado pelo PWA para personalizar nome, logo, descrição e social links.
+    """
+    permission_classes = [AllowAny]
+    throttle_classes = [PublicAPIRateThrottle]
+
+    @extend_schema(
+        summary="Informações do Servidor",
+        description="Retorna metadados públicos do servidor: nome, descrição, versão, redes sociais e configurações.",
+        responses={200: ServerInfoSerializer},
+        tags=["Servidor"],
+        auth=[]
+    )
+    def get(self, request):
+        """Retorna dados públicos do servidor para uso no PWA."""
+        cache_key = 'api_server_info'
+        cached = cache.get(cache_key)
+        if cached:
+            return Response(cached)
+
+        # Obtém a crônica da configuração LINEAGE_QUERY_MODULE
+        module = getattr(settings, 'LINEAGE_QUERY_MODULE', '')
+        chronicle_map = {
+            'dreamv3': 'Interlude',
+            'l2dev': 'High Five',
+            'l2jfrozen': 'Interlude',
+            'lucera': 'Interlude',
+        }
+        chronicle = chronicle_map.get(module, module.capitalize() if module else '')
+
+        data = {
+            'name': getattr(settings, 'PROJECT_TITLE', 'PDL'),
+            'short_name': getattr(settings, 'PROJECT_TITLE', 'PDL').split()[0] if getattr(settings, 'PROJECT_TITLE', '') else 'PDL',
+            'description': getattr(settings, 'PROJECT_DESCRIPTION', ''),
+            'version': getattr(settings, 'VERSION', '1.0.0'),
+            'chronicle': chronicle,
+            'logo_url': getattr(settings, 'PROJECT_LOGO_URL', '/static/pwa/icons/logo.png'),
+            'discord_url': getattr(settings, 'PROJECT_DISCORD_URL', ''),
+            'youtube_url': getattr(settings, 'PROJECT_YOUTUBE_URL', ''),
+            'facebook_url': getattr(settings, 'PROJECT_FACEBOOK_URL', ''),
+            'instagram_url': getattr(settings, 'PROJECT_INSTAGRAM_URL', ''),
+            'theme_color': getattr(settings, 'PROJECT_THEME_COLOR', '#0d0d0d'),
+            'rates': {
+                'xp': str(getattr(settings, 'XP_RATE', 'x1')),
+                'sp': str(getattr(settings, 'SP_RATE', 'x1')),
+                'drop': str(getattr(settings, 'DROP_RATE', 'x1')),
+                'adena': str(getattr(settings, 'ADENA_RATE', 'x1')),
+            },
+            'features': {
+                'payments': getattr(settings, 'MERCADO_PAGO_ACTIVATE_PAYMENTS', False) or getattr(settings, 'STRIPE_ACTIVATE_PAYMENTS', False),
+                'push_notifications': bool(getattr(settings, 'VAPID_PUBLIC_KEY', None)),
+                'discord_integration': getattr(settings, 'SOCIAL_LOGIN_DISCORD_ENABLED', False),
+                'show_players_online': getattr(settings, 'SHOW_PLAYERS_ONLINE', True),
+            },
+        }
+
+        serializer = ServerInfoSerializer(data)
+        cache.set(cache_key, serializer.data, 300)  # Cache 5 minutos
+        return Response(serializer.data)
 
 
 @endpoint_enabled('players_online')

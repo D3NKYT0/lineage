@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { subscribeUserToPush, unsubscribeUserFromPush } from "./push";
 import { setTokens, clearTokens, getToken, apiFetch } from "./api";
 import "./App.css";
+import { useServer } from "./ServerContext";
+import HomeSection from "./HomeSection";
 import UserSection from "./UserSection";
 import ServerSection from "./ServerSection";
 import SearchSection from "./SearchSection";
@@ -9,19 +11,24 @@ import GameSection from "./GameSection";
 import MetricsSection from "./MetricsSection";
 import AdminSection from "./AdminSection";
 import PushSection from "./PushSection";
-import { FaUser, FaServer, FaSearch, FaGamepad, FaChartBar, FaCogs, FaBell, FaSignOutAlt, FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaHome, FaUser, FaServer, FaSearch, FaGamepad,
+  FaChartBar, FaCogs, FaBell, FaSignOutAlt, FaBars, FaTimes
+} from "react-icons/fa";
 
 const SECTIONS = [
+  { key: "home", label: "Início", icon: FaHome },
   { key: "user", label: "Usuário", icon: FaUser },
   { key: "server", label: "Servidor", icon: FaServer },
   { key: "search", label: "Busca", icon: FaSearch },
   { key: "game", label: "Jogo", icon: FaGamepad },
   { key: "metrics", label: "Métricas", icon: FaChartBar },
-  { key: "admin", label: "Administração", icon: FaCogs },
-  { key: "push", label: "Push", icon: FaBell },
+  { key: "admin", label: "Admin", icon: FaCogs },
+  { key: "push", label: "Notificações", icon: FaBell },
 ];
 
 const SECTION_COMPONENTS = {
+  home: HomeSection,
   user: UserSection,
   server: ServerSection,
   search: SearchSection,
@@ -36,17 +43,10 @@ class ErrorBoundary extends React.Component {
     super(props);
     this.state = { hasError: false, error: null };
   }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error };
+  static getDerivedStateFromError(error) { return { hasError: true, error }; }
+  componentDidCatch(error, info) {
+    if (typeof this.props.onError === "function") this.props.onError(error, info);
   }
-
-  componentDidCatch(error, errorInfo) {
-    if (typeof this.props.onError === "function") {
-      this.props.onError(error, errorInfo);
-    }
-  }
-
   render() {
     if (this.state.hasError) {
       return (
@@ -65,18 +65,9 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-function SectionPlaceholder({ section }) {
-  return (
-    <div className="pwa-section-placeholder">
-      <div className="pwa-card">
-        <h2>{section.label}</h2>
-        <p>Esta seção estará disponível em breve.</p>
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
+  const { info } = useServer();
+
   const [permission, setPermission] = useState(() =>
     typeof Notification !== "undefined" ? Notification.permission : "default"
   );
@@ -87,24 +78,15 @@ export default function App() {
   const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false);
   const [pushError, setPushError] = useState("");
-  const [activeSection, setActiveSection] = useState(SECTIONS[0].key);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [discordServer, setDiscordServer] = useState(null);
+  const [activeSection, setActiveSection] = useState("home");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Atualiza título do documento com nome dinâmico do servidor
   useEffect(() => {
-    const title = SECTIONS.find((s) => s.key === activeSection)?.label || "PDL";
-    document.title = activeSection ? `${title} — PDL` : "PDL — Notificações e Painel";
-  }, [activeSection]);
-
-  useEffect(() => {
-    if (!token) return;
-    let cancelled = false;
-    apiFetch("/api/v1/discord/server/by-domain/")
-      .then((res) => res.ok ? res.json() : null)
-      .then((data) => { if (!cancelled && data) setDiscordServer(data); })
-      .catch(() => {});
-    return () => { cancelled = true; };
-  }, [token]);
+    const section = SECTIONS.find((s) => s.key === activeSection);
+    const label = section?.label || "Início";
+    document.title = `${label} — ${info.name || "PDL"}`;
+  }, [activeSection, info.name]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -121,7 +103,7 @@ export default function App() {
         setTokens(data.access, data.refresh);
         setToken(data.access);
       } else {
-        setLoginError(data.detail || "Usuário ou senha inválidos.");
+        setLoginError(data.detail || data.error || "Usuário ou senha inválidos.");
       }
     } catch (_) {
       setLoginError("Erro ao conectar ao servidor.");
@@ -143,15 +125,15 @@ export default function App() {
   const handleUnsubscribe = async () => {
     if (!("serviceWorker" in navigator)) return;
     try {
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
-      if (subscription) {
-        await subscription.unsubscribe();
-        await unsubscribeUserFromPush(token, subscription);
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      if (sub) {
+        await sub.unsubscribe();
+        await unsubscribeUserFromPush(token, sub);
         setSubscribed(false);
         setPermission(typeof Notification !== "undefined" ? Notification.permission : "default");
       }
-    } catch (_) {}
+    } catch (_) { }
   };
 
   const handleLogout = async () => {
@@ -160,34 +142,39 @@ export default function App() {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       });
-    } catch (_) {}
+    } catch (_) { }
     clearTokens();
     setToken("");
     setSubscribed(false);
     setUsername("");
     setPassword("");
-    setMenuOpen(false);
+    setSidebarOpen(false);
+    setActiveSection("home");
   };
 
-  const setSection = (key) => {
+  const navigate = (key) => {
     setActiveSection(key);
-    setMenuOpen(false);
+    setSidebarOpen(false);
   };
 
-  const ActiveComponent = SECTION_COMPONENTS[activeSection];
-
+  // ---- LOGIN SCREEN ----
   if (!token) {
     return (
       <ErrorBoundary>
         <div className="pwa-app pwa-app--login">
           <div className="pwa-login">
-            <div className="pwa-card pwa-login__card">
+            <div className="pwa-login__card pwa-card">
               <div className="pwa-login__header">
-                <img src="/static/pwa/icons/logo.png" alt="" className="pwa-login__logo" />
-                <h1>Entrar</h1>
+                <img
+                  src={info.logo_url || "/static/pwa/icons/logo.png"}
+                  alt=""
+                  className="pwa-login__logo"
+                />
+                <h1>{info.name || "PDL"}</h1>
                 <p className="pwa-login__tip">
-                  Acesse sua conta para gerenciar notificações e configurações.
+                  {info.description || "Acesse sua conta para gerenciar notificações e configurações."}
                 </p>
+                {info.chronicle && <span className="pwa-login__badge">{info.chronicle}</span>}
               </div>
               <form className="pwa-login__form" onSubmit={handleLogin} noValidate>
                 <input
@@ -211,11 +198,17 @@ export default function App() {
                   required
                   aria-label="Senha"
                 />
-                <button className="pwa-btn pwa-btn--primary pwa-btn--block" type="submit" disabled={loading}>
+                <button
+                  className="pwa-btn pwa-btn--primary pwa-btn--block"
+                  type="submit"
+                  disabled={loading}
+                >
                   {loading ? "Entrando…" : "Entrar"}
                 </button>
               </form>
-              {loginError && <p className="pwa-login__error" role="alert">{loginError}</p>}
+              {loginError && (
+                <p className="pwa-login__error" role="alert">{loginError}</p>
+              )}
             </div>
           </div>
         </div>
@@ -223,71 +216,118 @@ export default function App() {
     );
   }
 
+  // ---- MAIN APP ----
+  const ActiveComponent = SECTION_COMPONENTS[activeSection];
+  const ActiveIcon = SECTIONS.find((s) => s.key === activeSection)?.icon;
+
   return (
     <ErrorBoundary>
-      <div className="pwa-app">
-        <header className="pwa-nav" role="banner">
-          <div className="pwa-nav__inner">
-            <a href="/" className="pwa-nav__brand" aria-label="Ir para o site">
-              <img src="/static/pwa/icons/logo.png" alt="" className="pwa-nav__logo" />
-              <span className="pwa-nav__title">PDL</span>
-            </a>
+      <div className={`pwa-app ${sidebarOpen ? "pwa-app--sidebar-open" : ""}`}>
 
+        {/* Overlay para mobile */}
+        {sidebarOpen && (
+          <div
+            className="pwa-sidebar-overlay"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Sidebar */}
+        <aside className="pwa-sidebar" role="navigation" aria-label="Menu principal">
+          <div className="pwa-sidebar__brand" onClick={() => navigate("home")}>
+            <img
+              src={info.logo_url || "/static/pwa/icons/logo.png"}
+              alt=""
+              className="pwa-sidebar__logo"
+            />
+            <span className="pwa-sidebar__title">{info.short_name || info.name || "PDL"}</span>
+          </div>
+
+          <nav className="pwa-sidebar__nav">
+            {SECTIONS.map((section) => {
+              const Icon = section.icon;
+              const isActive = activeSection === section.key;
+              return (
+                <button
+                  key={section.key}
+                  type="button"
+                  className={`pwa-sidebar__item ${isActive ? "pwa-sidebar__item--active" : ""}`}
+                  onClick={() => navigate(section.key)}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  <span className="pwa-sidebar__item-icon">
+                    <Icon size={18} />
+                  </span>
+                  <span className="pwa-sidebar__item-label">{section.label}</span>
+                  {isActive && <span className="pwa-sidebar__item-indicator" />}
+                </button>
+              );
+            })}
+          </nav>
+
+          <div className="pwa-sidebar__footer">
             <button
               type="button"
-              className="pwa-nav__toggle"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-expanded={menuOpen}
-              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+              className="pwa-sidebar__logout"
+              onClick={handleLogout}
+              aria-label="Sair"
             >
-              {menuOpen ? <FaTimes /> : <FaBars />}
+              <FaSignOutAlt size={16} />
+              <span>Sair</span>
             </button>
-
-            <nav className={`pwa-nav__menu ${menuOpen ? "pwa-nav__menu--open" : ""}`} aria-label="Navegação">
-              <ul className="pwa-nav__list">
-                {SECTIONS.map((section) => (
-                  <li key={section.key}>
-                    <button
-                      type="button"
-                      className={`pwa-nav__link ${activeSection === section.key ? "pwa-nav__link--active" : ""}`}
-                      onClick={() => setSection(section.key)}
-                      aria-current={activeSection === section.key ? "page" : undefined}
-                    >
-                      <span className="pwa-nav__icon">{React.createElement(section.icon)}</span>
-                      <span>{section.label}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              <button
-                type="button"
-                className="pwa-nav__link pwa-nav__link--logout"
-                onClick={handleLogout}
-                aria-label="Sair"
-              >
-                <span className="pwa-nav__icon"><FaSignOutAlt /></span>
-                <span>Sair</span>
-              </button>
-            </nav>
           </div>
-        </header>
+        </aside>
 
-        <main className="pwa-main" role="main">
-          <div className="pwa-main__inner">
-            {ActiveComponent ? (
-              <ActiveComponent key={activeSection} token={token} />
-            ) : (
-              <SectionPlaceholder section={SECTIONS.find((s) => s.key === activeSection) || SECTIONS[0]} />
-            )}
-          </div>
-          {discordServer && discordServer.server_name && (
-            <footer className="pwa-footer">
-              <span className="pwa-footer-discord">
-                Comunidade Discord: <strong>{discordServer.server_name}</strong>
+        {/* Main area */}
+        <div className="pwa-main-wrap">
+          {/* Top bar (mobile) */}
+          <header className="pwa-topbar" role="banner">
+            <button
+              type="button"
+              className="pwa-topbar__hamburger"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-expanded={sidebarOpen}
+              aria-label={sidebarOpen ? "Fechar menu" : "Abrir menu"}
+            >
+              {sidebarOpen ? <FaTimes /> : <FaBars />}
+            </button>
+            <div className="pwa-topbar__brand" onClick={() => navigate("home")}>
+              {ActiveIcon && React.createElement(ActiveIcon, { size: 16 })}
+              <span>
+                {SECTIONS.find((s) => s.key === activeSection)?.label || "PDL"}
               </span>
-            </footer>
-          )}
-        </main>
+            </div>
+            <button
+              type="button"
+              className="pwa-topbar__logout"
+              onClick={handleLogout}
+              aria-label="Sair"
+            >
+              <FaSignOutAlt size={16} />
+            </button>
+          </header>
+
+          <main className="pwa-content" role="main">
+            {ActiveComponent ? (
+              <ActiveComponent
+                key={activeSection}
+                token={token}
+                onNavigate={navigate}
+                activeSection={activeSection}
+                subscribed={subscribed}
+                permission={permission}
+                onSubscribe={handleSubscribe}
+                onUnsubscribe={handleUnsubscribe}
+                pushError={pushError}
+              />
+            ) : (
+              <div className="pwa-card" style={{ padding: "2rem", textAlign: "center" }}>
+                <p style={{ color: "var(--pdl-text-muted)" }}>Seção não encontrada.</p>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
     </ErrorBoundary>
   );
