@@ -18,7 +18,13 @@ class ForbiddenRedirectMiddleware:
         if response.status_code == 403 and request.path != login_url and not request.path.endswith('/login/'):
             # Log para verificar de onde vem o erro 403
             logger.warning(f'Erro 403: Acesso negado para {request.path} por {request.user}')
-            # Redirecionamento para a página de login
+            
+            # Se o usuário já estiver logado, exibe a página de acesso negado
+            if request.user.is_authenticated:
+                from django.shortcuts import render
+                return render(request, 'errors/403.html', status=403)
+                
+            # Redirecionamento para a página de login se for anônimo
             return redirect(login_url)
         return response
     
