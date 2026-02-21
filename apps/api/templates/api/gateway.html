@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API v1 Gateway - {{ settings.PROJECT_TITLE }}</title>
+    <!-- Tailwind CSS (via CDN para página standalone) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827;
+            /* gray-900 */
+        }
+
+        /* Utilities de Animação para Blobs de fundo */
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+    </style>
+</head>
+
+<body class="text-white antialiased">
+    <div class="min-h-screen flex items-center justify-center p-4 py-20 relative overflow-hidden">
+
+        <!-- Efeitos de Fundo -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+            <div
+                class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob">
+            </div>
+            <div
+                class="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-purple-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-2000">
+            </div>
+            <div
+                class="absolute bottom-[-10%] left-[20%] w-[40%] h-[40%] bg-indigo-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-4000">
+            </div>
+        </div>
+
+        <!-- Container Principal / Glassmorphism -->
+        <div
+            class="relative z-10 max-w-4xl w-full bg-gray-800 bg-opacity-40 backdrop-blur-xl border border-gray-700 p-10 rounded-3xl shadow-2xl transform transition-all duration-500 hover:shadow-blue-900/20">
+
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <div
+                    class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-purple-600 mb-6 shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-server text-4xl text-white"></i>
+                </div>
+                <h1
+                    class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+                    {{ api_info.name }}
+                </h1>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                    {{ api_info.description }}
+                </p>
+
+                <div class="mt-6 flex flex-wrap justify-center gap-3">
+                    <span
+                        class="px-4 py-1.5 rounded-full text-sm font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                        <i class="fa-solid fa-code-branch mr-2"></i>{{ api_info.version }}
+                    </span>
+                    <span
+                        class="px-4 py-1.5 rounded-full text-sm font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+                        <i class="fa-solid fa-check-circle mr-2"></i>Status: Online
+                    </span>
+                    <span
+                        class="px-4 py-1.5 rounded-full text-sm font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                        <i class="fa-solid fa-bolt mr-2"></i>Rate Limit: {{ api_info.rate_limits.authenticated }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Cards de Documentação -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+
+                <!-- Swagger UI -->
+                <a href="{{ api_info.documentation.swagger_ui }}"
+                    class="group block relative p-6 bg-gray-900/50 rounded-2xl border border-gray-700 hover:border-green-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-green-500/10">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-b from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4 text-green-400 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-book-open text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-white group-hover:text-green-400 transition-colors">
+                            Swagger UI</h3>
+                        <p class="text-gray-400 text-sm">Explorador interativo da API. Teste endpoints diretamente pelo
+                            navegador.</p>
+                    </div>
+                </a>
+
+                <!-- ReDoc HTML -->
+                <a href="{{ api_info.documentation.redoc }}"
+                    class="group block relative p-6 bg-gray-900/50 rounded-2xl border border-gray-700 hover:border-blue-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/10">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-b from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4 text-blue-400 group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-readme text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-white group-hover:text-blue-400 transition-colors">ReDoc
+                        </h3>
+                        <p class="text-gray-400 text-sm">Documentação estática com design limpo, focado em leitura
+                            estruturada.</p>
+                    </div>
+                </a>
+
+                <!-- OpenAPI JSON -->
+                <a href="{{ api_info.documentation.openapi_schema }}"
+                    class="group block relative p-6 bg-gray-900/50 rounded-2xl border border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/10">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-b from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
+                    </div>
+                    <div class="relative z-10">
+                        <div
+                            class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4 text-purple-400 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-file-code text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-white group-hover:text-purple-400 transition-colors">
+                            OpenAPI Schema</h3>
+                        <p class="text-gray-400 text-sm">Esquema oficial em formato YAML formatado nativamente no padrão
+                            OpenAPI 3.</p>
+                    </div>
+                </a>
+
+            </div>
+
+            <!-- Estatísticas Rápidas -->
+            <div
+                class="bg-gray-900/30 rounded-2xl border border-gray-800 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex-1 text-center md:text-left">
+                    <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">Acesso Livre</h4>
+                    <div class="text-2xl font-bold text-white">{{ api_info.counts.public }} <span
+                            class="text-base font-normal text-gray-500">endpoints</span></div>
+                </div>
+                <div class="w-px h-12 bg-gray-700 hidden md:block"></div>
+                <div class="flex-1 text-center">
+                    <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">Autenticados</h4>
+                    <div class="text-2xl font-bold text-white">{{ api_info.counts.authenticated }} <span
+                            class="text-base font-normal text-gray-500">endpoints</span></div>
+                </div>
+                <div class="w-px h-12 bg-gray-700 hidden md:block"></div>
+                <div class="flex-1 text-center md:text-right">
+                    <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">Tempo Médio</h4>
+                    <div class="text-2xl font-bold text-green-400"><i
+                            class="fa-solid fa-gauge-high mr-2 text-sm"></i>~15<span
+                            class="text-base font-normal text-gray-500">ms</span></div>
+                </div>
+            </div>
+
+            <div class="text-center mt-10">
+                <a href="/" class="text-gray-500 hover:text-white transition-colors text-sm"><i
+                        class="fa-solid fa-arrow-left mr-2"></i>Voltar ao Site Principal</a>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>

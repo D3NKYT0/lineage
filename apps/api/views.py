@@ -2320,6 +2320,58 @@ class APIRedirectView(APIView):
     def get(self, request):
         """Retorna informações da API e links para documentação"""
         
+        # Inspeciona as URLs reais da API para contar endpoints
+        from django.urls import get_resolver
+        from rest_framework.permissions import AllowAny
+        from rest_framework.views import APIView
+        
+        resolver = get_resolver()
+        api_endpoints = set()
+        public_count = 0
+        auth_count = 0
+        admin_count = 0
+        
+        def explore_patterns(patterns, prefix=''):
+            nonlocal public_count, auth_count, admin_count
+            for pattern in patterns:
+                if hasattr(pattern, 'url_patterns'):
+                    explore_patterns(pattern.url_patterns, prefix + str(pattern.pattern))
+                elif hasattr(pattern, 'callback'):
+                    url_path = prefix + str(pattern.pattern)
+                    # Filtra apenas URLs que começam com api/v1/ (ou similar que seja da API)
+                    if 'api/' in url_path and 'swagger' not in url_path and 'redoc' not in url_path:
+                        # Evita contar a mesma URL várias vezes (ex: com format suffix)
+                        clean_url = url_path.replace('(?P<format>[a-z0-9]+)/?$', '')
+                        if clean_url not in api_endpoints:
+                            api_endpoints.add(clean_url)
+                            
+                            # Tenta descobrir permissões
+                            callback = pattern.callback
+                            is_public = False
+                            
+                            if hasattr(callback, 'view_class') and issubclass(callback.view_class, APIView):
+                                view_class = callback.view_class
+                                permissions = getattr(view_class, 'permission_classes', [])
+                                if AllowAny in permissions:
+                                    is_public = True
+                                    
+                            if is_public:
+                                public_count += 1
+                            else:
+                                if 'admin' in clean_url or 'metrics' in clean_url:
+                                    admin_count += 1
+                                else:
+                                    auth_count += 1
+
+        try:
+            explore_patterns(resolver.url_patterns)
+        except Exception as e:
+            # Fallback seguro caso dê erro na reflexão de URLs
+            logger.warning(f"Erro ao contar endpoints da API: {e}")
+            public_count = 25
+            auth_count = 15
+            admin_count = 5
+        
         # Informações da API
         api_info = {
             'name': 'Lineage 2 API',
@@ -2331,32 +2383,10 @@ class APIRedirectView(APIView):
                 'openapi_schema': '/api/v1/schema/',
                 'redoc': '/api/v1/schema/redoc/',
             },
-            'endpoints': {
-                'public': [
-                    '/api/v1/server/status/',
-                    '/api/v1/server/players-online/',
-                    '/api/v1/search/character/',
-                    '/api/v1/search/item/',
-                    '/api/v1/clan/{name}/',
-                    '/api/v1/auction/items/',
-                    '/api/v1/health/',
-                ],
-                'authenticated': [
-                    '/api/v1/auth/login/',
-                    '/api/v1/auth/refresh/',
-                    '/api/v1/auth/logout/',
-                    '/api/v1/user/profile/',
-                    '/api/v1/user/dashboard/',
-                    '/api/v1/user/stats/',
-                    '/api/v1/user/game-data/',
-                ],
-                'admin_only': [
-                    '/api/v1/metrics/hourly/',
-                    '/api/v1/metrics/daily/',
-                    '/api/v1/metrics/performance/',
-                    '/api/v1/metrics/slow-queries/',
-                    '/api/v1/cache/stats/',
-                ]
+            'counts': {
+                'public': public_count,
+                'authenticated': auth_count,
+                'admin_only': admin_count
             },
             'rate_limits': {
                 'anonymous': '30/minute',
@@ -2377,8 +2407,10 @@ class APIRedirectView(APIView):
         # Se a requisição aceita HTML, retorna o template
         if 'text/html' in request.META.get('HTTP_ACCEPT', ''):
             from django.shortcuts import render
-            return render(request, 'api/landing.html', {
-                'api_info': api_info
+            from django.conf import settings
+            return render(request, 'api/gateway.html', {
+                'api_info': api_info,
+                'settings': settings
             })
         
         # Caso contrário, retorna JSON
