@@ -15,6 +15,7 @@
 | [ARCHITECTURE_OVERVIEW_DIAGRAM](architecture/ARCHITECTURE_OVERVIEW_DIAGRAM.md) | Diagrama de arquitetura geral |
 | [LINEAGE2_DB_INTEGRATION_DIAGRAM](architecture/LINEAGE2_DB_INTEGRATION_DIAGRAM.md) | Diagrama de integração com banco Lineage 2 |
 | [THEME_SYSTEM_FLOW_DIAGRAM](architecture/THEME_SYSTEM_FLOW_DIAGRAM.md) | Diagrama do fluxo do sistema de temas |
+| [MULTI_SERVER_ARCHITECTURE](architecture/MULTI_SERVER_ARCHITECTURE.md) | Arquitetura Matriz-Filial para Múltiplos Servidores |
 
 ---
 
@@ -55,6 +56,7 @@
 | Documento | Descrição |
 |-----------|-----------|
 | [THEME_SYSTEM](themes/THEME_SYSTEM.md) | Visão geral do sistema de temas |
+| [DESIGN_SYSTEM](themes/DESIGN_SYSTEM.md) | Guia completo de Design System da Plataforma |
 | [THEME_DEVELOPER_GUIDE](themes/THEME_DEVELOPER_GUIDE.md) | Guia para desenvolvedores de temas |
 | [GUIDE_CREATE_THEME](themes/GUIDE_CREATE_THEME.md) | Tutorial completo para criar um tema |
 | [THEME_ERROR_HANDLING](themes/THEME_ERROR_HANDLING.md) | Tratamento de erros em temas |
@@ -201,9 +203,6 @@
 | Documento | Descrição |
 |-----------|-----------|
 | [CHANGELOG_2026_02](releases/CHANGELOG_2026_02.md) | Changelog de fevereiro de 2026 |
-| [RELEASE_1.11.0_BRANCH_MATRIX](releases/RELEASE_1.11.0_BRANCH_MATRIX.md) | Release Matriz/Filial v1.11.0 |
-| [RELEASE_1.14.5_VISUAL_RESTRUCTURE](releases/RELEASE_1.14.5_VISUAL_RESTRUCTURE.md) | Release Reestruturação Visual v1.14.5 |
-| [RELEASE_1.16.0_LINKED_ACCOUNTS](releases/RELEASE_1.16.0_LINKED_ACCOUNTS.md) | Release Contas Vinculadas v1.16.0 |
 
 ---
 

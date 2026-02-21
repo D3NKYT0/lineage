@@ -295,3 +295,4 @@ A rede social está com uma base sólida e funcional! As principais funcionalida
 5. **Deploy** em produção
 
 A estrutura está preparada para crescer e se tornar uma rede social completa e moderna! 🚀
+

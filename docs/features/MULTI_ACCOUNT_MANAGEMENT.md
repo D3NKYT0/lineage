@@ -1,87 +1,299 @@
-﻿## Gerenciamento de múltiplas contas (Contra Mestre)
+﻿# 📱 Guia Completo da Rede Social (app.main.social)
 
-Este recurso permite que um usuário delegue diferentes contas do Lineage 2 para outros membros da equipe (contra mestres) dentro do painel PDL, mantendo auditoria e troca rápida entre contas.
+> **Última atualização:** 20/02/2026
 
-### Conceitos
+## 🎯 **Funcionalidades Implementadas**
 
-- **Conta ativa**: o login do jogo atualmente selecionado na sessão. Todos os módulos sensíveis (inventário, carteira, shop, serviços e marketplace) utilizam este login para consultar personagens e executar operações no banco do jogo.
-- **Contra mestre**: usuário do PDL com permissão delegada para operar uma conta que não é a sua principal. Cada delegação é registrada em `ManagedLineageAccount`.
-- **Proprietário**: usuário cujo UUID está vinculado diretamente ao login do jogo (`linked_uuid`). Somente o proprietário pode criar ou remover delegações.
-- **Conta mestre do e-mail (Email Master)**: quando mais de uma conta do PDL compartilha o mesmo e-mail, a primeira que confirmar o endereço se torna automaticamente a "conta mestre" desse e-mail. Isso é registrado no modelo `EmailOwnership`. A conta mestre pode gerenciar todas as contas do Lineage 2 que possuem aquele e-mail.
-- **Vinculação automática**: quando você salva seu perfil (independente de ter alterado o e-mail ou não), o sistema verifica se o seu e-mail já possui uma conta mestre. Se sim, a sua conta do Lineage 2 (username) é automaticamente vinculada ao UUID da conta mestre no banco do jogo. **Importante**: apenas a conta que está sendo editada é vinculada, outras contas com o mesmo e-mail não são afetadas.
+### **✅ Funcionalidades Básicas:**
+- ✅ Feed de posts com timeline
+- ✅ Sistema de posts (criar, editar, deletar)
+- ✅ Comentários com respostas aninhadas
+- ✅ Sistema de curtidas/likes
+- ✅ Seguir/deixar de seguir usuários
+- ✅ Perfis de usuário personalizáveis
+- ✅ Sistema de busca
+- ✅ Privacidade (posts públicos/privados)
 
-### Vinculação de Contas do Lineage 2
+### **🚀 Funcionalidades Avançadas Adicionadas:**
+- ✅ **Vídeos** - Upload e reprodução de vídeos
+- ✅ **Links** - Compartilhamento de links com preview
+- ✅ **Hashtags** - Sistema completo de hashtags
+- ✅ **Reações** - 6 tipos de reações (👍❤️😂😮😢😠)
+- ✅ **Compartilhamentos** - Compartilhar posts com comentários
+- ✅ **Posts fixados** - Fixar posts no topo do perfil
+- ✅ **Estatísticas** - Visualizações, engajamento, etc.
+- ✅ **Curtidas em comentários** - Sistema de likes para comentários
+- ✅ **Perfis estendidos** - Mais informações e links sociais
+- ✅ **Admin completo** - Interface administrativa completa
 
-#### Vinculação Automática ao Salvar Perfil
+## 📋 **Como Usar a Rede Social**
 
-Quando você salva seu perfil (em `/app/profile/edit/`), o sistema verifica automaticamente:
+### **1. Acessar a rede social:**
+```
+http://seudominio.com/social/feed/
+```
 
-1. **Se o seu e-mail possui uma conta mestre**: O sistema verifica se existe um `EmailOwnership` para o seu e-mail.
-2. **Se sim, vincula apenas a sua conta**: Apenas a conta do Lineage 2 correspondente ao seu username é vinculada ao UUID da conta mestre.
-3. **Outras contas não são afetadas**: Se existem outras contas do Lineage 2 com o mesmo e-mail, elas **não** são vinculadas automaticamente nesta operação.
+### **2. URLs Principais:**
+- **Feed**: `/social/feed/`
+- **Meus Posts**: `/social/my-posts/`
+- **Busca**: `/social/search/`
+- **Editar Perfil**: `/social/edit-profile/`
+- **Hashtag**: `/social/hashtag/nome-da-hashtag/`
 
-**Exemplo:**
-- `admin` é a conta mestre do e-mail `exemplo@email.com`
-- `denkyto` e `denky` também têm esse e-mail no banco do Lineage 2
-- Você edita o perfil de `denkyto` e salva
-- **Resultado**: Apenas `denkyto` é vinculado ao `admin`. `denky` permanece como estava.
+### **3. Funcionalidades por Seção:**
 
-#### Vinculação Manual
+#### **📝 Criar Posts:**
+- Texto (máx. 1000 caracteres)
+- Imagens (JPG, PNG, GIF - máx. 5MB)
+- Vídeos (MP4, AVI, MOV - máx. 50MB)
+- Links com preview automático
+- Hashtags (ex: #tecnologia #programacao)
+- Configurar privacidade
 
-Para vincular uma conta do Lineage 2 manualmente:
+#### **👥 Gerenciar Perfil:**
+- Foto de perfil e capa
+- Biografia e interesses
+- Localização e dados pessoais
+- Links para redes sociais
+- Configurações de privacidade
 
-1. Acesse `Servidor > Conta > Vincular conta` (`/app/server/account/link-lineage-account/`).
-2. Informe a senha da conta do Lineage 2.
-3. (Opcional) Solicite um código de verificação por e-mail para maior segurança.
-4. A conta será vinculada ao seu UUID no banco do Lineage 2.
+#### **🔍 Buscar:**
+- Usuários por nome/email
+- Posts por conteúdo
+- Hashtags
+- Filtros por data
 
-**Importante**: A vinculação manual vincula apenas a conta correspondente ao seu username. Outras contas não são afetadas.
+#### **💬 Interagir:**
+- 6 tipos de reações nos posts
+- Comentários com imagens
+- Curtidas em comentários
+- Compartilhamentos
+- Seguir usuários
 
-### Fluxo de Gerenciamento
+## 🛠️ **Próximos Passos para Completar**
 
-1. Acesse `Servidor > Conta > Gerenciar contas` (`/app/server/account/manage/`).
-2. Use o seletor "Conta ativa" para escolher qual login deseja operar. O badge da conta ativa também aparece no dashboard da conta.
-3. Para adicionar um contra mestre, informe:
-   - Login do jogo (precisa estar vinculado ao seu usuário).
-   - Username do usuário do PDL que atuará como contra mestre.
-   - Observações (opcional) com as orientações desejadas.
-4. Cada contra mestre pode receber acesso a múltiplas contas. O painel lista:
-   - Contas que você delegou (com ação de remover acesso).
-   - Contas delegadas para você (incluindo quem concedeu o acesso).
-   - Contas vinculadas automaticamente (via `linked_uuid` ou e-mail).
+### **2. 📱 Melhorar Templates Restantes**
 
-### Comportamento de Vinculação
+#### **Templates a Atualizar:**
+- `post_detail.html` - Adicionar novas funcionalidades
+- `user_profile.html` - Mostrar estatísticas e links sociais
+- `edit_profile.html` - Incluir novos campos
+- `search.html` - Melhorar interface de busca
+- `my_posts.html` - Adicionar funcionalidades de posts
 
-#### Quando o e-mail é alterado
+### **3. 🔧 Funcionalidades Adicionais**
 
-Se você alterar o e-mail no perfil e o novo e-mail já possui uma conta mestre:
-- A sua conta do Lineage 2 (username) é vinculada ao UUID da conta mestre.
-- O campo `email` no banco do Lineage 2 é atualizado para o novo e-mail.
-- O campo `linked_uuid` é atualizado para o UUID da conta mestre.
+#### **Sistema de Notificações:**
+```python
+# Criar app de notificações
+- Notificações em tempo real
+- Notificações por email
+- Configurações de notificação
+```
 
-#### Quando o e-mail não é alterado
+#### **Sistema de Mensagens:**
+```python
+# Integrar com app message existente
+- Chat privado entre usuários
+- Mensagens em tempo real
+- Histórico de conversas
+```
 
-Se você salvar o perfil sem alterar o e-mail:
-- O sistema verifica se o e-mail atual possui uma conta mestre.
-- Se sim, vincula apenas a sua conta do Lineage 2 ao UUID da conta mestre.
-- Outras contas com o mesmo e-mail **não** são vinculadas automaticamente.
+#### **Sistema de Moderação:**
+```python
+# Funcionalidades de moderação
+- Reportar posts/comentários
+- Moderação automática
+- Sistema de banimento
+- Filtros de conteúdo
+```
 
-#### Desvincular uma conta
+#### **Sistema de Stories:**
+```python
+# Stories temporários
+- Posts que expiram em 24h
+- Stories com mídia
+- Visualizações de stories
+```
 
-Para desvincular uma conta do Lineage 2:
-1. Acesse `Servidor > Conta > Gerenciar contas`.
-2. Na seção "Contas delegadas para você", clique em "Desvincular" na conta desejada.
-3. A conta terá seu `linked_uuid` definido como `NULL` no banco do Lineage 2.
-4. O campo `email` **não** é alterado (permanece como estava).
+### **4. 🎨 Melhorias de UX/UI**
 
-### Segurança
+#### **Interface Responsiva:**
+- Mobile-first design
+- PWA (Progressive Web App)
+- Dark mode
+- Animações suaves
 
-- Toda troca de contexto valida se o usuário possui permissão ativa na conta selecionada.
-- Operações críticas (transferências, shop, serviços) continuam exigindo autenticação local (senha do PDL) e respeitam as mesmas verificações de PIN/2FA já existentes.
-- Delegações podem ser revogadas a qualquer momento pelo proprietário ou por um superusuário.
-- A vinculação automática ocorre apenas para a conta específica que está sendo editada, garantindo que outras contas não sejam afetadas inadvertidamente.
+#### **Funcionalidades Avançadas:**
+- Infinite scroll
+- Lazy loading de imagens
+- Cache inteligente
+- Otimização de performance
 
-### APIs
+### **5. 🔒 Segurança e Privacidade**
 
-- Endpoints do dashboard podem receber o parâmetro `account_login` (query string ou corpo) para definir explicitamente a conta alvo. Sem esse parâmetro, a API usa o mesmo contexto registrado na sessão web.
+#### **Recursos de Segurança:**
+- Rate limiting
+- Validação de arquivos
+- Proteção contra spam
+- Backup automático
+
+#### **Configurações de Privacidade:**
+- Controle granular de privacidade
+- Listas de amigos próximos
+- Bloqueio de usuários
+- Modo invisível
+
+### **6. 📊 Analytics e Relatórios**
+
+#### **Dashboard de Analytics:**
+- Estatísticas de engajamento
+- Relatórios de crescimento
+- Métricas de usuários
+- Análise de conteúdo
+
+## 🚀 **Como Implementar as Próximas Funcionalidades**
+
+### **1. Sistema de Notificações:**
+```bash
+# Criar novo app
+python manage.py startapp notifications
+
+# Adicionar ao settings.py
+INSTALLED_APPS += ['apps.main.notifications']
+
+# Criar modelos
+# - Notification
+# - NotificationSettings
+# - NotificationTemplate
+```
+
+### **2. Sistema de Mensagens:**
+```bash
+# Integrar com app message existente
+# Adicionar funcionalidades de chat em tempo real
+# Usar WebSockets ou Django Channels
+```
+
+### **3. Sistema de Moderação:**
+```bash
+# Criar app de moderação
+python manage.py startapp moderation
+
+# Modelos:
+# - Report
+# - ModerationAction
+# - ContentFilter
+```
+
+### **4. Melhorias de Performance:**
+```bash
+# Otimizações de banco de dados
+python manage.py makemigrations --optimize
+
+# Cache Redis
+pip install django-redis
+
+# CDN para mídia
+# Configurar AWS S3 ou similar
+```
+
+## 📈 **Métricas de Sucesso**
+
+### **KPIs Importantes:**
+- **Engajamento**: Likes, comentários, compartilhamentos
+- **Crescimento**: Novos usuários, posts criados
+- **Retenção**: Usuários ativos diariamente
+- **Performance**: Tempo de carregamento, uptime
+
+### **Ferramentas de Monitoramento:**
+- Google Analytics
+- Sentry para erros
+- New Relic para performance
+- Custom dashboard
+
+## 🎯 **Checklist de Implementação**
+
+### **✅ Concluído:**
+- [x] Modelos de dados
+- [x] Views e URLs
+- [x] Formulários
+- [x] Admin interface
+- [x] Template do feed
+- [x] Sistema de hashtags
+- [x] Reações e compartilhamentos
+
+### **🔄 Em Andamento:**
+- [ ] Templates restantes
+- [ ] JavaScript interativo
+- [ ] Testes automatizados
+
+### **⏳ Próximos:**
+- [ ] Sistema de notificações
+- [ ] Chat em tempo real
+- [ ] Moderação de conteúdo
+- [ ] Stories
+- [ ] PWA
+- [ ] Analytics
+
+## 🛠️ **Comandos Úteis**
+
+### **Desenvolvimento:**
+```bash
+# Criar migrações
+python manage.py makemigrations social
+
+# Aplicar migrações
+python manage.py migrate
+
+# Criar superusuário
+python manage.py createsuperuser
+
+# Coletar arquivos estáticos
+python manage.py collectstatic
+
+# Testar
+python manage.py test apps.main.social
+```
+
+### **Produção:**
+```bash
+# Backup do banco
+python manage.py dumpdata social > social_backup.json
+
+# Restaurar backup
+python manage.py loaddata social_backup.json
+
+# Verificar integridade
+python manage.py check --deploy
+```
+
+## 📚 **Recursos Adicionais**
+
+### **Documentação:**
+- [Django Documentation](https://docs.djangoproject.com/)
+- [Django REST Framework](https://www.django-rest-framework.org/)
+- [Bootstrap Icons](https://icons.getbootstrap.com/)
+
+### **Bibliotecas Úteis:**
+- `django-crispy-forms` - Formulários bonitos
+- `django-allauth` - Autenticação social
+- `django-channels` - WebSockets
+- `celery` - Tarefas assíncronas
+- `redis` - Cache e sessões
+
+---
+
+## 🎉 **Conclusão**
+
+A rede social está com uma base sólida e funcional! As principais funcionalidades estão implementadas e funcionando. Agora você pode:
+
+1. **Testar** todas as funcionalidades
+2. **Personalizar** os templates conforme necessário
+3. **Implementar** as funcionalidades adicionais
+4. **Otimizar** performance e UX
+5. **Deploy** em produção
+
+A estrutura está preparada para crescer e se tornar uma rede social completa e moderna! 🚀
+
 
