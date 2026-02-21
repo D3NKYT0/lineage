@@ -31,3 +31,8 @@ Toda mutação no Painel PDL é *Auditada*.
 - Alguém mudou a taxa (inflação) das moedas na `Config Hub`? O auditor salva a data, o novo valor e o IP do Administrador que causou isso.
 
 **Ninguém foge da auditoria sistêmica.** Use-a a favor da liderança para delegar sub-gerentes sem temer corrupção oculta.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -68,3 +68,8 @@ A base dispõe de ferramentas via console que agem como metralhadoras assíncron
 # Executar a simulação de tráfego contra endpoints
 python scripts/generate_api_traffic.py --base-url http://127.0.0.1:6085 --requests 100 --delay 0.1
 ```
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

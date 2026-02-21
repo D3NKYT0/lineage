@@ -98,3 +98,8 @@ Se não tiver o FFmpeg:
 3. Escolha "Windows builds by BtbN" ou similar
 4. Baixe a versão "release"
 5. Extraia para `C:\ffmpeg\`
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

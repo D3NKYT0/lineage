@@ -59,3 +59,7 @@ A aplicação reside no diretório `apps/licence/` e conta com APIs REST:
 - `GET /license/api/features/?feature=X`: Endpoint unitário para checamento.
 
 O módulo todo suporta `i18n` e logs detalhados de tentativas de acesso persistidos nas queries para monitoramento anti-fraude.
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

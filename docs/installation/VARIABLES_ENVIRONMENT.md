@@ -471,3 +471,8 @@ cp env.sample .env
 # Edite o arquivo .env com suas configurações
 python manage.py runserver
 ```
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -31,3 +31,8 @@ O seu inventário do Painel é intocável até que você delegue a transição d
 
 Se você enjoou da recompensa "Varas de Pescar Tier 1", não existe botão de jogar fora. Mas você pode transformar excesso em **Fichas de Cassino** reciclando-as.
 Selecione itens comuns que pegaram teia no Inventário Web e troque automaticamente o *scrap* gerado por Moedas de Aposta (Minigames). E quem sabe não dá sorte num *Jackpot*?
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

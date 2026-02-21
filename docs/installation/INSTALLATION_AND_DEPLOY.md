@@ -106,3 +106,8 @@ docker compose restart
 ## Documentação Relacionada
 - [Guia Completo do install.sh](../installation/INSTALL_SH_GUIDE.md)
 - [Variáveis de Ambiente](../installation/VARIABLES_ENVIRONMENT.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

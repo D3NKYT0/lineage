@@ -95,3 +95,8 @@ Caso você prefira visualizar, iterar e explorar os Endpoints em tempo real atra
 ## 📞 Suporte e Contato
 
 Em caso de dúvidas a respeito das funcionalidades, relatar anomalias (bugs), ou conversar sobre viabilidade técnica de novas requisições programáticas, entre em contato através das canais oficiais em nosso Discord ou verifique as `Issues` no repositório do Github.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

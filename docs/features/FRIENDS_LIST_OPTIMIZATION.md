@@ -220,3 +220,7 @@ stats_update_interval = 30000  # Atualização de stats em ms
 ## Conclusão
 
 As otimizações implementadas transformaram um endpoint problemático em uma solução escalável e eficiente, capaz de lidar com milhares de usuários mantendo uma excelente experiência do usuário. 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

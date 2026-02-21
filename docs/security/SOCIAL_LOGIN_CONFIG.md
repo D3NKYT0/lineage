@@ -115,3 +115,7 @@ As seguintes variáveis estão disponíveis em todos os templates:
   </div>
 {% endif %}
 ``` 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

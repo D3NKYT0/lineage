@@ -117,3 +117,7 @@ Esta configuração trabalha em conjunto com outras configurações relacionadas
 - `FAKE_PLAYERS_FACTOR`: Multiplicador de jogadores online
 - `FAKE_PLAYERS_MIN`: Valor mínimo de jogadores online
 - `FAKE_PLAYERS_MAX`: Valor máximo de jogadores online 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -103,3 +103,7 @@ Uma **aplicação web progressiva (PWA)** desenvolvida em React para o sistema P
 
 **🎮 Sistema PDL - Perfect Dark Lineage**  
 *PWA Push Notifications - Interface Moderna e Responsiva* 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

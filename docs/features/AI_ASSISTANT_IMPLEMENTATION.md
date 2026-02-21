@@ -219,3 +219,8 @@ O design segue o padrão visual do PDL:
 ---
 
 **Desenvolvido para o PDL (Painel Definitivo Lineage)**
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

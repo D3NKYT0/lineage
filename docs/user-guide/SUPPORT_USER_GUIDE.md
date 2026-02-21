@@ -25,3 +25,8 @@ Seu ticket nunca some, mas altera os seguintes estágios:
 - **Aberto / Em Andamento**: O Administrador do servidor já visualizou e está operando os logs do banco em busca do seu problema.
 - **Aguardando Usuário**: **ATENÇÃO!** O admin solicitou evidências ou mais clareza. Você precisará checar seu Ticket e postar um novo comentário com a sua devolutiva.
 - **Resolvido**: Acabou de chover vitória! Leia os passos providenciados pelo staff, recolha seus itens ou avalie o que eles declararam. E mais importante: mande aquele "rating positivo" como feedback para incentivar o GM que ajudou.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -58,3 +58,8 @@ Você está livre para manipular a injeção inicial por meio das interfaces vis
 ## 🚀 Integrações de Inventário
 
 Qualquer ganho que vá além das abstrações de "Fichas" de minigame (como armaduras, runas especiais etc) engaja o utilitário nativo via API da *"Bag"*. Itens sorteados viram dados lógicos aguardando o usuário enviá-los efetivamente para os personagens associados. Tudo logado contra abusos em banco de dados isolado no L2J.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -975,3 +975,7 @@ Lembre-se: **Teste sempre** antes de fazer upload, **use variáveis** para texto
 ---
 
 *Este guia foi criado com base na análise do sistema de temas do PDL. Para dúvidas específicas, consulte a documentação técnica ou entre em contato com a equipe de desenvolvimento.* 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

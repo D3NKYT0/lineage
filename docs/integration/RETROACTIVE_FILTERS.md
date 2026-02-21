@@ -270,3 +270,8 @@ echo "Resultados salvos em /tmp/moderation_check.log"
 **Última atualização**: Dezembro 2024  
 **Versão**: 1.0  
 **Compatibilidade**: Django 4.0+
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

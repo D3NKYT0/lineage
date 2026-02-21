@@ -80,3 +80,8 @@ Leilões são encerrados automaticamente a cada **1 minuto** por uma tarefa agen
 
 - 💰 [Carteira e Pagamentos](WALLET_AND_PAYMENTS.md)
 - 🛍️ [Marketplace de Personagens](../features/MARKETPLACE.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

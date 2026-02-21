@@ -26,3 +26,8 @@ A aba de Boss não é para brincadeira:
 **Campeonatos da Olimpíada e Castelos (Siege)**
 - Visualize quem são os exatos *Heróis atuais da classe* antes de pisar num spot. Mapeie adversários, classes predominantes em roxo claro nas tabelas responsivas para smartphones.
 - Acesse *Castle & Siege* para checar o senhorio atual do feudo e quando as muralhas desabarão de novo no embate mortal quinzenal (cronômetros de Início de Cerco são dinâmicos dependendo do horário injetado da Staff).
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -164,3 +164,8 @@ Endpoints administrativos diversos e conexões com aplicativos terceiros.
 ### Discord Bot Endpoints
 * **Recuperar Info do Servidor L2 para Discord:** `GET /api/v1/discord/server/`
 * **Mapeamento/Info Especiais de Webhooks via Dominio:** `GET /api/v1/discord/server/by-domain/`
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

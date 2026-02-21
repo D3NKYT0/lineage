@@ -222,3 +222,8 @@ O sistema normaliza automaticamente:
 - Remove `www.`
 - Remove barras finais
 - Converte para minúsculas
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

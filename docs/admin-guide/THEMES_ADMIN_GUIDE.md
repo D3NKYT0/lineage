@@ -23,3 +23,8 @@ Para implementar o trabalho de um Front-End parceiro que montou pastas customiza
 3. É possível acompanhar as variações de pasta, pois arquivos nomeados corretamente (por ex: `button-glow.css` ou bibliotecas Bootstrap inteiras) serão aplicados a todas as rotas atreladas àquele Theme Code. Se um tema tentar acessar um template HTML que ele mesmo não re-escreveu, a aplicação busca automaticamente a versão "Coringada" (Fallback) do template original, impossibilitando erros *Página Não Encontrada (404)*.
 
 *Aviso ao dono do Projeto*: Caso encomende novos designs, oriente o desenvolvedor à leitura completa do **THEME_DEVELOPER_GUIDE.md**. É absolutamente indestrutível e seguro rodar quantos temas quiser em paralelo na sua Staff (Testes Locais).
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -80,3 +80,8 @@ Recomendamos fortemente ativar a **autenticação de dois fatores**:
 - 🛒 [Como usar a Loja](SHOP_GUIDE.md)
 - 🏷️ [Como participar de Leilões](AUCTION_GUIDE.md)
 - 📱 [Como usar a Rede Social](SOCIAL_USER_GUIDE.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

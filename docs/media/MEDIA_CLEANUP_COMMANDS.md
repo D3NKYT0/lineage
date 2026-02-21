@@ -326,3 +326,8 @@ Estes comandos fornecem uma solução completa para gerenciamento de arquivos de
 4. **Monitoramento**: Acompanha o status do storage
 
 Use-os regularmente para manter seu storage limpo e organizado! 🚀
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

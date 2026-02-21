@@ -268,3 +268,8 @@ Possíveis melhorias para versões futuras:
 ---
 
 **Nota**: Este sistema foi projetado para ser não intrusivo e manter a funcionalidade do site enquanto fornece feedback claro sobre problemas nos temas. É especialmente útil para sites com múltiplos temas ou temas enviados por usuários, onde erros podem não ser imediatamente aparentes.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

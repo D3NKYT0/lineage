@@ -100,3 +100,7 @@ Para usar o banner editável em outros templates:
 - Apenas uma configuração pode existir por vez
 - As imagens são salvas na pasta `media/banners/`
 - O sistema mantém compatibilidade com a imagem estática original 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

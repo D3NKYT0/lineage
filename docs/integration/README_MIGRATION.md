@@ -127,3 +127,7 @@ docker compose exec site_http python3 manage.py migrate_l2_accounts --help
 ---
 
 **⚠️ IMPORTANTE**: Sempre faça backup antes da migração! 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

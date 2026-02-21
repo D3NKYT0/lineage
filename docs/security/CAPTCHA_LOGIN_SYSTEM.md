@@ -140,3 +140,7 @@ O sistema gera logs para monitoramento:
 1. Verifique se `CONFIG_HCAPTCHA_SECRET_KEY` está correto
 2. Confirme se o token está sendo enviado corretamente
 3. Verifique a conectividade com hCaptcha 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -293,3 +293,7 @@ A aplicação está pronta para produção e oferece uma base sólida para futur
 
 **Desenvolvido para o Sistema PDL**  
 *Perfect Dark Lineage - PWA Push Notifications* 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

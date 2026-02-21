@@ -87,3 +87,8 @@ flowchart TD
 ## Conclusão
 
 Este modelo garante que o acesso ao banco externo do Lineage 2 seja feito de forma segura, controlada e auditável, minimizando riscos comuns de segurança em integrações entre sistemas web e bancos legados ou externos.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

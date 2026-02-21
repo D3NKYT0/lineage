@@ -29,3 +29,8 @@ Você não apenas responde, mas mapeia o peso do problema. Ao clicar sobre um ID
 ## 🤖 Atendimento Prévio pela IA
 
 Lembre-se que caso o módulo do **Assistente Virtual** esteja rodando em sua base de configurações, é provável que tickets com "Categoria Perfeita" tenham sido sugeridos diretamente pela inteligência artificial após falha em encontrar ajuda nas FAQs públicas, o que significa que o usuário já cruzou os tutoriais básicos antes de submeter o formulário.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

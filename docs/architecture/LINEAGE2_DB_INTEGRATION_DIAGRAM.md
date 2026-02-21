@@ -36,3 +36,8 @@ flowchart TD
 - **Funções Utilitárias:** Camada de lógica que prepara e executa as consultas.
 - **LineageDB:** Classe de integração que conecta o Django ao banco L2 via SQLAlchemy.
 - **Banco L2:** Banco de dados do servidor do jogo, com tabelas específicas do Lineage 2.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

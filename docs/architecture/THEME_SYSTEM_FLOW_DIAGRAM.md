@@ -57,3 +57,7 @@ flowchart TD
 - **Templates do tema ativo:** Templates customizados do tema.
 - **Fallback:** Usa templates padrão se não existirem no tema.
 - **Usuário:** Visualiza o site com o tema ativo.
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

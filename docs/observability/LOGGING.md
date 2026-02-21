@@ -113,3 +113,8 @@ Com `TELEMETRY_ENABLED=True`, cada `log_action(...)` também alimenta o contador
 ## Log em JSON (futuro)
 
 O módulo `core.logger` define um formatter `json`. Para ativar em produção (ex.: CloudWatch, ELK), troque o `formatter` dos handlers desejados para `"json"` em `core/logger.py`.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

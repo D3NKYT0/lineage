@@ -86,3 +86,8 @@ Ferramentas massivas e configurações do Sistema Central de Verificação de pl
 ---
 
 **Dica Master**: Todas as ferramentas conectam-se visualmente via Neo-Dashboard. Nenhum painel desloga você da sessão. Caso perca abas de vista, o menu retrátil em todas as visões (Sidebar ESQUERDA) consegue retornar velozmente para o `/config/hub/`.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -97,3 +97,7 @@ templates/includes/
 2. **Favoritos**: Permitir marcar downloads como favoritos
 3. **Histórico**: Mostrar downloads recentes do usuário
 4. **Notificações**: Alertar sobre novos downloads disponíveis 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

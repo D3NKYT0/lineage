@@ -83,3 +83,8 @@ Acesse `/app/shop/purchases/` para ver todas as suas compras anteriores com deta
 
 - 💰 [Carteira e Pagamentos](WALLET_AND_PAYMENTS.md)
 - 🎒 Inventário — para retirar seus itens no jogo
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

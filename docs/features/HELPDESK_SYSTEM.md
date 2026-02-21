@@ -44,3 +44,8 @@ A equipe tem acesso a um painel unificado em rotas designadas que não apenas li
 - `apps/main/solicitation/models.py`: Centraliza todos os campos cruciais das solicitações customizadas.
 - `apps/main/solicitation/choices.py`: Indexa as listas numéricas de escolha (Tuple Constants).
 - Os fluxos assíncronos e submissões baseadas em arquivos são tratadas no escopo do `forms.py`.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -33,3 +33,8 @@ Requisições inteiras da interface relacional são armazenadas nos motores de m
 Existe a view utilitária `get_friends_stats` para consumo assíncrono. Sua finalidade é recalcular o counter de status das notificações nos Badges Laterais e Headbars do template a todo instante (`friends_count`, `pending`, `sent`) minimizando overhead no carregamento HTML.
 
 Esta engenharia eleva a confiabilidade da lista e permite escala robusta mesmo em bases povoadas com múltiplos requests de amizade complexos.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

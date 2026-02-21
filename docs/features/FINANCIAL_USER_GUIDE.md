@@ -135,3 +135,8 @@ Atualize a página de pendências/status. Se necessário, acesse a página de su
 - Não compartilhe sua senha e sempre confirme as informações antes de transferir.
 
 
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

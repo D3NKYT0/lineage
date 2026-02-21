@@ -725,3 +725,8 @@ python manage.py migrate_l2_accounts
 ---
 
 *Documentação atualizada em: Dezembro 2024*
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

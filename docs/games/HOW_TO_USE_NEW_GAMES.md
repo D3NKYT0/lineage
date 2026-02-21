@@ -212,3 +212,8 @@ python manage.py migrate
 
 **Pronto para jogar!** 🎉
 
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

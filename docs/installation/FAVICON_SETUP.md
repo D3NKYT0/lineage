@@ -150,3 +150,7 @@ Para garantir que o favicon seja carregado corretamente, adicione nos templates 
 - Verifique logs de erro para 404s no favicon
 - Monitore performance da view
 - Acompanhe uso de cache 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

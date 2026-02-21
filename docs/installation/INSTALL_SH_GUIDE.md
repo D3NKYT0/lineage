@@ -542,3 +542,8 @@ https://github.com/D3NKYT0/lineage/issues
 
 **Última atualização**: 2025-01-27
 
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

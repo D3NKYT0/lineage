@@ -245,3 +245,8 @@ ModerationAction.objects.filter(notify_user=True).values('action_type').annotate
 **Status**: ✅ Implementado e Funcionando  
 **Versão**: 1.0  
 **Última Atualização**: Dezembro 2024
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

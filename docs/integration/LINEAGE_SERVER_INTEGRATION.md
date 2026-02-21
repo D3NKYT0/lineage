@@ -71,3 +71,8 @@ O banco L2 é um banco MySQL separado, com tabelas como `characters`, `accounts`
 - O acesso ao banco L2 pode ser desabilitado via variável de ambiente (`LINEAGE_DB_ENABLED`)
 - Cache interno reduz carga em consultas repetidas
 - Alterações no banco L2 devem ser feitas com cuidado para não afetar o servidor do jogo
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

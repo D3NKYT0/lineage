@@ -90,3 +90,8 @@ O sistema suporta uso misto de **saldo principal** e **saldo bônus** no checkou
 - 🛒 [Guia da Loja — Usuário](../user-guide/SHOP_GUIDE.md)
 - 📊 [Relatório Financeiro](ACCOUNTANCY_GUIDE.md)
 - 💳 [Configurar Pagamentos](PAYMENT_CONFIGURATION.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -99,3 +99,8 @@ O context processor `background_setting` injeta a imagem de fundo ativa.
 - [Guia de Criação de Temas](GUIDE_CREATE_THEME.md)
 - [Guia do Desenvolvedor de Temas](THEME_DEVELOPER_GUIDE.md)
 - [Rotas de Templates de Tema](THEME_TEMPLATES_ROUTES.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -107,3 +107,8 @@ Acesse `/social/my-posts/` para gerenciar somente os posts que você publicou, c
 
 - 👥 [Notificações e Mensagens](NOTIFICATION_AND_MESSAGES.md)
 - 🛡️ [Sistema de Moderação](../features/MODERATION_SYSTEM.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

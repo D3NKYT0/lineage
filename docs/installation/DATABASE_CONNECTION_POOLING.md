@@ -237,3 +237,8 @@ docker exec -it site_http ps aux | grep gunicorn | grep -v grep | wc -l
 - [ProxySQL Documentation](https://proxysql.com/documentation/)
 - [MySQL max_connections](https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_connections)
 
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

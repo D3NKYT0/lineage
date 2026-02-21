@@ -102,3 +102,8 @@ O extrato exibe todas as movimentações em ordem cronológica, incluindo:
 - 🛒 [Guia da Loja](SHOP_GUIDE.md)
 - 🏷️ [Guia do Leilão](AUCTION_GUIDE.md)
 - 💳 [Configuração de Pagamentos](../admin-guide/PAYMENT_CONFIGURATION.md) *(para administradores)*
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

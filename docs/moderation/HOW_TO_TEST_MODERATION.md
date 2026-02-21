@@ -128,3 +128,8 @@ python test_moderation_simple.py
 ```
 
 Este comando funciona imediatamente e mostra como o sistema detecta conteúdo problemático! 🎉
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

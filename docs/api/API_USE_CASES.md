@@ -154,3 +154,8 @@ async function linkMyGameAccount(gameId, emailTokenValidado) {
     }
 }
 ```
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

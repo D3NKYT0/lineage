@@ -77,3 +77,8 @@ Após adquirir um personagem:
 - 💰 [Carteira e Pagamentos](WALLET_AND_PAYMENTS.md)
 - 🏷️ [Leilão de Itens](AUCTION_GUIDE.md)
 - 👥 [Gerenciamento de Múltiplas Contas](../features/MULTI_ACCOUNT_MANAGEMENT.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

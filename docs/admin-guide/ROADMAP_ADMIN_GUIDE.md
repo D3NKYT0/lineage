@@ -58,3 +58,8 @@ Jogadores acessam o roadmap em `/app/roadmap/` (lista de roadmaps) e `/app/roadm
 
 - 📅 [Calendário de Eventos](CALENDARY_GUIDE.md)
 - 📚 [Wiki do Servidor](WIKI_ADMIN_GUIDE.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

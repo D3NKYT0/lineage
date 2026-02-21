@@ -686,3 +686,7 @@ Contribuições são bem-vindas! Por favor, leia o guia de contribuição antes 
 ---
 
 **© 2025 Painel Definitivo Lineage - Todos os direitos reservados** 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

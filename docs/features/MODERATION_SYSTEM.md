@@ -257,3 +257,7 @@ Para dúvidas ou problemas:
 
 **Compatibilidade:** Django 5.2+  
 **App:** `apps.main.social`
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

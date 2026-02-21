@@ -658,3 +658,8 @@ O Gerador Automático de Queries é uma ferramenta essencial que:
 
 Com esta ferramenta, a integração entre o servidor Lineage 2 e o sistema web torna-se **simples, rápida e confiável**! 🚀
 
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

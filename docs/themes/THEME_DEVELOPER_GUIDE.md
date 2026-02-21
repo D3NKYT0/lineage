@@ -571,3 +571,7 @@ python manage.py shell
 ---
 
 *Este guia foca nos recursos específicos do sistema de temas do PDL. Para dicas de HTML/CSS/JS, consulte a documentação padrão dessas tecnologias.* 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

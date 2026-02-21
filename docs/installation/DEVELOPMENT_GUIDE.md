@@ -104,3 +104,8 @@ git checkout develop
 - Use `./install.sh menu` para comandos úteis em ambiente Docker
 - Documentação da API em [API_DOCUMENTATION](../api/API_DOCUMENTATION.md) e [API_ENDPOINTS](../api/API_ENDPOINTS.md)
 - Apps disponíveis: `apps/main/` (administrator, auditor, ai_assistant, calendary, downloads, faq, home, licence, message, news, notification, resources, social, solicitation) e `apps/lineage/` (accountancy, auction, games, inventory, marketplace, payment, reports, roadmap, server, shop, tops, wallet, wiki)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

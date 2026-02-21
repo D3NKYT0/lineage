@@ -101,3 +101,8 @@ O app já está configurado no `INSTALLED_APPS` e suas URLs estão incluídas no
 ## Traduções
 
 Todas as strings estão traduzidas em português no arquivo `locale/pt/LC_MESSAGES/django.po`.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

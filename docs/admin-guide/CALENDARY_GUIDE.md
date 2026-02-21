@@ -67,3 +67,8 @@ Os eventos são carregados via API AJAX (`/app/calendary/api/events/`) para uma 
 
 - 🗺️ [Roadmap do Servidor](ROADMAP_ADMIN_GUIDE.md)
 - 📰 [Gerenciar Notícias](NEWS_ADMIN_GUIDE.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

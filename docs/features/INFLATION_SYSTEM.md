@@ -692,3 +692,8 @@ Para dúvidas ou problemas:
 - [Documentação de Integração do Servidor Lineage](../integration/LINEAGE_SERVER_INTEGRATION.md)
 - [Modelos Django - Server](apps/lineage/server/models.py)
 - [Queries - Server](apps/lineage/server/querys/)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

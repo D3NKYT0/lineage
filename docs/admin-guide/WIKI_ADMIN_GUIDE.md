@@ -97,3 +97,8 @@ A Wiki é integrada com o sistema de temas do PDL. Os templates da Wiki são car
 
 - 🗺️ [Guia do Roadmap](ROADMAP_ADMIN_GUIDE.md)
 - 📰 [Gerenciar Notícias](NEWS_ADMIN_GUIDE.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

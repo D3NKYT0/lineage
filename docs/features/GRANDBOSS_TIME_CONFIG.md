@@ -84,3 +84,7 @@ CONFIG_GRANDBOSS_SHOW_TIME=True
 - A mudança é aplicada imediatamente após reiniciar o servidor
 - A configuração afeta apenas a exibição, não os dados armazenados
 - O formato de data segue o padrão brasileiro (dd/mm/aaaa) 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

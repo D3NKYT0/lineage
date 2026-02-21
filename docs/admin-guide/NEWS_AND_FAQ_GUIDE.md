@@ -74,3 +74,8 @@ Gerencie no Django Admin: `/admin/faq/`.
 
 - 📚 [Wiki do Servidor](WIKI_ADMIN_GUIDE.md)
 - 📅 [Calendário de Eventos](CALENDARY_GUIDE.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

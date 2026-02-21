@@ -105,3 +105,8 @@ Foram aplicados tunings estruturais no webserver Nginx (`nginx/django.conf`):
 
 ### Warnings de Acesso Prematuro
 O comportamento do `ResourcesConfig` foi reescrito. Chamadas que geravam `RuntimeWarning: Accessing the database during app initialization` no motor Django foram resolvidas deferindo o hook de setup. O motor de `populate_resources` não utiliza mais threads com delay estático, passando a atuar apenas sob a garantia segura do sinal sistêmico `request_started` emitido pela primeira chamada HTTP ou de comando no terminal. 
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

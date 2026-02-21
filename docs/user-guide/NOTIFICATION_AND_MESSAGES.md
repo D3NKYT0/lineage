@@ -81,3 +81,8 @@ Para encontrar um jogador específico, use a busca integrada:
 
 - 📱 [Rede Social](SOCIAL_USER_GUIDE.md)
 - 🔔 [Sistema de Notificações (Técnico)](../notifications/NOTIFICATIONS_README.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

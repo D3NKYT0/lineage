@@ -120,3 +120,8 @@ Relatório avançado que cruzar **transações de carteira** com os **saldos reg
 
 - 💳 [Configuração de Pagamentos](PAYMENT_CONFIGURATION.md)
 - 🛒 [Gerenciar Loja (Admin)](SHOP_ADMIN_GUIDE.md)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

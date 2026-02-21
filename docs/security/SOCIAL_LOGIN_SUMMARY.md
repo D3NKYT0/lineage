@@ -55,3 +55,7 @@ SOCIAL_LOGIN_DISCORD_ENABLED=True  # Discord
 ✅ **Segurança**: Desabilita sem remover credenciais  
 ✅ **Manutenibilidade**: Configuração via .env  
 ✅ **UX**: Interface limpa e responsiva 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

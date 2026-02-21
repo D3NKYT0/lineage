@@ -76,3 +76,8 @@ Ajuste em `core/settings.py` se precisar.
 ## Dependência
 
 Usa `prometheus_client` (já no `requirements.txt`). Se a lib não estiver disponível, o middleware e o endpoint não quebram; as métricas ficam apenas indisponíveis.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

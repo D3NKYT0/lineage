@@ -112,3 +112,7 @@ O sistema de solicitação foi transformado em um sistema de helpdesk completo c
 3. **Templates de Resposta** - Respostas pré-definidas para categorias
 4. **SLA** - Definir tempos de resposta por prioridade
 5. **Integração com Chat** - Melhorar integração com sistema de chat
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

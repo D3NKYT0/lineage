@@ -171,3 +171,8 @@ templates/      # Templates Django
 - `README.md` — Visão geral e instalação
 - `workflow.md` — Fluxo de desenvolvimento
 - `docs/` — Documentação técnica detalhada
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

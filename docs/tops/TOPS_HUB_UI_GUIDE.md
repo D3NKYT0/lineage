@@ -32,3 +32,8 @@ Ao longo do hub, ferramentas estáticas de Javascript englobam os componentes pe
 Tabelas nativamente são destrutíveis em aparelhos, toda configuração compensa perdas de eixo adaptando de modo dinâmico:
 - `<768px`: Redução do peso semântico, eliminação de colunas visuais opcionais com `table-responsive`.
 - `<576px`: Compactação máxima. Iconografia de clãs minimizadas sob efeitos essenciais, garantindo framerates lisos (60fps limit). Mapeamento de crest e avatares suprimidos dinamicamente de event handlers custosos na DOM mobile.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

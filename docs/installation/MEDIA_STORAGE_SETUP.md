@@ -196,3 +196,8 @@ Você agora tem um sistema completo de gerenciamento de mídia com:
 ---
 
 **Dúvidas?** Consulte o arquivo `apps/media_storage/README.md` para documentação detalhada.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

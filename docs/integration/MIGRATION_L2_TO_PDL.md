@@ -252,3 +252,7 @@ fi
 ```
 
 Execute com: `chmod +x migrate_l2_safe.sh && ./migrate_l2_safe.sh` 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

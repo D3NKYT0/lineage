@@ -213,3 +213,8 @@ GET /api/v1/moderation/logs/export/
 **Última atualização**: Dezembro 2024  
 **Versão**: 1.0  
 **Compatibilidade**: Excel 2016+, LibreOffice 6+
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

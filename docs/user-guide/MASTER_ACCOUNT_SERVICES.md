@@ -46,3 +46,8 @@ Perdeu a senha que você digita no client L2?
 1. Não crie um ticket de cara. Vá em "Minhas Contas".
 2. Localize a Sub-conta e escolha **"Trocar Senha/Reset"**.
 3. O painel web obriga você a ter autenticado com o 2FA para permitir a reescultura dessa credencial. Seu saldo no jogo segue seguro!
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -763,3 +763,8 @@ Se você está pensando em implementar algo similar em seu servidor, considere:
 
 **PDL - Painel Definitivo Lineage**
 *Transformando a gestão de servidores Lineage 2*
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

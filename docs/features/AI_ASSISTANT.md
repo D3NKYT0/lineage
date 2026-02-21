@@ -30,3 +30,8 @@ Todo tráfego é arquivado para auditoria técnica sob contexto das limitações
    ANTHROPIC_API_KEY=sua_chave_secreta_aqui
    ```
 2. Custo Monetário: Devido às chamadas sequenciais síncronas HTTP por mensagem, os endpoints disparam de forma custosa e em larga escala requerem instâncias de `Celery` para workers async ou mudança de motor para modelos low-tier (como o `haiku` default). O acompanhamento dos limites de gasto pode ser visto direto pelos painéis unificados nativos dos logs do bot no Django Administration (`/admin/ai_assistant/`).
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

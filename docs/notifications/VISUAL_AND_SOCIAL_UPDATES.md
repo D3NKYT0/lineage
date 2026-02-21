@@ -128,3 +128,8 @@ Para novos usuários, siga o guia de instalação em nossa documentação.
 **A nova era do PDL! 🎨📱✨**
 
 *Desenvolvido com ❤️ pela equipe PDL*
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

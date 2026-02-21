@@ -24,3 +24,8 @@ Em vez de banimentos frios, utilize o disparador central em **Notificações Glo
 
 Membros da Staff podem extrair a prova irrefutável de transações financeiras, auditoria administrativa e de tickets excluídos utilizando os utilitários de Moderação listados no sistema.
 Verifique o pipeline de auditoria via `docker-compose exec` seguindo o guia avançado `docs/moderation/EXPORT_MODERATION_LOGS.md` caso necessite embasar ações criminosas (Ex: Fraude de Mercado Pago ou Chargeback de Cartões de Crédito).
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -83,3 +83,8 @@ O Design System preza pelo desempenho de processamento visual:
 - **CSS Transforms**: Uso extensivo de aceleração de hardware
 - **Will-change**: Aviso antecipado ao navegador para otimização de animações chave
 - **Reduced Motion**: Respeito a painéis/interfaces configuradas para redução de movimento (Acessibilidade)
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

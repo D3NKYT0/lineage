@@ -283,3 +283,8 @@ Crie novos peixes no Admin com diferentes raridades e requisitos de nível
 **Data:** Dezembro 2025  
 **Versão:** 1.0.0
 
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

@@ -67,3 +67,8 @@ flowchart TD
 - **flower:** Dashboard de monitoramento do Celery.
 - **redis:** Broker de mensagens e cache.
 - **postgres:** Banco de dados PostgreSQL.
+
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

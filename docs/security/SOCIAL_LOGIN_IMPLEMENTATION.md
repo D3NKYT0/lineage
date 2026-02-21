@@ -135,3 +135,7 @@ python test/test_social_login_config.py
 2. **Adicionar validação** das configurações no startup
 3. **Considerar cache** das configurações para performance
 4. **Documentar** para outros desenvolvedores da equipe 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+

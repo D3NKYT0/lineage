@@ -114,3 +114,7 @@ graph TD
 O sistema Matriz-Filial do PDL 1.11.0 foi projetado para ambientes profissionais, com foco em flexibilidade, segurança e facilidade de integração. Ele abstrai a complexidade de múltiplos bancos e servidores, oferecendo uma experiência unificada tanto para administradores quanto para desenvolvedores.
 
 Se você precisa de um painel multi-servidor, escalável e pronto para integrações corporativas, o PDL 1.11.0 entrega tudo isso de forma open source e altamente configurável. 
+---
+
+[ Voltar ao Índice](../INDEX.md)
+
