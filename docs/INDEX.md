@@ -24,7 +24,9 @@ Escolha o guia adequado ao seu perfil:
 | Documento | Descrição |
 |-----------|-----------|
 | [GETTING_STARTED](user-guide/GETTING_STARTED.md) | 🚀 Primeiros passos: cadastro, login, vincular conta |
+| [MASTER_ACCOUNT_SERVICES](user-guide/MASTER_ACCOUNT_SERVICES.md) | 📂 Criar sub-contas (Lineage 2) e gerenciar serviços (Unstuck, Nicks) |
 | [WALLET_AND_PAYMENTS](user-guide/WALLET_AND_PAYMENTS.md) | 💰 Carteira, depósitos, transferências e fichas |
+| [INVENTORY_PORTAL](user-guide/INVENTORY_PORTAL.md) | 🎒 Como usar o Web Inventory e retirar prêmios pro jogo |
 | [SHOP_GUIDE](user-guide/SHOP_GUIDE.md) | 🛒 Como usar a Loja de Itens |
 | [AUCTION_GUIDE](user-guide/AUCTION_GUIDE.md) | 🏷️ Como dar lances e criar leilões |
 | [MARKETPLACE_USER_GUIDE](user-guide/MARKETPLACE_USER_GUIDE.md) | 🛍️ Comprar e vender personagens no Marketplace |
@@ -51,6 +53,8 @@ Escolha o guia adequado ao seu perfil:
 | [NEWS_AND_FAQ_GUIDE](admin-guide/NEWS_AND_FAQ_GUIDE.md) | 📰 Publicar notícias e gerenciar FAQ |
 | [HELPDESK_ADMIN_GUIDE](admin-guide/HELPDESK_ADMIN_GUIDE.md) | 🎧 Gerenciar abertura de tickets e atendimento |
 | [MODERATION_ADMIN_GUIDE](admin-guide/MODERATION_ADMIN_GUIDE.md) | 🛡️ Aplicar banimentos e deletar logs sociais |
+| [AUDITOR_ADMIN_GUIDE](admin-guide/AUDITOR_ADMIN_GUIDE.md) | 🕵️ Rastrear logs de fraude, Múltiplas Contas (IP) e financeiro |
+| [DOWNLOADS_MANAGER_GUIDE](admin-guide/DOWNLOADS_MANAGER_GUIDE.md) | ⬇️ Configurar links (Mega, Drive) pro Client Lineage 2 |
 | [THEMES_ADMIN_GUIDE](admin-guide/THEMES_ADMIN_GUIDE.md) | 🎨 Configurar templates e Dark/Light Mode |
 
 ---
