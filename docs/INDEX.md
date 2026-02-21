@@ -6,6 +6,49 @@
 
 ---
 
+## 🧭 Por onde começar?
+
+Escolha o guia adequado ao seu perfil:
+
+| Você é... | Vá para... |
+|-----------|-----------|
+| 🧑 **Jogador / Usuário do Painel** | [Guia do Usuário Final](#-guia-do-usuário-final) |
+| 🛠️ **Dono do Servidor / Admin** | [Guia do Administrador](#%EF%B8%8F-guia-do-administrador) |
+| 👩‍💻 **Desenvolvedor / Técnico** | [Instalação](#-instalação-e-deploy) · [Arquitetura](#%EF%B8%8F-arquitetura) · [API](#-api-rest) |
+
+---
+
+## 🧑 Guia do Usuário Final
+> Para jogadores que querem aprender a usar o painel PDL.
+
+| Documento | Descrição |
+|-----------|-----------|
+| [GETTING_STARTED](user-guide/GETTING_STARTED.md) | 🚀 Primeiros passos: cadastro, login, vincular conta |
+| [WALLET_AND_PAYMENTS](user-guide/WALLET_AND_PAYMENTS.md) | 💰 Carteira, depósitos, transferências e fichas |
+| [SHOP_GUIDE](user-guide/SHOP_GUIDE.md) | 🛒 Como usar a Loja de Itens |
+| [AUCTION_GUIDE](user-guide/AUCTION_GUIDE.md) | 🏷️ Como dar lances e criar leilões |
+| [MARKETPLACE_USER_GUIDE](user-guide/MARKETPLACE_USER_GUIDE.md) | 🛍️ Comprar e vender personagens no Marketplace |
+| [SOCIAL_USER_GUIDE](user-guide/SOCIAL_USER_GUIDE.md) | 📱 Rede social: posts, reações, hashtags |
+| [NOTIFICATION_AND_MESSAGES](user-guide/NOTIFICATION_AND_MESSAGES.md) | 🔔 Notificações, chat e lista de amigos |
+
+---
+
+## 🛠️ Guia do Administrador
+> Para donos de servidor que gerenciam o PDL.
+
+| Documento | Descrição |
+|-----------|-----------|
+| [ADMIN_OVERVIEW](admin-guide/ADMIN_OVERVIEW.md) | 🗂️ Visão geral de todas as ferramentas de admin |
+| [SHOP_ADMIN_GUIDE](admin-guide/SHOP_ADMIN_GUIDE.md) | 🛒 Gerenciar itens, pacotes e cupons de desconto |
+| [PAYMENT_CONFIGURATION](admin-guide/PAYMENT_CONFIGURATION.md) | 💳 Configurar MercadoPago e Stripe |
+| [ACCOUNTANCY_GUIDE](admin-guide/ACCOUNTANCY_GUIDE.md) | 📊 Relatórios financeiros e fluxo de caixa |
+| [WIKI_ADMIN_GUIDE](admin-guide/WIKI_ADMIN_GUIDE.md) | 📚 Criar páginas e patch notes na Wiki |
+| [CALENDARY_GUIDE](admin-guide/CALENDARY_GUIDE.md) | 📅 Gerenciar eventos no calendário |
+| [ROADMAP_ADMIN_GUIDE](admin-guide/ROADMAP_ADMIN_GUIDE.md) | 🗺️ Publicar planos de desenvolvimento |
+| [NEWS_AND_FAQ_GUIDE](admin-guide/NEWS_AND_FAQ_GUIDE.md) | 📰 Publicar notícias e gerenciar FAQ |
+
+---
+
 ## 🏛️ Arquitetura
 > Visão geral da estrutura e diagramas do projeto.
 
