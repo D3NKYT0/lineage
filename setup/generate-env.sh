@@ -946,6 +946,39 @@ generate_vapid_config() {
     fi
 }
 
+# Função para gerar configuração de Telemetria (Prometheus)
+generate_telemetry_config() {
+    local edit_mode="${1:-false}"
+    if [ "$edit_mode" = "false" ]; then
+        add_section "TELEMETRY CONFIGURATION"
+    fi
+    
+    local existing_telemetry_enabled=$(get_existing_value "TELEMETRY_ENABLED" 2>/dev/null || echo "False")
+    local telemetry_enabled_default=$(echo "$existing_telemetry_enabled" | tr '[:upper:]' '[:lower:]')
+    
+    if ask_yes_no "Habilitar Telemetria local e externa (Prometheus)?" "$telemetry_enabled_default"; then
+        # Gerar chave aleatória caso não exista
+        local default_token=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 2>/dev/null || echo "secret-token-1234")
+        local existing_token=$(get_existing_value "TELEMETRY_SCRAPE_TOKEN" 2>/dev/null | sed 's/"//g' | sed "s/'//g" || echo "$default_token")
+        
+        TELEMETRY_SCRAPE_TOKEN=$(ask_value "Token secreto de segurança para o Grafana (Scrape Token)" "$existing_token")
+        
+        if [ "$edit_mode" = "true" ]; then
+            update_var "TELEMETRY_ENABLED" "True"
+            update_var "TELEMETRY_SCRAPE_TOKEN" "'$TELEMETRY_SCRAPE_TOKEN'"
+        else
+            add_var "TELEMETRY_ENABLED" "True"
+            add_var "TELEMETRY_SCRAPE_TOKEN" "'$TELEMETRY_SCRAPE_TOKEN'"
+        fi
+    else
+        if [ "$edit_mode" = "true" ]; then
+            update_var "TELEMETRY_ENABLED" "False"
+        else
+            add_var "TELEMETRY_ENABLED" "False"
+        fi
+    fi
+}
+
 # Função principal
 main() {
     clear
@@ -1053,6 +1086,11 @@ main() {
     # VAPID
     if ask_yes_no "Incluir configuração de VAPID (Web Push)?" "n"; then
         generate_vapid_config "$edit_mode"
+    fi
+    
+    # Telemetria / Prometheus
+    if ask_yes_no "Incluir configuração de Telemetria (Monitoria de Eventos e HTTP)?" "n"; then
+        generate_telemetry_config "$edit_mode"
     fi
     
     echo
