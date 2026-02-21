@@ -1,6 +1,6 @@
 # Hub de Tops: Especificações de Interface e Interatividade
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O ambiente de "Tops/Rankings" do servidor utiliza um ecossistema de ponta-a-ponta moderno visando estética premium, transições cinematográficas e alta responsividade.
 

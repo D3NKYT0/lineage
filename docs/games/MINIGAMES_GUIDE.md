@@ -1,6 +1,6 @@
 # Guia do Ecossistema de Minigames
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O Lineage Definitivo Painel (PDL) suporta e gerencia minigames interativos que movimentam a economia (fichas e itens in-game) sem precisar que o usuário esteja logado no cliente do jogo. Atualmente, o painel oferece os seguintes módulos:
 

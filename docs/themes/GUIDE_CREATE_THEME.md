@@ -1,6 +1,6 @@
 ﻿# Guia Completo: Como Criar Temas para o PDL
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## 📋 Índice
 1. [Visão Geral do Sistema de Temas](#visão-geral)

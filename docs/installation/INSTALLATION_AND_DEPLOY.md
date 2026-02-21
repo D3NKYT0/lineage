@@ -1,6 +1,6 @@
 ﻿# Guia de Instalação e Implantação
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## Pré-requisitos
 - **Python** 3.10+ (recomendado 3.14)

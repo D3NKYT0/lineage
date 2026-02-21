@@ -1,6 +1,6 @@
 # Documentação Técnica: Sistema de Amigos
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## Problema Original no Endpoint
 A estruturação legada do subsistema de amigos (`/app/message/friends-list/`) sofria de deficiências no carregamento em massa (problemas `N+1`) e falta de filtros adequados para bases com altas quantidades de usuários relacionais (N:N).

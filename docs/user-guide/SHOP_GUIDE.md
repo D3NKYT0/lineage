@@ -1,6 +1,6 @@
 # 🛒 Guia da Loja
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 A **Loja** do PDL permite comprar itens e pacotes de itens para o seu personagem diretamente com o saldo da sua carteira.
 

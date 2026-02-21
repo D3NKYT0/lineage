@@ -1,6 +1,6 @@
 ﻿# Telemetria (métricas Prometheus)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O projeto expõe métricas no formato **Prometheus** para monitoramento (Grafana, Alertmanager, etc.).
 

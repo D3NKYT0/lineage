@@ -1,6 +1,6 @@
 ﻿# 🚀 Migração L2 → PDL - Guia Rápido
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## O que foi criado
 

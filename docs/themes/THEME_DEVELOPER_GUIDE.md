@@ -1,6 +1,6 @@
 ﻿# Guia do Desenvolvedor: Recursos do Sistema de Temas PDL
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## 📋 Índice
 1. [Variáveis do Sistema](#variaveis-sistema)

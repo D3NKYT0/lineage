@@ -1,6 +1,6 @@
 ﻿# 📚 Documentação — Painel Definitivo Lineage (PDL)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 > Índice geral da documentação. Para começar, consulte o [README do projeto](../README.md).
 

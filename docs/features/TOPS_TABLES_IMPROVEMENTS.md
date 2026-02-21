@@ -1,6 +1,6 @@
 ﻿# Melhorias nas Tabelas do Hub de Tops
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## Visão Geral
 

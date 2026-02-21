@@ -1,6 +1,6 @@
 # 💰 Carteira e Pagamentos
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 A **Carteira** é o centro financeiro do painel PDL. Aqui você gerencia dois tipos de saldo: o **Saldo Principal** (obtido via depósitos reais) e o **Saldo Bônus** (créditos promocionais).
 

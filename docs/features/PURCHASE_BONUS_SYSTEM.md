@@ -1,6 +1,6 @@
 ﻿# Sistema de Bônus para Compras de Moedas
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## Visão Geral
 

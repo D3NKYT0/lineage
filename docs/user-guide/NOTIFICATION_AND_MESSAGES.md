@@ -1,6 +1,6 @@
 # 👥 Guia de Notificações e Mensagens
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O PDL possui um sistema integrado de **notificações em tempo real** e um gerenciador completo de **amizades e chat**.
 

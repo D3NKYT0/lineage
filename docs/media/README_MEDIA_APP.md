@@ -1,6 +1,6 @@
 ﻿# Media Storage - Sistema de Gerenciamento de Mídia
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Um aplicativo Django completo para gerenciamento de arquivos de mídia com interface administrativa e de usuário.
 

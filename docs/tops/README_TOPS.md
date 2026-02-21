@@ -1,6 +1,6 @@
 ﻿# App Tops - Rankings do Servidor
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Este app fornece uma interface pública para visualizar os rankings do servidor Lineage 2, seguindo o padrão dos apps Wiki e Downloads.
 

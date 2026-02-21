@@ -1,6 +1,6 @@
 # 🚀 Primeiros Passos no PDL
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Bem-vindo ao **Painel Definitivo Lineage (PDL)**! Este guia vai te levar desde o seu primeiro acesso até o uso das funcionalidades básicas do painel.
 

@@ -1,6 +1,6 @@
 # 🛍️ Marketplace de Personagens — Guia do Usuário
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O **Marketplace** do PDL permite comprar e vender **personagens** do Lineage 2 diretamente entre jogadores, utilizando o saldo da Carteira PDL como meio de pagamento.
 

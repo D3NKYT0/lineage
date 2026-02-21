@@ -1,6 +1,6 @@
 # 🏷️ Guia do Leilão
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O sistema de **Leilão** permite que jogadores coloquem itens à venda e que outros jogadores deem lances para arrematá-los, tudo usando o saldo da Carteira PDL.
 

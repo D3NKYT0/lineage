@@ -1,6 +1,6 @@
 ﻿# Comandos para Limpeza de Arquivos de Mídia Órfãos
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## 🎯 Problema
 

@@ -1,5 +1,7 @@
 ﻿# Rotas Suportadas por Temas - PDL
 
+> **Última atualização:** 21/02/2026
+
 Este documento lista todas as rotas que podem ser substituídas por arquivos de tema no sistema PDL (Private Development Lineage).
 
 ## 📋 Índice

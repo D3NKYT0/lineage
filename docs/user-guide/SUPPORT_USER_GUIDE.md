@@ -1,6 +1,6 @@
 # Guia do Jogador - Suporte e Central de Ajuda
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Precisa de ajuda com sua conta, reportar um bug chato ou problemas com faturamento de créditos? O PDL possui um Assistente Inteligente 24 horas e um sistema centralizado humano para te salvar.
 

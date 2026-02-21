@@ -1,6 +1,6 @@
 # Guia do Jogador - Tops, Rankings e Estatísticas
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Para os jogadores competitivos, a plataforma hospeda abas imersivas separadas dos logs normais onde você localiza dados vitais do ecossistema do servidor. Tudo sincronizado em Tempo Real e integrado organicamente ao Visual Neumorphic.
 

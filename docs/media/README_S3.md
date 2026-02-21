@@ -1,6 +1,6 @@
 ﻿# Configuração do AWS S3 no Django
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Este projeto está configurado para usar o Amazon S3 para armazenamento de arquivos estáticos e de mídia.
 

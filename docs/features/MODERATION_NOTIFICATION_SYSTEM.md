@@ -1,5 +1,7 @@
 ﻿# Sistema de Notificação de Moderação
 
+> **Última atualização:** 21/02/2026
+
 ## 📋 Visão Geral
 
 O sistema de notificação de moderação permite que moderadores enviem notificações automáticas aos usuários quando uma ação de moderação é aplicada. Isso melhora a transparência e comunicação entre moderadores e usuários.

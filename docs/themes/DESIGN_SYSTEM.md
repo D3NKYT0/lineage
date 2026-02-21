@@ -1,6 +1,6 @@
 # 🎨 Design System — PDL
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## Visão Geral
 O Design System do Painel Definitivo Lineage (PDL) estabelece os padrões visuais consistentes em toda a plataforma, garantindo uma experiência de usuário (UX) coesa e moderna.

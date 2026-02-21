@@ -1,5 +1,7 @@
 ﻿# 🔄 Sistema de Filtros Retroativos
 
+> **Última atualização:** 21/02/2026
+
 ## Visão Geral
 
 O sistema de filtros retroativos permite aplicar as regras de moderação atuais a todo o conteúdo já existente no sistema, garantindo que posts e comentários criados antes da implementação dos filtros também sejam verificados e moderados adequadamente.

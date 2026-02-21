@@ -1,6 +1,6 @@
 # 📱 Rede Social — Guia do Usuário
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O PDL tem uma **rede social integrada** para conectar jogadores, compartilhar conquistas, criar comunidade e interagir com o conteúdo do servidor.
 

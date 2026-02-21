@@ -1,6 +1,6 @@
 ﻿# 🎉 Sistema de Gerenciamento de Mídia - Configuração Final
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 O aplicativo **Media Storage** foi criado com sucesso! Agora você precisa seguir alguns passos simples para colocá-lo em funcionamento.
 

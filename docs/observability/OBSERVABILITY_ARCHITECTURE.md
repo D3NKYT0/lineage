@@ -1,6 +1,6 @@
 # Arquitetura de Observabilidade e Telemetria
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Documentação da infraestrutura de ponta a ponta do sistema PDL, abrangendo logs unificados, métricas de APIs exportáveis, mapeamento analítico e roteamento avançado do SPA no Webserver.
 

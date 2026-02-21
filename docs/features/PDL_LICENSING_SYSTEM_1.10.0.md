@@ -1,6 +1,6 @@
 ﻿# PDL 1.10.0 - Sistema de Licenciamento Completo
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## Painel Definitivo Lineage
 ### Sistema de Licenciamento Empresarial com Validação DNS e Criptografia Avançada

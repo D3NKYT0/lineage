@@ -1,5 +1,7 @@
 ﻿# Guia de Uso do install.sh
 
+> **Última atualização:** 21/02/2026
+
 ## 📋 Índice
 
 - [Visão Geral](#visão-geral)

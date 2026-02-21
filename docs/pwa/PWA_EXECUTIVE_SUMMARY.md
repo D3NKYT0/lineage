@@ -1,6 +1,6 @@
 ﻿# 🚀 PWA Push Notifications PDL - Resumo Executivo
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## 📱 O que é?
 

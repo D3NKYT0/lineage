@@ -1,6 +1,6 @@
 ﻿# Configuração de Login Social
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Este documento explica como configurar o sistema de login social no PDL.
 

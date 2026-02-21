@@ -1,5 +1,7 @@
 ﻿# 📊 Sistema de Export de Logs de Moderação
 
+> **Última atualização:** 21/02/2026
+
 ## Visão Geral
 
 O sistema de export de logs permite gerar relatórios detalhados das ações de moderação em formatos Excel e CSV, com formatação profissional e estatísticas completas.

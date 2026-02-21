@@ -1,6 +1,6 @@
 # 🔧 Guia Geral de Debugging e Troubleshooting
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Este documento contém os passos recomendados para diagnosticar e resolver problemas comuns na plataforma PDL, abrangendo desde anomalias no client-side (Frontend) até rastreamento de fluxos dinâmicos no server-side (Django).
 

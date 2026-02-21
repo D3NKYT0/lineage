@@ -1,6 +1,6 @@
 ﻿# Guia de Desenvolvimento
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ## Organização do Projeto
 - **Apps Django** em `apps/` (main, lineage, api, media_storage)

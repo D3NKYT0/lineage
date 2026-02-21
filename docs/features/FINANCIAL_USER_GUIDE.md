@@ -1,5 +1,7 @@
 ﻿## Guia do Usuário – Pagamentos, Bônus e Carteira
 
+> **Última atualização:** 21/02/2026
+
 Este guia explica como adicionar saldo, entender o bônus, acompanhar pagamentos e usar sua carteira para transferências. Tudo aqui é pensado para usuários (não precisa ser técnico).
 
 ### O que você consegue fazer

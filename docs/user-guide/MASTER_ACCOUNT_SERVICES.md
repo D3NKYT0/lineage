@@ -1,6 +1,6 @@
 # Guia do Jogador - Central de Contas (Master Account)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 No Lineage Definitivo Painel (PDL), nós separamos a sua "Identidade Web" dos "Bonecos no Jogo" para gerar uma blindagem total contra hackers. 
 

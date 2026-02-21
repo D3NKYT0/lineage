@@ -1,6 +1,6 @@
 ﻿# Diagrama: Segurança ao Usar Django para Acessar o Banco Externo do Lineage 2
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 ```mermaid
 flowchart TD

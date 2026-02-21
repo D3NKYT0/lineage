@@ -1,6 +1,6 @@
 # 🎨 Nova Era Visual e Rede Social no PDL
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Temos o prazer de anunciar uma grande atualização para o painel PDL, uma mudança revolucionária que redefine completamente a experiência do usuário e introduz uma rede social integrada que transformará a forma como nossa comunidade interage.
 

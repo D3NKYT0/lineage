@@ -1,6 +1,6 @@
 # Guia do Jogador - Inventário Web (Painel)
 
-> **Última atualização:** 20/02/2026
+> **Última atualização:** 21/02/2026
 
 Diferente do inventário `ALT + V` tradicional que você abre jogando, o PDL possui sua própria "Mochila Cloud" (Web Inventory), isolada de PKs e livre de peso para armazenar seus itens comprados pela rede.
 
