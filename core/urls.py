@@ -20,6 +20,7 @@ class CustomSchemaView(SpectacularAPIView):
         description="Retorna o schema oficial da API (OpenAPI 3.0) em formato YAML/JSON.",
         tags=["Schema"],
         auth=[],
+        responses={200: dict}
     )
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)

@@ -14,7 +14,8 @@ from django.utils import timezone
 from django.db import models
 from datetime import datetime
 import logging
-from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.utils import extend_schema, OpenApiParameter, inline_serializer
+from rest_framework import serializers
 
 from .serializers import (
     PlayerOnlineSerializer, TopPlayerSerializer, TopClanSerializer,
@@ -2440,6 +2441,29 @@ class VapidPublicKeyView(APIView):
     summary="Inscrever Dispositivo Para Push 🔒",
     description="Registra a assinatura de push notification do dispositivo do usuário autenticado.\n\nEnvie o objeto de assinatura gerado pelo browser (endpoint, keys.auth, keys.p256dh).\n\nRequer token JWT no header.",
     tags=["Push"],
+    request=inline_serializer(
+        name="PushSubscriptionRequest",
+        fields={
+            'endpoint': serializers.URLField(required=True),
+            'keys': inline_serializer(
+                name="PushSubscriptionKeys",
+                fields={
+                    'auth': serializers.CharField(required=True),
+                    'p256dh': serializers.CharField(required=True),
+                }
+            )
+        }
+    ),
+    responses={
+        200: inline_serializer(
+            name="PushSubscriptionResponse",
+            fields={
+                'ok': serializers.BooleanField(),
+                'deleted': serializers.IntegerField(required=False)
+            }
+        ),
+        400: APIResponseSerializer
+    }
 )
 class PushSubscriptionView(APIView):
     authentication_classes = [JWTAuthentication]
