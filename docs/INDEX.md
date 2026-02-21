@@ -119,19 +119,17 @@ Escolha o guia adequado ao seu perfil:
 | [MODERATION_NOTIFICATION_SYSTEM](features/MODERATION_NOTIFICATION_SYSTEM.md) | Notificações do sistema de moderação |
 | [FLOATING_NOTIFICATIONS_SYSTEM](features/FLOATING_NOTIFICATIONS_SYSTEM.md) | Notificações flutuantes |
 | [SOCIAL_NETWORK_GUIDE](features/SOCIAL_NETWORK_GUIDE.md) | Guia da rede social integrada |
-| [FRIENDS_LIST_OPTIMIZATION](features/FRIENDS_LIST_OPTIMIZATION.md) | Otimização da lista de amigos |
+| [FRIENDS_SYSTEM](features/FRIENDS_SYSTEM.md) | Sistema e Otimização da Lista de Amigos |
 | [MULTI_ACCOUNT_MANAGEMENT](features/MULTI_ACCOUNT_MANAGEMENT.md) | Gerenciamento de múltiplas contas |
-| [LICENSE_SYSTEM](features/LICENSE_SYSTEM.md) | Sistema de licenciamento |
-| [PDL_LICENSING_SYSTEM_1.10.0](features/PDL_LICENSING_SYSTEM_1.10.0.md) | Licenciamento v1.10.0 |
+| [LICENSE_SYSTEM](features/LICENSE_SYSTEM.md) | Sistema de licenciamento (Geral) |
 | [BANNER_CONFIGURATION](features/BANNER_CONFIGURATION.md) | Configuração de banners |
 | [SHOW_PLAYERS_ONLINE_CONFIG](features/SHOW_PLAYERS_ONLINE_CONFIG.md) | Exibição de jogadores online |
 | [GRANDBOSS_TIME_CONFIG](features/GRANDBOSS_TIME_CONFIG.md) | Configuração de horários de Grand Boss |
 | [INTERNAL_DOWNLOADS](features/INTERNAL_DOWNLOADS.md) | Sistema de downloads internos |
 | [FINANCIAL_USER_GUIDE](features/FINANCIAL_USER_GUIDE.md) | Guia financeiro para usuários |
 | [DISCORD_BOT_INTEGRATION](features/DISCORD_BOT_INTEGRATION.md) | Integração com bot Discord |
-| [SOLICITATION_IMPROVEMENTS](features/SOLICITATION_IMPROVEMENTS.md) | Melhorias no sistema de solicitações |
-| [TOPS_TABLES_IMPROVEMENTS](features/TOPS_TABLES_IMPROVEMENTS.md) | Melhorias nas tabelas de tops |
-| [AI_ASSISTANT_IMPLEMENTATION](features/AI_ASSISTANT_IMPLEMENTATION.md) | Implementação do assistente de IA |
+| [HELPDESK_SYSTEM](features/HELPDESK_SYSTEM.md) | Sistema de Helpdesk e Chamados |
+| [AI_ASSISTANT](features/AI_ASSISTANT.md) | Assistente Virtual de Inteligência Artificial |
 
 ---
 
@@ -197,6 +195,7 @@ Escolha o guia adequado ao seu perfil:
 | Documento | Descrição |
 |-----------|-----------|
 | [README_TOPS](tops/README_TOPS.md) | Sistema de tops e rankings |
+| [TOPS_HUB_UI_GUIDE](tops/TOPS_HUB_UI_GUIDE.md) | Guia de Interface e Interatividade do Hub |
 
 ---
 
