@@ -473,11 +473,11 @@ main() {
             if is_git_repository; then
                 echo "  4) Atualizar repositório (git pull)"
                 echo "  5) Backup do banco de dados"
-                echo "  6) Configurar proxy reverso (nginx-proxy.sh)"
-                echo "  7) Instalar Nginx (install-nginx.sh)"
-                echo "  8) Gerar arquivo .env (generate-env.sh)"
-                echo "  9) Configurar FTP para launcher (setup-ftp.sh)"
-                echo "  10) Configurar Nginx para launcher (setup-nginx-launcher.sh)"
+                echo "  6) Configurar proxy reverso (nginx-proxy)"
+                echo "  7) Instalar Nginx (install-nginx)"
+                echo "  8) Gerar arquivo .env (generate-env)"
+                echo "  9) Configurar FTP para launcher (setup-ftp)"
+                echo "  10) Configurar Nginx para launcher (setup-nginx-launcher)"
                 echo "  11) Listar scripts disponíveis"
                 echo "  12) Sair"
                 echo
@@ -500,11 +500,11 @@ main() {
                 esac
             else
                 echo "  4) Backup do banco de dados"
-                echo "  5) Configurar proxy reverso (nginx-proxy.sh)"
-                echo "  6) Instalar Nginx (install-nginx.sh)"
-                echo "  7) Gerar arquivo .env (generate-env.sh)"
-                echo "  8) Configurar FTP para launcher (setup-ftp.sh)"
-                echo "  9) Configurar Nginx para launcher (setup-nginx-launcher.sh)"
+                echo "  5) Configurar proxy reverso (nginx-proxy)"
+                echo "  6) Instalar Nginx (install-nginx)"
+                echo "  7) Gerar arquivo .env (generate-env)"
+                echo "  8) Configurar FTP para launcher (setup-ftp)"
+                echo "  9) Configurar Nginx para launcher (setup-nginx-launcher)"
                 echo "  10) Listar scripts disponíveis"
                 echo "  11) Sair"
                 echo
