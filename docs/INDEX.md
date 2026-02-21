@@ -138,7 +138,7 @@ Escolha o guia adequado ao seu perfil:
 
 | Documento | Descrição |
 |-----------|-----------|
-| [NEW_GAMES_IMPLEMENTATION](games/NEW_GAMES_IMPLEMENTATION.md) | Implementação de novos minigames |
+| [MINIGAMES_GUIDE](games/MINIGAMES_GUIDE.md) | Guia do Ecossistema de Minigames |
 | [HOW_TO_USE_NEW_GAMES](games/HOW_TO_USE_NEW_GAMES.md) | Como usar os minigames |
 
 ---
@@ -151,8 +151,6 @@ Escolha o guia adequado ao seu perfil:
 | [DJANGO_L2_SECURITY_MODEL](security/DJANGO_L2_SECURITY_MODEL.md) | Modelo de segurança Django + Lineage 2 |
 | [CAPTCHA_LOGIN_SYSTEM](security/CAPTCHA_LOGIN_SYSTEM.md) | Sistema de CAPTCHA no login |
 | [SOCIAL_LOGIN_CONFIG](security/SOCIAL_LOGIN_CONFIG.md) | Configuração de login social |
-| [SOCIAL_LOGIN_IMPLEMENTATION](security/SOCIAL_LOGIN_IMPLEMENTATION.md) | Implementação do login social |
-| [SOCIAL_LOGIN_SUMMARY](security/SOCIAL_LOGIN_SUMMARY.md) | Resumo do login social |
 
 ---
 
