@@ -3,105 +3,40 @@
 > **Última atualização:** 21/02/2026
 
 ## Visão Geral
-O sistema de temas permite customizar a aparência do site enviando pacotes ZIP contendo templates, estilos, scripts e assets. Cada tema pode ser ativado/desativado e possui variáveis configuráveis para internacionalização e personalização visual.
+O sistema de temas do PDL é uma Engine robusta que permite customizar a aparência completa da plataforma pública através do envio de pacotes ZIP contendo templates HTML, estilos CSS, scripts JS e assets. O sistema foi desenhado para ser dinâmico, suportar internacionalização nativa e operar de forma isolada do código-fonte, garantindo segurança e facilidade em atualizações.
 
 ---
 
-## Como Funciona
-- **Modelo principal:** `Theme` (apps.main.administrator.models)
-- **Upload:** O admin envia um arquivo ZIP contendo o tema
-- **Validação:** O ZIP deve conter `theme.json` com metadados obrigatórios (`name`, `slug`, etc.)
-- **Extração:** Arquivos são extraídos para `themes/installed/<slug>/`
-- **Ativação:** Apenas um tema pode estar ativo por vez. Ao ativar um tema, os demais são desativados
-- **Remoção:** Ao excluir um tema, tanto o arquivo ZIP original do upload quanto a pasta correspondente já extraída em `themes/installed/<slug>` são removidos definitivamente para manter o sistema limpo.
+## Como Funciona (Alto Nível)
+1. **Upload e Validação:** O administrador envia um arquivo ZIP pelo painel. O sistema valida estruturalmente o conteúdo e garante proteções de segurança (file types autorizados, limites de tamanho e proteção contra path traversal).
+2. **Extração e Registro:** Os arquivos são alocados no diretório estático correto e as configurações (definidas em um arquivo interno `theme.json`) são mapeadas para o banco de dados. Variáveis customizadas do tema são instantaneamente geradas.
+3. **Ativação e Fallbacks:** Apenas um tema pode estar ativo por vez no sistema. Ao ativar, todos os visitantes passam a receber os templates da nova interface gráfica. Caso algum arquivo ou rota não exista no tema atual, o PDL automaticamente engatilha um sistema de fallback inteligente para o template padrão (Core), impedindo qualquer quebra de visualização para o usuário (Erro 500).
+4. **Desinstalação Limpa:** Quando excluído, os arquivos ZIP e as pastas em disco atreladas ao tema são completamente expurgadas para manter a plataforma íntegra.
 
 ---
 
-## Estrutura Esperada do ZIP
-- Arquivos permitidos: `.html`, `.css`, `.js`, imagens, fontes, etc.
-- Arquivo obrigatório: `theme.json` com metadados e variáveis
-- Exemplo de `theme.json`:
-  ```json
-  {
-    "name": "Tema Exemplo",
-    "slug": "tema-exemplo",
-    "version": "1.0",
-    "author": "Seu Nome",
-    "description": "Descrição do tema.",
-    "variables": [
-      {
-        "name": "Cor Primária",
-        "tipo": "string",
-        "valor_pt": "#123456",
-        "valor_en": "#123456",
-        "valor_es": "#123456"
-      }
-    ]
-  }
-  ```
+## 📚 Índice da Documentação de Temas
+
+Para evitar repetições, toda a inteligência e detalhes técnicos do Sistema de Temas foram ramificados em guias especializados baseados no que você deseja fazer:
+
+### Começando
+* 🎨 **[Tutorial: Como Criar um Tema](GUIDE_CREATE_THEME.md)**
+  Aprenda o passo a passo de como montar a estrutura de arquivos e pastas, empacotar seu ZIP e ver os requisitos de segurança e limites de tamanho de upload.
+
+### Programação e Customização
+* 💻 **[Guia do Desenvolvedor de Temas](THEME_DEVELOPER_GUIDE.md)**
+  Onde a magia acontece. Aprenda como funcionam e são processadas as Variáveis Multilíngues de Tema, Arquitetura de Herança de layouts, processamento de contexto global (Context Processors) e o detalhamento do renderizador `render_theme_page`.
+
+* 🗂️ **[Mapeamento de Rotas de Templates](THEME_TEMPLATES_ROUTES.md)**
+  Lista exata documentando quais templates HTML você precisa nomear e onde eles devem ser dispostos para sobrescrever cada página nativa do Core original (Tops, Wiki, Páginas Essenciais, Autenticação, etc).
+
+* 💉 **[Mapeamento do Index Context](THEME_INDEX_CONTEXT.md)**
+  Guia super avançado documentando exclusivamente a grande quantidade estrutural de Variáveis passadas para o principal template de qualquer tema (`index.html`), como a renderização em tempo real de contadores, players fakes, notícias e clãs top ranking.
+
+### Tratamento e Proteção
+* 🚨 **[Tratamento de Erros e Prevenção de Quebras](THEME_ERROR_HANDLING.md)**
+  Descreve a implementação tecnológica de proteção em sandbox do visualizador, garantindo que o seu servidor nunca vai reportar *500 Internal Error* para visitantes, mesmo que os designers insiram templates absurdos, com URLs extintas ou sintaxes fatais do Django (NoReverseMatch / TemplateSyntaxError).
 
 ---
 
-## Variáveis de Tema
-- Definidas em `theme.json` e salvas no banco de dados como o modelo `ThemeVariable`, automaticamente prefixadas com o slug do tema.
-- Suporte nativo a tipos específicos (`string`, `int`, `boolean`), com conversão automática através do método `get_valor_convertido()` ao serem chamadas nos templates.
-- Suporte a internacionalização (`valor_pt`, `valor_en`, `valor_es`) com fallback para o português (`valor_pt`).
-- Disponível no contexto dos templates via context processor
-- Exemplo de uso no template:
-  ```django
-  <style>body { background: {{ tema_exemplo_cor_primaria }}; }</style>
-  ```
-
----
-
-## Contexto de Templates
-O context processor `active_theme` injeta no contexto:
-- `active_theme` — slug do tema ativo
-- `base_template` — caminho para o base.html do tema
-- `theme_slug`, `path_theme`, `theme_files`
-
-O context processor `theme_variables` injeta todas as variáveis do tema.  
-O context processor `background_setting` injeta a imagem de fundo ativa.
-
----
-
-## Renderização de Páginas
-- Função `render_theme_page` (em `utils/render_theme_page.py`):
-  - Tenta renderizar o template do tema ativo
-  - Se não existir, usa o template padrão
-- Exemplo de uso:
-  ```python
-  return render_theme_page(request, 'public', 'index.html', context)
-  ```
-
----
-
-## Servindo Arquivos do Tema
-- A view `serve_theme_file` serve arquivos HTML do tema ativo de forma segura
-- Verifica existência do arquivo e retorna 404 se não encontrado
-
----
-
-## Segurança
-- Apenas extensões permitidas são extraídas
-- Caminhos validados para evitar path traversal
-- Tamanho máximo do ZIP: 50MB
-
----
-
-## Dicas
-- Inclua sempre um `base.html` no tema para herança de templates
-- Use variáveis para facilitar customização sem editar arquivos
-- Teste o tema em múltiplos idiomas
-
----
-
-## Documentação Relacionada
-- [Guia de Criação de Temas](GUIDE_CREATE_THEME.md)
-- [Guia do Desenvolvedor de Temas](THEME_DEVELOPER_GUIDE.md)
-- [Rotas de Templates de Tema](THEME_TEMPLATES_ROUTES.md)
-
----
-
-[ Voltar ao Índice](../INDEX.md)
-
+[ Voltar ao Índice Geral](../INDEX.md)
