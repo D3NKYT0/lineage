@@ -37,6 +37,24 @@ Todos os módulos dependem estritamente da área Django Adim (`/admin/games/`):
 - Para o **Slot Machine**, você obrigatoriamente vincula uma configuração Master definindo os multiplicadores iniciais e atrelos ao banco.
 - Em **Pescaria**, o Adm rege a inflação ao lançar peixes na tabela determinando XP exatos, Fichas de trade-off por peso e a tag de Raridade deles.
 
+## 🚀 Setup e Uso no Servidor (População)
+
+Antes de utilizar a interface e os jogos estarem listados no sistema, um setup de banco primário é exigido.
+
+1. **Instale as definições estruturais nativas**
+   ```bash
+   python manage.py makemigrations games
+   python manage.py migrate
+   ```
+
+2. **Popule a Base de Minigames Dinâmica**
+   ```bash
+   python manage.py populate_new_games
+   ```
+   *O comando automático abastece nativamente o banco com: 9 Símbolos Base e 12 Prêmios para o Slot Machine, Setup padrão de rolagem de Dados (Dice Game), e a fundação biológica de pesca com 12 tipos de peixes variados por raridade, além de 4 iscas de farm.*
+
+Você está livre para manipular a injeção inicial por meio das interfaces visuais do **Config Hub (`/config/hub/`)** que hospedam as planilhas dinâmicas editáveis das configurações descritas acima.
+
 ## 🚀 Integrações de Inventário
 
 Qualquer ganho que vá além das abstrações de "Fichas" de minigame (como armaduras, runas especiais etc) engaja o utilitário nativo via API da *"Bag"*. Itens sorteados viram dados lógicos aguardando o usuário enviá-los efetivamente para os personagens associados. Tudo logado contra abusos em banco de dados isolado no L2J.

@@ -87,7 +87,6 @@ Escolha o guia adequado ao seu perfil:
 | [API_DOCUMENTATION](api/API_DOCUMENTATION.md) | Documentação completa da API |
 | [API_ENDPOINTS](api/API_ENDPOINTS.md) | Lista de endpoints disponíveis |
 | [API_CONFIG_PANEL](api/API_CONFIG_PANEL.md) | Configuração da API via painel |
-| [API_IMPLEMENTATION_SUMMARY](api/API_IMPLEMENTATION_SUMMARY.md) | Resumo de implementação da API |
 | [README_API](api/README_API.md) | README do app de API |
 | [REST_API_GUIDE](api/REST_API_GUIDE.md) | Guia rápido da API REST |
 
@@ -139,7 +138,6 @@ Escolha o guia adequado ao seu perfil:
 | Documento | Descrição |
 |-----------|-----------|
 | [MINIGAMES_GUIDE](games/MINIGAMES_GUIDE.md) | Guia do Ecossistema de Minigames |
-| [HOW_TO_USE_NEW_GAMES](games/HOW_TO_USE_NEW_GAMES.md) | Como usar os minigames |
 
 ---
 
@@ -224,7 +222,7 @@ Escolha o guia adequado ao seu perfil:
 |-----------|-----------|
 | [LOGGING](observability/LOGGING.md) | Sistema de logging |
 | [TELEMETRY](observability/TELEMETRY.md) | Telemetria e métricas |
-| [TECHNICAL_IMPROVEMENTS](observability/TECHNICAL_IMPROVEMENTS.md) | Melhorias Técnicas e Monitoramento |
+| [OBSERVABILITY_ARCHITECTURE](observability/OBSERVABILITY_ARCHITECTURE.md) | Arquitetura de Observabilidade e Telemetria |
 
 ---
 
