@@ -50,6 +50,8 @@ v1_patterns = [
     # =========================== GAME DATA ===========================
     path('clan/<str:clan_name>/', views.ClanDetailView.as_view(), name='clan_detail'),
     path('auction/items/', views.AuctionItemsView.as_view(), name='auction_items'),
+    path('game/summary/', views.GameSummaryView.as_view(), name='game_summary'),
+    path('game/leaderboard/', views.GameLeaderboardView.as_view(), name='game_leaderboard'),
     
     # =========================== MONITORING & METRICS ===========================
     path('health/', views.HealthCheckView.as_view(), name='health_check'),
@@ -61,6 +63,7 @@ v1_patterns = [
     # =========================== ADMINISTRATION ===========================
     path('admin/config/', views.APIConfigView.as_view(), name='api_config'),
     path('admin/config/panel/', views.APIConfigPanelView.as_view(), name='api_config_panel'),
+    path('admin/dashboard/', views.AdminDashboardView.as_view(), name='admin_dashboard'),
 
     # =========================== PUSH NOTIFICATIONS ===========================
     path('push-subscription/', PushSubscriptionView.as_view(), name='push_subscription'),

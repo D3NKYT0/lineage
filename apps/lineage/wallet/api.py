@@ -26,6 +26,7 @@ from django.utils.translation import gettext as _
 from django.contrib.auth import authenticate
 
 from core.log_utils import log_action
+from drf_spectacular.utils import extend_schema
 
 logger = logging.getLogger(__name__)
 
@@ -601,6 +602,7 @@ class WalletTransferThrottle(UserRateThrottle):
     scope = 'wallet_transfer'
 
 
+@extend_schema(exclude=True)
 class InternalTransferToServerAPI(APIView):
     """
     API interna para processar transferências de wallet para o servidor.
@@ -974,6 +976,7 @@ def process_transfer_to_player(user, nome_jogador, valor, senha=None, skip_dupli
         return {'success': False, 'error': 'Erro interno do servidor. Tente novamente mais tarde.'}
 
 
+@extend_schema(exclude=True)
 class InternalTransferToPlayerAPI(APIView):
     """
     API interna para processar transferências de wallet entre jogadores.

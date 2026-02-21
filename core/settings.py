@@ -906,33 +906,132 @@ REST_FRAMEWORK = {
 
 # DRF Spectacular Configuration
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Lineage 2 API',
-    'DESCRIPTION': 'API pública para Lineage 2',
+    'TITLE': getattr(globals().get('PROJECT_TITLE', None), '__str__', lambda: None)() or os.getenv('PROJECT_TITLE', 'Lineage 2 — PDL API'),
+    'DESCRIPTION': f"""
+# Lineage 2 PDL — API REST
+
+API pública e autenticada para servidores de **Lineage 2** usando a plataforma PDL.
+Permite integrar rankings, status do servidor, busca de personagens/itens, leilão, notificações push e gestão de usuários.
+
+---
+
+## 🔐 Autenticação (JWT)
+
+Esta API utiliza **JSON Web Tokens (JWT)**. Para acessar endpoints protegidos:
+
+1. Faça `POST /api/v1/auth/login/` com `username` e `password`
+2. Você receberá um `access` token (válido por **1 hora**) e um `refresh` token (válido por **7 dias**)
+3. Inclua o token no header de todas as requisições:
+   ```
+   Authorization: Bearer <seu_access_token>
+   ```
+4. Quando o access token expirar, renove com `POST /api/v1/auth/refresh/`
+
+---
+
+## ⚡ Rate Limits
+
+| Tipo de acesso | Limite |
+|---|---|
+| Anônimo (sem token) | 30 req/min |
+| Autenticado (com token) | 100 req/min |
+
+> Respostas com erro `429 Too Many Requests` indicam que o limite foi atingido.
+
+---
+
+## 📦 Grupos de Endpoints
+
+| Grupo | Descrição |
+|---|---|
+| **Servidor** | Status online/offline, rankings (PvP, PK, nível, riqueza, Olympiad), Grand Boss, Siege, RaidBoss |
+| **Autenticação** | Login, refresh de token, logout |
+| **Usuário** | Perfil, dashboard, estatísticas, dados de jogo (XP, conquistas, Battle Pass) |
+| **Busca** | Pesquisa de personagens e itens por nome |
+| **Jogo** | Leilão, clãs, carteira (wallet), loja, ranking PDL |
+| **Discord** | Integração com servidores Discord |
+| **Notificações Push** | Inscrição e gerenciamento de notificações push (VAPID) |
+| **Administração** | Configuração de endpoints, painel admin, dashboard de staff |
+| **Monitoramento** | Métricas de uso, performance, queries lentas (requer staff) |
+
+---
+
+## 🌐 Endpoints Públicos (sem autenticação)
+
+- `GET /api/v1/server/info/` — Informações públicas do servidor
+- `GET /api/v1/server/status/` — Status online/offline do servidor de jogo
+- `GET /api/v1/server/players-online/` — Jogadores online em tempo real
+- `GET /api/v1/server/top-*` — Rankings públicos
+- `GET /api/v1/search/character/` — Busca de personagens
+- `GET /api/v1/search/item/` — Busca de itens
+
+---
+
+## 📝 Formato de Resposta
+
+A maioria das respostas segue o padrão:
+```json
+{{
+  "success": true,
+  "data": {{ ... }},
+  "timestamp": "2024-01-01T00:00:00Z"
+}}
+```
+
+Erros retornam `"success": false` com a chave `"error"` descrevendo o problema.
+""",
     'VERSION': VERSION,
     'SERVE_INCLUDE_SCHEMA': True,
     'COMPONENT_SPLIT_REQUEST': True,
     'SCHEMA_PATH_PREFIX': '/api/v1/',
-    'AUTO_SCHEMA_GENERATION': False,  # Desabilita geração automática de schema
-    'TAGS': [],
-    
-    # Configuração de segurança para Swagger UI
-    'SECURITY': [
-        {
-            'Bearer': []
-        }
+    'AUTO_SCHEMA_GENERATION': False,
+
+    # --- Tags organizadas e descritas ---
+    'TAGS': [
+        {'name': 'Servidor',        'description': 'Status online/offline, rankings, Grand Boss, Siege, RaidBoss e Olympiad do servidor de jogo.'},
+        {'name': 'Autenticação',    'description': 'Login, refresh e logout via JWT. Use o token retornado no header `Authorization: Bearer <token>`.'},
+        {'name': 'Usuário',         'description': 'Perfil, dashboard, estatísticas, alteração de senha e dados de jogo (XP, conquistas, Battle Pass, fichas).'},
+        {'name': 'Busca',           'description': 'Pesquisa de personagens e itens por nome no servidor.'},
+        {'name': 'Jogo',            'description': 'Dados de jogo: leilão, clãs, carteira (wallet), itens da loja e ranking PDL de XP.'},
+        {'name': 'Discord',         'description': 'Integração com o bot do Discord — associação de servidores Discord a instâncias PDL.'},
+        {'name': 'Push',            'description': 'Gerenciamento de notificações push via VAPID/WebPush. Permite inscrever e cancelar dispositivos.'},
+        {'name': 'Administração',   'description': 'Configuração e ativação/desativação de endpoints. Requer permissão de staff ou superuser.'},
+        {'name': 'Monitoramento',   'description': 'Métricas de uso da API, performance por endpoint e queries lentas. Requer staff.'},
+        {'name': 'Informações',     'description': 'Informações gerais e ponto de entrada da API.'},
     ],
+
+    # --- Segurança JWT ---
+    'SECURITY': [{'Bearer': []}],
     'SECURITY_DEFINITIONS': {
         'Bearer': {
             'type': 'http',
             'scheme': 'bearer',
             'bearerFormat': 'JWT',
-            'description': 'Digite seu token JWT sem o prefixo "Bearer"'
+            'description': 'Token JWT obtido via `POST /api/v1/auth/login/`. Cole apenas o token, sem o prefixo "Bearer".',
         }
     },
-    
-    # Template personalizado para Swagger UI
-    "SWAGGER_UI_FAVICON_HREF": STATIC_URL + "assets/img/ico.jpg",
+
+    # --- Metadados ---
+    'CONTACT': {
+        'name': 'PDL — Suporte',
+        'url': os.getenv('PROJECT_DISCORD_URL', ''),
+    },
+    'LICENSE': {'name': 'Proprietário — uso restrito'},
+
+    # --- UI Swagger ---
+    'SWAGGER_UI_FAVICON_HREF': STATIC_URL + 'assets/img/ico.jpg',
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': True,
+        'displayOperationId': False,
+        'defaultModelsExpandDepth': 1,
+        'defaultModelExpandDepth': 2,
+        'docExpansion': 'list',
+        'filter': True,
+        'tryItOutEnabled': True,
+    },
 }
+
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',

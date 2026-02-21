@@ -2389,6 +2389,13 @@ class APIRedirectView(APIView):
         })
 
 
+@extend_schema(
+    summary="Chave Pública VAPID",
+    description="Retorna a chave pública VAPID necessária para registrar uma assinatura push no browser.\n\nO cliente deve usar esta chave ao chamar `PushManager.subscribe()` no Service Worker.\n\n**Público** — não requer autenticação.",
+    responses={200: APIResponseSerializer},
+    tags=["Push"],
+    auth=[]
+)
 class VapidPublicKeyView(APIView):
     permission_classes = [AllowAny]
 
@@ -2397,6 +2404,11 @@ class VapidPublicKeyView(APIView):
         return Response({"vapid_public_key": settings.VAPID_PUBLIC_KEY})
 
 
+@extend_schema(
+    summary="Inscrever Dispositivo Para Push 🔒",
+    description="Registra a assinatura de push notification do dispositivo do usuário autenticado.\n\nEnvie o objeto de assinatura gerado pelo browser (endpoint, keys.auth, keys.p256dh).\n\nRequer token JWT no header.",
+    tags=["Push"],
+)
 class PushSubscriptionView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -2433,6 +2445,12 @@ class PushSubscriptionView(APIView):
 
 # =========================== DISCORD BOT ENDPOINTS ===========================
 
+@extend_schema(
+    summary="Informações do Servidor Discord",
+    description="Retorna informações do servidor Discord cadastrado para este site PDL.\n\nUsado pelo bot do Discord para identificar a instância do site vinculada a um servidor Discord.\n\n**Público** — não requer autenticação.",
+    tags=["Discord"],
+    auth=[]
+)
 class DiscordServerView(APIView):
     """
     Endpoint para o bot Discord consultar informações de servidores cadastrados
@@ -2442,17 +2460,18 @@ class DiscordServerView(APIView):
     
     @extend_schema(
         summary="Obter informações do servidor Discord",
-        description="Retorna informações do servidor Discord cadastrado para este site",
+        description="Retorna informações do servidor Discord pelo discord_guild_id.",
         parameters=[
             OpenApiParameter(
                 name='discord_guild_id',
                 type=str,
                 location=OpenApiParameter.QUERY,
-                description='ID do servidor Discord',
+                description='ID do servidor Discord (ex: 1101010101100)',
                 required=True
             )
         ],
-        responses={200: DiscordServerSerializer, 404: None}
+        responses={200: DiscordServerSerializer, 404: None},
+        tags=["Discord"],
     )
     def get(self, request):
         """Busca servidor Discord pelo ID"""
@@ -2597,8 +2616,10 @@ class DiscordServerByDomainView(APIView):
     
     @extend_schema(
         summary="Verificar servidor Discord por domínio",
-        description="Verifica se existe um servidor Discord cadastrado para este domínio",
-        responses={200: DiscordServerSerializer, 404: None}
+        description="Verifica se existe um servidor Discord cadastrado para este domínio.\n\n**Público** — não requer autenticação.",
+        responses={200: DiscordServerSerializer, 404: None},
+        tags=["Discord"],
+        auth=[]
     )
     def get(self, request):
         """Busca servidor Discord pelo domínio atual"""
@@ -2624,3 +2645,265 @@ class DiscordServerByDomainView(APIView):
                 {'error': 'Erro ao buscar servidor'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+# =========================== GAME SUMMARY VIEW ===========================
+
+@endpoint_enabled('game_summary')
+@extend_schema(
+    summary="Resumo de Jogo do Usuário",
+    description="Retorna wallet, itens da loja, conquistas, Battle Pass e jogos do usuário autenticado.",
+    responses={200: APIResponseSerializer},
+    tags=["Jogo"],
+)
+class GameSummaryView(APIView):
+    """
+    Retorna um resumo dos dados de jogo do usuário logado:
+    wallet (saldo + bônus), itens da loja, últimas compras e dados de leilão.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        data = {}
+
+        # --- Wallet ---
+        try:
+            from apps.lineage.wallet.models import Wallet
+            wallet = Wallet.objects.filter(usuario=user).first()
+            if wallet:
+                data['wallet'] = {
+                    'saldo': float(wallet.saldo),
+                    'saldo_bonus': float(wallet.saldo_bonus),
+                    'total': float(wallet.saldo + wallet.saldo_bonus),
+                }
+            else:
+                data['wallet'] = {'saldo': 0.0, 'saldo_bonus': 0.0, 'total': 0.0}
+        except Exception:
+            data['wallet'] = {'saldo': 0.0, 'saldo_bonus': 0.0, 'total': 0.0}
+
+        # --- Loja ---
+        try:
+            from apps.lineage.shop.models import ShopItem
+            shop_items = ShopItem.objects.filter(ativo=True).order_by('preco')[:8]
+            data['shop_items'] = [
+                {
+                    'id': item.id,
+                    'nome': item.nome,
+                    'item_id': item.item_id,
+                    'preco': float(item.preco),
+                    'quantidade': item.quantidade,
+                }
+                for item in shop_items
+            ]
+        except Exception:
+            data['shop_items'] = []
+
+        # --- Fichas ---
+        try:
+            data['fichas'] = user.fichas if hasattr(user, 'fichas') else 0
+        except Exception:
+            data['fichas'] = 0
+
+        # --- Conquistas ---
+        try:
+            from apps.main.home.models import ConquistaUsuario, Conquista
+            total_achievements = Conquista.objects.count()
+            user_achievements = ConquistaUsuario.objects.filter(usuario=user).count()
+            data['achievements'] = {
+                'count': user_achievements,
+                'total': total_achievements,
+                'pct': round((user_achievements / total_achievements * 100) if total_achievements else 0, 1),
+            }
+        except Exception:
+            data['achievements'] = {'count': 0, 'total': 0, 'pct': 0}
+
+        # --- Battle Pass ---
+        try:
+            from apps.lineage.games.models import BattlePassSeason, UserBattlePassProgress
+            active_season = BattlePassSeason.objects.filter(is_active=True).first()
+            if active_season:
+                try:
+                    progress = UserBattlePassProgress.objects.get(user=user, season=active_season)
+                    current_level = progress.get_current_level()
+                    data['battle_pass'] = {
+                        'season_name': active_season.name,
+                        'xp': progress.xp,
+                        'level': current_level.level if current_level else 0,
+                        'is_active': True,
+                    }
+                except UserBattlePassProgress.DoesNotExist:
+                    data['battle_pass'] = {'season_name': active_season.name, 'xp': 0, 'level': 0, 'is_active': True}
+            else:
+                data['battle_pass'] = None
+        except Exception:
+            data['battle_pass'] = None
+
+        # --- Jogos (giros, boxes) ---
+        try:
+            from apps.lineage.games.models import SpinHistory, Box
+            spins = SpinHistory.objects.filter(user=user).count()
+            boxes = Box.objects.filter(user=user, opened=True).count()
+            data['games'] = {'spins': spins, 'boxes_opened': boxes, 'total': spins + boxes}
+        except Exception:
+            data['games'] = {'spins': 0, 'boxes_opened': 0, 'total': 0}
+
+        return Response({'success': True, 'data': data, 'timestamp': timezone.now().isoformat()})
+
+
+# =========================== GAME LEADERBOARD PDL ===========================
+
+@endpoint_enabled('game_leaderboard')
+@extend_schema(
+    summary="Ranking PDL de XP",
+    description="Retorna o top 20 de usuários ordenados por XP no sistema PDL. Cache de 2 minutos.",
+    responses={200: APIResponseSerializer},
+    tags=["Jogo"],
+)
+class GameLeaderboardView(APIView):
+    """
+    Retorna o ranking de XP e nível dos usuários no sistema PDL.
+    Não requer dados do servidor de jogo — usa apenas dados do banco PDL.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        cache_key = 'api_game_leaderboard'
+        cached = cache.get(cache_key)
+        if cached:
+            return Response(cached)
+
+        try:
+            from apps.main.home.models import PerfilGamer
+            top_players = (
+                PerfilGamer.objects
+                .select_related('user')
+                .order_by('-xp')[:20]
+            )
+            ranking = [
+                {
+                    'position': i + 1,
+                    'username': p.user.username,
+                    'level': p.level,
+                    'xp': p.xp,
+                }
+                for i, p in enumerate(top_players)
+            ]
+            result = {
+                'success': True,
+                'data': ranking,
+                'timestamp': timezone.now().isoformat(),
+            }
+            cache.set(cache_key, result, 120)  # 2 minutos
+            return Response(result)
+        except Exception as e:
+            return Response(
+                {'success': False, 'error': str(e), 'data': []},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+# =========================== ADMIN DASHBOARD VIEW ===========================
+
+@endpoint_enabled('admin_dashboard')
+@extend_schema(
+    summary="Painel Admin (PWA)",
+    description="Retorna estatísticas de usuários, push subscriptions, carteiras e configuração de endpoints. Requer is_staff=True.",
+    responses={200: APIResponseSerializer, 403: APIResponseSerializer},
+    tags=["Administração"],
+)
+class AdminDashboardView(APIView):
+    """
+    Painel de administração para staff — estatísticas de usuários,
+    subscriptions de push e dados do sistema.
+    Requer is_staff=True.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_staff:
+            return Response(
+                {'success': False, 'error': 'Acesso negado. Apenas staff pode acessar o painel admin.'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        cache_key = f'api_admin_dashboard_{request.user.id}'
+        cached = cache.get(cache_key)
+        if cached:
+            return Response(cached)
+
+        data = {}
+
+        # --- Usuários ---
+        try:
+            from apps.main.home.models import User
+            from django.utils import timezone as tz
+            from datetime import timedelta
+            now = tz.now()
+            data['users'] = {
+                'total': User.objects.count(),
+                'active': User.objects.filter(is_active=True).count(),
+                'staff': User.objects.filter(is_staff=True).count(),
+                'last_7_days': User.objects.filter(date_joined__gte=now - timedelta(days=7)).count(),
+                'last_30_days': User.objects.filter(date_joined__gte=now - timedelta(days=30)).count(),
+                'online_today': User.objects.filter(last_login__date=now.date()).count(),
+            }
+        except Exception:
+            data['users'] = {}
+
+        # --- Push Subscriptions ---
+        try:
+            from apps.main.notification.models import PushSubscription
+            data['push'] = {
+                'total_subscriptions': PushSubscription.objects.count(),
+                'active_subscriptions': PushSubscription.objects.filter(active=True).count() if hasattr(PushSubscription, 'active') else PushSubscription.objects.count(),
+            }
+        except Exception:
+            data['push'] = {'total_subscriptions': 0, 'active_subscriptions': 0}
+
+        # --- Wallet summary ---
+        try:
+            from apps.lineage.wallet.models import Wallet
+            from django.db.models import Sum, Count
+            wallet_agg = Wallet.objects.aggregate(
+                total_saldo=Sum('saldo'),
+                total_bonus=Sum('saldo_bonus'),
+                count=Count('id'),
+            )
+            data['wallet'] = {
+                'total_wallets': wallet_agg['count'] or 0,
+                'total_saldo': float(wallet_agg['total_saldo'] or 0),
+                'total_bonus': float(wallet_agg['total_bonus'] or 0),
+            }
+        except Exception:
+            data['wallet'] = {}
+
+        # --- Endpoint config ---
+        try:
+            toggle, _ = ApiEndpointToggle.objects.get_or_create(pk=1)
+            all_ep = toggle.get_all_endpoints()
+            active_count = sum(1 for v in all_ep.values() if v)
+            data['api_config'] = {
+                'total_endpoints': len(all_ep),
+                'active_endpoints': active_count,
+                'inactive_endpoints': len(all_ep) - active_count,
+                'last_updated': toggle.updated_at.isoformat() if toggle.updated_at else None,
+                'endpoints': all_ep,
+            }
+        except Exception:
+            data['api_config'] = {}
+
+        # --- System info ---
+        import sys
+        import platform
+        data['system'] = {
+            'python_version': sys.version.split()[0],
+            'platform': platform.system(),
+            'debug': getattr(settings, 'DEBUG', False),
+            'version': getattr(settings, 'VERSION', '—'),
+        }
+
+        result = {'success': True, 'data': data, 'timestamp': timezone.now().isoformat()}
+        cache.set(cache_key, result, 60)  # 1 minuto
+        return Response(result)
+

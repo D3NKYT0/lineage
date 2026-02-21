@@ -20,7 +20,7 @@ class ServerAPISchema:
     def players_online_schema():
         return extend_schema(
             summary="Jogadores Online",
-            description="Retorna o número de jogadores atualmente online no servidor. **Endpoint público** - não requer autenticação.",
+            description="Retorna o número atual de jogadores conectados ao servidor.\n\n**Público** — não requer autenticação.\n\nReflete o valor em tempo real do banco de dados do servidor Lineage 2.",
             responses={
                 status.HTTP_200_OK: PlayerOnlineSerializer
             },
@@ -32,7 +32,7 @@ class ServerAPISchema:
     def top_pvp_schema():
         return extend_schema(
             summary="Ranking PvP",
-            description="Retorna o ranking dos jogadores com mais PvPs. **Endpoint público** - não requer autenticação.",
+            description="Retorna os jogadores com mais kills PvP.\n\n**Público** — não requer autenticação.\n\nUse o parâmetro `limit` para controlar quantos registros retornar (máx: 100).",
             parameters=[
                 OpenApiParameter(
                     name="limit",
@@ -58,7 +58,7 @@ class ServerAPISchema:
     def top_pk_schema():
         return extend_schema(
             summary="Ranking PK",
-            description="Retorna o ranking dos jogadores com mais PKs. **Endpoint público** - não requer autenticação.",
+            description="Retorna os jogadores com mais kills de jogadores (Player Killer).\n\n**Público** — não requer autenticação.\n\nPersonagens marcados como PK têm o nome exibido em vermelho no jogo.",
             parameters=[
                 OpenApiParameter(
                     name="limit",
@@ -183,11 +183,11 @@ class ServerAPISchema:
     def olympiad_ranking_schema():
         return extend_schema(
             summary="Ranking da Olimpíada",
-            description="Retorna o ranking atual da Olimpíada. **Endpoint público** - não requer autenticação.",
+            description="Retorna o ranking competitivo atual da Olimpíada.\n\n**Público** — não requer autenticação.\n\nA Olimpíada é o sistema de duelos 1v1 do Lineage 2 que ocorre semanalmente e define os heróis do servidor.",
             responses={
                 status.HTTP_200_OK: OlympiadRankingSerializer(many=True)
             },
-            tags=["Olimpíada"],
+            tags=["Servidor"],
             auth=[]
         )
     
@@ -199,7 +199,7 @@ class ServerAPISchema:
             responses={
                 status.HTTP_200_OK: OlympiadHeroSerializer(many=True)
             },
-            tags=["Olimpíada"],
+            tags=["Servidor"],
             auth=[]
         )
     
@@ -207,23 +207,23 @@ class ServerAPISchema:
     def grandboss_status_schema():
         return extend_schema(
             summary="Status dos Grand Bosses",
-            description="Retorna o status atual dos Grand Bosses. **Endpoint público** - não requer autenticação.",
+            description="Retorna o status atual dos Grand Bosses (ativo, morto, cooldown).\n\n**Público** — não requer autenticação.\n\nGrand Bosses são chefões especiais do Lineage 2 com tempo de respawn controlado.",
             responses={
                 status.HTTP_200_OK: GrandBossStatusSerializer(many=True)
             },
-            tags=["Bosses"],
+            tags=["Servidor"],
             auth=[]
         )
     
     @staticmethod
     def siege_schema():
         return extend_schema(
-            summary="Status dos Cercos",
-            description="Retorna o status atual dos castelos e cercos. **Endpoint público** - não requer autenticação.",
+            summary="Status dos Cercos (Castle Siege)",
+            description="Retorna o status atual dos castelos e cercos agendados.\n\n**Público** — não requer autenticação.\n\nOs cercos (Sieges) ocorrem nos finais de semana e permitem que clãs conquistem castelos.",
             responses={
                 status.HTTP_200_OK: SiegeSerializer(many=True)
             },
-            tags=["Cercos"],
+            tags=["Servidor"],
             auth=[]
         )
     
@@ -248,7 +248,7 @@ class ServerAPISchema:
             responses={
                 status.HTTP_200_OK: SiegeParticipantSerializer(many=True)
             },
-            tags=["Cercos"],
+            tags=["Servidor"],
             auth=[]
         )
     
@@ -273,7 +273,7 @@ class ServerAPISchema:
             responses={
                 status.HTTP_200_OK: BossJewelLocationSerializer(many=True)
             },
-            tags=["Bosses"],
+            tags=["Servidor"],
             auth=[]
         ) 
 
@@ -474,12 +474,12 @@ class GameDataAPISchema:
     def clan_detail_schema():
         return extend_schema(
             summary="Detalhes do Clã",
-            description="Retorna informações detalhadas de um clã específico. **Endpoint público** - não requer autenticação.",
+            description="Retorna informações detalhadas de um clã pelo nome.\n\nIncui líder, nível do clã, contagem de membros, reputação e aliança.\n\n**Público** — não requer autenticação.",
             responses={
                 status.HTTP_200_OK: ClanDetailSerializer,
                 status.HTTP_404_NOT_FOUND: APIResponseSerializer,
             },
-            tags=["Dados do Jogo"],
+            tags=["Jogo"],
             auth=[]
         )
     
@@ -487,7 +487,7 @@ class GameDataAPISchema:
     def auction_items_schema():
         return extend_schema(
             summary="Itens do Leilão",
-            description="Retorna itens disponíveis no leilão. **Endpoint público** - não requer autenticação.",
+            description="Retorna os itens disponíveis no sistema de leilão privado (Private Store Auction) do servidor.\n\nIncui nome do item, grau, encantamento, vendedor, lance atual e tempo restante.\n\n**Público** — não requer autenticação.",
             parameters=[
                 OpenApiParameter(
                     name="limit",
@@ -506,7 +506,7 @@ class GameDataAPISchema:
                 status.HTTP_200_OK: AuctionItemSerializer(many=True),
                 status.HTTP_400_BAD_REQUEST: APIResponseSerializer,
             },
-            tags=["Dados do Jogo"],
+            tags=["Jogo"],
             auth=[]
         )
 
@@ -519,12 +519,12 @@ class ServerStatusAPISchema:
     @staticmethod
     def server_status_schema():
         return extend_schema(
-            summary="Status do Servidor",
-            description="Retorna o status atual do servidor de jogo. **Endpoint público** - não requer autenticação.",
+            summary="Status do Servidor de Jogo",
+            description="Retorna o status online/offline do servidor Lineage 2 (Game Server e Login Server).\n\nVerifica conectividade de rede em tempo real.\n\n**Público** — não requer autenticação.",
             responses={
                 status.HTTP_200_OK: ServerStatusSerializer,
             },
-            tags=["Status do Servidor"],
+            tags=["Servidor"],
             auth=[]
         )
 
@@ -537,11 +537,11 @@ class APIInfoSchema:
     @staticmethod
     def api_info_schema():
         return extend_schema(
-            summary="Informações da API",
-            description="Retorna informações gerais sobre a API. **Endpoint público** - não requer autenticação.",
+            summary="Informações Gerais da API",
+            description="Retorna metadados sobre a API: endpoints disponíveis, versão, rate limits e link para a documentação.\n\n**Público** — não requer autenticação.",
             responses={
                 status.HTTP_200_OK: APIResponseSerializer,
             },
-            tags=["Informações da API"],
+            tags=["Informações"],
             auth=[]
         ) 

@@ -12,6 +12,17 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
     SpectacularRedocView,
 )
+from drf_spectacular.utils import extend_schema
+
+class CustomSchemaView(SpectacularAPIView):
+    @extend_schema(
+        summary="OpenAPI Schema",
+        description="Retorna o schema oficial da API (OpenAPI 3.0) em formato YAML/JSON.",
+        tags=["Schema"],
+        auth=[],
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 from apps.media_storage.views import serve_media
 from core.telemetry_views import metrics_view
 from django.utils.functional import cached_property
@@ -121,7 +132,7 @@ urlpatterns = [
 
     # API
     path("api/", include("apps.api.urls")),
-    path("api/v1/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/v1/schema/", CustomSchemaView.as_view(), name="schema"),
     path(
         "api/v1/schema/swagger/",
         SpectacularSwaggerView.as_view(url_name="schema"),

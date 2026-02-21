@@ -53,6 +53,8 @@ class ApiEndpointToggle(BaseModel):
     # =========================== GAME DATA ENDPOINTS ===========================
     clan_detail = models.BooleanField(default=True, verbose_name=_("Clan Detail"))
     auction_items = models.BooleanField(default=True, verbose_name=_("Auction Items"))
+    game_summary = models.BooleanField(default=True, verbose_name=_("Game Summary"))
+    game_leaderboard = models.BooleanField(default=True, verbose_name=_("Game Leaderboard"))
     
     # =========================== SERVER STATUS ENDPOINTS ===========================
     server_status = models.BooleanField(default=True, verbose_name=_("Server Status"))
@@ -71,6 +73,7 @@ class ApiEndpointToggle(BaseModel):
     # =========================== ADMINISTRATION ENDPOINTS ===========================
     api_config = models.BooleanField(default=True, verbose_name=_("API Config"))
     api_config_panel = models.BooleanField(default=True, verbose_name=_("API Config Panel"))
+    admin_dashboard = models.BooleanField(default=True, verbose_name=_("Admin Dashboard (PWA)"))
 
     class Meta:
         verbose_name = _("API Endpoint Toggle")
@@ -118,6 +121,8 @@ class ApiEndpointToggle(BaseModel):
             'game_data': {
                 'clan_detail': self.clan_detail,
                 'auction_items': self.auction_items,
+                'game_summary': self.game_summary,
+                'game_leaderboard': self.game_leaderboard,
             },
             'server_status': {
                 'server_status': self.server_status,
@@ -136,6 +141,7 @@ class ApiEndpointToggle(BaseModel):
             'administration': {
                 'api_config': self.api_config,
                 'api_config_panel': self.api_config_panel,
+                'admin_dashboard': self.admin_dashboard,
             }
         }
     
@@ -169,6 +175,8 @@ class ApiEndpointToggle(BaseModel):
             'search_item': self.search_item,
             'clan_detail': self.clan_detail,
             'auction_items': self.auction_items,
+            'game_summary': self.game_summary,
+            'game_leaderboard': self.game_leaderboard,
             'server_status': self.server_status,
             'api_info': self.api_info,
             'health_check': self.health_check,
@@ -179,6 +187,7 @@ class ApiEndpointToggle(BaseModel):
             'cache_stats': self.cache_stats,
             'api_config': self.api_config,
             'api_config_panel': self.api_config_panel,
+            'admin_dashboard': self.admin_dashboard,
         }
 
 

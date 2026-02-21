@@ -10,6 +10,7 @@ from django.conf import settings
 from apps.main.home.tasks import send_email_task
 from utils.resources import gen_avatar, get_class_name
 from utils.dynamic_import import get_query_class
+from drf_spectacular.utils import extend_schema
 
 LineageAccount = get_query_class("LineageAccount")
 LineageServices = get_query_class("LineageServices")
@@ -37,6 +38,7 @@ def resolve_account_login(request):
         raise PermissionDenied("Você não tem permissão para acessar essa conta.")
 
     return account_login
+@extend_schema(exclude=True)
 class AccountDashboardAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -99,6 +101,7 @@ class AccountDashboardAPI(APIView):
         }
         return Response(data)
 
+@extend_schema(exclude=True)
 class UpdatePasswordAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -121,6 +124,7 @@ class UpdatePasswordAPI(APIView):
             return Response({'success': True})
         return Response({'error': 'Erro ao atualizar senha.'}, status=400)
 
+@extend_schema(exclude=True)
 class RegisterLineageAccountAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -218,6 +222,7 @@ class RegisterLineageAccountAPI(APIView):
         else:
             return Response({'error': 'Erro ao criar conta. O banco de dados do Lineage pode estar indisponível.'}, status=503)
 
+@extend_schema(exclude=True)
 class LinkLineageAccountAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -237,6 +242,7 @@ class LinkLineageAccountAPI(APIView):
         else:
             return Response({'error': 'Erro ao vincular conta.'}, status=400)
 
+@extend_schema(exclude=True)
 class RequestLinkByEmailAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -261,6 +267,7 @@ class RequestLinkByEmailAPI(APIView):
         )
         return Response({'success': True, 'link': link})
 
+@extend_schema(exclude=True)
 class LinkByEmailTokenAPI(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
