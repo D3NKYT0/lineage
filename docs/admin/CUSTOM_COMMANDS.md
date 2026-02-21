@@ -11,6 +11,10 @@ Este documento lista todos os comandos Django customizados disponíveis no proje
 - [Comandos de Moderação Social](#comandos-de-moderação-social)
 - [Comandos de Recursos do Sistema](#comandos-de-recursos-do-sistema)
 - [Comandos de Servidor e API](#comandos-de-servidor-e-api)
+- [Comandos de Minigames (Jogos)](#comandos-de-minigames-jogos)
+- [Comandos de Marketplace](#comandos-de-marketplace)
+- [Comandos de Pagamentos](#comandos-de-pagamentos)
+- [Comandos de FAQ e Conteúdo](#comandos-de-faq-e-conteúdo)
 - [Comandos de Usuários e Autenticação](#comandos-de-usuários-e-autenticação)
 - [Comandos de Limpeza e Manutenção](#comandos-de-limpeza-e-manutenção)
 
@@ -394,6 +398,130 @@ python manage.py generate_api_token --username api_user --password senha123
 
 ---
 
+### `test_queries`
+**Localização:** `apps/lineage/server/management/commands/test_queries.py`
+
+Comando essencial para desenvolvimento, testa todas as 7 classes do arquivo gerado `query_*.py` no banco L2 e garante que nenhuma quebra ocorra entre a bridge Django -> Lineage 2 DB. Executa em torno de 46 testes.
+
+```bash
+python manage.py test_queries [opções]
+```
+
+**Opções:**
+- `--verbose`: Mostra detalhes expansivos do resultado de cada chamada.
+
+**Exemplos:**
+```bash
+# Execução padrão
+python manage.py test_queries
+
+# Executar exibindo o dump das respostas JSON/Dict no terminal
+python manage.py test_queries --verbose
+```
+
+---
+
+## 🎮 Comandos de Minigames (Jogos)
+
+### `populate_new_games`
+**Localização:** `apps/lineage/games/management/commands/populate_new_games.py`
+
+Popula os três novos modos de Jogo (Slot Machine, Dice Game e Fishing Game) com as configurações iniciais de apostas, prêmios, icones, multiplicadores e raridade de itens (Gera a Base do Fishing).
+
+```bash
+python manage.py populate_new_games
+```
+
+---
+
+### `fix_duplicate_configs`
+**Localização:** `apps/lineage/games/management/commands/fix_duplicate_configs.py`
+
+Remove lixo e configurações duplicadas geradas acidentalmente nas tabelas dos jogos (Mantendo apenas UMA configuração principal ativa para Dice, Slots e Fishing).
+
+```bash
+python manage.py fix_duplicate_configs
+```
+
+---
+
+## 🛒 Comandos de Marketplace
+
+### `create_marketplace_master_account`
+**Localização:** `apps/lineage/marketplace/management/commands/create_marketplace_master_account.py`
+
+Cria a conta MASTER no banco do Lineage2 (L2 DB) que armazenará temporariamente os personagens offline listados a venda no Marketplace até seu respectivo comprador.
+
+```bash
+python manage.py create_marketplace_master_account [opções]
+```
+
+**Opções:**
+- `--account-name [NOME]`: Nome customizado (Padrão/Default: MARKETPLACE_SYSTEM)
+- `--force`: Recria a account forçadamente ignorando existências
+
+---
+
+### `cancel_old_marketplace_sales`
+**Localização:** `apps/lineage/marketplace/management/commands/cancel_old_marketplace_sales.py`
+
+Audita, estorna e processa listings pendentes ou vendas presas do sistema de Marketplace para o banco de dados L2 Master, ou cancelando do Database em caso de incongruência.
+
+```bash
+python manage.py cancel_old_marketplace_sales [opções]
+```
+
+**Opções:**
+- `--dry-run`: Somente relata o que aconteceria.
+- `--force`: Cancela sem prompt (Y/N) input.
+- `--move-to-master`: Tenta resgatar preservando os personagens ativos listados pra conta mestre
+
+---
+
+## 💳 Comandos de Pagamentos
+
+### `processar_aprovados`
+**Localização:** `apps/lineage/payment/management/commands/processar_aprovados.py`
+
+Varre o status dos pacotes na gateway pra finalizar transações e debitar as coins ao jogador no jogo.
+
+```bash
+python manage.py processar_aprovados
+```
+
+---
+
+### `reconciliar_pendentes`
+**Localização:** `apps/lineage/payment/management/commands/reconciliar_pendentes.py`
+
+Força um "Pull" das credenciais via IPN/API do Mercado Pago, reconciliando faturas esquecidas.
+
+```bash
+python manage.py reconciliar_pendentes [opções]
+```
+
+**Opções:**
+- `--cutoff-minutes [INT]`: Minutos de corte em relação ao timestamp de criação da transação. Padrão 5.
+
+---
+
+## 📖 Comandos de FAQ e Conteúdo
+
+### `populate_pdl_faqs`
+**Localização:** `apps/main/faq/management/commands/populate_pdl_faqs.py`
+
+Gera dezenas de sessões FAQ informativas base explicando detalhadamente (por traduções) como os jogadores podem extrair o máximo do site e do PDL, com links úteis.
+
+```bash
+python manage.py populate_pdl_faqs [opções]
+```
+
+**Opções:**
+- `--clear`: Remove todas as faqs customizaveis antes do Seed.
+- `--language [pt|en|es|all]`: Cria/Ajusta em idiomas selecionados. Padrão pt.
+
+---
+
 ## 👤 Comandos de Usuários e Autenticação
 
 ### `test_suspension_login`
@@ -533,11 +661,15 @@ python manage.py backup_media --create --path media/avatars
 | **Licenciamento** | 4 | generate_encryption_key, create_test_license, create_license, check_license |
 | **Moderação Social** | 3 | setup_moderation, clear_moderation_filters, apply_filters_retroactive |
 | **Recursos do Sistema** | 1 | populate_resources |
-| **Servidor e API** | 2 | migrate_l2_accounts, generate_api_token |
+| **Servidor e API** | 3 | migrate_l2_accounts, generate_api_token, test_queries |
+| **Minigames (Jogos)** | 2 | populate_new_games, fix_duplicate_configs |
+| **Marketplace** | 2 | create_marketplace_master_account, cancel_old_marketplace_sales |
+| **Pagamentos** | 2 | processar_aprovados, reconciliar_pendentes |
+| **FAQ e Conteúdo** | 1 | populate_pdl_faqs |
 | **Usuários e Autenticação** | 1 | test_suspension_login |
 | **Limpeza e Manutenção** | 3 | cleanup_storage, cleanup_orphaned_media, backup_media |
 
-**Total: 19 comandos customizados**
+**Total: 27 comandos customizados**
 
 ---
 

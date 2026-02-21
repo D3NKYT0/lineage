@@ -94,11 +94,10 @@ Escolha o guia adequado ao seu perfil:
 
 | Documento | Descrição |
 |-----------|-----------|
-| [API_DOCUMENTATION](api/API_DOCUMENTATION.md) | Documentação completa da API |
-| [API_ENDPOINTS](api/API_ENDPOINTS.md) | Lista de endpoints disponíveis |
-| [API_CONFIG_PANEL](api/API_CONFIG_PANEL.md) | Configuração da API via painel |
-| [README_API](api/README_API.md) | README do app de API |
-| [REST_API_GUIDE](api/REST_API_GUIDE.md) | Guia rápido da API REST |
+| [README](api/README.md) | Introdução, fluxos de autenticação, rate limits e arquitetura da API |
+| [API_REFERENCE](api/API_REFERENCE.md) | Referência completa e técnica de todos os endpoints disponíveis |
+| [API_USE_CASES](api/API_USE_CASES.md) | Tutoriais, exemplos em código práticos e de implementações completas |
+| [API_CONFIG_PANEL](api/API_CONFIG_PANEL.md) | Configuração e painel de gerência da API pública |
 
 ---
 

@@ -316,11 +316,3 @@ Para contribuir com melhorias:
 4. Adicione testes
 5. Documente as alterações
 6. Submeta um pull request
-
-## Suporte
-
-Para suporte técnico:
-- 📧 Email: admin@lineage2server.com
-- 📖 Documentação: `/docs/`
-- 🐛 Issues: GitHub Issues
-- 💬 Chat: Discord/Slack 
