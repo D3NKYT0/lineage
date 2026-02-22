@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import ClanProfile, RecruitmentApplication
 from .forms import ClanProfileForm, RecruitmentApplicationForm
-from .services import get_user_lead_clans, get_clan_basic_info, get_clan_full_details, get_user_characters
+from .services import get_user_lead_clans, get_clan_basic_info, get_clan_full_details, get_user_characters, get_top_clans
 from apps.lineage.server.services.account_context import get_available_accounts
 from utils.render_theme_page import render_theme_page
 
@@ -16,10 +16,31 @@ class TestClaimClanView(LoginRequiredMixin, View):
         accounts = get_available_accounts(request.user)
         logins = [acc.get('login') for acc in accounts if acc.get('login')]
         characters = get_user_characters(logins)
-        
+
+        # Clãs que os personagens do usuário fazem parte (para usar IDs como exemplo)
+        user_clans_map = {}
+        for char in characters:
+            cid = char.get('clan_id') or char.get('clanid') or 0
+            if cid and int(cid) > 0:
+                cid = int(cid)
+                if cid not in user_clans_map:
+                    info = get_clan_basic_info(cid)
+                    user_clans_map[cid] = {
+                        'clan_id': cid,
+                        'clan_name': (info.get('clan_name') or info.get('name', f'Clã {cid}')) if info else f'Clã {cid}',
+                        'characters': []
+                    }
+                user_clans_map[cid]['characters'].append(char.get('char_name', '?'))
+        user_clans = list(user_clans_map.values())
+
+        # Top 10 clãs do servidor (banco L2)
+        top_clans = get_top_clans(limit=10)
+
         return render_theme_page(request, 'clans', 'test_claim.html', {
             'title': _('Painel de Testes - Clãs'),
-            'characters': characters
+            'characters': characters,
+            'user_clans': user_clans,
+            'top_clans': top_clans or [],
         })
         
     def post(self, request):
@@ -106,7 +127,7 @@ class ClanDashboardView(LoginRequiredMixin, View):
                 selected_clan = next((c for c in user_clans if str(c.get('clan_id')) == str(current_clan_id)), user_clans[0]) if user_clans else None
             
             if selected_clan:
-                profile, _ = ClanProfile.objects.get_or_create(clan_id=selected_clan['clan_id'])
+                profile, _created = ClanProfile.objects.get_or_create(clan_id=selected_clan['clan_id'])
                 form = ClanProfileForm(instance=profile)
                 applications = RecruitmentApplication.objects.filter(clan_profile=profile).order_by('-created_at')
         
@@ -141,7 +162,7 @@ class ClanDashboardView(LoginRequiredMixin, View):
         selected_clan = next((c for c in user_clans if str(c.get('clan_id')) == str(current_clan_id)), None) if user_clans else None
         
         if selected_clan:
-            profile, _ = ClanProfile.objects.get_or_create(clan_id=selected_clan['clan_id'])
+            profile, _created = ClanProfile.objects.get_or_create(clan_id=selected_clan['clan_id'])
             form = ClanProfileForm(request.POST, request.FILES, instance=profile)
             if form.is_valid():
                 form.save()

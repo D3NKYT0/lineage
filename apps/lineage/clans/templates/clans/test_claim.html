@@ -73,15 +73,76 @@
         box-shadow: 0 8px 25px rgba(220, 53, 69, 0.6);
         color: white;
     }
+
+    .clan-id-badge {
+        padding: 2px 8px;
+        border-radius: 6px;
+        background: rgba(13, 202, 240, 0.2);
+        transition: background 0.2s;
+    }
+    .clan-id-badge:hover {
+        background: rgba(13, 202, 240, 0.4);
+        color: #0dcaf0 !important;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="dashboard-bg">
-    <div class="container text-center pt-5">
-        <h2 class="mx-auto text-warning mb-4" style="font-family: 'Orbitron', sans-serif;"><i
+    <div class="container pt-5">
+        <h2 class="text-center mx-auto text-warning mb-4" style="font-family: 'Orbitron', sans-serif;"><i
                 class="fas fa-hammer me-2"></i>{% trans "Painel de Testes (Dev Mode)" %}</h2>
-        <div class="dashboard-card p-5 mx-auto" style="max-width: 500px;">
+
+        <div class="row mb-4 g-3 justify-content-center">
+            <div class="col-12 col-lg-5">
+                <div class="dashboard-card p-4 h-100">
+                    <h6 class="text-info mb-3"><i class="fas fa-users me-2"></i>{% trans "Clãs dos seus personagens" %}</h6>
+                    <p class="small text-secondary mb-2">IDs para usar como exemplo na reivindicação (clique para preencher):</p>
+                    {% if user_clans %}
+                    <ul class="list-unstyled mb-0">
+                        {% for c in user_clans %}
+                        <li class="mb-2 d-flex align-items-center gap-2 flex-wrap">
+                            <a href="#" class="clan-id-badge text-decoration-none text-info fw-bold"
+                               data-clan-id="{{ c.clan_id }}" title="Clique para preencher o ID">
+                                ID: {{ c.clan_id }}
+                            </a>
+                            <span class="text-white">— {{ c.clan_name }}</span>
+                            <small class="text-secondary">({{ c.characters|join:", " }})</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-secondary small mb-0">Nenhum personagem seu está em um clã no jogo.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-12 col-lg-5">
+                <div class="dashboard-card p-4 h-100">
+                    <h6 class="text-success mb-3"><i class="fas fa-trophy me-2"></i>{% trans "Top 10 clãs do servidor" %}</h6>
+                    <p class="small text-secondary mb-2">IDs para usar como exemplo (clique para preencher):</p>
+                    {% if top_clans %}
+                    <ul class="list-unstyled mb-0">
+                        {% for c in top_clans %}
+                        <li class="mb-2 d-flex align-items-center gap-2 flex-wrap">
+                            <a href="#" class="clan-id-badge text-decoration-none text-success fw-bold"
+                               data-clan-id="{{ c.clan_id }}" title="Clique para preencher o ID">
+                                ID: {{ c.clan_id }}
+                            </a>
+                            <span class="text-white">— {{ c.clan_name|default:"—" }}</span>
+                            <small class="text-secondary">
+                                (Lv.{{ c.clan_level|default:"?" }} · {{ c.membros|default:"?" }} membros)
+                            </small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-secondary small mb-0">Banco L2 indisponível ou sem clãs.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-card p-5 mx-auto text-center" style="max-width: 500px;">
             <p class="lead mb-4">Reivindique a liderança de um clã para testes locais no Dashboard.</p>
             <form method="post" action="{% url 'clans:test_claim' %}">
                 {% csrf_token %}
@@ -114,4 +175,17 @@
         </div>
     </div>
 </div>
+<script>
+document.querySelectorAll('.clan-id-badge').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var clanId = this.getAttribute('data-clan-id');
+        var input = document.querySelector('input[name="clan_id"]');
+        if (input && clanId) {
+            input.value = clanId;
+            input.focus();
+        }
+    });
+});
+</script>
 {% endblock %}
