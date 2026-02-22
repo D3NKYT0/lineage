@@ -129,19 +129,37 @@
                             <div class="mb-5 p-4 rounded"
                                 style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);">
                                 <label class="form-label form-label-glow"><i class="fas fa-user-ninja me-2"></i>{% trans "Identificação do Personagem" %}</label>
+                                {% if characters %}
+                                <select name="char_id" class="form-select form-control-glass" required id="charSelect">
+                                    <option value="" disabled selected>-- {% trans "Escolha seu personagem" %} --</option>
+                                    {% for char in characters %}
+                                    <option value="{{ char.char_id }}" data-name="{{ char.char_name }}">
+                                        {{ char.char_name }} ({% trans "Lv" %}. {{ char.level }}{% if char.clan_id %} - {% trans "Clã atual" %}: {{ char.clan_id }}{% endif %})
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <input type="hidden" name="char_name" id="charNameInput" value="">
+                                <script>
+                                document.getElementById('charSelect').addEventListener('change', function() {
+                                    var opt = this.options[this.selectedIndex];
+                                    document.getElementById('charNameInput').value = opt.dataset.name || '';
+                                });
+                                </script>
+                                {% else %}
                                 <div class="row g-3">
                                     <div class="col-md-8">
                                         <input type="text" name="char_name" class="form-control form-control-glass"
-                                            placeholder="{% trans 'Nome do Personagem (Temp)' %}" required>
+                                            placeholder="{% trans 'Nome do Personagem' %}" required>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="number" name="char_id" class="form-control form-control-glass"
-                                            placeholder="{% trans 'ID (Temp)' %}" required>
+                                            placeholder="{% trans 'ID' %}" required>
                                     </div>
                                 </div>
                                 <div class="mt-2 text-warning small opacity-75">
-                                    <i class="fas fa-tools me-1"></i>{% trans "Na versão final, será um dropdown dos seus chars vinculados." %}
+                                    <i class="fas fa-info-circle me-1"></i>{% trans "Vincule suas contas do jogo ao site para selecionar personagens automaticamente." %}
                                 </div>
+                                {% endif %}
                             </div>
 
                             <div class="mb-5">

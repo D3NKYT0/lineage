@@ -17,6 +17,7 @@ BASE_CLASS_COL = 'class_id'  # Vem de character_subclasses
 HAS_SUBCLASS = True
 SUBCLASS_CHAR_ID = 'char_obj_id'
 CLAN_NAME_SOURCE = 'clan_subpledges'
+SUBPLEDGE_FILTER = 'sub_pledge_id'  # ACIS v1 usa sub_pledge_id = 0
 HAS_ALLY_DATA = False
 
 # ============================================================================

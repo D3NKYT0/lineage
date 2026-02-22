@@ -27,6 +27,7 @@ def get_user_lead_clans(account_logins):
 
     clan_name_source = getattr(query_module, 'CLAN_NAME_SOURCE', 'clan_data')
     char_id_col = getattr(query_module, 'CHAR_ID', 'obj_Id')
+    subpledge_filter = getattr(query_module, 'SUBPLEDGE_FILTER', 'type')
 
     # Build IN clause for account logins
     placeholders = ", ".join([f":acc{i}" for i in range(len(account_logins))])
@@ -42,11 +43,12 @@ def get_user_lead_clans(account_logins):
             WHERE P.account_name IN ({placeholders})
         """
     else:
-        # Name and leader logic usually in clan_subpledges
+        # Name and leader logic in clan_subpledges (schema varies: sub_pledge_id=0 or type=0)
+        sub_filter = "S.sub_pledge_id = 0" if subpledge_filter == 'sub_pledge_id' else "S.type = 0"
         sql = f"""
             SELECT C.clan_id, S.name AS clan_name, C.clan_level, P.char_name AS leader_name, P.{char_id_col} AS leader_id
             FROM clan_data C
-            INNER JOIN clan_subpledges S ON S.clan_id = C.clan_id AND S.type = '0'
+            INNER JOIN clan_subpledges S ON S.clan_id = C.clan_id AND {sub_filter}
             INNER JOIN characters P ON P.{char_id_col} = S.leader_id
             WHERE P.account_name IN ({placeholders})
         """
@@ -113,6 +115,7 @@ def get_clan_basic_info(clan_id):
         query_module = importlib.import_module(f'apps.lineage.server.querys.query_default')
 
     clan_name_source = getattr(query_module, 'CLAN_NAME_SOURCE', 'clan_data')
+    subpledge_filter = getattr(query_module, 'SUBPLEDGE_FILTER', 'type')
 
     if clan_name_source == 'clan_data':
         sql = """
@@ -121,10 +124,11 @@ def get_clan_basic_info(clan_id):
             WHERE clan_id = :clan_id
         """
     else:
-        sql = """
+        sub_filter = "S.sub_pledge_id = 0" if subpledge_filter == 'sub_pledge_id' else "S.type = 0"
+        sql = f"""
             SELECT C.clan_id, S.name AS clan_name, C.clan_level
             FROM clan_data C
-            LEFT JOIN clan_subpledges S ON S.clan_id = C.clan_id AND S.type = '0'
+            LEFT JOIN clan_subpledges S ON S.clan_id = C.clan_id AND {sub_filter}
             WHERE C.clan_id = :clan_id
         """
 
@@ -135,3 +139,30 @@ def get_clan_basic_info(clan_id):
         import logging
         logging.getLogger(__name__).error(f"Error fetching clan info: {e}")
         return None
+
+
+def get_clan_full_details(clan_id):
+    """
+    Retorna detalhes completos do clã (leader_name, member_count, reputation, level).
+    Usa get_clan_basic_info para obter clan_name e depois LineageStats.get_clan_details.
+    """
+    basic = get_clan_basic_info(clan_id)
+    if not basic:
+        return None
+    clan_name = basic.get('clan_name')
+    if clan_name:
+        try:
+            LineageStats = get_query_class("LineageStats")
+            if LineageStats:
+                full = LineageStats.get_clan_details(clan_name)
+                if full:
+                    return full
+        except Exception:
+            pass
+    # Fallback: normaliza basic para ter 'level' e campos vazios
+    result = dict(basic)
+    result['level'] = result.get('level') or result.get('clan_level', '-')
+    result.setdefault('leader_name', '')
+    result.setdefault('member_count', '-')
+    result.setdefault('reputation', '-')
+    return result

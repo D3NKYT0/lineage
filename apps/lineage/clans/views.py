@@ -7,13 +7,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import ClanProfile, RecruitmentApplication
 from .forms import ClanProfileForm, RecruitmentApplicationForm
-from .services import get_user_lead_clans, get_clan_basic_info, get_user_characters
-from apps.lineage.server.database import LineageDB
+from .services import get_user_lead_clans, get_clan_basic_info, get_clan_full_details, get_user_characters
 from apps.lineage.server.services.account_context import get_available_accounts
-from utils.dynamic_import import get_query_class
 from utils.render_theme_page import render_theme_page
-
-LineageStats = get_query_class("LineageStats")
 
 class TestClaimClanView(LoginRequiredMixin, View):
     def get(self, request):
@@ -41,7 +37,7 @@ class TestClaimClanView(LoginRequiredMixin, View):
             if selected_char:
                 game_data = get_clan_basic_info(clan_id)
                 clan_name = game_data.get('clan_name', f'Test Clan {clan_id}') if game_data else f'Test Clan {clan_id}'
-                clan_level = game_data.get('level', 1) if game_data else 1
+                clan_level = game_data.get('clan_level') or game_data.get('level', 1) if game_data else 1
                 
                 # Store mock data in session
                 mock_clans = request.session.get('mock_lead_clans', [])
@@ -79,10 +75,7 @@ class ClanListView(View):
 class ClanDetailView(View):
     def get(self, request, clan_id):
         profile = get_object_or_404(ClanProfile, clan_id=clan_id)
-        
-        # Look up game stat data using our helper
-        game_data = get_clan_basic_info(clan_id)
-            
+        game_data = get_clan_full_details(clan_id)
         context = {
             'profile': profile,
             'game_data': game_data,
@@ -110,19 +103,24 @@ class ClanDashboardView(LoginRequiredMixin, View):
             if not current_clan_id:
                 selected_clan = user_clans[0]
             else:
-                selected_clan = next((c for c in user_clans if str(c.get('clan_id')) == str(current_clan_id)), user_clans[0])
+                selected_clan = next((c for c in user_clans if str(c.get('clan_id')) == str(current_clan_id)), user_clans[0]) if user_clans else None
             
             if selected_clan:
-                profile, created = ClanProfile.objects.get_or_create(
-                    clan_id=selected_clan['clan_id'],
-                    defaults={'description': ''}
-                )
+                profile, _ = ClanProfile.objects.get_or_create(clan_id=selected_clan['clan_id'])
                 form = ClanProfileForm(instance=profile)
                 applications = RecruitmentApplication.objects.filter(clan_profile=profile).order_by('-created_at')
         
+        # Normalize clan dicts for template: ensure 'level' key (services returns clan_level)
+        user_clans_normalized = []
+        for c in user_clans:
+            c_copy = dict(c)
+            c_copy['level'] = c.get('clan_level') or c.get('level', '-')
+            user_clans_normalized.append(c_copy)
+
         context = {
             'title': _("Painel do Clã"),
-            'user_clans': user_clans,
+            'user_clans': user_clans_normalized,
+            'selected_clan': selected_clan,
             'selected_clan_id': int(selected_clan['clan_id']) if selected_clan else None,
             'profile': profile,
             'form': form,
@@ -140,7 +138,7 @@ class ClanDashboardView(LoginRequiredMixin, View):
         user_clans.extend(mock_clans)
         
         current_clan_id = request.POST.get('clan_id')
-        selected_clan = next((c for c in user_clans if str(c.get('clan_id')) == str(current_clan_id)), None)
+        selected_clan = next((c for c in user_clans if str(c.get('clan_id')) == str(current_clan_id)), None) if user_clans else None
         
         if selected_clan:
             profile, _ = ClanProfile.objects.get_or_create(clan_id=selected_clan['clan_id'])
@@ -161,23 +159,42 @@ class ClanDashboardView(LoginRequiredMixin, View):
 class ApplyToClanView(LoginRequiredMixin, View):
     def get(self, request, clan_id):
         profile = get_object_or_404(ClanProfile, clan_id=clan_id)
+        accounts = get_available_accounts(request.user)
+        logins = [acc.get('login') for acc in accounts if acc.get('login')]
+        characters = get_user_characters(logins)
         form = RecruitmentApplicationForm()
-        
         context = {
             'profile': profile,
             'form': form,
+            'characters': characters,
             'title': _("Inscrever-se no Clã")
         }
         return render_theme_page(request, 'clans', 'apply.html', context)
 
     def post(self, request, clan_id):
         profile = get_object_or_404(ClanProfile, clan_id=clan_id)
+        accounts = get_available_accounts(request.user)
+        logins = [acc.get('login') for acc in accounts if acc.get('login')]
+        characters = get_user_characters(logins)
         form = RecruitmentApplicationForm(request.POST)
-        
         if form.is_valid():
             app = form.save(commit=False)
             app.user = request.user
             app.clan_profile = profile
+            char_id = form.cleaned_data.get('char_id')
+            char_name = form.cleaned_data.get('char_name') or ''
+            if characters:
+                # Valida que o personagem pertence às contas do usuário
+                valid_char = next((c for c in characters if str(c.get('char_id')) == str(char_id)), None)
+                if not valid_char:
+                    messages.error(request, _("Personagem inválido. Escolha um personagem vinculado à sua conta."))
+                    context = {'profile': profile, 'form': form, 'characters': characters, 'title': _("Inscrever-se no Clã")}
+                    return render_theme_page(request, 'clans', 'apply.html', context)
+                app.char_id = int(char_id)
+                app.char_name = valid_char.get('char_name', char_name)
+            else:
+                app.char_id = int(char_id)
+                app.char_name = char_name.strip() or str(char_id)
             # Verifica spam
             if RecruitmentApplication.objects.filter(user=request.user, clan_profile=profile, status='PENDING').exists():
                 messages.error(request, _("Você já tem uma inscrição pendente para este clã."))
@@ -190,6 +207,7 @@ class ApplyToClanView(LoginRequiredMixin, View):
         context = {
             'profile': profile,
             'form': form,
+            'characters': characters,
             'title': _("Inscrever-se no Clã")
         }
         return render_theme_page(request, 'clans', 'apply.html', context)
