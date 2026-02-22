@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+﻿{% extends "layouts/base.html" %}
 {% load i18n widget_tweaks static %}
 
 {% block extrahead %}
@@ -154,6 +154,30 @@
         background-color: #0dcaf0;
         border-color: #0dcaf0;
     }
+
+    .alert-custom-success {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-left: 4px solid #28a745 !important;
+    }
+
+    .alert-custom-error {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-left: 4px solid #dc3545 !important;
+    }
+
+    .alert-custom-info {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-left: 4px solid #17a2b8 !important;
+    }
+
+    .alert-custom-warning {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-left: 4px solid #ffc107 !important;
+    }
 </style>
 {% endblock %}
 
@@ -166,12 +190,10 @@
         {% if messages %}
         <div class="mb-4">
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0"
-                style="background: rgba(255,255,255,0.1); color: #fff; border-left: 4px solid {% if message.tags == 'success' %}#28a745{% elif message.tags == 'error' %}#dc3545{% else %}#17a2b8{% endif %} !important;"
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 alert-custom-{{ message.tags|default:'info' }}"
                 role="alert">
                 {{ message }}
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
-                    aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% endfor %}
         </div>
@@ -181,25 +203,29 @@
         <div class="dashboard-card p-5 text-center">
             <i class="fas fa-chess-rook fa-4x mb-4 opacity-50 text-secondary"></i>
             <h3 class="text-info card-title-orbit mb-3">{% trans "Acesso Negado ou Sem Permissão" %}</h3>
-            <p class="text-muted lead mb-0">{% trans "Este painel é exclusivo para líderes de Clãs reconhecidos. Se você
-                é um líder no jogo, atualize suas contas vinculadas ou aguarde a sincronização." %}</p>
+            <p class="text-muted lead mb-0">{% trans "Este painel é exclusivo para líderes de Clãs reconhecidos. Se você é um líder no jogo, atualize suas contas vinculadas ou aguarde a sincronização." %}</p>
         </div>
         {% else %}
 
-        <div class="row mb-4">
-            <div class="col-md-5 col-lg-4">
+        <div class="row mb-4 align-items-center">
+            <div class="col-md-6 col-lg-5">
                 <form method="get" class="d-flex bg-dark p-2 rounded-pill shadow-sm"
                     style="border: 1px solid rgba(255,255,255,0.1);">
-                    <select name="clan_id" class="form-select border-0 bg-transparent text-light shadow-none"
+                    <select name="clan_id" class="form-select border-0 bg-transparent text-light shadow-none fs-5"
                         onchange="this.form.submit()">
                         {% for clan in user_clans %}
-                        <option value="{{ clan.clan_id }}" {% if clan.clan_id==selected_clan_id %}selected{% endif %}
-                            class="bg-dark">
-                            {{ clan.clan_name }} (Nvl {{ clan.level }})
+                        <option value="{{ clan.clan_id }}" {% if clan.clan_id == selected_clan_id %}selected{% endif %}>
+                            [{{ clan.leader_name }}] {{ clan.clan_name }} (Nvl {{ clan.level }})
                         </option>
                         {% endfor %}
                     </select>
                 </form>
+            </div>
+            <div class="col-md-6 col-lg-7 text-md-end mt-3 mt-md-0">
+                <span class="badge bg-secondary p-2 px-3 border border-dark rounded-pill fs-6 shadow-sm">
+                    <i class="fas fa-user-shield me-2 text-warning"></i>{% trans "Personagem Líder Atual:" %} <span
+                        class="text-white">{{ selected_clan.leader_name }}</span>
+                </span>
             </div>
         </div>
 
@@ -253,8 +279,7 @@
                                 <tr>
                                     <td>
                                         {% if app.status == 'PENDING' %}
-                                        <span class="badge bg-warning text-dark"><i
-                                                class="fas fa-clock me-1"></i>Pendente</span>
+                                        <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i>Pendente</span>
                                         {% elif app.status == 'APPROVED' %}
                                         <span class="badge bg-success"><i class="fas fa-check me-1"></i>Aprovado</span>
                                         {% elif app.status == 'REJECTED' %}
@@ -291,8 +316,8 @@
                                             <div class="modal-header border-bottom border-secondary"
                                                 style="background: rgba(0,0,0,0.2);">
                                                 <h5 class="modal-title" style="font-family: 'Orbitron', sans-serif;">
-                                                    <i class="fas fa-user-ninja me-2 text-warning"></i>{% trans
-                                                    "Inscrição de" %} <span class="text-info">{{ app.char_name }}</span>
+                                                    <i class="fas fa-user-ninja me-2 text-warning"></i>{% trans "Inscrição de" %} 
+                                                    <span class="text-info">{{ app.char_name }}</span>
                                                 </h5>
                                                 <button type="button" class="btn-close btn-close-white"
                                                     data-bs-dismiss="modal" aria-label="Close"></button>
@@ -300,17 +325,12 @@
                                             <div class="modal-body p-4">
                                                 <div
                                                     class="mb-4 bg-black bg-opacity-25 p-3 rounded border border-secondary">
-                                                    <p class="mb-1 text-muted small text-uppercase">{% trans "Mensagem
-                                                        do Jogador" %}</p>
-                                                    <p class="mb-0 fs-6" style="line-height: 1.5;">{{
-                                                        app.message|linebreaksbr }}</p>
+                                                    <p class="mb-1 text-muted small text-uppercase">{% trans "Mensagem do Jogador" %}</p>
+                                                    <p class="mb-0 fs-6" style="line-height: 1.5;">{{ app.message|linebreaksbr }}</p>
                                                 </div>
-
                                                 <div class="row g-2 text-muted small">
-                                                    <div class="col-6"><i class="fas fa-id-card me-1"></i>ID: {{
-                                                        app.char_id }}</div>
-                                                    <div class="col-6"><i class="far fa-calendar-alt me-1"></i>{% trans
-                                                        "Enviado em:" %} {{ app.created_at|date:"d/m/Y" }}</div>
+                                                    <div class="col-6"><i class="fas fa-id-card me-1"></i>ID: {{ app.char_id }}</div>
+                                                    <div class="col-6"><i class="far fa-calendar-alt me-1"></i>{% trans "Enviado em:" %} {{ app.created_at|date:"d/m/Y" }}</div>
                                                 </div>
                                             </div>
 
@@ -320,17 +340,23 @@
                                                 <form method="post"
                                                     action="{% url 'clans:process_application' app.id 'reject' %}">
                                                     {% csrf_token %}
+                                                    <input type="hidden" name="leader_char_id"
+                                                        value="{{ selected_clan.leader_id }}">
+                                                    <input type="hidden" name="clan_id"
+                                                        value="{{ selected_clan.clan_id }}">
                                                     <button type="submit"
                                                         class="btn btn-outline-danger px-4 rounded-pill"><i
-                                                            class="fas fa-times me-2"></i>{% trans "Rejeitar"
-                                                        %}</button>
+                                                            class="fas fa-times me-2"></i>{% trans "Rejeitar" %}</button>
                                                 </form>
                                                 <form method="post"
                                                     action="{% url 'clans:process_application' app.id 'approve' %}">
                                                     {% csrf_token %}
+                                                    <input type="hidden" name="leader_char_id"
+                                                        value="{{ selected_clan.leader_id }}">
+                                                    <input type="hidden" name="clan_id"
+                                                        value="{{ selected_clan.clan_id }}">
                                                     <button type="submit" class="action-btn action-btn-success"><i
-                                                            class="fas fa-check me-2"></i>{% trans "Aprovar & Convidar"
-                                                        %}</button>
+                                                            class="fas fa-check me-2"></i>{% trans "Aprovar & Convidar" %}</button>
                                                 </form>
                                             </div>
                                             {% else %}
@@ -360,8 +386,7 @@
                     <div class="row">
                         <div class="col-lg-8">
                             <h4 class="mb-4 text-warning" style="font-family: 'Orbitron', sans-serif;"><i
-                                    class="fas fa-sliders-h me-2"></i>{% trans "Configurações de Recrutamento Módulo
-                                Web" %}</h4>
+                                    class="fas fa-sliders-h me-2"></i>{% trans "Configurações de Recrutamento Módulo  Web" %}</h4>
 
                             <form method="post" action="{% url 'clans:dashboard' %}" enctype="multipart/form-data">
                                 {% csrf_token %}
@@ -371,39 +396,34 @@
                                 <div class="bg-black bg-opacity-25 p-4 rounded-3 border border-secondary mb-4">
                                     <div class="form-check form-switch mb-4">
                                         <input class="form-check-input" type="checkbox" role="switch"
-                                            id="recruitingSwitch" name="recruiting" {% if profile.recruiting %}checked{%
-                                            endif %} style="transform: scale(1.3); margin-left: -2em;">
-                                        <label class="form-check-label ms-3 text-info fw-bold" for="recruitingSwitch">{%
-                                            trans "Abrir Recrutamento Web" %}</label>
-                                        <div class="form-text mt-1 text-muted ms-3">{% trans "Exibe o clã na lista
-                                            pública para jogadores enviarem convites." %}</div>
+                                            id="recruitingSwitch" name="recruiting" {% if profile.recruiting %}checked{% endif %} style="transform: scale(1.3); margin-left: -2em;">
+                                        <label class="form-check-label ms-3 text-info fw-bold" for="recruitingSwitch">{% trans "Abrir Recrutamento Web" %}</label>
+                                        <div class="form-text mt-1 text-muted ms-3">{% trans "Exibe o clã na lista pública para jogadores enviarem convites." %}</div>
                                     </div>
 
                                     <div class="row g-4">
                                         <div class="col-md-6">
                                             <label class="form-label text-light">{% trans "Foco do Clã" %}</label>
                                             <select name="focus" class="form-select form-control-glass">
-                                                <option value="MIXED" {% if profile.focus=='MIXED' %}selected{% endif
-                                                    %}>PvX (Misto)</option>
-                                                <option value="PVP" {% if profile.focus=='PVP' %}selected{% endif %}>
+                                                <option value="MIXED" {% if profile.focus == 'MIXED' %}selected{% endif %}>
+                                                    PvX (Misto)</option>
+                                                <option value="PVP" {% if profile.focus == 'PVP' %}selected{% endif %}>
                                                     Focado em PvP</option>
-                                                <option value="PVE" {% if profile.focus=='PVE' %}selected{% endif %}>
+                                                <option value="PVE" {% if profile.focus == 'PVE' %}selected{% endif %}>
                                                     Focado em PvE / Farm</option>
-                                                <option value="CASUAL" {% if profile.focus=='CASUAL' %}selected{% endif
-                                                    %}>Casual / Social</option>
+                                                <option value="CASUAL" {% if profile.focus == 'CASUAL' %}selected{% endif %}>
+                                                    Casual / Social</option>
                                             </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label text-light">{% trans "Nível Mínimo Exigido"
-                                                %}</label>
+                                            <label class="form-label text-light">{% trans "Nível Mínimo Exigido" %}</label>
                                             <input type="number" name="min_level"
                                                 class="form-control form-control-glass"
                                                 value="{{ profile.min_level|default:1 }}" min="1">
                                         </div>
 
                                         <div class="col-md-6">
-                                            <label class="form-label text-light">{% trans "Classes Procuradas"
-                                                %}</label>
+                                            <label class="form-label text-light">{% trans "Classes Procuradas" %}</label>
                                             <input type="text" name="required_classes"
                                                 class="form-control form-control-glass"
                                                 value="{{ profile.required_classes }}"
@@ -419,8 +439,7 @@
                                     </div>
 
                                     <div class="mt-4">
-                                        <label class="form-label text-light">{% trans "Mensagem de Apresentação (MOTD)"
-                                            %}</label>
+                                        <label class="form-label text-light">{% trans "Mensagem de Apresentação (MOTD)" %}</label>
                                         <textarea name="motd" rows="4" class="form-control form-control-glass"
                                             placeholder="Apresente seu clã, regras e objetivos para convencer jogadores a aplicarem.">{{ profile.motd }}</textarea>
                                     </div>
@@ -430,14 +449,12 @@
                                     <h5 class="text-white mb-3">{% trans "Personalização Visual" %}</h5>
                                     <div class="row g-4">
                                         <div class="col-md-6">
-                                            <label class="form-label text-light">{% trans "Ícone/Brasão do Clã Web
-                                                (Opcional)" %}</label>
+                                            <label class="form-label text-light">{% trans "Ícone/Brasão do Clã Web (Opcional)" %}</label>
                                             <input type="file" name="crest_image"
                                                 class="form-control form-control-glass" accept="image/*">
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label text-light">{% trans "Banner do Clã Web (Opcional)"
-                                                %}</label>
+                                            <label class="form-label text-light">{% trans "Banner do Clã Web (Opcional)" %}</label>
                                             <input type="file" name="banner_image"
                                                 class="form-control form-control-glass" accept="image/*">
                                         </div>
@@ -449,11 +466,9 @@
                                 </button>
                                 {% else %}
                                 <div class="alert alert-warning text-dark border-0">
-                                    <i class="fas fa-exclamation-triangle me-2"></i>{% trans "O perfil web do clã ainda
-                                    não foi gerado. Salve uma vez para criar a estrutura." %}
+                                    <i class="fas fa-exclamation-triangle me-2"></i>{% trans "O perfil web do clã ainda não foi gerado. Salve uma vez para criar a estrutura." %}
                                 </div>
-                                <button type="submit" class="action-btn px-5">{% trans "Gerar Perfil Inicial"
-                                    %}</button>
+                                <button type="submit" class="action-btn px-5">{% trans "Gerar Perfil Inicial" %}</button>
                                 {% endif %}
                             </form>
                         </div>
@@ -462,13 +477,11 @@
 
                 <!-- Members Tab Placeholder -->
                 <div class="tab-pane fade" id="members-tab-pane" role="tabpanel" tabindex="0">
-                    <div class="dashboard-card p-5 text-center mt-3 border-0 bg-transparent shadow-none border-none">
+                    <div class="dashboard-card p-5 text-center mt-3 border-0 bg-transparent shadow-none">
                         <i class="fas fa-cogs fa-4x text-muted mb-4"></i>
                         <h4 class="card-title-orbit text-info mb-3">{% trans "Módulo de Gerenciamento In-Game" %}</h4>
                         <p class="text-muted lead mx-auto" style="max-width: 600px;">
-                            {% trans "Esta central permitirá que você visualize membros live do LineageDB, verifique
-                            contribuições, atribua patentes web, modifique guild roles e expulse membros remotamente."
-                            %}
+                            {% trans "Esta central permitirá que você visualize membros live do LineageDB, verifique contribuições, atribua patentes web, modifique guild roles e expulse membros remotamente." %}
                         </p>
                         <span class="badge bg-secondary p-2 px-3 mt-3 shadow-sm border border-light text-light"><i
                                 class="fas fa-tools me-2"></i>{% trans "Em Desenvolvimento" %}</span>

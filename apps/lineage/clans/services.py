@@ -36,7 +36,7 @@ def get_user_lead_clans(account_logins):
     if clan_name_source == 'clan_data':
         # Name and leader logic is in clan_data
         sql = f"""
-            SELECT C.clan_id, C.clan_name, C.clan_level, P.char_name AS leader_name
+            SELECT C.clan_id, C.clan_name, C.clan_level, P.char_name AS leader_name, P.{char_id_col} AS leader_id
             FROM clan_data C
             INNER JOIN characters P ON P.{char_id_col} = C.leader_id
             WHERE P.account_name IN ({placeholders})
@@ -44,7 +44,7 @@ def get_user_lead_clans(account_logins):
     else:
         # Name and leader logic usually in clan_subpledges
         sql = f"""
-            SELECT C.clan_id, S.name AS clan_name, C.clan_level, P.char_name AS leader_name
+            SELECT C.clan_id, S.name AS clan_name, C.clan_level, P.char_name AS leader_name, P.{char_id_col} AS leader_id
             FROM clan_data C
             INNER JOIN clan_subpledges S ON S.clan_id = C.clan_id AND S.type = '0'
             INNER JOIN characters P ON P.{char_id_col} = S.leader_id
@@ -58,6 +58,39 @@ def get_user_lead_clans(account_logins):
         import logging
         logging.getLogger(__name__).error(f"Error fetching user clans: {e}")
         return []
+
+def get_user_characters(account_logins):
+    """
+    Returns a list of characters belonging to the provided accounts using the primary LineageServices.find_chars method.
+    """
+    if not account_logins:
+        return []
+
+    from utils.dynamic_import import get_query_class
+    LineageServices = get_query_class("LineageServices")
+    
+    if not LineageServices:
+        return []
+
+    all_characters = []
+    
+    for login in account_logins:
+        try:
+            personagens = LineageServices.find_chars(login)
+            if personagens:
+                for char in personagens:
+                    all_characters.append({
+                        'char_id': char['obj_Id'],
+                        'char_name': char['char_name'],
+                        'account_name': char.get('account_name', login),
+                        'level': char.get('base_level', '-') or 1,
+                        'clan_id': char.get('clanid', 0)
+                    })
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).error(f"Error fetching user characters for login {login}: {e}")
+            
+    return all_characters
 
 def get_clan_basic_info(clan_id):
     """

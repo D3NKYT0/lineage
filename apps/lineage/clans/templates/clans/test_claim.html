@@ -1,0 +1,117 @@
+{% extends "layouts/base.html" %}
+{% load i18n widget_tweaks %}
+
+{% block extrahead %}
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+<style>
+    .dashboard-bg {
+        background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+        color: #f8f9fa;
+        padding: 50px 0;
+        min-height: 100vh;
+    }
+
+    .dashboard-card {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(18, 18, 32, 0.95));
+        border: 2px solid #0dcaf0;
+        border-radius: 16px;
+        box-shadow: 0 0 30px rgba(13, 202, 240, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.5);
+        color: #f8f9fa;
+    }
+
+    .action-btn {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        border-radius: 25px;
+        color: white;
+        font-weight: 600;
+        padding: 12px 30px;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+    }
+
+    .form-control-glass {
+        background: rgba(0, 0, 0, 0.4) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: #fff !important;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+    .form-control-glass:focus {
+        background: rgba(0, 0, 0, 0.6) !important;
+        border-color: #0dcaf0 !important;
+        box-shadow: 0 0 10px rgba(13, 202, 240, 0.5) !important;
+        color: #fff !important;
+    }
+
+    select.form-control-glass option {
+        background: #121220;
+        color: #fff;
+    }
+
+    .action-btn-danger {
+        background: linear-gradient(45deg, #dc3545, #fd7e14);
+        border: none;
+        border-radius: 25px;
+        color: white;
+        font-weight: 600;
+        padding: 10px 25px;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .action-btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(220, 53, 69, 0.6);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-bg">
+    <div class="container text-center pt-5">
+        <h2 class="mx-auto text-warning mb-4" style="font-family: 'Orbitron', sans-serif;"><i
+                class="fas fa-hammer me-2"></i>{% trans "Painel de Testes (Dev Mode)" %}</h2>
+        <div class="dashboard-card p-5 mx-auto" style="max-width: 500px;">
+            <p class="lead mb-4">Reivindique a liderança de um clã para testes locais no Dashboard.</p>
+            <form method="post" action="{% url 'clans:test_claim' %}">
+                {% csrf_token %}
+                <div class="mb-4 text-start">
+                    <label class="form-label text-warning fw-bold">{% trans "Personagem que será o Líder" %}</label>
+                    <select name="char_id" class="form-select form-control-glass border-warning fs-5" required>
+                        <option value="" disabled selected>-- Escolha um Personagem --</option>
+                        {% for char in characters %}
+                        <option value="{{ char.char_id }}">{{ char.char_name }} (Lv. {{ char.level }})</option>
+                        {% empty %}
+                        <option value="" disabled>Nenhum personagem encontrado nas suas contas.</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-4 text-start">
+                    <label class="form-label text-info fw-bold">{% trans "ID do Clã para Reivindicar" %}</label>
+                    <input type="number" name="clan_id"
+                        class="form-control form-control-glass border-info text-center fs-3" required
+                        placeholder="Ex: 1">
+                </div>
+                <div class="d-grid gap-3">
+                    <button type="submit" class="action-btn w-100 fs-5">
+                        <i class="fas fa-crown me-2"></i>{% trans "Forçar Liderança" %}
+                    </button>
+                    <a href="{% url 'clans:dashboard' %}" class="action-btn-danger w-100 fs-6 text-center">
+                        <i class="fas fa-arrow-left me-2"></i>{% trans "Cancelar e Voltar" %}
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

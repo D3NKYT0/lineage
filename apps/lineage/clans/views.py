@@ -7,13 +7,62 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import ClanProfile, RecruitmentApplication
 from .forms import ClanProfileForm, RecruitmentApplicationForm
-from .services import get_user_lead_clans, get_clan_basic_info
+from .services import get_user_lead_clans, get_clan_basic_info, get_user_characters
 from apps.lineage.server.database import LineageDB
 from apps.lineage.server.services.account_context import get_available_accounts
 from utils.dynamic_import import get_query_class
 from utils.render_theme_page import render_theme_page
 
 LineageStats = get_query_class("LineageStats")
+
+class TestClaimClanView(LoginRequiredMixin, View):
+    def get(self, request):
+        accounts = get_available_accounts(request.user)
+        logins = [acc.get('login') for acc in accounts if acc.get('login')]
+        characters = get_user_characters(logins)
+        
+        return render_theme_page(request, 'clans', 'test_claim.html', {
+            'title': _('Painel de Testes - Clãs'),
+            'characters': characters
+        })
+        
+    def post(self, request):
+        clan_id = request.POST.get('clan_id')
+        char_id = request.POST.get('char_id')
+        
+        if clan_id and char_id:
+            accounts = get_available_accounts(request.user)
+            logins = [acc.get('login') for acc in accounts if acc.get('login')]
+            characters = get_user_characters(logins)
+            
+            # Valida se o char pertence mesmo às contas do usuário
+            selected_char = next((c for c in characters if str(c.get('char_id')) == str(char_id)), None)
+            
+            if selected_char:
+                game_data = get_clan_basic_info(clan_id)
+                clan_name = game_data.get('clan_name', f'Test Clan {clan_id}') if game_data else f'Test Clan {clan_id}'
+                clan_level = game_data.get('level', 1) if game_data else 1
+                
+                # Store mock data in session
+                mock_clans = request.session.get('mock_lead_clans', [])
+                
+                if not any(str(c.get('clan_id')) == str(clan_id) and str(c.get('leader_id')) == str(char_id) for c in mock_clans):
+                    mock_clans.append({
+                        'clan_id': int(clan_id),
+                        'clan_name': clan_name,
+                        'level': clan_level,
+                        'leader_id': selected_char.get('char_id'),
+                        'leader_name': selected_char.get('char_name')
+                    })
+                    request.session['mock_lead_clans'] = mock_clans
+                    
+                messages.success(request, _(f"Liderança do clã '{clan_name}' (ID: {clan_id}) reivindicada com o personagem '{selected_char.get('char_name')}' para testes!"))
+            else:
+                messages.error(request, _("Personagem inválido para sua conta."))
+        else:
+            messages.error(request, _("ID do Clã ou Personagem não informados."))
+            
+        return redirect('clans:dashboard')
 
 class ClanListView(View):
     def get(self, request):
@@ -47,6 +96,10 @@ class ClanDashboardView(LoginRequiredMixin, View):
         logins = [acc.get('login') for acc in accounts if acc.get('login')]
         user_clans = get_user_lead_clans(logins)
         
+        # Inject mock clans from session for testing
+        mock_clans = request.session.get('mock_lead_clans', [])
+        user_clans.extend(mock_clans)
+        
         current_clan_id = request.GET.get('clan_id')
         selected_clan = None
         profile = None
@@ -70,7 +123,7 @@ class ClanDashboardView(LoginRequiredMixin, View):
         context = {
             'title': _("Painel do Clã"),
             'user_clans': user_clans,
-            'selected_clan': selected_clan,
+            'selected_clan_id': int(selected_clan['clan_id']) if selected_clan else None,
             'profile': profile,
             'form': form,
             'applications': applications,
@@ -81,6 +134,10 @@ class ClanDashboardView(LoginRequiredMixin, View):
         accounts = get_available_accounts(request.user)
         logins = [acc.get('login') for acc in accounts if acc.get('login')]
         user_clans = get_user_lead_clans(logins)
+        
+        # Inject mock clans from session for testing
+        mock_clans = request.session.get('mock_lead_clans', [])
+        user_clans.extend(mock_clans)
         
         current_clan_id = request.POST.get('clan_id')
         selected_clan = next((c for c in user_clans if str(c.get('clan_id')) == str(current_clan_id)), None)
@@ -140,15 +197,37 @@ class ApplyToClanView(LoginRequiredMixin, View):
 class ProcessApplicationView(LoginRequiredMixin, View):
     def post(self, request, pk, action):
         app = get_object_or_404(RecruitmentApplication, pk=pk)
+        leader_char_id = request.POST.get('leader_char_id')
+        form_clan_id = request.POST.get('clan_id')
         
-        # Segurança: Verificar se usuario logado é mesmo lider do clan app.clan_profile.clan_id
+        if not form_clan_id or str(form_clan_id) != str(app.clan_profile.clan_id):
+            messages.error(request, _("Dados de clã inválidos."))
+            return redirect('clans:dashboard')
+            
+        accounts = get_available_accounts(request.user)
+        logins = [acc.get('login') for acc in accounts if acc.get('login')]
+        user_clans = get_user_lead_clans(logins)
         
-        if action == 'accept':
+        # Inject mock clans from session for testing
+        mock_clans = request.session.get('mock_lead_clans', [])
+        user_clans.extend(mock_clans)
+        
+        # Security: Verify if the user owns the character that leads this clan
+        is_leader = any(str(c.get('clan_id')) == str(form_clan_id) and str(c.get('leader_id')) == str(leader_char_id) for c in user_clans)
+        
+        if not is_leader:
+            messages.error(request, _("Você não tem permissão para processar esta inscrição com este personagem."))
+            return redirect('clans:dashboard')
+        
+        if action == 'approve':
             # Implementar logica Híbrida: Atualizar o Lineage DB (char.clanid = clan_id)
-            pass
+            # Todo: update DB directly if character is offline, otherwise error message.
+            app.status = 'APPROVED'
+            app.save()
+            messages.success(request, _("Inscrição aprovada com sucesso! (Recurso híbrido de convite pendente)"))
         elif action == 'reject':
             app.status = 'REJECTED'
             app.save()
             messages.info(request, _("Inscrição rejeitada."))
             
-        return redirect('clans:dashboard')
+        return redirect(f"{reverse('clans:dashboard')}?clan_id={form_clan_id}")
