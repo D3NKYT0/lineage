@@ -5,15 +5,16 @@
     <div class="user-card d-flex d-md-none align-items-center justify-content-between justify-content-md-center pb-4">
       <div class="d-flex align-items-center">
         <div class="avatar-lg me-4">
-          <div class="avatar-container" style="width: 4.5rem; height: 4.5rem; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255, 255, 255, 0.3); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); position: relative;">
+          <div class="avatar-container"
+            style="width: 4.5rem; height: 4.5rem; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255, 255, 255, 0.3); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); position: relative;">
             {% if user.avatar %}
-              <img src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}" 
-                   alt="User-Profile-Image" 
-                   style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+            <img
+              src="{% url 'serve_files:serve_decrypted_file_with_timestamp' 'home' 'user' 'avatar' user.uuid timestamp %}"
+              alt="User-Profile-Image"
+              style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
             {% else %}
-              <img alt="Image placeholder" 
-                   src="{% static 'assets/img/team/generic_user.png' %}"
-                   style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
+            <img alt="Image placeholder" src="{% static 'assets/img/team/generic_user.png' %}"
+              style="width: 100%; height: 100%; object-fit: cover; background-color: #cbd5e1;" />
             {% endif %}
           </div>
         </div>
@@ -45,9 +46,9 @@
         <a href="{% url 'index' %}" class="nav-link d-flex align-items-center">
           <span class="sidebar-icon">
             {% if site_logo %}
-              <img src="{{ site_logo.image.url }}" height="60" alt="{{ site_logo.name }}">
+            <img src="{{ site_logo.image.url }}" height="60" alt="{{ site_logo.name }}">
             {% else %}
-              <img src="{% static 'assets/img/l2_logo.png' %}" height="60" alt="Lineage2 Logo" />
+            <img src="{% static 'assets/img/l2_logo.png' %}" height="60" alt="Lineage2 Logo" />
             {% endif %}
           </span>
         </a>
@@ -57,7 +58,8 @@
         <a href="{% url 'dashboard' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z"
+                clip-rule="evenodd"></path>
               <path d="M10 6a4 4 0 11-4 4 4 4 0 014-4z"></path>
             </svg>
           </span>
@@ -71,7 +73,9 @@
         <a href="{% url 'calendary:calendar' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd"
+                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                clip-rule="evenodd"></path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Calendário" %}</span>
@@ -84,16 +88,16 @@
         <a href="{% url 'roadmap:index' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="5" width="14" height="10" rx="2" fill="currentColor"/>
-              <rect x="7" y="7" width="2" height="6" rx="1" fill="#fff"/>
-              <rect x="11" y="7" width="2" height="6" rx="1" fill="#fff"/>
+              <rect x="3" y="5" width="14" height="10" rx="2" fill="currentColor" />
+              <rect x="7" y="7" width="2" height="6" rx="1" fill="#fff" />
+              <rect x="11" y="7" width="2" height="6" rx="1" fill="#fff" />
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Roadmap" %}</span>
         </a>
       </li>
       {% endif %}
-      
+
       {% if user.is_authenticated %}
 
       {% comment %} Verifica se há links ativos na seção de compras/vendas {% endcomment %}
@@ -125,7 +129,9 @@
         <a href="{% url 'shop:purchase_history' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 2a1 1 0 000 2h8a1 1 0 100-2H6zM3 6a1 1 0 011-1h12a1 1 0 011 1v9a2 2 0 01-2 2H5a2 2 0 01-2-2V6zm2 1v8h10V7H5zm2 2h6a1 1 0 110 2H7a1 1 0 110-2z"></path>
+              <path
+                d="M6 2a1 1 0 000 2h8a1 1 0 100-2H6zM3 6a1 1 0 011-1h12a1 1 0 011 1v9a2 2 0 01-2 2H5a2 2 0 01-2-2V6zm2 1v8h10V7H5zm2 2h6a1 1 0 110 2H7a1 1 0 110-2z">
+              </path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Histórico de Compras" %}</span>
@@ -139,8 +145,12 @@
         <a href="{% url 'auction:listar_leiloes' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"></path>
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"></path>
+              <path
+                d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z">
+              </path>
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z"
+                clip-rule="evenodd"></path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Leilões" %}</span>
@@ -160,7 +170,9 @@
         <a href="{% url 'marketplace:list' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"></path>
+              <path
+                d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z">
+              </path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Marketplace" %}</span>
@@ -181,13 +193,15 @@
         <a href="{% url 'games:bag_dashboard' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 4a3 3 0 016 0h1a2 2 0 012 2v9a3 3 0 01-3 3H5a3 3 0 01-3-3V6a2 2 0 012-2h1zm3-1a1 1 0 00-1 1h2a1 1 0 00-1-1zm0 4a1 1 0 000 2h4a1 1 0 100-2H8z"></path>
+              <path
+                d="M5 4a3 3 0 016 0h1a2 2 0 012 2v9a3 3 0 01-3 3H5a3 3 0 01-3-3V6a2 2 0 012-2h1zm3-1a1 1 0 00-1 1h2a1 1 0 00-1-1zm0 4a1 1 0 000 2h4a1 1 0 100-2H8z">
+              </path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Minha Bag" %}</span>
         </a>
       </li>
-      {% endif %}      
+      {% endif %}
 
       {% is_resource_active 'games_module' as games_active %}
       {% if games_active %}
@@ -196,9 +210,9 @@
           data-bs-target="#submenu-games">
           <span>
             <span class="sidebar-icon">
-              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M21 8h-4.184a3.001 3.001 0 00-5.632 0H7a5 5 0 000 10h1v-2H7a3 3 0 010-6h4.184a3.001 3.001 0 005.632 0H21a1 1 0 000-2zM9 13H8v1a1 1 0 11-2 0v-1H5a1 1 0 110-2h1v-1a1 1 0 112 0v1h1a1 1 0 110 2zm6.5-1.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm2.5 2a1 1 0 100-2 1 1 0 000 2z"/>
+              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M21 8h-4.184a3.001 3.001 0 00-5.632 0H7a5 5 0 000 10h1v-2H7a3 3 0 010-6h4.184a3.001 3.001 0 005.632 0H21a1 1 0 000-2zM9 13H8v1a1 1 0 11-2 0v-1H5a1 1 0 110-2h1v-1a1 1 0 112 0v1h1a1 1 0 110 2zm6.5-1.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm2.5 2a1 1 0 100-2 1 1 0 000 2z" />
               </svg>
             </span>
             {% trans "Games" %}
@@ -212,9 +226,10 @@
             </svg>
           </span>
         </span>
-        <div class="multi-level collapse {% if 'games' in parent %}show{% endif %}" role="list" id="submenu-games" aria-expanded="false">
+        <div class="multi-level collapse {% if 'games' in parent %}show{% endif %}" role="list" id="submenu-games"
+          aria-expanded="false">
           <ul class="flex-column nav">
-      
+
             {% is_resource_active 'roulette' as roulette_active %}
             {% if roulette_active %}
             <li class="nav-item {% if 'top-level' in segment %}active{% endif %}">
@@ -259,19 +274,20 @@
               </a>
             </li>
             {% endif %}
-      
+
           </ul>
         </div>
-      </li>  
+      </li>
       {% endif %}
-      
+
       {% is_resource_active 'battle_pass' as battle_pass_active %}
       {% if battle_pass_active %}
       <li class="nav-item {% if 'battle-pass' in segment %}active{% endif %}">
         <a href="{% url 'games:battle_pass' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 3a2 2 0 012-2h8a2 2 0 012 2v1H4V3zm0 3h12v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm6 2a1 1 0 100 2 1 1 0 000-2zm-2 3a1 1 0 100 2h4a1 1 0 100-2H8z" />
+              <path
+                d="M4 3a2 2 0 012-2h8a2 2 0 012 2v1H4V3zm0 3h12v10a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm6 2a1 1 0 100 2 1 1 0 000-2zm-2 3a1 1 0 100 2h4a1 1 0 100-2H8z" />
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Battle Pass" %}</span>
@@ -285,7 +301,8 @@
         <a href="{% url 'games:daily_bonus_dashboard' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 2a1 1 0 011 1v1h2V3a1 1 0 112 0v1h1a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h1V3a1 1 0 112 0v1h2V3a1 1 0 011-1zM7 9a1 1 0 100 2h6a1 1 0 100-2H7z" />
+              <path
+                d="M10 2a1 1 0 011 1v1h2V3a1 1 0 112 0v1h1a2 2 0 012 2v9a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h1V3a1 1 0 112 0v1h2V3a1 1 0 011-1zM7 9a1 1 0 100 2h6a1 1 0 100-2H7z" />
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Bônus Diário" %}</span>
@@ -309,13 +326,14 @@
         <a href="{% url 'faq:faq_list' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z"
+                clip-rule="evenodd"></path>
               <path d="M10 6a4 4 0 11-4 4 4 4 0 014-4z"></path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Ajuda (FAQ)" %}</span>
         </a>
-      </li> 
+      </li>
       {% endif %}
 
       <li class="nav-item {% if 'ai_assistant' in segment or 'chatbot' in segment %}active{% endif %}">
@@ -323,7 +341,9 @@
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path>
-              <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"></path>
+              <path
+                d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z">
+              </path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Assistente de IA" %}</span>
@@ -336,13 +356,14 @@
         <a href="{% url 'news:index' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z"
+                clip-rule="evenodd"></path>
               <path d="M10 6a4 4 0 11-4 4 4 4 0 014-4z"></path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Notícias" %}</span>
         </a>
-      </li> 
+      </li>
       {% endif %}
 
       {% is_resource_active 'message_module' as message_active %}
@@ -351,13 +372,14 @@
         <a href="{% url 'message:index' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z"
+                clip-rule="evenodd"></path>
               <path d="M10 6a4 4 0 11-4 4 4 4 0 014-4z"></path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Mensagens" %}</span>
         </a>
-      </li> 
+      </li>
       {% endif %}
 
       {% is_resource_active 'solicitation_module' as solicitation_active %}
@@ -366,13 +388,14 @@
         <a href="{% url 'solicitation:solicitation_list' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z"
+                clip-rule="evenodd"></path>
               <path d="M10 6a4 4 0 11-4 4 4 4 0 014-4z"></path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Solicitações" %}</span>
         </a>
-      </li> 
+      </li>
       {% endif %}
 
       {% is_resource_active 'downloads_module' as downloads_active %}
@@ -381,7 +404,9 @@
         <a href="{% url 'downloads:internal_download_list' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd"
+                d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z"
+                clip-rule="evenodd"></path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Downloads" %}</span>
@@ -405,12 +430,14 @@
           data-bs-target="#submenu-tops">
           <span>
             <span class="sidebar-icon">
-              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 2a1 1 0 00-1 1v2a4 4 0 004 4h2a4 4 0 004-4V3a1 1 0 00-1-1H6zM4 5a2 2 0 01-2-2h2v2zm12-2h2a2 2 0 01-2 2V3z"></path>
-                <path fill-rule="evenodd" d="M4 13a6 6 0 0012 0H4zm6 3a3 3 0 003-3H7a3 3 0 003 3z" clip-rule="evenodd"></path>
+              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M6 2a1 1 0 00-1 1v2a4 4 0 004 4h2a4 4 0 004-4V3a1 1 0 00-1-1H6zM4 5a2 2 0 01-2-2h2v2zm12-2h2a2 2 0 01-2 2V3z">
+                </path>
+                <path fill-rule="evenodd" d="M4 13a6 6 0 0012 0H4zm6 3a3 3 0 003-3H7a3 3 0 003 3z" clip-rule="evenodd">
+                </path>
               </svg>
-            </span>            
+            </span>
             {% trans "Tops" %}
             <span class="sidebar-text"></span>
           </span>
@@ -422,7 +449,8 @@
             </svg>
           </span>
         </span>
-        <div class="multi-level collapse {% if 'tops' in parent %}show{% endif %}" role="list" id="submenu-tops" aria-expanded="false">
+        <div class="multi-level collapse {% if 'tops' in parent %}show{% endif %}" role="list" id="submenu-tops"
+          aria-expanded="false">
           <ul class="flex-column nav">
 
             <li class="nav-item {% if 'top-level' in segment %}active{% endif %}">
@@ -430,25 +458,25 @@
                 <span class="sidebar-text">{% trans "Top Level" %}</span>
               </a>
             </li>
-            
+
             <li class="nav-item {% if 'top-pk' in segment %}active{% endif %}">
               <a class="nav-link" href="{% url 'server:top_pk' %}">
                 <span class="sidebar-text">{% trans "Top PK" %}</span>
               </a>
             </li>
-            
+
             <li class="nav-item {% if 'top-pk' in segment %}active{% endif %}">
               <a class="nav-link" href="{% url 'server:top_pvp' %}">
                 <span class="sidebar-text">{% trans "Top PVP" %}</span>
               </a>
             </li>
-            
+
             <li class="nav-item {% if 'top-adena' in segment %}active{% endif %}">
               <a class="nav-link" href="{% url 'server:top_adena' %}">
                 <span class="sidebar-text">{% trans "Top Adena" %}</span>
               </a>
             </li>
-            
+
             <li class="nav-item {% if 'top-clans' in segment %}active{% endif %}">
               <a class="nav-link" href="{% url 'server:top_clans' %}">
                 <span class="sidebar-text">{% trans "Top Clans" %}</span>
@@ -460,7 +488,7 @@
                 <span class="sidebar-text">{% trans "Top Raid Boss" %}</span>
               </a>
             </li>
-            
+
             <li class="nav-item {% if 'top-clans' in segment %}active{% endif %}">
               <a class="nav-link" href="{% url 'server:top_online' %}">
                 <span class="sidebar-text">{% trans "Top Online" %}</span>
@@ -469,9 +497,11 @@
 
             {% get_custom_tops as custom_tops %}
             {% for ct in custom_tops %}
-            <li class="nav-item {% if request.resolver_match and request.resolver_match.url_name == 'custom_top' and request.resolver_match.kwargs.slug == ct.slug %}active{% endif %}">
+            <li
+              class="nav-item {% if request.resolver_match and request.resolver_match.url_name == 'custom_top' and request.resolver_match.kwargs.slug == ct.slug %}active{% endif %}">
               <a class="nav-link" href="{% url 'server:custom_top' ct.slug %}">
-                <span class="sidebar-text">{{ ct.title }}<span class="custom-top-tag ms-1" title="{% trans 'Ranking exclusivo' %}">Exclusivo</span></span>
+                <span class="sidebar-text">{{ ct.title }}<span class="custom-top-tag ms-1"
+                    title="{% trans 'Ranking exclusivo' %}">Exclusivo</span></span>
               </a>
             </li>
             {% endfor %}
@@ -481,6 +511,20 @@
       </li>
       {% endif %}
 
+      <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
+
+      <li class="nav-item {% if 'clans' in segment %}active{% endif %}">
+        <a href="{% url 'clans:list' %}" class="nav-link">
+          <span class="sidebar-icon">
+            <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+          </span>
+          <span class="sidebar-text">{% trans "Recrutamento de Clãs" %}</span>
+        </a>
+      </li>
+
       {% is_resource_active 'server_module' as server_active %}
       {% if server_active %}
       <li class="nav-item">
@@ -488,10 +532,12 @@
           data-bs-target="#submenu-heroes">
           <span>
             <span class="sidebar-icon">
-              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 2a1 1 0 00-1 1v2a4 4 0 004 4h2a4 4 0 004-4V3a1 1 0 00-1-1H6zM4 5a2 2 0 01-2-2h2v2zm12-2h2a2 2 0 01-2 2V3z"></path>
-                <path fill-rule="evenodd" d="M4 13a6 6 0 0012 0H4zm6 3a3 3 0 003-3H7a3 3 0 003 3z" clip-rule="evenodd"></path>
+              <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M6 2a1 1 0 00-1 1v2a4 4 0 004 4h2a4 4 0 004-4V3a1 1 0 00-1-1H6zM4 5a2 2 0 01-2-2h2v2zm12-2h2a2 2 0 01-2 2V3z">
+                </path>
+                <path fill-rule="evenodd" d="M4 13a6 6 0 0012 0H4zm6 3a3 3 0 003-3H7a3 3 0 003 3z" clip-rule="evenodd">
+                </path>
               </svg>
             </span>
             {% trans "Heroes" %}
@@ -505,47 +551,52 @@
             </svg>
           </span>
         </span>
-        <div class="multi-level collapse {% if 'heroes' in parent %}show{% endif %}" role="list" id="submenu-heroes" aria-expanded="false">
+        <div class="multi-level collapse {% if 'heroes' in parent %}show{% endif %}" role="list" id="submenu-heroes"
+          aria-expanded="false">
           <ul class="flex-column nav">
-      
+
             <li class="nav-item {% if 'top-olympiad' in segment %}active{% endif %}">
               <a class="nav-link" href="{% url 'server:olympiad_ranking' %}">
                 <span class="sidebar-text">{% trans "Top Olympiad" %}</span>
               </a>
             </li>
-            
+
             <li class="nav-item {% if 'top-heroes-all' in segment %}active{% endif %}">
               <a class="nav-link" href="{% url 'server:olympiad_all_heroes' %}">
                 <span class="sidebar-text">{% trans "All Heroes" %}</span>
               </a>
             </li>
-            
+
             <li class="nav-item {% if 'top-heroes-current' in segment %}active{% endif %}">
               <a class="nav-link" href="{% url 'server:olympiad_current_heroes' %}">
                 <span class="sidebar-text">{% trans "Current Heroes" %}</span>
               </a>
             </li>
-      
+
           </ul>
         </div>
-      </li>      
+      </li>
 
       <li class="nav-item {% if 'siege' in segment %}active{% endif %}">
         <a href="{% url 'server:siege_ranking' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 2c.55 0 1 .45 1 1v3h3c.55 0 1 .45 1 1s-.45 1-1 1h-3v3c0 .55-.45 1-1 1s-1-.45-1-1v-3H6c-.55 0-1-.45-1-1s.45-1 1-1h3V5c0-.55.45-1 1-1z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd"
+                d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 2c.55 0 1 .45 1 1v3h3c.55 0 1 .45 1 1s-.45 1-1 1h-3v3c0 .55-.45 1-1 1s-1-.45-1-1v-3H6c-.55 0-1-.45-1-1s.45-1 1-1h3V5c0-.55.45-1 1-1z"
+                clip-rule="evenodd"></path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Castle Siege" %}</span>
         </a>
       </li>
-      
+
       <li class="nav-item {% if 'boss-jewel' in segment %}active{% endif %}">
         <a href="{% url 'server:boss_jewel_locations' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 2c.55 0 1 .45 1 1v3h3c.55 0 1 .45 1 1s-.45 1-1 1h-3v3c0 .55-.45 1-1 1s-1-.45-1-1v-3H6c-.55 0-1-.45-1-1s.45-1 1-1h3V5c0-.55.45-1 1-1z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd"
+                d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 2c.55 0 1 .45 1 1v3h3c.55 0 1 .45 1 1s-.45 1-1 1h-3v3c0 .55-.45 1-1 1s-1-.45-1-1v-3H6c-.55 0-1-.45-1-1s.45-1 1-1h3V5c0-.55.45-1 1-1z"
+                clip-rule="evenodd"></path>
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Boss Jewel Locations" %}</span>
@@ -556,7 +607,9 @@
         <a href="{% url 'server:grandboss' %}" class="nav-link">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c.55 0 1 .45 1 1v5h4c.55 0 1 .45 1 1s-.45 1-1 1h-5V6c0-.55.45-1 1-1z" clip-rule="evenodd"/>
+              <path fill-rule="evenodd"
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c.55 0 1 .45 1 1v5h4c.55 0 1 .45 1 1s-.45 1-1 1h-5V6c0-.55.45-1 1-1z"
+                clip-rule="evenodd" />
             </svg>
           </span>
           <span class="sidebar-text">{% trans "Grand Boss Status" %}</span>
@@ -569,7 +622,8 @@
       {% is_resource_active 'accountancy_module' as accountancy_active %}
       {% is_resource_active 'reports_module' as reports_active %}
       {% is_resource_active 'server_module' as server_active %}
-      {% comment %} O separador aparece se houver pelo menos um recurso ativo OU se houver links que não dependem de recursos (Logs) {% endcomment %}
+      {% comment %} O separador aparece se houver pelo menos um recurso ativo OU se houver links que não dependem de
+      recursos (Logs) {% endcomment %}
       {% if accountancy_active or reports_active or server_active %}
       <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
       {% endif %}
@@ -587,7 +641,7 @@
           </span>
           <span class="sidebar-text">{% trans "Dashboard Contábil" %}</span>
         </a>
-      </li>   
+      </li>
       {% endif %}
 
       {% is_resource_active 'reports_module' as reports_active %}
@@ -624,7 +678,8 @@
 
       {% comment %} Verifica se há links ativos na seção de auditoria/logs {% endcomment %}
       {% is_resource_active 'auditor_module' as auditor_active %}
-      {% comment %} O separador aparece se houver auditoria ativa OU se for superuser (pois os logs sempre aparecem para superusers) {% endcomment %}
+      {% comment %} O separador aparece se houver auditoria ativa OU se for superuser (pois os logs sempre aparecem para
+      superusers) {% endcomment %}
       {% if auditor_active or request.user.is_superuser %}
       <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
       {% endif %}
@@ -644,13 +699,14 @@
         </a>
       </li>
       {% endif %}
-      
+
       <!-- Logs Info -->
       <li class="nav-item">
         <a href="{% url 'log_info_dashboard' %}" class="nav-link d-flex align-items-center">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z"
+                clip-rule="evenodd"></path>
               <path fill-rule="evenodd" d="M9 6h2v8H9z" clip-rule="evenodd"></path>
               <path fill-rule="evenodd" d="M9 10h2v2H9z" clip-rule="evenodd"></path>
             </svg>
@@ -664,7 +720,8 @@
         <a href="{% url 'log_error_dashboard' %}" class="nav-link d-flex align-items-center">
           <span class="sidebar-icon">
             <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M10 2a8 8 0 11-8 8 8 8 0 018-8zm0 2a6 6 0 100 12 6 6 0 000-12z"
+                clip-rule="evenodd"></path>
               <path fill-rule="evenodd" d="M9 6h2v8H9z" clip-rule="evenodd"></path>
               <path fill-rule="evenodd" d="M9 10h2v2H9z" clip-rule="evenodd"></path>
             </svg>
@@ -681,11 +738,14 @@
       <!-- Status de Atualização (apenas para staffs) -->
       <!-- Indicador de atualização disponível -->
       <li class="nav-item" id="update-notification-item" style="display: none;">
-        <button type="button" class="nav-link d-flex align-items-center justify-content-center w-100 border-0 bg-transparent text-warning" 
-                data-bs-toggle="modal" data-bs-target="#updateModal" style="cursor: pointer;">
+        <button type="button"
+          class="nav-link d-flex align-items-center justify-content-center w-100 border-0 bg-transparent text-warning"
+          data-bs-toggle="modal" data-bs-target="#updateModal" style="cursor: pointer;">
           <span class="sidebar-icon me-2">
             <svg class="icon icon-xs" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd"
+                d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                clip-rule="evenodd"></path>
             </svg>
           </span>
           <span class="sidebar-text text-warning small">
@@ -693,13 +753,16 @@
           </span>
         </button>
       </li>
-      
+
       <!-- Indicador de versão atualizada -->
       <li class="nav-item" id="version-updated-item" style="display: none;">
         <div class="nav-link d-flex align-items-center justify-content-center w-100">
           <span class="sidebar-icon me-2">
-            <svg class="icon icon-xs text-success" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            <svg class="icon icon-xs text-success" fill="currentColor" viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"></path>
             </svg>
           </span>
           <span class="sidebar-text text-success small">
@@ -731,8 +794,11 @@
     <div class="modal-content bg-gray-800 text-white">
       <div class="modal-header border-gray-700">
         <h5 class="modal-title" id="updateModalLabel">
-          <svg class="icon icon-sm me-2 text-warning" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+          <svg class="icon icon-sm me-2 text-warning" fill="currentColor" viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+              clip-rule="evenodd"></path>
           </svg>
           Atualização Disponível
         </h5>
@@ -743,20 +809,20 @@
           <strong>Versão Atual:</strong> <span id="modal-current-version">v{{ version }}</span><br>
           <strong>Nova Versão:</strong> <span id="modal-latest-version" class="text-warning">-</span>
         </div>
-        
+
         <h6 class="mb-3">Como Atualizar o Projeto:</h6>
-        
+
         <div class="mb-4">
           <h6 class="text-primary mb-2">1. Fazer Backup (Recomendado)</h6>
           <pre class="bg-gray-900 p-3 rounded text-white small"><code>cd /var/pdl/lineage
 bash setup/backup.sh</code></pre>
         </div>
-        
+
         <div class="mb-4">
           <h6 class="text-primary mb-2">2. Atualizar o Código</h6>
           <pre class="bg-gray-900 p-3 rounded text-white small"><code>git pull origin main</code></pre>
         </div>
-        
+
         <div class="mb-4">
           <h6 class="text-primary mb-2">3. Executar Build</h6>
           <pre class="bg-gray-900 p-3 rounded text-white small"><code>bash setup/build.sh</code></pre>
@@ -765,27 +831,29 @@ bash setup/backup.sh</code></pre>
             <code>bash install.sh build</code>
           </p>
         </div>
-        
+
         <div class="mb-3">
           <h6 class="text-primary mb-2">4. Verificar Status</h6>
           <pre class="bg-gray-900 p-3 rounded text-white small"><code>docker compose ps</code></pre>
         </div>
-        
+
         <div class="alert alert-warning mt-4">
           <strong>⚠️ Importante:</strong>
           <ul class="mb-0 mt-2 small">
             <li>Certifique-se de que todos os containers estão rodando corretamente após a atualização</li>
-            <li>Verifique se as migrações foram aplicadas: <code>docker compose exec site_http python manage.py showmigrations</code></li>
+            <li>Verifique se as migrações foram aplicadas:
+              <code>docker compose exec site_http python manage.py showmigrations</code></li>
             <li>Em caso de problemas, você pode restaurar o backup: <code>bash setup/backup.sh restore</code></li>
           </ul>
         </div>
-        
+
         <div id="release-notes" class="mt-3" style="display: none;">
           <h6 class="mb-2">Notas da Versão:</h6>
-          <div class="bg-gray-900 p-3 rounded text-white small" id="release-notes-content" style="max-height: 200px; overflow-y: auto;">
+          <div class="bg-gray-900 p-3 rounded text-white small" id="release-notes-content"
+            style="max-height: 200px; overflow-y: auto;">
           </div>
         </div>
-        
+
         <div class="mt-3">
           <a href="#" id="release-link" target="_blank" class="btn btn-sm btn-outline-primary">
             Ver Release no GitHub
@@ -800,114 +868,114 @@ bash setup/backup.sh</code></pre>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Verificar atualização apenas para staffs
-  {% if request.user.is_staff %}
-  fetch('{% url "check_version_update" %}')
-    .then(response => response.json())
-    .then(data => {
-      const versionDisplay = document.getElementById('version-display');
-      const versionBadge = document.getElementById('version-check-badge');
-      const updateItem = document.getElementById('update-notification-item');
-      const updatedItem = document.getElementById('version-updated-item');
-      
-      if (data.has_update) {
-        // Mostrar botão de atualização
-        if (updateItem) {
-          updateItem.style.display = 'block';
-        }
-        
-        // Ocultar indicador de atualizado
-        if (updatedItem) {
-          updatedItem.style.display = 'none';
-        }
-        
-        // Atualizar texto do botão
-        const updateText = document.getElementById('update-text');
-        if (updateText) {
-          updateText.textContent = `Atualizar para v${data.latest_version}`;
-        }
-        
-        // Adicionar badge de atualização disponível na versão
-        if (versionBadge) {
-          versionBadge.innerHTML = '<span class="badge bg-warning text-dark" title="Nova versão disponível: v' + data.latest_version + '">!</span>';
-          versionBadge.style.display = 'inline';
-        }
-        
-        // Destacar versão atual
-        if (versionDisplay) {
-          versionDisplay.classList.add('text-warning');
-          versionDisplay.setAttribute('title', 'Nova versão disponível: v' + data.latest_version);
-        }
-        
-        // Configurar modal quando aberto
-        const updateModal = document.getElementById('updateModal');
-        if (updateModal) {
-          updateModal.addEventListener('show.bs.modal', function() {
-            // Atualizar informações no modal
-            const currentVersionEl = document.getElementById('modal-current-version');
-            const latestVersionEl = document.getElementById('modal-latest-version');
-            const releaseNotesEl = document.getElementById('release-notes');
-            const releaseNotesContentEl = document.getElementById('release-notes-content');
-            const releaseLinkEl = document.getElementById('release-link');
-            
-            if (currentVersionEl) currentVersionEl.textContent = `v${data.current_version}`;
-            if (latestVersionEl) latestVersionEl.textContent = `v${data.latest_version}`;
-            
-            if (data.release_notes && data.release_notes.trim()) {
-              if (releaseNotesEl) releaseNotesEl.style.display = 'block';
-              if (releaseNotesContentEl) {
-                // Converter markdown básico para HTML (simples)
-                let notes = data.release_notes
-                  .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                  .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                  .replace(/`(.*?)`/g, '<code>$1</code>')
-                  .replace(/\n/g, '<br>');
-                releaseNotesContentEl.innerHTML = notes;
+  document.addEventListener('DOMContentLoaded', function () {
+    // Verificar atualização apenas para staffs
+    {% if request.user.is_staff %}
+    fetch('{% url "check_version_update" %}')
+      .then(response => response.json())
+      .then(data => {
+        const versionDisplay = document.getElementById('version-display');
+        const versionBadge = document.getElementById('version-check-badge');
+        const updateItem = document.getElementById('update-notification-item');
+        const updatedItem = document.getElementById('version-updated-item');
+
+        if (data.has_update) {
+          // Mostrar botão de atualização
+          if (updateItem) {
+            updateItem.style.display = 'block';
+          }
+
+          // Ocultar indicador de atualizado
+          if (updatedItem) {
+            updatedItem.style.display = 'none';
+          }
+
+          // Atualizar texto do botão
+          const updateText = document.getElementById('update-text');
+          if (updateText) {
+            updateText.textContent = `Atualizar para v${data.latest_version}`;
+          }
+
+          // Adicionar badge de atualização disponível na versão
+          if (versionBadge) {
+            versionBadge.innerHTML = '<span class="badge bg-warning text-dark" title="Nova versão disponível: v' + data.latest_version + '">!</span>';
+            versionBadge.style.display = 'inline';
+          }
+
+          // Destacar versão atual
+          if (versionDisplay) {
+            versionDisplay.classList.add('text-warning');
+            versionDisplay.setAttribute('title', 'Nova versão disponível: v' + data.latest_version);
+          }
+
+          // Configurar modal quando aberto
+          const updateModal = document.getElementById('updateModal');
+          if (updateModal) {
+            updateModal.addEventListener('show.bs.modal', function () {
+              // Atualizar informações no modal
+              const currentVersionEl = document.getElementById('modal-current-version');
+              const latestVersionEl = document.getElementById('modal-latest-version');
+              const releaseNotesEl = document.getElementById('release-notes');
+              const releaseNotesContentEl = document.getElementById('release-notes-content');
+              const releaseLinkEl = document.getElementById('release-link');
+
+              if (currentVersionEl) currentVersionEl.textContent = `v${data.current_version}`;
+              if (latestVersionEl) latestVersionEl.textContent = `v${data.latest_version}`;
+
+              if (data.release_notes && data.release_notes.trim()) {
+                if (releaseNotesEl) releaseNotesEl.style.display = 'block';
+                if (releaseNotesContentEl) {
+                  // Converter markdown básico para HTML (simples)
+                  let notes = data.release_notes
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/`(.*?)`/g, '<code>$1</code>')
+                    .replace(/\n/g, '<br>');
+                  releaseNotesContentEl.innerHTML = notes;
+                }
               }
-            }
-            
-            if (data.release_url && releaseLinkEl) {
-              releaseLinkEl.href = data.release_url;
-            }
-          });
+
+              if (data.release_url && releaseLinkEl) {
+                releaseLinkEl.href = data.release_url;
+              }
+            });
+          }
+        } else {
+          // Versão está atualizada - mostrar indicador verde
+          if (updatedItem) {
+            updatedItem.style.display = 'block';
+          }
+
+          // Ocultar botão de atualização
+          if (updateItem) {
+            updateItem.style.display = 'none';
+          }
+
+          // Adicionar badge de atualizado na versão
+          if (versionBadge) {
+            versionBadge.innerHTML = '<span class="badge bg-success" title="Versão atualizada">✓</span>';
+            versionBadge.style.display = 'inline';
+          }
+
+          // Destacar versão como atualizada
+          if (versionDisplay) {
+            versionDisplay.classList.remove('text-warning');
+            versionDisplay.classList.add('text-success');
+            versionDisplay.setAttribute('title', 'Versão atualizada');
+          }
         }
-      } else {
-        // Versão está atualizada - mostrar indicador verde
-        if (updatedItem) {
-          updatedItem.style.display = 'block';
-        }
-        
-        // Ocultar botão de atualização
-        if (updateItem) {
-          updateItem.style.display = 'none';
-        }
-        
-        // Adicionar badge de atualizado na versão
-        if (versionBadge) {
-          versionBadge.innerHTML = '<span class="badge bg-success" title="Versão atualizada">✓</span>';
-          versionBadge.style.display = 'inline';
-        }
-        
-        // Destacar versão como atualizada
-        if (versionDisplay) {
-          versionDisplay.classList.remove('text-warning');
-          versionDisplay.classList.add('text-success');
-          versionDisplay.setAttribute('title', 'Versão atualizada');
-        }
-      }
-    })
-    .catch(error => {
-      console.error('Erro ao verificar atualização:', error);
-      // Em caso de erro, não mostrar nada (manter comportamento padrão)
-    });
-  {% endif %}
-});
+      })
+      .catch(error => {
+        console.error('Erro ao verificar atualização:', error);
+        // Em caso de erro, não mostrar nada (manter comportamento padrão)
+      });
+    {% endif %}
+  });
 </script>
 {% endif %}
 
 <style>
-  .nav-item .nav-link{
+  .nav-item .nav-link {
     min-width: 100%;
   }
 
@@ -917,44 +985,47 @@ document.addEventListener('DOMContentLoaded', function() {
     max-width: 100%;
     text-wrap: wrap;
   }
-  
-  
+
+
   .sidebar__support-btn {
     height: 140px !important;
     width: 100px !important;
     background-color: #1F2937 !important;
   }
-  
+
   /* Indicadores de versão */
   #update-notification-item .nav-link:hover {
     background-color: rgba(251, 191, 36, 0.1) !important;
     border-radius: 4px;
   }
-  
+
   #version-updated-item .nav-link {
     opacity: 0.9;
   }
-  
+
   #version-check-badge .badge {
     font-size: 0.65rem;
     padding: 0.2em 0.4em;
     animation: pulse 2s infinite;
   }
-  
+
   @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0.7;
     }
   }
-  
+
   #version-check-badge .badge.bg-warning {
     animation: none;
     box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
   }
-  
+
   #version-check-badge .badge.bg-success {
     animation: none;
   }

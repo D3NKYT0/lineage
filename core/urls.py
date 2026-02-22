@@ -106,6 +106,7 @@ lineage_patterns = [
     path("roadmap/", include("apps.lineage.roadmap.urls")),
     path("wiki/", include("apps.lineage.wiki.urls")),
     path("tops/", include("apps.lineage.tops.urls")),
+    path("clans/", include("apps.lineage.clans.urls", namespace='clans')),
 ]
 
 

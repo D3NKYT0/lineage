@@ -1,0 +1,186 @@
+{% extends "layouts/base.html" %}
+{% load i18n widget_tweaks %}
+
+{% block extrahead %}
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+<style>
+    .dashboard-bg {
+        background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+        color: #f8f9fa;
+        padding: 50px 0;
+        min-height: 100vh;
+    }
+
+    .dashboard-card {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(18, 18, 32, 0.95));
+        border: 2px solid #0dcaf0;
+        border-radius: 16px;
+        box-shadow: 0 0 30px rgba(13, 202, 240, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.5);
+        color: #f8f9fa;
+        backdrop-filter: blur(10px);
+    }
+
+    .card-header-styled {
+        background: linear-gradient(90deg, #1a1a2e, #0dcaf0);
+        color: #fff;
+        font-family: 'Orbitron', sans-serif;
+        border-bottom: 2px solid #00d9ff;
+        padding: 1.5rem;
+        border-radius: 14px 14px 0 0;
+    }
+
+    .form-control-glass {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s;
+    }
+
+    .form-control-glass:focus {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: #0dcaf0;
+        box-shadow: 0 0 15px rgba(13, 202, 240, 0.3);
+        color: #fff;
+    }
+
+    .form-control-glass::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .action-btn {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        border-radius: 25px;
+        color: white;
+        font-weight: 600;
+        padding: 12px 30px;
+        transition: all 0.3s ease;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+        color: white;
+    }
+
+    .alert-info-custom {
+        background: linear-gradient(135deg, rgba(13, 202, 240, 0.1), rgba(13, 202, 240, 0.05));
+        border: 1px solid rgba(13, 202, 240, 0.4);
+        border-radius: 12px;
+        color: #e0f2fe;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-label-glow {
+        color: #0dcaf0;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 0.75rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-7">
+                <div class="dashboard-card">
+                    <div class="card-header-styled">
+                        <h3 class="mb-0 card-title-orbit text-shadow">
+                            <i class="fas fa-file-signature me-3 text-warning"></i>{% trans "Inscrição: Clã ID" %} {{
+                            profile.clan_id }}
+                        </h3>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-sm"
+                            style="background: rgba(255,255,255,0.1); color: #fff;" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                        <div class="alert alert-info-custom p-4 mb-5">
+                            <div class="d-flex">
+                                <i class="fas fa-info-circle fa-2x me-3 text-info"></i>
+                                <div>
+                                    <h6 class="fw-bold mb-1 text-info">{% trans "Processo de Recrutamento" %}</h6>
+                                    <p class="mb-0 small">{% trans "O Líder do Clã revisará sua inscrição. Se aprovado,
+                                        você precisará aceitar o convite no jogo ou sua tag será atualizada
+                                        automaticamente." %}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form method="post" action="{% url 'clans:apply' profile.clan_id %}">
+                            {% csrf_token %}
+
+                            <div class="mb-5 p-4 rounded"
+                                style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);">
+                                <label class="form-label form-label-glow"><i class="fas fa-user-ninja me-2"></i>{% trans
+                                    "Identificação do Personagem" %}</label>
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <input type="text" name="char_name" class="form-control form-control-glass"
+                                            placeholder="{% trans 'Nome do Personagem (Temp)' %}" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="number" name="char_id" class="form-control form-control-glass"
+                                            placeholder="{% trans 'ID (Temp)' %}" required>
+                                    </div>
+                                </div>
+                                <div class="mt-2 text-warning small opacity-75">
+                                    <i class="fas fa-tools me-1"></i>{% trans "Na versão final, será um dropdown dos
+                                    seus chars vinculados." %}
+                                </div>
+                            </div>
+
+                            <div class="mb-5">
+                                <label for="{{ form.message.id_for_label }}" class="form-label form-label-glow">
+                                    <i class="fas fa-pen-nib me-2"></i>{% trans "Carta de Apresentação" %}
+                                </label>
+                                {% render_field form.message class="form-control form-control-glass"
+                                placeholder=_("Conte por que deseja entrar, sua classe foco, level e horários em que
+                                costuma jogar.") rows="5" %}
+
+                                <div class="form-text mt-2" style="color: rgba(255,255,255,0.5);">{{
+                                    form.message.help_text }}</div>
+                                {% if form.message.errors %}
+                                <div class="invalid-feedback d-block text-danger mt-2">{{ form.message.errors|join:", "
+                                    }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-end border-top pt-4"
+                                style="border-color: rgba(255,255,255,0.1) !important;">
+                                <a href="{% url 'clans:detail' profile.clan_id %}"
+                                    class="btn border border-secondary text-light px-4 rounded-pill d-flex align-items-center justify-content-center"
+                                    style="background: rgba(255,255,255,0.05); transition: background 0.3s;">
+                                    {% trans "Cancelar" %}
+                                </a>
+                                <button type="submit" class="action-btn">
+                                    <i class="fas fa-rocket me-2"></i>{% trans "Enviar Inscrição" %}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

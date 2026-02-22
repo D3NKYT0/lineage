@@ -172,6 +172,7 @@ INSTALLED_APPS = [
     "apps.lineage.wiki",
     "apps.lineage.roadmap",
     "apps.lineage.tops",
+    "apps.lineage.clans",
 
     'allauth',
     'allauth.account',

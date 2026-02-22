@@ -1,0 +1,483 @@
+{% extends "layouts/base.html" %}
+{% load i18n widget_tweaks static %}
+
+{% block extrahead %}
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+<style>
+    .dashboard-bg {
+        background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+        color: #f8f9fa;
+        padding: 40px 0;
+        min-height: 100vh;
+    }
+
+    .dashboard-card {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(18, 18, 32, 0.95));
+        border: 2px solid #6f42c1;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(111, 66, 193, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.5);
+        color: #f8f9fa;
+    }
+
+    .section-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #f8f9fa;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        margin-bottom: 2rem;
+        border-left: 4px solid #0dcaf0;
+        padding-left: 1rem;
+    }
+
+    .action-btn {
+        background: linear-gradient(45deg, #6f42c1, #e83e8c);
+        border: none;
+        border-radius: 25px;
+        color: white;
+        font-weight: 600;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(111, 66, 193, 0.6);
+        color: white;
+    }
+
+    .action-btn-danger {
+        background: linear-gradient(45deg, #dc3545, #fd7e14);
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+    }
+
+    .action-btn-success {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    }
+
+    .nav-tabs-custom {
+        border-bottom: 2px solid #6f42c1;
+    }
+
+    .nav-tabs-custom .nav-link {
+        color: #adb5bd;
+        border: none;
+        border-bottom: 3px solid transparent;
+        border-radius: 0;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 1rem 1.5rem;
+        transition: all 0.3s;
+    }
+
+    .nav-tabs-custom .nav-link:hover {
+        color: #fff;
+        border-color: rgba(111, 66, 193, 0.5);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-tabs-custom .nav-link.active {
+        color: #0dcaf0;
+        background: rgba(13, 202, 240, 0.1);
+        border-bottom: 3px solid #0dcaf0;
+        box-shadow: inset 0 -10px 10px -10px rgba(13, 202, 240, 0.5);
+    }
+
+    .table-custom {
+        color: #e2e8f0;
+        border-collapse: separate;
+        border-spacing: 0 0.5rem;
+    }
+
+    .table-custom thead th {
+        border-bottom: none;
+        color: #0dcaf0;
+        font-family: 'Orbitron', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .table-custom tbody tr {
+        background: rgba(255, 255, 255, 0.05);
+        transition: transform 0.2s, background 0.2s;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .table-custom tbody tr:hover {
+        transform: scale(1.01);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .table-custom tbody td {
+        padding: 1rem;
+        vertical-align: middle;
+        border: none;
+    }
+
+    .table-custom tbody td:first-child {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+
+    .table-custom tbody td:last-child {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+    .form-control-glass {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+    .form-control-glass:focus {
+        background: rgba(0, 0, 0, 0.4);
+        border-color: #6f42c1;
+        box-shadow: 0 0 10px rgba(111, 66, 193, 0.5);
+        color: #fff;
+    }
+
+    .form-check-input:checked {
+        background-color: #0dcaf0;
+        border-color: #0dcaf0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-bg">
+    <div class="container">
+        <h2 class="section-title"><i class="fas fa-crown me-3 text-warning"></i>{% trans "Painel de Comando do Clã" %}
+        </h2>
+
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0"
+                style="background: rgba(255,255,255,0.1); color: #fff; border-left: 4px solid {% if message.tags == 'success' %}#28a745{% elif message.tags == 'error' %}#dc3545{% else %}#17a2b8{% endif %} !important;"
+                role="alert">
+                {{ message }}
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if not user_clans %}
+        <div class="dashboard-card p-5 text-center">
+            <i class="fas fa-chess-rook fa-4x mb-4 opacity-50 text-secondary"></i>
+            <h3 class="text-info card-title-orbit mb-3">{% trans "Acesso Negado ou Sem Permissão" %}</h3>
+            <p class="text-muted lead mb-0">{% trans "Este painel é exclusivo para líderes de Clãs reconhecidos. Se você
+                é um líder no jogo, atualize suas contas vinculadas ou aguarde a sincronização." %}</p>
+        </div>
+        {% else %}
+
+        <div class="row mb-4">
+            <div class="col-md-5 col-lg-4">
+                <form method="get" class="d-flex bg-dark p-2 rounded-pill shadow-sm"
+                    style="border: 1px solid rgba(255,255,255,0.1);">
+                    <select name="clan_id" class="form-select border-0 bg-transparent text-light shadow-none"
+                        onchange="this.form.submit()">
+                        {% for clan in user_clans %}
+                        <option value="{{ clan.clan_id }}" {% if clan.clan_id==selected_clan_id %}selected{% endif %}
+                            class="bg-dark">
+                            {{ clan.clan_name }} (Nvl {{ clan.level }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <div class="dashboard-card overflow-hidden">
+            <ul class="nav nav-tabs nav-tabs-custom bg-black bg-opacity-25" id="clanDashboardTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="applications-tab" data-bs-toggle="tab"
+                        data-bs-target="#applications-tab-pane" type="button" role="tab"
+                        aria-controls="applications-tab-pane" aria-selected="true">
+                        <i class="fas fa-envelope-open-text me-2"></i>{% trans "Inscrições" %}
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="members-tab" data-bs-toggle="tab" data-bs-target="#members-tab-pane"
+                        type="button" role="tab" aria-controls="members-tab-pane" aria-selected="false">
+                        <i class="fas fa-users me-2"></i>{% trans "Membros" %}
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-tab-pane"
+                        type="button" role="tab" aria-controls="settings-tab-pane" aria-selected="false">
+                        <i class="fas fa-cog me-2"></i>{% trans "Configurações" %}
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content p-4" id="clanDashboardTabsContent">
+
+                <!-- Applications Tab -->
+                <div class="tab-pane fade show active" id="applications-tab-pane" role="tabpanel" tabindex="0">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0 text-info" style="font-family: 'Orbitron', sans-serif;"><i
+                                class="fas fa-inbox me-2"></i>{% trans "Aplicações de Recrutamento" %}</h4>
+                        <span class="badge bg-primary fs-6">{{ applications.count }} {% trans "Total" %}</span>
+                    </div>
+
+                    {% if applications %}
+                    <div class="table-responsive">
+                        <table class="table table-custom table-hover">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Status" %}</th>
+                                    <th>{% trans "Personagem" %}</th>
+                                    <th>{% trans "Data" %}</th>
+                                    <th>{% trans "Mensagem" %}</th>
+                                    <th class="text-end">{% trans "Ações" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                <tr>
+                                    <td>
+                                        {% if app.status == 'PENDING' %}
+                                        <span class="badge bg-warning text-dark"><i
+                                                class="fas fa-clock me-1"></i>Pendente</span>
+                                        {% elif app.status == 'APPROVED' %}
+                                        <span class="badge bg-success"><i class="fas fa-check me-1"></i>Aprovado</span>
+                                        {% elif app.status == 'REJECTED' %}
+                                        <span class="badge bg-danger"><i class="fas fa-times me-1"></i>Rejeitado</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">{{ app.status }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="fw-bold text-light">{{ app.char_name }}</td>
+                                    <td class="text-muted small">{{ app.created_at|date:"d M Y, H:i" }}</td>
+                                    <td class="text-truncate" style="max-width: 200px;">
+                                        <span class="text-muted fst-italic">{{ app.message }}</span>
+                                    </td>
+                                    <td class="text-end">
+                                        {% if app.status == 'PENDING' %}
+                                        <button class="btn btn-sm btn-outline-info rounded-pill" data-bs-toggle="modal"
+                                            data-bs-target="#appModal{{ app.id }}">
+                                            <i class="fas fa-eye me-1"></i> {% trans "Avaliar" %}
+                                        </button>
+                                        {% else %}
+                                        <button class="btn btn-sm btn-outline-secondary rounded-pill"
+                                            data-bs-toggle="modal" data-bs-target="#appModal{{ app.id }}">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+                                <!-- Modal for Application -->
+                                <div class="modal fade" id="appModal{{ app.id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content text-light"
+                                            style="background: #1a1a2e; border: 2px solid #0dcaf0; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.8);">
+                                            <div class="modal-header border-bottom border-secondary"
+                                                style="background: rgba(0,0,0,0.2);">
+                                                <h5 class="modal-title" style="font-family: 'Orbitron', sans-serif;">
+                                                    <i class="fas fa-user-ninja me-2 text-warning"></i>{% trans
+                                                    "Inscrição de" %} <span class="text-info">{{ app.char_name }}</span>
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white"
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body p-4">
+                                                <div
+                                                    class="mb-4 bg-black bg-opacity-25 p-3 rounded border border-secondary">
+                                                    <p class="mb-1 text-muted small text-uppercase">{% trans "Mensagem
+                                                        do Jogador" %}</p>
+                                                    <p class="mb-0 fs-6" style="line-height: 1.5;">{{
+                                                        app.message|linebreaksbr }}</p>
+                                                </div>
+
+                                                <div class="row g-2 text-muted small">
+                                                    <div class="col-6"><i class="fas fa-id-card me-1"></i>ID: {{
+                                                        app.char_id }}</div>
+                                                    <div class="col-6"><i class="far fa-calendar-alt me-1"></i>{% trans
+                                                        "Enviado em:" %} {{ app.created_at|date:"d/m/Y" }}</div>
+                                                </div>
+                                            </div>
+
+                                            {% if app.status == 'PENDING' %}
+                                            <div
+                                                class="modal-footer border-top border-secondary bg-black bg-opacity-25 justify-content-between">
+                                                <form method="post"
+                                                    action="{% url 'clans:process_application' app.id 'reject' %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit"
+                                                        class="btn btn-outline-danger px-4 rounded-pill"><i
+                                                            class="fas fa-times me-2"></i>{% trans "Rejeitar"
+                                                        %}</button>
+                                                </form>
+                                                <form method="post"
+                                                    action="{% url 'clans:process_application' app.id 'approve' %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="action-btn action-btn-success"><i
+                                                            class="fas fa-check me-2"></i>{% trans "Aprovar & Convidar"
+                                                        %}</button>
+                                                </form>
+                                            </div>
+                                            {% else %}
+                                            <div
+                                                class="modal-footer border-top border-secondary bg-black bg-opacity-25">
+                                                <button type="button" class="btn btn-secondary rounded-pill"
+                                                    data-bs-dismiss="modal">{% trans "Fechar" %}</button>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5 opacity-50">
+                        <i class="fas fa-inbox fa-3x mb-3 text-secondary"></i>
+                        <p class="lead mb-0">{% trans "Nenhuma inscrição pendente no momento." %}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-pane fade" id="settings-tab-pane" role="tabpanel" tabindex="0">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <h4 class="mb-4 text-warning" style="font-family: 'Orbitron', sans-serif;"><i
+                                    class="fas fa-sliders-h me-2"></i>{% trans "Configurações de Recrutamento Módulo
+                                Web" %}</h4>
+
+                            <form method="post" action="{% url 'clans:dashboard' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" name="clan_id" value="{{ selected_clan_id }}">
+
+                                {% if profile %}
+                                <div class="bg-black bg-opacity-25 p-4 rounded-3 border border-secondary mb-4">
+                                    <div class="form-check form-switch mb-4">
+                                        <input class="form-check-input" type="checkbox" role="switch"
+                                            id="recruitingSwitch" name="recruiting" {% if profile.recruiting %}checked{%
+                                            endif %} style="transform: scale(1.3); margin-left: -2em;">
+                                        <label class="form-check-label ms-3 text-info fw-bold" for="recruitingSwitch">{%
+                                            trans "Abrir Recrutamento Web" %}</label>
+                                        <div class="form-text mt-1 text-muted ms-3">{% trans "Exibe o clã na lista
+                                            pública para jogadores enviarem convites." %}</div>
+                                    </div>
+
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label text-light">{% trans "Foco do Clã" %}</label>
+                                            <select name="focus" class="form-select form-control-glass">
+                                                <option value="MIXED" {% if profile.focus=='MIXED' %}selected{% endif
+                                                    %}>PvX (Misto)</option>
+                                                <option value="PVP" {% if profile.focus=='PVP' %}selected{% endif %}>
+                                                    Focado em PvP</option>
+                                                <option value="PVE" {% if profile.focus=='PVE' %}selected{% endif %}>
+                                                    Focado em PvE / Farm</option>
+                                                <option value="CASUAL" {% if profile.focus=='CASUAL' %}selected{% endif
+                                                    %}>Casual / Social</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label text-light">{% trans "Nível Mínimo Exigido"
+                                                %}</label>
+                                            <input type="number" name="min_level"
+                                                class="form-control form-control-glass"
+                                                value="{{ profile.min_level|default:1 }}" min="1">
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label text-light">{% trans "Classes Procuradas"
+                                                %}</label>
+                                            <input type="text" name="required_classes"
+                                                class="form-control form-control-glass"
+                                                value="{{ profile.required_classes }}"
+                                                placeholder="Ex: Bishop, Overlord">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label text-light">{% trans "Horários e Região" %}</label>
+                                            <input type="text" name="playtime_requirements"
+                                                class="form-control form-control-glass"
+                                                value="{{ profile.playtime_requirements }}"
+                                                placeholder="Ex: Noite (BRT)">
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <label class="form-label text-light">{% trans "Mensagem de Apresentação (MOTD)"
+                                            %}</label>
+                                        <textarea name="motd" rows="4" class="form-control form-control-glass"
+                                            placeholder="Apresente seu clã, regras e objetivos para convencer jogadores a aplicarem.">{{ profile.motd }}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="bg-black bg-opacity-25 p-4 rounded-3 border border-secondary mb-4">
+                                    <h5 class="text-white mb-3">{% trans "Personalização Visual" %}</h5>
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <label class="form-label text-light">{% trans "Ícone/Brasão do Clã Web
+                                                (Opcional)" %}</label>
+                                            <input type="file" name="crest_image"
+                                                class="form-control form-control-glass" accept="image/*">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label text-light">{% trans "Banner do Clã Web (Opcional)"
+                                                %}</label>
+                                            <input type="file" name="banner_image"
+                                                class="form-control form-control-glass" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="action-btn px-5">
+                                    <i class="fas fa-save me-2"></i>{% trans "Salvar Configurações" %}
+                                </button>
+                                {% else %}
+                                <div class="alert alert-warning text-dark border-0">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>{% trans "O perfil web do clã ainda
+                                    não foi gerado. Salve uma vez para criar a estrutura." %}
+                                </div>
+                                <button type="submit" class="action-btn px-5">{% trans "Gerar Perfil Inicial"
+                                    %}</button>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Members Tab Placeholder -->
+                <div class="tab-pane fade" id="members-tab-pane" role="tabpanel" tabindex="0">
+                    <div class="dashboard-card p-5 text-center mt-3 border-0 bg-transparent shadow-none border-none">
+                        <i class="fas fa-cogs fa-4x text-muted mb-4"></i>
+                        <h4 class="card-title-orbit text-info mb-3">{% trans "Módulo de Gerenciamento In-Game" %}</h4>
+                        <p class="text-muted lead mx-auto" style="max-width: 600px;">
+                            {% trans "Esta central permitirá que você visualize membros live do LineageDB, verifique
+                            contribuições, atribua patentes web, modifique guild roles e expulse membros remotamente."
+                            %}
+                        </p>
+                        <span class="badge bg-secondary p-2 px-3 mt-3 shadow-sm border border-light text-light"><i
+                                class="fas fa-tools me-2"></i>{% trans "Em Desenvolvimento" %}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

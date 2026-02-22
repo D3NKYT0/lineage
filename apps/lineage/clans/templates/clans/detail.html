@@ -1,0 +1,285 @@
+{% extends "layouts/base.html" %}
+{% load i18n %}
+
+{% block extrahead %}
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+<style>
+    .dashboard-bg {
+        background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
+        color: #f8f9fa;
+        padding: 50px 0;
+        min-height: 100vh;
+    }
+
+    .dashboard-card {
+        background: linear-gradient(to bottom right, #1a1a2e, #121220);
+        border: 2px solid #6f42c1;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(111, 66, 193, 0.5), 0 0 25px rgba(13, 202, 240, 0.3);
+        color: #f8f9fa;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+    }
+
+    .header-card {
+        position: relative;
+        border: 3px solid #00d9ff;
+        border-radius: 16px;
+        box-shadow: 0 0 30px rgba(0, 217, 255, 0.3);
+    }
+
+    .card-header-styled {
+        background: linear-gradient(90deg, #1a1a2e, #6f42c1);
+        color: #fff;
+        font-family: 'Orbitron', sans-serif;
+        border-bottom: 2px solid #00d9ff;
+        padding: 1rem 1.5rem;
+    }
+
+    .card-title-orbit {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .stats-box {
+        text-align: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        transition: transform 0.2s;
+    }
+
+    .stats-box:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .stats-val {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 2rem;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+    }
+
+    .action-btn {
+        background: linear-gradient(45deg, #6f42c1, #e83e8c);
+        border: none;
+        border-radius: 25px;
+        color: white;
+        font-weight: 600;
+        padding: 12px 24px;
+        transition: all 0.3s ease;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(111, 66, 193, 0.4);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(111, 66, 193, 0.6);
+        color: white;
+    }
+
+    .action-btn-success {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+    }
+
+    .action-btn-success:hover {
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+    }
+
+    .action-btn-disabled {
+        background: linear-gradient(45deg, #6c757d, #495057);
+        box-shadow: none;
+        cursor: not-allowed;
+        opacity: 0.8;
+    }
+
+    .action-btn-disabled:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .req-list-group .list-group-item {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-bg">
+    <div class="container">
+        <!-- Banner and Header -->
+        <div class="dashboard-card header-card p-0 mb-5">
+            <div class="position-relative" style="min-height: 220px;">
+                {% if profile.banner_image %}
+                <img src="{{ profile.banner_image.url }}" class="w-100 h-100 position-absolute" alt="Clan Banner"
+                    style="object-fit: cover; opacity: 0.4; top: 0; left: 0; z-index: 1;">
+                {% endif %}
+                <div class="position-absolute w-100 h-100"
+                    style="background: linear-gradient(to top, #121220 0%, transparent 100%); z-index: 2;"></div>
+
+                <div class="position-relative p-4 d-flex flex-column justify-content-end h-100"
+                    style="z-index: 3; min-height: 220px;">
+                    <div class="d-flex align-items-end">
+                        {% if profile.crest_image %}
+                        <img src="{{ profile.crest_image.url }}" alt="Crest" class="me-4 rounded"
+                            style="width: 80px; height: 80px; box-shadow: 0 0 20px rgba(0,217,255,0.6); border: 2px solid #00d9ff;">
+                        {% endif %}
+                        <div>
+                            <h1 class="card-title-orbit text-white display-5 mb-1">
+                                {% if game_data %}
+                                {{ game_data.clan_name }}
+                                {% else %}
+                                Clan ID: {{ profile.clan_id }}
+                                {% endif %}
+                            </h1>
+                            {% if game_data %}
+                            <p class="lead mb-0 text-info">
+                                <i class="fas fa-crown me-2 text-warning"></i>{% trans "Líder:" %} <strong
+                                    class="text-white">{{ game_data.leader_name }}</strong>
+                                <span class="mx-3 text-secondary">|</span>
+                                <i class="fas fa-star me-2 text-warning"></i>{% trans "Nível:" %} <strong
+                                    class="text-white">{{ game_data.level }}</strong>
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Details -->
+            <div class="col-lg-8">
+                <!-- Message of the Day -->
+                <div class="dashboard-card">
+                    <div class="card-header-styled">
+                        <h4 class="mb-0 card-title-orbit"><i class="fas fa-bullhorn me-2 text-warning"></i>{% trans
+                            "Mensagem do Dia" %}</h4>
+                    </div>
+                    <div class="card-body p-4" style="background: rgba(0,0,0,0.2);">
+                        {% if profile.motd %}
+                        <div class="text-light fs-5" style="line-height: 1.6;">
+                            {{ profile.motd|linebreaks }}
+                        </div>
+                        {% else %}
+                        <div class="text-center py-4 opacity-50">
+                            <i class="fas fa-comment-slash fa-3x mb-3"></i>
+                            <p class="fst-italic mb-0">{% trans "Este clã não forneceu uma apresentação ainda." %}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                {% if game_data %}
+                <div class="dashboard-card border-info">
+                    <div class="card-header-styled" style="background: linear-gradient(90deg, #1a1a2e, #0dcaf0);">
+                        <h4 class="mb-0 card-title-orbit"><i class="fas fa-chart-bar me-2"></i>{% trans "Estatísticas do
+                            Clã" %}</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="stats-box border-warning">
+                                    <h3 class="stats-val text-warning mb-1">{{ game_data.member_count }}</h3>
+                                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-users me-1"></i>{%
+                                        trans "Membros Ativos" %}</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stats-box border-success">
+                                    <h3 class="stats-val text-success mb-1">{{ game_data.reputation }}</h3>
+                                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-medal me-1"></i>{%
+                                        trans "Reputação" %}</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stats-box border-info">
+                                    <h3 class="stats-val text-info mb-1">{{ game_data.level }}</h3>
+                                    <small class="text-muted text-uppercase fw-bold"><i
+                                            class="fas fa-layer-group me-1"></i>{% trans "Nível do Clã" %}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Sidebar / Requirements -->
+            <div class="col-lg-4">
+                <div class="dashboard-card">
+                    <div class="card-header-styled" style="background: linear-gradient(90deg, #1a1a2e, #ff8c00);">
+                        <h4 class="mb-0 card-title-orbit"><i class="fas fa-clipboard-check me-2"></i>{% trans
+                            "Requisitos" %}</h4>
+                    </div>
+                    <ul class="list-group list-group-flush req-list-group px-2 py-3">
+                        <li
+                            class="list-group-item d-flex justify-content-between align-items-center mb-2 rounded border">
+                            <span class="text-light"><i class="fas fa-arrow-up text-warning me-2"></i>{% trans "Nível
+                                Mínimo" %}</span>
+                            <span class="badge bg-warning text-dark fs-6">{{ profile.min_level }}+</span>
+                        </li>
+                        <li
+                            class="list-group-item d-flex justify-content-between align-items-center mb-2 rounded border">
+                            <span class="text-light"><i class="fas fa-user-shield text-info me-2"></i>{% trans "Classes"
+                                %}</span>
+                            <span class="badge bg-info text-dark">{{ profile.required_classes|default:_("Qualquer")
+                                }}</span>
+                        </li>
+                        <li
+                            class="list-group-item d-flex justify-content-between align-items-center mb-2 rounded border">
+                            <span class="text-light"><i class="fas fa-crosshairs text-danger me-2"></i>{% trans "Foco"
+                                %}</span>
+                            <span class="badge bg-danger text-white">{{ profile.focus }}</span>
+                        </li>
+
+                        <li class="list-group-item mb-2 rounded border">
+                            <small class="text-muted d-block text-uppercase fw-bold mb-1"><i
+                                    class="far fa-clock me-1"></i>{% trans "Horário de Jogo" %}</small>
+                            <span class="text-light">{{ profile.playtime_requirements|default:_("Flexível") }}</span>
+                        </li>
+
+                        <li class="list-group-item mb-2 rounded border">
+                            <small class="text-muted d-block text-uppercase fw-bold mb-1"><i
+                                    class="fas fa-globe me-1"></i>{% trans "Idioma" %}</small>
+                            <span class="text-light">{{ profile.language|default:_("Qualquer") }}</span>
+                        </li>
+                    </ul>
+                    <div class="card-footer border-top-0 bg-transparent p-4">
+                        {% if profile.recruiting %}
+                        <a href="{% url 'clans:apply' profile.clan_id %}" class="action-btn action-btn-success w-100">
+                            <i class="fas fa-paper-plane me-2 fs-5"></i>
+                            <span class="fs-5">{% trans "Inscrever-se" %}</span>
+                        </a>
+                        <!-- Add a cool glow effect beneath the button -->
+                        <div class="text-center mt-3 text-success"
+                            style="filter: drop-shadow(0 0 5px rgba(40,167,69,0.8)); opacity: 0.8;">
+                            <i class="fas fa-circle px-1" style="font-size: 0.5rem;"></i>
+                            <i class="fas fa-circle px-1" style="font-size: 0.5rem;"></i>
+                            <i class="fas fa-circle px-1" style="font-size: 0.5rem;"></i>
+                            <span class="ms-2 small fw-bold text-uppercase">{% trans "Recrutando" %}</span>
+                        </div>
+                        {% else %}
+                        <button class="action-btn action-btn-disabled w-100" disabled>
+                            <i class="fas fa-lock me-2 fs-5"></i>
+                            <span class="fs-5">{% trans "Fechado" %}</span>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
