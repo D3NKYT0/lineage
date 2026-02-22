@@ -98,8 +98,7 @@
                 <div class="dashboard-card">
                     <div class="card-header-styled">
                         <h3 class="mb-0 card-title-orbit text-shadow">
-                            <i class="fas fa-file-signature me-3 text-warning"></i>{% trans "Inscrição: Clã ID" %} {{
-                            profile.clan_id }}
+                            <i class="fas fa-file-signature me-3 text-warning"></i>{% trans "Inscrição: Clã ID" %} {{ profile.clan_id }}
                         </h3>
                     </div>
                     <div class="card-body p-4 p-md-5">
@@ -119,9 +118,7 @@
                                 <i class="fas fa-info-circle fa-2x me-3 text-info"></i>
                                 <div>
                                     <h6 class="fw-bold mb-1 text-info">{% trans "Processo de Recrutamento" %}</h6>
-                                    <p class="mb-0 small">{% trans "O Líder do Clã revisará sua inscrição. Se aprovado,
-                                        você precisará aceitar o convite no jogo ou sua tag será atualizada
-                                        automaticamente." %}</p>
+                                    <p class="mb-0 small">{% trans "O Líder do Clã revisará sua inscrição. Se aprovado, você precisará aceitar o convite no jogo ou sua tag será atualizada automaticamente." %}</p>
                                 </div>
                             </div>
                         </div>
@@ -131,8 +128,7 @@
 
                             <div class="mb-5 p-4 rounded"
                                 style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);">
-                                <label class="form-label form-label-glow"><i class="fas fa-user-ninja me-2"></i>{% trans
-                                    "Identificação do Personagem" %}</label>
+                                <label class="form-label form-label-glow"><i class="fas fa-user-ninja me-2"></i>{% trans "Identificação do Personagem" %}</label>
                                 <div class="row g-3">
                                     <div class="col-md-8">
                                         <input type="text" name="char_name" class="form-control form-control-glass"
@@ -144,8 +140,7 @@
                                     </div>
                                 </div>
                                 <div class="mt-2 text-warning small opacity-75">
-                                    <i class="fas fa-tools me-1"></i>{% trans "Na versão final, será um dropdown dos
-                                    seus chars vinculados." %}
+                                    <i class="fas fa-tools me-1"></i>{% trans "Na versão final, será um dropdown dos seus chars vinculados." %}
                                 </div>
                             </div>
 
@@ -153,15 +148,11 @@
                                 <label for="{{ form.message.id_for_label }}" class="form-label form-label-glow">
                                     <i class="fas fa-pen-nib me-2"></i>{% trans "Carta de Apresentação" %}
                                 </label>
-                                {% render_field form.message class="form-control form-control-glass"
-                                placeholder=_("Conte por que deseja entrar, sua classe foco, level e horários em que
-                                costuma jogar.") rows="5" %}
+                                {% render_field form.message class="form-control form-control-glass" placeholder=_("Conte por que deseja entrar, sua classe foco, level e horários em que costuma jogar.") rows="5" %}
 
-                                <div class="form-text mt-2" style="color: rgba(255,255,255,0.5);">{{
-                                    form.message.help_text }}</div>
+                                <div class="form-text mt-2" style="color: rgba(255,255,255,0.5);">{{ form.message.help_text }}</div>
                                 {% if form.message.errors %}
-                                <div class="invalid-feedback d-block text-danger mt-2">{{ form.message.errors|join:", "
-                                    }}</div>
+                                <div class="invalid-feedback d-block text-danger mt-2">{{ form.message.errors|join:", " }}</div>
                                 {% endif %}
                             </div>
 

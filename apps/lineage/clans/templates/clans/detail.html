@@ -163,8 +163,7 @@
                 <!-- Message of the Day -->
                 <div class="dashboard-card">
                     <div class="card-header-styled">
-                        <h4 class="mb-0 card-title-orbit"><i class="fas fa-bullhorn me-2 text-warning"></i>{% trans
-                            "Mensagem do Dia" %}</h4>
+                        <h4 class="mb-0 card-title-orbit"><i class="fas fa-bullhorn me-2 text-warning"></i>{% trans "Mensagem do Dia" %}</h4>
                     </div>
                     <div class="card-body p-4" style="background: rgba(0,0,0,0.2);">
                         {% if profile.motd %}
@@ -184,30 +183,26 @@
                 {% if game_data %}
                 <div class="dashboard-card border-info">
                     <div class="card-header-styled" style="background: linear-gradient(90deg, #1a1a2e, #0dcaf0);">
-                        <h4 class="mb-0 card-title-orbit"><i class="fas fa-chart-bar me-2"></i>{% trans "Estatísticas do
-                            Clã" %}</h4>
+                        <h4 class="mb-0 card-title-orbit"><i class="fas fa-chart-bar me-2"></i>{% trans "Estatísticas do Clã" %}</h4>
                     </div>
                     <div class="card-body p-4">
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <div class="stats-box border-warning">
                                     <h3 class="stats-val text-warning mb-1">{{ game_data.member_count }}</h3>
-                                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-users me-1"></i>{%
-                                        trans "Membros Ativos" %}</small>
+                                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-users me-1"></i>{% trans "Membros Ativos" %}</small>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="stats-box border-success">
                                     <h3 class="stats-val text-success mb-1">{{ game_data.reputation }}</h3>
-                                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-medal me-1"></i>{%
-                                        trans "Reputação" %}</small>
+                                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-medal me-1"></i>{% trans "Reputação" %}</small>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="stats-box border-info">
                                     <h3 class="stats-val text-info mb-1">{{ game_data.level }}</h3>
-                                    <small class="text-muted text-uppercase fw-bold"><i
-                                            class="fas fa-layer-group me-1"></i>{% trans "Nível do Clã" %}</small>
+                                    <small class="text-muted text-uppercase fw-bold"><i class="fas fa-layer-group me-1"></i>{% trans "Nível do Clã" %}</small>
                                 </div>
                             </div>
                         </div>
@@ -220,27 +215,23 @@
             <div class="col-lg-4">
                 <div class="dashboard-card">
                     <div class="card-header-styled" style="background: linear-gradient(90deg, #1a1a2e, #ff8c00);">
-                        <h4 class="mb-0 card-title-orbit"><i class="fas fa-clipboard-check me-2"></i>{% trans
-                            "Requisitos" %}</h4>
+                        <h4 class="mb-0 card-title-orbit"><i class="fas fa-clipboard-check me-2"></i>{% trans "Requisitos" %}</h4>
                     </div>
                     <ul class="list-group list-group-flush req-list-group px-2 py-3">
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center mb-2 rounded border">
-                            <span class="text-light"><i class="fas fa-arrow-up text-warning me-2"></i>{% trans "Nível
-                                Mínimo" %}</span>
+                            <span class="text-light"><i class="fas fa-arrow-up text-warning me-2"></i>{% trans "Nível Mínimo" %}</span>
                             <span class="badge bg-warning text-dark fs-6">{{ profile.min_level }}+</span>
                         </li>
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center mb-2 rounded border">
-                            <span class="text-light"><i class="fas fa-user-shield text-info me-2"></i>{% trans "Classes"
-                                %}</span>
+                            <span class="text-light"><i class="fas fa-user-shield text-info me-2"></i>{% trans "Classes" %}</span>
                             <span class="badge bg-info text-dark">{{ profile.required_classes|default:_("Qualquer")
                                 }}</span>
                         </li>
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center mb-2 rounded border">
-                            <span class="text-light"><i class="fas fa-crosshairs text-danger me-2"></i>{% trans "Foco"
-                                %}</span>
+                            <span class="text-light"><i class="fas fa-crosshairs text-danger me-2"></i>{% trans "Foco" %}</span>
                             <span class="badge bg-danger text-white">{{ profile.focus }}</span>
                         </li>
 
