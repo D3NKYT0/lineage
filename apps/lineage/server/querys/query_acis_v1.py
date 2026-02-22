@@ -1617,3 +1617,104 @@ class LineageInflation:
             "date_to": date_to,
             "items": []
         }
+
+
+class LineageClans:
+
+    @staticmethod
+    def get_user_lead_clans(account_logins):
+        if not account_logins:
+            return []
+        db = LineageDB()
+        if not getattr(db, 'enabled', False):
+            return []
+        placeholders = ", ".join([f":acc{i}" for i in range(len(account_logins))])
+        params = {f"acc{i}": acc for i, acc in enumerate(account_logins)}
+        sub_filter = "S.sub_pledge_id = 0" if SUBPLEDGE_FILTER == 'sub_pledge_id' else "S.type = 0"
+        if CLAN_NAME_SOURCE == 'clan_data':
+            sql = f"""
+                SELECT C.clan_id, C.clan_name, C.clan_level, P.char_name AS leader_name, P.{CHAR_ID} AS leader_id
+                FROM clan_data C
+                INNER JOIN characters P ON P.{CHAR_ID} = C.leader_id
+                WHERE P.account_name IN ({placeholders})
+            """
+        else:
+            sql = f"""
+                SELECT C.clan_id, S.name AS clan_name, C.clan_level, P.char_name AS leader_name, P.{CHAR_ID} AS leader_id
+                FROM clan_data C
+                INNER JOIN clan_subpledges S ON S.clan_id = C.clan_id AND {sub_filter}
+                INNER JOIN characters P ON P.{CHAR_ID} = S.leader_id
+                WHERE P.account_name IN ({placeholders})
+            """
+        try:
+            result = db.select(sql, params)
+            return result if result else []
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).error(f"LineageClans.get_user_lead_clans: {e}")
+            return []
+
+    @staticmethod
+    def get_user_characters(account_logins):
+        if not account_logins:
+            return []
+        all_characters = []
+        for login in account_logins:
+            try:
+                personagens = LineageServices.find_chars(login)
+                if personagens:
+                    for char in personagens:
+                        all_characters.append({
+                            'char_id': char.get(CHAR_ID),
+                            'char_name': char.get('char_name'),
+                            'account_name': char.get('account_name', login),
+                            'level': char.get('base_level') or char.get('level', 1),
+                            'clan_id': char.get('clanid', 0) or char.get('clan_id', 0)
+                        })
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"LineageClans.get_user_characters: {e}")
+        return all_characters
+
+    @staticmethod
+    def get_clan_basic_info(clan_id):
+        db = LineageDB()
+        if not getattr(db, 'enabled', False):
+            return None
+        sub_filter = "S.sub_pledge_id = 0" if SUBPLEDGE_FILTER == 'sub_pledge_id' else "S.type = 0"
+        if CLAN_NAME_SOURCE == 'clan_data':
+            sql = "SELECT clan_id, clan_name, clan_level FROM clan_data WHERE clan_id = :clan_id"
+        else:
+            sql = f"""
+                SELECT C.clan_id, S.name AS clan_name, C.clan_level
+                FROM clan_data C
+                LEFT JOIN clan_subpledges S ON S.clan_id = C.clan_id AND {sub_filter}
+                WHERE C.clan_id = :clan_id
+            """
+        try:
+            result = db.select(sql, {"clan_id": clan_id})
+            return result[0] if result else None
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).error(f"LineageClans.get_clan_basic_info: {e}")
+            return None
+
+    @staticmethod
+    def get_clan_full_details(clan_id):
+        basic = LineageClans.get_clan_basic_info(clan_id)
+        if not basic:
+            return None
+        clan_name = basic.get('clan_name')
+        if clan_name:
+            try:
+                full = LineageStats.get_clan_details(clan_name)
+                if full:
+                    return full
+            except Exception:
+                pass
+        result = dict(basic)
+        result['level'] = result.get('level') or result.get('clan_level', '-')
+        result.setdefault('leader_name', '')
+        result.setdefault('member_count', '-')
+        result.setdefault('reputation', '-')
+        return result

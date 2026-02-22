@@ -686,6 +686,7 @@ def gerar_arquivo_query(nome_projeto, schema, config):
     from classes.transfer_char_to_wallet import get_transfer_char_to_wallet_template
     from classes.lineage_marketplace import get_lineage_marketplace_template
     from classes.lineage_inflation import get_lineage_inflation_template
+    from classes.lineage_clans import get_lineage_clans_template
     
     # Preparar estrutura de clan
     clan_structure = {
@@ -764,6 +765,14 @@ def gerar_arquivo_query(nome_projeto, schema, config):
         char_id=config['char_id'],
         access_level=config['access_level_characters']
     )
+
+    print("   📝 Gerando classe LineageClans...")
+    clans_code = get_lineage_clans_template(
+        char_id=config['char_id'],
+        clan_structure=clan_structure,
+        clan_id_col=config.get('clan_id_col', 'clan_id'),
+        clan_leader_col=config.get('clan_leader_col', 'leader_id')
+    )
     
     # Montar arquivo completo
     from datetime import datetime
@@ -827,6 +836,8 @@ HAS_ALLY_DATA = {config['has_ally_data']}          # Se tem tabela ally_data
 {marketplace_code}
 
 {inflation_code}
+
+{clans_code}
 '''
     
     # Salvar arquivo
