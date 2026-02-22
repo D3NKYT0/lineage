@@ -22,6 +22,7 @@
 | [DISCORD_BOT_INTEGRATION](DISCORD_BOT_INTEGRATION.md) | Integração com bot Discord |
 | [HELPDESK_SYSTEM](HELPDESK_SYSTEM.md) | Sistema de Helpdesk e Chamados |
 | [AI_ASSISTANT](AI_ASSISTANT.md) | Assistente Virtual de Inteligência Artificial |
+| [CLANS_MANAGEMENT](CLANS_MANAGEMENT.md) | Gerenciamento de clãs e recrutamento web integrado ao L2 |
 
 ---
 
