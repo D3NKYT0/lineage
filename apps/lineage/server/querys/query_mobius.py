@@ -1629,3 +1629,30 @@ class LineageClans:
         result.setdefault('reputation', '-')
         return result
 
+    @staticmethod
+    def get_clan_members(clan_id):
+        """Retorna os membros de um clã (Mobius)."""
+        db = LineageDB()
+        if not getattr(db, 'enabled', False):
+            return []
+        try:
+            sql = """
+                SELECT 
+                    C.char_name, 
+                    C.online, 
+                    C.pvpkills, 
+                    C.pkkills,
+                    (SELECT S0.level FROM character_subclasses AS S0 WHERE S0.char_obj_id = C.obj_Id AND S0.isBase = '1' LIMIT 1) AS level,
+                    (SELECT S0.class_id FROM character_subclasses AS S0 WHERE S0.char_obj_id = C.obj_Id AND S0.isBase = '1' LIMIT 1) AS base,
+                    C.accesslevel
+                FROM characters C
+                WHERE C.clanid = :clan_id
+                ORDER BY C.online DESC, level DESC, C.char_name ASC
+            """
+            result = db.select(sql, {"clan_id": clan_id})
+            return result if result else []
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).error(f"LineageClans.get_clan_members: {e}")
+            return []
+

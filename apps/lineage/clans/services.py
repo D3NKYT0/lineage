@@ -46,6 +46,33 @@ def get_clan_full_details(clan_id):
     return LineageClans.get_clan_full_details(clan_id)
 
 
+def get_clan_members(clan_id):
+    """Retorna os membros de um clã a partir do banco L2."""
+    LineageClans = get_query_class("LineageClans")
+    if not LineageClans:
+        return []
+    
+    # Fazemos um fallback suave caso a classe LineageClans antiga não tenha o método ainda
+    get_members_func = getattr(LineageClans, 'get_clan_members', None)
+    if get_members_func:
+        return get_members_func(clan_id)
+    
+    # Hard fallback apenas como "safety net", logando o aviso
+    import logging
+    logging.getLogger(__name__).warning("LineageClans.get_clan_members não está implementado na query class atual.")
+    from apps.lineage.server.database import LineageDB
+    db = LineageDB()
+    if getattr(db, 'enabled', False):
+        try:
+            sql = "SELECT char_name, online FROM characters WHERE clanid = :clan_id OR clan_id = :clan_id ORDER BY online DESC, char_name ASC"
+            result = db.select(sql, {"clan_id": clan_id})
+            return result if result else []
+        except:
+            return []
+    return []
+
+
+
 def get_top_clans(limit=10):
     """Retorna o top N clãs do servidor (banco L2)."""
     LineageStats = get_query_class("LineageStats")

@@ -9,7 +9,7 @@ import re
 
 from .models import ClanProfile, RecruitmentApplication
 from .forms import ClanProfileForm, RecruitmentApplicationForm
-from .services import get_user_lead_clans, get_clan_basic_info, get_clan_full_details, get_user_characters, get_top_clans
+from .services import get_user_lead_clans, get_clan_basic_info, get_clan_full_details, get_user_characters, get_top_clans, get_clan_members
 from apps.lineage.server.services.account_context import get_available_accounts
 from utils.render_theme_page import render_theme_page
 
@@ -163,6 +163,7 @@ class ClanDashboardView(LoginRequiredMixin, View):
         profile = None
         form = None
         applications = []
+        clan_members = []
         
         if user_clans:
             if not current_clan_id:
@@ -174,6 +175,7 @@ class ClanDashboardView(LoginRequiredMixin, View):
                 profile, _created = ClanProfile.objects.get_or_create(clan_id=selected_clan['clan_id'])
                 form = ClanProfileForm(instance=profile)
                 applications = RecruitmentApplication.objects.filter(clan_profile=profile).order_by('-created_at')
+                clan_members = get_clan_members(selected_clan['clan_id'])
         
         # Normalize clan dicts for template: ensure 'level' key (services returns clan_level)
         user_clans_normalized = []
@@ -190,6 +192,7 @@ class ClanDashboardView(LoginRequiredMixin, View):
             'profile': profile,
             'form': form,
             'applications': applications,
+            'clan_members': clan_members if selected_clan else [],
         }
         return render_theme_page(request, 'clans', 'dashboard.html', context)
 

@@ -1757,3 +1757,34 @@ class LineageClans:
         result.setdefault('member_count', '-')
         result.setdefault('reputation', '-')
         return result
+
+    @staticmethod
+    def get_clan_members(clan_id):
+        """Retorna os membros de um clã (Dream v2)."""
+        db = LineageDB()
+        if not getattr(db, 'enabled', False):
+            return []
+        try:
+            sql = """
+                SELECT 
+                    C.char_name, 
+                    C.online, 
+                    C.pvpkills, 
+                    C.pkkills,
+                    (SELECT S0.level FROM character_subclasses AS S0 WHERE S0.char_obj_id = C.obj_Id AND S0.isBase = '1' LIMIT 1) AS level,
+                    (SELECT S0.class_id FROM character_subclasses AS S0 WHERE S0.char_obj_id = C.obj_Id AND S0.isBase = '1' LIMIT 1) AS base,
+                    C.accesslevel
+                FROM characters C
+                WHERE C.clanid = :clan_id OR C.clan_id = :clan_id
+                ORDER BY C.online DESC, level DESC, C.char_name ASC
+            """
+            result = db.select(sql, {"clan_id": clan_id})
+            return result if result else []
+        except Exception as e:
+            try:
+                # Fallback mais básico
+                sql_fallback = "SELECT char_name, online FROM characters WHERE clanid = :clan_id OR clan_id = :clan_id ORDER BY online DESC, char_name ASC"
+                result = db.select(sql_fallback, {"clan_id": clan_id})
+                return result if result else []
+            except:
+                return []
