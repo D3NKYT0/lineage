@@ -442,14 +442,10 @@
   }
 }
 
-/* Backdrop do modal */
-.pdl-notification-modal + .modal-backdrop,
-.modal-backdrop.show {
+/* Backdrop do modal de notificação (não afetar todos os modais globais) */
+.pdl-notification-modal + .modal-backdrop {
   z-index: 9998 !important;
   background-color: rgba(0, 0, 0, 0.5) !important;
-}
-
-.modal-backdrop.show {
   opacity: 1 !important;
 }
 

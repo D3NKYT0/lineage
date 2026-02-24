@@ -179,6 +179,95 @@
         border-left: 4px solid #ffc107 !important;
     }
 
+    /* Modal de Avaliação de Solicitações */
+    .clan-eval-modal .modal-dialog {
+        max-width: 650px;
+    }
+
+    .clan-eval-modal-content {
+        background: #1a1a2e;
+        border: 2px solid #0dcaf0;
+        border-radius: 12px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        color: #f8f9fa;
+    }
+
+    .clan-eval-modal-header {
+        background: rgba(0, 0, 0, 0.2);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .clan-eval-modal-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.1rem;
+    }
+
+    .clan-eval-modal-body {
+        padding: 1.75rem 2rem;
+    }
+
+    .clan-eval-modal-message {
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .clan-eval-modal-message p:last-child {
+        margin-bottom: 0;
+    }
+
+    .clan-eval-modal-meta {
+        color: #adb5bd;
+        font-size: 0.85rem;
+    }
+
+    .clan-eval-modal-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.35);
+    }
+
+    .clan-eval-btn {
+        border-radius: 999px;
+        font-weight: 600;
+        padding: 0.5rem 1.75rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        transition: all 0.25s ease;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .clan-eval-btn-reject {
+        background: linear-gradient(45deg, #dc3545, #fd7e14);
+        border: none;
+        color: #fff;
+    }
+
+    .clan-eval-btn-approve {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        color: #fff;
+    }
+
+    .clan-eval-btn-close {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #f8f9fa;
+    }
+
+    .clan-eval-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+        color: #fff;
+    }
+
+    .clan-eval-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    }
+
 </style>
 {% endblock %}
 
@@ -317,37 +406,35 @@
 
                     {# Modais precisam ficar fora da <table> para evitar problemas de overflow/z-index #}
                     {% for app in applications %}
-                    <div class="modal fade" id="appModal{{ app.id }}" tabindex="-1" aria-hidden="true">
+                    <div class="modal fade clan-eval-modal" id="appModal{{ app.id }}" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content text-light"
-                                style="background: #1a1a2e; border: 2px solid #0dcaf0; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.8);">
-                                <div class="modal-header border-bottom border-secondary"
-                                    style="background: rgba(0,0,0,0.2);">
-                                    <h5 class="modal-title" style="font-family: 'Orbitron', sans-serif;">
+                            <div class="modal-content text-light clan-eval-modal-content">
+                                <div class="modal-header clan-eval-modal-header">
+                                    <h5 class="modal-title clan-eval-modal-title">
                                         <i class="fas fa-user-ninja me-2 text-warning"></i>{% trans "Solicitação de Recrutamento:" %}
                                         <span class="text-info">{{ app.char_name }}</span>
                                     </h5>
                                     <button type="button" class="btn-close btn-close-white"
                                         data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                                <div class="modal-body p-4">
-                                    <div class="mb-4 bg-black bg-opacity-25 p-3 rounded border border-secondary">
+                                <div class="modal-body clan-eval-modal-body">
+                                    <div class="mb-4 p-3 clan-eval-modal-message">
                                         <p class="mb-1 text-muted small text-uppercase">{% trans "Mensagem do Jogador" %}</p>
                                         <p class="mb-0 fs-6" style="line-height: 1.5;">{{ app.message|linebreaksbr }}</p>
                                     </div>
-                                    <div class="row g-2 text-muted small">
+                                    <div class="row g-2 text-muted small clan-eval-modal-meta">
                                         <div class="col-6"><i class="fas fa-id-card me-1"></i>ID: {{ app.char_id }}</div>
                                         <div class="col-6"><i class="far fa-calendar-alt me-1"></i>{% trans "Enviado em:" %} {{ app.created_at|date:"d/m/Y" }}</div>
                                     </div>
                                 </div>
 
                                 {% if app.status == 'PENDING' %}
-                                <div class="modal-footer border-top border-secondary bg-black bg-opacity-25 justify-content-between">
+                                <div class="modal-footer clan-eval-modal-footer justify-content-between">
                                     <form method="post" action="{% url 'clans:process_application' app.id 'reject' %}">
                                         {% csrf_token %}
                                         <input type="hidden" name="leader_char_id" value="{{ selected_clan.leader_id }}">
                                         <input type="hidden" name="clan_id" value="{{ selected_clan.clan_id }}">
-                                        <button type="submit" class="btn btn-outline-danger px-4 rounded-pill">
+                                        <button type="submit" class="btn clan-eval-btn clan-eval-btn-reject">
                                             <i class="fas fa-times me-2"></i>{% trans "Rejeitar" %}
                                         </button>
                                     </form>
@@ -355,14 +442,14 @@
                                         {% csrf_token %}
                                         <input type="hidden" name="leader_char_id" value="{{ selected_clan.leader_id }}">
                                         <input type="hidden" name="clan_id" value="{{ selected_clan.clan_id }}">
-                                        <button type="submit" class="action-btn action-btn-success">
+                                        <button type="submit" class="clan-eval-btn clan-eval-btn-approve">
                                             <i class="fas fa-check me-2"></i>{% trans "Aprovar e Enviar Convite" %}
                                         </button>
                                     </form>
                                 </div>
                                 {% else %}
-                                <div class="modal-footer border-top border-secondary bg-black bg-opacity-25">
-                                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                                <div class="modal-footer clan-eval-modal-footer">
+                                    <button type="button" class="btn clan-eval-btn clan-eval-btn-close" data-bs-dismiss="modal">
                                         {% trans "Fechar" %}
                                     </button>
                                 </div>

@@ -288,7 +288,7 @@ class ApplyToClanView(LoginRequiredMixin, View):
 class ProcessApplicationView(LoginRequiredMixin, View):
     def post(self, request, pk, action):
         app = get_object_or_404(RecruitmentApplication, pk=pk)
-        leader_char_id = request.POST.get('leader_char_id')
+        posted_leader_char_id = request.POST.get('leader_char_id')
         form_clan_id = _normalize_clan_id(request.POST.get('clan_id'))
         
         if not form_clan_id or str(form_clan_id) != str(app.clan_profile.clan_id):
@@ -303,12 +303,14 @@ class ProcessApplicationView(LoginRequiredMixin, View):
         mock_clans = request.session.get('mock_lead_clans', [])
         user_clans.extend(mock_clans)
         
-        # Security: Verify if the user owns the character that leads this clan
-        is_leader = any(str(c.get('clan_id')) == str(form_clan_id) and str(c.get('leader_id')) == str(leader_char_id) for c in user_clans)
-        
-        if not is_leader:
+        # Security: server-side validation (não confiar em leader_char_id vindo do POST)
+        leader_clan = next((c for c in user_clans if str(c.get('clan_id')) == str(form_clan_id)), None)
+        if not leader_clan:
             messages.error(request, _("Você não tem permissão para processar esta inscrição com este personagem."))
             return redirect('clans:dashboard')
+        
+        # Keep leader_char_id available if needed for future hybrid invite logic
+        leader_char_id = leader_clan.get('leader_id') or posted_leader_char_id
         
         if action == 'approve':
             # Implementar logica Híbrida: Atualizar o Lineage DB (char.clanid = clan_id)
