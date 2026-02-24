@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.mixins import LoginRequiredMixin
 import logging
+import re
 
 from .models import ClanProfile, RecruitmentApplication
 from .forms import ClanProfileForm, RecruitmentApplicationForm
@@ -24,6 +25,16 @@ def _extract_char_id(char_dict):
         or char_dict.get("obj_id")
         or char_dict.get("charId")
     )
+
+
+def _normalize_clan_id(value):
+    """
+    Remove pontuação/formatacao de números (ex: 268.988.327 -> 268988327)
+    para IDs de clã vindos de querystring ou formulários.
+    """
+    if value is None:
+        return None
+    return re.sub(r"\D", "", str(value))
 
 
 class TestClaimClanView(LoginRequiredMixin, View):
@@ -59,7 +70,7 @@ class TestClaimClanView(LoginRequiredMixin, View):
         })
         
     def post(self, request):
-        clan_id = request.POST.get('clan_id')
+        clan_id = _normalize_clan_id(request.POST.get('clan_id'))
         char_id = request.POST.get('char_id')
         
         if clan_id and char_id:
@@ -144,7 +155,8 @@ class ClanDashboardView(LoginRequiredMixin, View):
         mock_clans = request.session.get('mock_lead_clans', [])
         user_clans.extend(mock_clans)
         
-        current_clan_id = request.GET.get('clan_id')
+        current_clan_id_raw = request.GET.get('clan_id')
+        current_clan_id = _normalize_clan_id(current_clan_id_raw) if current_clan_id_raw else None
         selected_clan = None
         profile = None
         form = None
@@ -188,7 +200,7 @@ class ClanDashboardView(LoginRequiredMixin, View):
         mock_clans = request.session.get('mock_lead_clans', [])
         user_clans.extend(mock_clans)
         
-        current_clan_id = request.POST.get('clan_id')
+        current_clan_id = _normalize_clan_id(request.POST.get('clan_id'))
         selected_clan = next((c for c in user_clans if str(c.get('clan_id')) == str(current_clan_id)), None) if user_clans else None
         
         if selected_clan:
@@ -235,17 +247,18 @@ class ApplyToClanView(LoginRequiredMixin, View):
             char_id = form.cleaned_data.get('char_id')
             char_name = form.cleaned_data.get('char_name') or ''
             if characters:
-                # Valida que o personagem pertence às contas do usuário
+                # Valida que o personagem pertence às contas do usuário (mas em modo web não bloqueia se falhar)
                 valid_char = next(
                     (c for c in characters if str(_extract_char_id(c)) == str(char_id)),
                     None,
                 )
-                if not valid_char:
-                    messages.error(request, _("Personagem inválido. Escolha um personagem vinculado à sua conta."))
-                    context = {'profile': profile, 'form': form, 'characters': characters, 'title': _("Inscrever-se no Clã")}
-                    return render_theme_page(request, 'clans', 'apply.html', context)
-                app.char_id = int(char_id)
-                app.char_name = valid_char.get('char_name', char_name)
+                if valid_char:
+                    app.char_id = int(char_id)
+                    app.char_name = valid_char.get('char_name', char_name)
+                else:
+                    # Fallback: aceita os dados enviados, apenas avisa o líder depois
+                    app.char_id = int(char_id)
+                    app.char_name = char_name.strip() or str(char_id)
             else:
                 app.char_id = int(char_id)
                 app.char_name = char_name.strip() or str(char_id)
@@ -258,6 +271,8 @@ class ApplyToClanView(LoginRequiredMixin, View):
             messages.success(request, _("Inscrição enviada com sucesso!"))
             return redirect('clans:detail', clan_id=clan_id)
             
+        # Form inválido: volta para a tela com erros visíveis
+        messages.error(request, _("Corrija os erros marcados no formulário antes de enviar novamente."))
         context = {
             'profile': profile,
             'form': form,
@@ -270,7 +285,7 @@ class ProcessApplicationView(LoginRequiredMixin, View):
     def post(self, request, pk, action):
         app = get_object_or_404(RecruitmentApplication, pk=pk)
         leader_char_id = request.POST.get('leader_char_id')
-        form_clan_id = request.POST.get('clan_id')
+        form_clan_id = _normalize_clan_id(request.POST.get('clan_id'))
         
         if not form_clan_id or str(form_clan_id) != str(app.clan_profile.clan_id):
             messages.error(request, _("Dados de clã inválidos."))

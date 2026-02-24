@@ -5,87 +5,115 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
 <style>
     .dashboard-bg {
-        background: radial-gradient(ellipse at center, #1a1a2e 0%, #121220 100%);
-        color: #f8f9fa;
-        padding: 50px 0;
+        background:
+            radial-gradient(circle at top left, rgba(13, 202, 240, 0.18), transparent 60%),
+            radial-gradient(circle at bottom right, rgba(111, 66, 193, 0.25), transparent 55%),
+            #050814;
+        color: #e9ecef;
+        padding: 56px 0;
         min-height: 100vh;
     }
 
     .dashboard-card {
-        background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(18, 18, 32, 0.95));
-        border: 2px solid #0dcaf0;
-        border-radius: 16px;
-        box-shadow: 0 0 30px rgba(13, 202, 240, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.5);
+        background: radial-gradient(circle at top, rgba(8, 15, 40, 0.98), rgba(3, 7, 22, 0.98));
+        border: 1px solid rgba(13, 202, 240, 0.3);
+        border-radius: 18px;
+        box-shadow:
+            0 0 40px rgba(13, 202, 240, 0.15),
+            0 0 80px rgba(111, 66, 193, 0.25);
         color: #f8f9fa;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(16px);
     }
 
     .card-header-styled {
-        background: linear-gradient(90deg, #1a1a2e, #0dcaf0);
+        background: linear-gradient(120deg, #020617, #111827, #0dcaf0);
         color: #fff;
         font-family: 'Orbitron', sans-serif;
-        border-bottom: 2px solid #00d9ff;
-        padding: 1.5rem;
-        border-radius: 14px 14px 0 0;
+        border-bottom: 1px solid rgba(13, 202, 240, 0.5);
+        padding: 1.6rem 1.8rem;
+        border-radius: 18px 18px 0 0;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    }
+
+    .card-header-styled h3 {
+        font-size: 1.4rem;
+        letter-spacing: 0.05em;
+        color: #ffffff;  /* título sempre branco, inclusive o ID */
     }
 
     .form-control-glass {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #fff;
-        border-radius: 8px;
-        padding: 0.75rem 1rem;
-        transition: all 0.3s;
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        color: #e5e7eb;
+        border-radius: 10px;
+        padding: 0.8rem 1rem;
+        transition: all 0.25s ease;
+        font-size: 0.98rem;
     }
 
     .form-control-glass:focus {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(15, 23, 42, 0.98);
         border-color: #0dcaf0;
-        box-shadow: 0 0 15px rgba(13, 202, 240, 0.3);
-        color: #fff;
+        box-shadow: 0 0 0 1px rgba(13, 202, 240, 0.6);
+        color: #f9fafb;
     }
 
     .form-control-glass::placeholder {
-        color: rgba(255, 255, 255, 0.4);
+        color: rgba(148, 163, 184, 0.7);
     }
 
     .action-btn {
-        background: linear-gradient(45deg, #28a745, #20c997);
+        background: linear-gradient(135deg, #38bdf8, #6366f1);
         border: none;
-        border-radius: 25px;
+        border-radius: 999px;
         color: white;
         font-weight: 600;
-        padding: 12px 30px;
-        transition: all 0.3s ease;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        padding: 0.9rem 2.6rem;
+        transition: all 0.25s ease;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
         display: inline-flex;
         align-items: center;
         justify-content: center;
         text-decoration: none;
-        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        box-shadow:
+            0 10px 30px rgba(56, 189, 248, 0.55),
+            0 0 22px rgba(129, 140, 248, 0.85);
+        font-size: 0.98rem;
     }
 
     .action-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.6);
+        transform: translateY(-2px) scale(1.01);
+        box-shadow:
+            0 18px 44px rgba(56, 189, 248, 0.8),
+            0 0 30px rgba(129, 140, 248, 1);
         color: white;
     }
 
     .alert-info-custom {
-        background: linear-gradient(135deg, rgba(13, 202, 240, 0.1), rgba(13, 202, 240, 0.05));
-        border: 1px solid rgba(13, 202, 240, 0.4);
-        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(13, 202, 240, 0.14), rgba(37, 99, 235, 0.16));
+        border: 1px solid rgba(129, 230, 217, 0.45);
+        border-radius: 14px;
         color: #e0f2fe;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.85);
     }
 
     .form-label-glow {
-        color: #0dcaf0;
+        color: #7dd3fc;
         text-transform: uppercase;
-        font-size: 0.85rem;
+        font-size: 0.82rem;
         font-weight: 700;
-        letter-spacing: 1px;
-        margin-bottom: 0.75rem;
+        letter-spacing: 0.12em;
+        margin-bottom: 0.55rem;
+    }
+
+    .hint-text {
+        color: rgba(148, 163, 184, 0.9);
+        font-size: 0.86rem;
+    }
+
+    .section-divider {
+        border-top: 1px dashed rgba(148, 163, 184, 0.4);
+        margin: 1.5rem 0 1.25rem;
     }
 </style>
 {% endblock %}
@@ -166,7 +194,8 @@
                                 <label for="{{ form.message.id_for_label }}" class="form-label form-label-glow">
                                     <i class="fas fa-pen-nib me-2"></i>{% trans "Carta de Apresentação" %}
                                 </label>
-                                {% render_field form.message class="form-control form-control-glass" placeholder=_("Conte por que deseja entrar, sua classe foco, level e horários em que costuma jogar.") rows="5" %}
+                                {% trans "Conte por que deseja entrar, sua classe foco, level e horários em que costuma jogar." as msg_placeholder %}
+                                {% render_field form.message class="form-control form-control-glass" placeholder=msg_placeholder rows="5" %}
 
                                 <div class="form-text mt-2" style="color: rgba(255,255,255,0.5);">{{ form.message.help_text }}</div>
                                 {% if form.message.errors %}
@@ -177,8 +206,8 @@
                             <div class="d-flex flex-column flex-sm-row gap-3 justify-content-end border-top pt-4"
                                 style="border-color: rgba(255,255,255,0.1) !important;">
                                 <a href="{% url 'clans:detail' profile.clan_id %}"
-                                    class="btn border border-secondary text-light px-4 rounded-pill d-flex align-items-center justify-content-center"
-                                    style="background: rgba(255,255,255,0.05); transition: background 0.3s;">
+                                    class="btn border-0 px-4 rounded-pill d-flex align-items-center justify-content-center"
+                                    style="background: linear-gradient(135deg, #ef4444, #b91c1c); color:#ffffff; box-shadow: 0 8px 24px rgba(239,68,68,0.6); transition: all 0.25s;">
                                     {% trans "Cancelar" %}
                                 </a>
                                 <button type="submit" class="action-btn">
