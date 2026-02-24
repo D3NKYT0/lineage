@@ -239,7 +239,11 @@ class ApplyToClanView(LoginRequiredMixin, View):
         accounts = get_available_accounts(request.user)
         logins = [acc.get('login') for acc in accounts if acc.get('login')]
         characters = get_user_characters(logins)
-        form = RecruitmentApplicationForm(request.POST)
+        # Normaliza o char_id vindo do select para garantir apenas dígitos
+        post_data = request.POST.copy()
+        if 'char_id' in post_data:
+            post_data['char_id'] = _normalize_clan_id(post_data.get('char_id'))
+        form = RecruitmentApplicationForm(post_data)
         if form.is_valid():
             app = form.save(commit=False)
             app.user = request.user

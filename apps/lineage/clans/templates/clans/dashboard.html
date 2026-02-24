@@ -178,6 +178,7 @@
         color: #fff;
         border-left: 4px solid #ffc107 !important;
     }
+
 </style>
 {% endblock %}
 
@@ -309,72 +310,67 @@
                                         {% endif %}
                                     </td>
                                 </tr>
-
-                                <!-- Modal for Application -->
-                                <div class="modal fade" id="appModal{{ app.id }}" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content text-light"
-                                            style="background: #1a1a2e; border: 2px solid #0dcaf0; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.8);">
-                                            <div class="modal-header border-bottom border-secondary"
-                                                style="background: rgba(0,0,0,0.2);">
-                                                <h5 class="modal-title" style="font-family: 'Orbitron', sans-serif;">
-                                                    <i class="fas fa-user-ninja me-2 text-warning"></i>{% trans "Solicitação de Recrutamento:" %}
-                                                    <span class="text-info">{{ app.char_name }}</span>
-                                                </h5>
-                                                <button type="button" class="btn-close btn-close-white"
-                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body p-4">
-                                                <div
-                                                    class="mb-4 bg-black bg-opacity-25 p-3 rounded border border-secondary">
-                                                    <p class="mb-1 text-muted small text-uppercase">{% trans "Mensagem do Jogador" %}</p>
-                                                    <p class="mb-0 fs-6" style="line-height: 1.5;">{{ app.message|linebreaksbr }}</p>
-                                                </div>
-                                                <div class="row g-2 text-muted small">
-                                                    <div class="col-6"><i class="fas fa-id-card me-1"></i>ID: {{ app.char_id }}</div>
-                                                    <div class="col-6"><i class="far fa-calendar-alt me-1"></i>{% trans "Enviado em:" %} {{ app.created_at|date:"d/m/Y" }}</div>
-                                                </div>
-                                            </div>
-
-                                            {% if app.status == 'PENDING' %}
-                                            <div
-                                                class="modal-footer border-top border-secondary bg-black bg-opacity-25 justify-content-between">
-                                                <form method="post"
-                                                    action="{% url 'clans:process_application' app.id 'reject' %}">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="leader_char_id"
-                                                        value="{{ selected_clan.leader_id }}">
-                                                    <input type="hidden" name="clan_id"
-                                                        value="{{ selected_clan.clan_id }}">
-                                                    <button type="submit"
-                                                        class="btn btn-outline-danger px-4 rounded-pill"><i
-                                                            class="fas fa-times me-2"></i>{% trans "Rejeitar" %}</button>
-                                                </form>
-                                                <form method="post"
-                                                    action="{% url 'clans:process_application' app.id 'approve' %}">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="leader_char_id"
-                                                        value="{{ selected_clan.leader_id }}">
-                                                    <input type="hidden" name="clan_id"
-                                                        value="{{ selected_clan.clan_id }}">
-                                                    <button type="submit" class="action-btn action-btn-success"><i
-                                                            class="fas fa-check me-2"></i>{% trans "Aprovar e Enviar Convite" %}</button>
-                                                </form>
-                                            </div>
-                                            {% else %}
-                                            <div
-                                                class="modal-footer border-top border-secondary bg-black bg-opacity-25">
-                                                <button type="button" class="btn btn-secondary rounded-pill"
-                                                    data-bs-dismiss="modal">{% trans "Fechar" %}</button>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                </div>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
+
+                    {# Modais precisam ficar fora da <table> para evitar problemas de overflow/z-index #}
+                    {% for app in applications %}
+                    <div class="modal fade" id="appModal{{ app.id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content text-light"
+                                style="background: #1a1a2e; border: 2px solid #0dcaf0; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.8);">
+                                <div class="modal-header border-bottom border-secondary"
+                                    style="background: rgba(0,0,0,0.2);">
+                                    <h5 class="modal-title" style="font-family: 'Orbitron', sans-serif;">
+                                        <i class="fas fa-user-ninja me-2 text-warning"></i>{% trans "Solicitação de Recrutamento:" %}
+                                        <span class="text-info">{{ app.char_name }}</span>
+                                    </h5>
+                                    <button type="button" class="btn-close btn-close-white"
+                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-4">
+                                    <div class="mb-4 bg-black bg-opacity-25 p-3 rounded border border-secondary">
+                                        <p class="mb-1 text-muted small text-uppercase">{% trans "Mensagem do Jogador" %}</p>
+                                        <p class="mb-0 fs-6" style="line-height: 1.5;">{{ app.message|linebreaksbr }}</p>
+                                    </div>
+                                    <div class="row g-2 text-muted small">
+                                        <div class="col-6"><i class="fas fa-id-card me-1"></i>ID: {{ app.char_id }}</div>
+                                        <div class="col-6"><i class="far fa-calendar-alt me-1"></i>{% trans "Enviado em:" %} {{ app.created_at|date:"d/m/Y" }}</div>
+                                    </div>
+                                </div>
+
+                                {% if app.status == 'PENDING' %}
+                                <div class="modal-footer border-top border-secondary bg-black bg-opacity-25 justify-content-between">
+                                    <form method="post" action="{% url 'clans:process_application' app.id 'reject' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="leader_char_id" value="{{ selected_clan.leader_id }}">
+                                        <input type="hidden" name="clan_id" value="{{ selected_clan.clan_id }}">
+                                        <button type="submit" class="btn btn-outline-danger px-4 rounded-pill">
+                                            <i class="fas fa-times me-2"></i>{% trans "Rejeitar" %}
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{% url 'clans:process_application' app.id 'approve' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="leader_char_id" value="{{ selected_clan.leader_id }}">
+                                        <input type="hidden" name="clan_id" value="{{ selected_clan.clan_id }}">
+                                        <button type="submit" class="action-btn action-btn-success">
+                                            <i class="fas fa-check me-2"></i>{% trans "Aprovar e Enviar Convite" %}
+                                        </button>
+                                    </form>
+                                </div>
+                                {% else %}
+                                <div class="modal-footer border-top border-secondary bg-black bg-opacity-25">
+                                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">
+                                        {% trans "Fechar" %}
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                     {% else %}
                     <div class="text-center py-5 opacity-50">
                         <i class="fas fa-inbox fa-3x mb-3 text-secondary"></i>

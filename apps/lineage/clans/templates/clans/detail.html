@@ -30,10 +30,13 @@
 
     .card-header-styled {
         background: linear-gradient(90deg, #1a1a2e, #6f42c1);
-        color: #fff;
         font-family: 'Orbitron', sans-serif;
         border-bottom: 2px solid #00d9ff;
         padding: 1rem 1.5rem;
+    }
+
+    .card-header-styled h4 {
+        color: #ffffff; /* títulos dos cards sempre brancos */
     }
 
     .card-title-orbit {
@@ -226,13 +229,15 @@
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center mb-2 rounded border">
                             <span class="text-light"><i class="fas fa-user-shield text-info me-2"></i>{% trans "Classes" %}</span>
-                            <span class="badge bg-info text-dark">{{ profile.required_classes|default:_("Qualquer")
-                                }}</span>
+                            {% trans "Qualquer" as any_label %}
+                            <span class="badge bg-info text-dark">
+                                {{ profile.required_classes|default:any_label }}
+                            </span>
                         </li>
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center mb-2 rounded border">
                             <span class="text-light"><i class="fas fa-crosshairs text-danger me-2"></i>{% trans "Foco" %}</span>
-                            <span class="badge bg-danger text-white">{{ profile.focus }}</span>
+                            <span class="badge bg-danger text-white">{{ profile.get_focus_display }}</span>
                         </li>
 
                         <li class="list-group-item mb-2 rounded border">

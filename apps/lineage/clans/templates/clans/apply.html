@@ -154,6 +154,12 @@
                         <form method="post" action="{% url 'clans:apply' profile.clan_id %}">
                             {% csrf_token %}
 
+                            {% if form.non_field_errors %}
+                            <div class="alert alert-danger py-2 px-3 mb-4 small">
+                                {{ form.non_field_errors|join:", " }}
+                            </div>
+                            {% endif %}
+
                             <div class="mb-5 p-4 rounded"
                                 style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);">
                                 <label class="form-label form-label-glow"><i class="fas fa-user-ninja me-2"></i>{% trans "Identificação do Personagem" %}</label>
@@ -167,6 +173,11 @@
                                     {% endfor %}
                                 </select>
                                 <input type="hidden" name="char_name" id="charNameInput" value="">
+                                {% if form.char_id.errors or form.char_name.errors %}
+                                <div class="invalid-feedback d-block text-danger mt-2">
+                                    {{ form.char_id.errors|join:", " }} {{ form.char_name.errors|join:", " }}
+                                </div>
+                                {% endif %}
                                 <script>
                                 document.getElementById('charSelect').addEventListener('change', function() {
                                     var opt = this.options[this.selectedIndex];
