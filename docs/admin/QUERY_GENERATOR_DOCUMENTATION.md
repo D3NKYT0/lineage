@@ -286,6 +286,7 @@ from classes.transfer_wallet_to_char import get_transfer_wallet_to_char_template
 from classes.transfer_char_to_wallet import get_transfer_char_to_wallet_template
 from classes.lineage_marketplace import get_lineage_marketplace_template
 from classes.lineage_inflation import get_lineage_inflation_template
+from classes.lineage_clans import get_lineage_clans_template
 ```
 
 #### **5.2. Geração de Cada Classe**
@@ -486,6 +487,14 @@ Marketplace de itens:
 Análise econômica:
 - `get_currency_circulation()` - Circulação de moeda
 - `get_item_inflation()` - Inflação de itens
+
+#### **LineageClans**
+Gerenciamento web de clãs:
+- `get_user_lead_clans()` - Clãs onde as contas são líderes
+- `get_user_characters()` - Personagens das contas
+- `get_clan_basic_info()` - Dados básicos do clã
+- `get_clan_full_details()` - Estatísticas completas do clã
+- `get_clan_members()` - Lista de membros do clã
 
 ---
 

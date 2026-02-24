@@ -131,6 +131,7 @@ A classe `LineageClans` fica em cada arquivo `query_*.py` (ex.: `query_default`,
 | `get_user_characters(account_logins)` | `[{char_id, char_name, level, clan_id}, ...]` | Personagens das contas (usa `LineageServices.find_chars`) |
 | `get_clan_basic_info(clan_id)` | `{clan_id, clan_name, clan_level}` | Dados básicos do clã |
 | `get_clan_full_details(clan_id)` | `{clan_id, clan_name, level, leader_name, member_count, reputation, ...}` | Dados completos (delega para `LineageStats.get_clan_details` quando existir) |
+| `get_clan_members(clan_id)` | `[{char_name, online, pvpkills, pkkills, level, base...}, ...]` | Retorna os membros de um clã (respeitando acessos e estrutura de colunas) |
 
 O SQL é adaptado ao schema: `CLAN_NAME_SOURCE` (clan_data vs clan_subpledges) e `SUBPLEDGE_FILTER` (sub_pledge_id vs type) vêm das constantes do módulo query.
 
