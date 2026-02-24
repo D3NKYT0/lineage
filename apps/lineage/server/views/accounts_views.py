@@ -32,6 +32,7 @@ signer = TimestampSigner()
 
 # Importação dinâmica das classes E constantes do schema
 LineageServices = get_query_class("LineageServices")
+LineageClans = get_query_class("LineageClans")
 
 # Importar constantes do schema (nomes reais das colunas do banco)
 import importlib
@@ -79,6 +80,22 @@ def account_dashboard(request):
     except Exception:
         personagens = []
         messages.warning(request, 'Não foi possível carregar seus personagens agora.')
+
+    # Verificar se alguma conta vinculada possui clã em que é líder
+    has_clan_leader_access = False
+    leader_clans = []
+    mock_lead_clans = request.session.get('mock_lead_clans', []) or []
+    if LineageClans:
+        try:
+            # Usa as contas disponíveis (todas contas L2 do usuário) para buscar clãs liderados
+            accounts = get_available_accounts(request.user)
+            logins = [acc.get('login') for acc in accounts if acc.get('login')]
+            leader_clans = LineageClans.get_user_lead_clans(logins) or []
+        except Exception:
+            leader_clans = []
+
+    # Considera tanto clãs reais quanto mockados (modo de teste do painel de clã)
+    has_clan_leader_access = bool(leader_clans or mock_lead_clans)
 
     # ✅ Usar constante do schema ao invés de hardcoded
     account['status'] = "Ativa" if int(account.get(ACCESS_LEVEL, 0)) >= 0 else "Bloqueada"
@@ -130,6 +147,7 @@ def account_dashboard(request):
         'characters': char_list,
         'char_count': len(char_list),
         'is_owner_account': is_owner,
+        'has_clan_leader_access': has_clan_leader_access,
     }
     context.update(get_lineage_template_context(request))
 

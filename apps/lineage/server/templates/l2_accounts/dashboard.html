@@ -662,6 +662,13 @@
                 <i class="fas fa-pencil-alt me-2"></i>
                 {% trans "Alterar Nickname" %}
               </a>
+
+              {% if has_clan_leader_access %}
+              <a href="{% url 'clans:dashboard' %}" class="action-btn">
+                <i class="fas fa-crown me-2"></i>
+                {% trans "Painel do Clã (Líder)" %}
+              </a>
+              {% endif %}
             </div>
           </div>
           {% endfor %}
