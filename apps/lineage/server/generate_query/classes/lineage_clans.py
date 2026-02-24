@@ -77,7 +77,7 @@ def get_lineage_clans_template(char_id: str, clan_structure: dict, clan_id_col: 
                 if personagens:
                     for char in personagens:
                         all_characters.append({{
-                            'char_id': char.get('{char_id}'),
+                            'char_id': char.get('{char_id}') or char.get('obj_Id') or char.get('obj_id') or char.get('charId'),
                             'char_name': char.get('char_name'),
                             'account_name': char.get('account_name', login),
                             'level': char.get('base_level') or char.get('level', 1),
