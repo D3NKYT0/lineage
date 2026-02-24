@@ -53,6 +53,8 @@ BASE_CLASS_COL = getattr(query_module, 'BASE_CLASS_COL', 'classid')
 @conditional_otp_required
 @require_lineage_connection
 def account_dashboard(request):
+    import logging
+    logger = logging.getLogger(__name__)
     active_login = get_active_login(request)
     account_data = LineageAccount.check_login_exists(active_login)
 
@@ -81,21 +83,23 @@ def account_dashboard(request):
         personagens = []
         messages.warning(request, 'Não foi possível carregar seus personagens agora.')
 
-    # Verificar se alguma conta vinculada possui clã em que é líder
+    # Verificar se a conta ATIVA possui algum clã em que é líder
     has_clan_leader_access = False
     leader_clans = []
-    mock_lead_clans = request.session.get('mock_lead_clans', []) or []
-    if LineageClans:
+    if LineageClans and active_login:
         try:
-            # Usa as contas disponíveis (todas contas L2 do usuário) para buscar clãs liderados
-            accounts = get_available_accounts(request.user)
-            logins = [acc.get('login') for acc in accounts if acc.get('login')]
-            leader_clans = LineageClans.get_user_lead_clans(logins) or []
+            # Apenas o login ativo importa aqui; um clã só pode ter um líder
+            leader_clans = LineageClans.get_user_lead_clans([active_login]) or []
         except Exception:
             leader_clans = []
 
-    # Considera tanto clãs reais quanto mockados (modo de teste do painel de clã)
-    has_clan_leader_access = bool(leader_clans or mock_lead_clans)
+    has_clan_leader_access = bool(leader_clans)
+    logger.info(
+        "[account_dashboard] active_login=%s leader_clans_count=%s leader_clans=%s",
+        active_login,
+        len(leader_clans) if leader_clans else 0,
+        leader_clans,
+    )
 
     # ✅ Usar constante do schema ao invés de hardcoded
     account['status'] = "Ativa" if int(account.get(ACCESS_LEVEL, 0)) >= 0 else "Bloqueada"
@@ -110,6 +114,22 @@ def account_dashboard(request):
             except:
                 created_time = None
 
+    # Mapeia IDs/Nomes de personagens líderes de clã para destacar no dashboard
+    leader_ids = {str(c.get('leader_id')) for c in (leader_clans or []) if c.get('leader_id') is not None}
+    leader_names = {str(c.get('leader_name')).strip().lower() for c in (leader_clans or []) if c.get('leader_name')}
+
+    mock_lead_clans = request.session.get('mock_lead_clans', []) or []
+    mock_leader_ids = {str(c.get('leader_id')) for c in mock_lead_clans if c.get('leader_id') is not None}
+    mock_leader_names = {str(c.get('leader_name')).strip().lower() for c in mock_lead_clans if c.get('leader_name')}
+
+    logger.info(
+        "[account_dashboard] leader_ids=%s leader_names=%s mock_leader_ids=%s mock_leader_names=%s",
+        sorted(list(leader_ids)),
+        sorted(list(leader_names)),
+        sorted(list(mock_leader_ids)),
+        sorted(list(mock_leader_names)),
+    )
+
     char_list = []
     for char in personagens:
         level = char.get('base_level', '-')
@@ -117,6 +137,21 @@ def account_dashboard(request):
         char_name = char.get('char_name') or char.get('charname', '-')
         base_class = char.get('base_class') or char.get('classid', 0)
         sex = char.get('sex', 0)
+
+        obj_id_str = str(obj_id)
+        name_key = str(char_name).strip().lower()
+        is_clan_leader = (
+            obj_id_str in leader_ids
+            or obj_id_str in mock_leader_ids
+            or name_key in leader_names
+            or name_key in mock_leader_names
+        )
+        logger.info(
+            "[account_dashboard] char_name=%s obj_id=%s is_clan_leader=%s",
+            char_name,
+            obj_id,
+            is_clan_leader,
+        )
 
         char_list.append({
             'id': obj_id,
@@ -137,7 +172,8 @@ def account_dashboard(request):
             'ally': char.get('ally_name', '-'),
             'nobless': 'Sim' if char.get('nobless') else 'Não',
             'hero': 'Sim' if char.get('hero_end') and int(char['hero_end']) > int(now().timestamp() * 1000) else 'Não',
-            'avatar': gen_avatar(base_class, sex)
+            'avatar': gen_avatar(base_class, sex),
+            'is_clan_leader': is_clan_leader,
         })
 
     context = {

@@ -104,12 +104,14 @@ class TestClaimClanView(LoginRequiredMixin, View):
                 # Store mock data in session
                 mock_clans = request.session.get('mock_lead_clans', [])
                 
-                if not any(str(c.get('clan_id')) == str(clan_id) and str(c.get('leader_id')) == str(char_id) for c in mock_clans):
+                leader_id = _extract_char_id(selected_char)
+
+                if not any(str(c.get('clan_id')) == str(clan_id) and str(c.get('leader_id')) == str(leader_id) for c in mock_clans):
                     mock_clans.append({
                         'clan_id': int(clan_id),
                         'clan_name': clan_name,
                         'level': clan_level,
-                        'leader_id': selected_char.get('char_id'),
+                        'leader_id': leader_id,
                         'leader_name': selected_char.get('char_name')
                     })
                     request.session['mock_lead_clans'] = mock_clans
