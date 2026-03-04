@@ -1,185 +1,131 @@
 # Licença do Projeto PDL (Painel Definitivo Lineage)
 
-## 📜 Estrutura de Licenciamento
+## 📌 Resumo Executivo
 
-Este projeto utiliza uma estrutura de licenciamento dual, combinando código open source e código proprietário.
+O projeto **PDL (Painel Definitivo Lineage)** adota um modelo de **Licenciamento Duplo (Dual License)**. 
+Isso significa que o projeto é composto por arquiteturas open source de terceiros e código proprietário desenvolvido exclusivamente pela equipe PDL.
+
+- **Componentes Base (Frontend/Tema):** Distribuídos sob a Licença MIT (Livres).
+- **Código PDL (Backend, Sistemas L2, Frontend Customizado):** Protegidos por direitos autorais (Proprietário), com regras de uso específicas divididas entre as modalidades **PDL FREE** (Não-Comercial) e **PDL PRO** (Comercial).
 
 ---
 
-## 🔓 Parte 1: Código Open Source (Licença MIT)
+## 🔓 Parte 1: Componentes Open Source (Licença MIT)
 
-### Componentes Cobertos pela MIT License
+O projeto utiliza como fundação o tema "Volt Pro" e outras bibliotecas. Estes componentes específicos permanecem sob a **Licença MIT**.
 
-Os seguintes componentes são distribuídos sob a **Licença MIT**:
+### O que é coberto pela MIT?
+- **Tema Base:** Templates HTML/CSS originais do tema Volt Pro.
+- **Bibliotecas:** Dependências JavaScript e CSS de terceiros (Bootstrap, jQuery, etc.).
+- **Assets:** Ícones, fontes e recursos visuais originais do tema base.
 
-- **Frontend Base**: Templates HTML/CSS originais do tema Volt Pro
-- **Bibliotecas JavaScript**: Bootstrap, jQuery, e outras dependências de terceiros
-- **Assets Estáticos**: Ícones, fontes e recursos visuais do tema base
-
-### Copyright
-
-```
+### Copyright dos Componentes Base
+```text
 Copyright (c) 2019-presente AppSeed (http://appseed.us/)
-Copyright (c) 2025-presente Daniel Amaral / PDL Team (https://pdl.denky.dev.br)
 ```
 
-### Texto da Licença MIT
+### Termos da Licença MIT
+> Permite o uso comercial, modificação, distribuição e uso privado destes componentes específicos, desde que o aviso de direitos autorais e a permissão sejam incluídos em todas as cópias. O software é fornecido "como está", sem garantias.
+*(Para o texto completo em inglês da Licença MIT, consulte o repositório original dos componentes de terceiros).*
 
-```
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+---
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## 🔒 Parte 2: Código Proprietário PDL (Todos os Direitos Reservados)
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Todo o ecossistema lógico, integrações, APIs e customizações criadas para o Lineage 2 pertencem à equipe PDL. **Este código NÃO é Open Source e NÃO está sob a licença MIT.**
+
+### Copyright PDL
+```text
+Copyright (c) 2024-2026 Daniel Amaral / PDL Team (https://pdl.denky.dev.br). Todos os direitos reservados.
 ```
 
-### Permissões da Licença MIT
-
-| Permissão | Status |
-|-----------|--------|
-| ✅ Uso comercial | **Permitido** |
-| ✅ Modificação | **Permitido** |
-| ✅ Distribuição | **Permitido** |
-| ✅ Uso privado | **Permitido** |
-| ✅ Criar produtos para clientes | **Permitido** |
-| ✅ Criar múltiplas aplicações | **Permitido** |
-| ✅ Criar aplicações SaaS | **Permitido** |
-| ✅ Cobrar de usuários finais | **Permitido** |
-
-### Limitações da Licença MIT
-
-| Restrição | Status |
-|-----------|--------|
-| ❌ Remover copyright do código-fonte original | **Não permitido** |
-| ❌ Responsabilização dos autores | **Não aplicável** |
-| ❌ Garantia de funcionamento | **Não fornecida** |
+### O que é coberto (Código Proprietário)?
+- **Backend Completo (Django & Python):** Desenvolvido em **Python 3.14** e **Django**, incluindo API REST, autenticação (com 2FA), portais de pagamentos (Mercado Pago, Stripe, PayPal) e processamento assíncrono via **Celery** e **Redis**.
+- **Integração Lineage 2:** Sincronização, leitura e escrita no banco de dados do L2, manipulação de contas, personagens e clãs via **PostgreSQL**.
+- **Sistemas Exclusivos:** Carteira digital (Wallet), loja virtual, marketplace, leilões, rankings, minigames (roleta, caixas, etc.), sistema de licenciamento e notificações automáticas (via **Daphne/WebSockets**).
+- **Frontend e Admin Customizado:** Todas as telas, dashboards e adaptações feitas sobre o tema base para atender exclusivamente ao projeto PDL.
+- **Infraestrutura e DevOps:** Arquitetura 100% conteinerizada via **Docker** e **Docker Compose**, roteamento e gateway proxy via **Nginx**, e execução em servidores WSGI/ASGI (**Gunicorn** e **Daphne**). Módulo de mídia e validação utilizando **FFmpeg**.
 
 ---
 
-## 🔒 Parte 2: Código Proprietário (Todos os Direitos Reservados)
+## ⚖️ Modalidades de Uso do Código Proprietário
 
-### Componentes Proprietários
+O uso da Parte 2 (Código Proprietário) é regulado por duas modalidades vigentes:
 
-O seguinte código desenvolvido pela equipe PDL é **proprietário** e **não está coberto pela Licença MIT**:
+### 🟢 PDL FREE (Uso Não-Comercial)
+Licença voltada para testes, aprendizado e servidores privados comunitários sem fins lucrativos.
 
-#### Backend Completo
-- 🔐 Sistema de autenticação e 2FA
-- 💰 Integrações de pagamento (Mercado Pago, Stripe, PayPal)
-- 🎮 Sistema de integração com servidor Lineage 2
-- 💳 Sistema de carteira digital (Wallet)
-- 🛒 Sistema de loja virtual e marketplace
-- 🏆 Sistema de leilões entre jogadores
-- 📊 Sistema de relatórios e analytics
-- 🎯 Sistema de minigames (roleta, caixas, dados, pesca)
-- 📱 Sistema de notificações (push, email, in-app)
-- 🌐 Sistema de rede social integrada
-- 🎨 Sistema dinâmico de temas
-- 📈 Sistema de rankings (PvP, PK, Clãs)
-- 📚 Sistema de Wiki de itens
-- 🎫 Sistema de licenciamento
-- 🔧 Painéis administrativos customizados
-- 🌍 Sistema de internacionalização (i18n)
-- 📡 API REST completa
-- 🔄 Sistema de sincronização com banco de dados L2
+**✅ O que é Permitido:**
+- Uso pessoal, educacional ou para desenvolvimento de testes locais.
+- Deploy em servidores de Lineage 2 **estritamente não comerciais** (onde não há venda de itens, doações com recompensas ou comercialização de vantagens VIP).
+- Estudar e modificar o código-fonte internamente para **uso próprio**.
 
-#### Frontend Customizado
-- 🎨 Templates customizados para todas as funcionalidades
-- 💼 Interfaces de gerenciamento
-- 📊 Dashboards interativos
-- 🎮 Componentes específicos do Lineage 2
-- 🛠️ Todas as modificações e melhorias no frontend base
+**❌ O que é Restrito (Sem garantias do Free):**
+- Não há suporte técnico ou garantia de implantação/funcionamento.
+- Atualizações não são garantidas de forma ativa para a versão gratuita.
 
-#### Infraestrutura e DevOps
-- 🐳 Configurações Docker otimizadas
-- ⚙️ Scripts de setup e deploy
-- 🔧 Configurações de Gunicorn, Daphne, Nginx
-- 📦 Sistema de build e CI/CD
+### 🔵 PDL PRO (Uso Comercial)
+Licença comercial obrigatória para qualquer servidor de Lineage 2 que envolva monetização ou obtenção de renda (venda de moedas, itens, status VIP, doações recompensadas).
 
-### Termos de Uso do Código Proprietário
+**❌ O que NÃO é Permitido (Mesmo com ou sem licença PRO):**
+- Revender, sublicenciar, distribuir ou transformar o painel em modelo *Software as a Service* (SaaS) a terceiros.
+- Criar produtos derivados para venda concorrente usando a base de código do PDL.
+- Remover os créditos fixos, logotipos essenciais ou avisos de copyright do painel PDL.
 
-#### ✅ Permitido (PDL FREE)
-- Uso pessoal e educacional
-- Modificação para uso próprio
-- Estudo do código-fonte
-- Deploy em servidores privados
-- Uso em servidores Lineage 2 não comerciais
-
-#### ❌ Não Permitido (Requer PDL PRO)
-- Uso comercial sem licença
-- Revenda do sistema
-- Criação de produtos derivados para venda
-- Remoção de marcas e copyright
-- Distribuição do código proprietário
-- Oferecimento como serviço (SaaS) sem licença
-- Uso em servidores comerciais sem contrato
-
-### Suporte e Garantias
-
-#### PDL FREE (Open Source)
-- ❌ Sem suporte oficial
-- ❌ Sem garantias de funcionamento
-- ❌ Sem atualizações garantidas
-- ✅ Comunidade open source
-
-#### PDL PRO (Licença Comercial)
-- ✅ Suporte técnico dedicado
-- ✅ Atualizações regulares
-- ✅ Garantia de funcionamento
-- ✅ SLA definido em contrato
-- ✅ Customizações incluídas
+**✅ Vantagens Inclusas na Licença PRO:**
+- Conformidade e permissão legal imediata para utilizar os sistemas completos de monetização.
+- Suporte técnico dedicado, prioritário e suporte com a configuração inicial.
+- Atualizações regulares, correções de segurança e acesso a novas funcionalidades.
+- Garantia de funcionamento atrelada via acordo e termos de serviço (SLA).
 
 ---
 
-## 📞 Contato e Informações
+## 🌟 Tecnologias Empregadas e Créditos
 
-### Licenciamento Comercial (PDL PRO)
+O **PDL** é construído no ombro de gigantes tecnológicos. Reconhecemos e agradecemos as comunidades de código aberto que mantêm as seguintes tecnologias fundamentais:
 
-Para adquirir uma licença comercial com suporte e garantias:
-
-- **Email**: contato@denky.dev.br
-- **Website**: https://pdl.denky.dev.br
-- **GitHub**: https://github.com/D3NKYT0/lineage
-
-### Questões sobre Licença MIT Original
-
-Para informações sobre componentes originais da AppSeed:
-
-- **Email**: support@appseed.us
-- **Website**: https://appseed.us
+- **[Python](https://www.python.org/) & [Django](https://www.djangoproject.com/):** Linguagem base e framework web robusto que sustenta o backend do projeto (PSF License / BSD License).
+- **[PostgreSQL](https://www.postgresql.org/):** Banco de dados relacional avançado utilizado na estrutura principal (PostgreSQL License).
+- **[Redis](https://redis.io/):** Banco de dados em memória, utilizado para mensageria, cache e brokers (BSD License).
+- **[Celery](https://docs.celeryq.dev/):** Fila de tarefas distribuídas assíncronas em Python (BSD License).
+- **[Docker](https://www.docker.com/):** Plataforma de conteinerização que garante padronização e escalabilidade do Codebase (Apache License 2.0).
+- **[Nginx](https://nginx.org/):** Servidor web de alta performance usado como proxy reverso (2-clause BSD-like license).
+- **[Gunicorn](https://gunicorn.org/) & [Daphne](https://github.com/django/daphne):** Servidores WSGI e ASGI para a execução do Django (MIT / BSD License).
+- **[Lineage 2 (NCSoft)](https://lineage2.com):** Jogo originário em torno do qual foi desenvolvido todo o painel. Este painel é criado para administradores de servidores (L2J e correlatos) e respeita implicitamente as propriedades artísticas da NCSoft na representação em painel, não interferindo nos códigos proprietários do jogo em si.
 
 ---
 
-## 📋 Resumo de Licenciamento
+## 📋 Tabela Resumo de Licenciamento
 
-| Componente | Licença | Uso Comercial | Suporte |
-|------------|---------|---------------|---------|
-| Frontend Base (Volt Pro) | MIT | ✅ Permitido | ❌ Não incluído |
-| Backend PDL | Proprietário | ⚠️ Requer licença | ✅ PDL PRO apenas |
-| Integrações L2 | Proprietário | ⚠️ Requer licença | ✅ PDL PRO apenas |
-| Sistema de Pagamentos | Proprietário | ⚠️ Requer licença | ✅ PDL PRO apenas |
-| Documentação | MIT | ✅ Permitido | ❌ Não incluído |
-
----
-
-## ⚖️ Disclaimer Legal
-
-Este software é fornecido "como está", sem garantias de qualquer tipo, expressas ou implícitas, incluindo, mas não se limitando a, garantias de comercialização, adequação a um propósito específico e não violação.
-
-Em nenhum caso os autores ou detentores de direitos autorais serão responsáveis por qualquer reclamação, danos ou outras responsabilidades, seja em uma ação de contrato, ato ilícito ou de outra forma, decorrente de, ou em conexão com o software ou o uso ou outras negociações no software.
+| Sistema / Abaixo descrito        | Tipo de Licença      | Uso Comercial (Com monetização) | Suporte Técnico e Updates  |
+|----------------------------------|----------------------|---------------------------------|----------------------------|
+| **Frontend Base (Volt/Libs)**    | MIT Orientado        | ✅ Permitido integralmente      | ❌ Nenhum                   |
+| **Backend & Lógica da API PDL**  | Proprietário PDL     | ⚠️ Restrito (Apenas PDL PRO)    | ✅ Exclusivo PDL PRO        |
+| **Integração no BD Lineage 2**   | Proprietário PDL     | ⚠️ Restrito (Apenas PDL PRO)    | ✅ Exclusivo PDL PRO        |
+| **Módulos Fiscais (Loja/Pagto)** | Proprietário PDL     | ⚠️ Restrito (Apenas PDL PRO)    | ✅ Exclusivo PDL PRO        |
+| **Documentação Técnica**         | MIT Orientado        | ✅ Permitido integralmente      | ❌ Nenhum                   |
 
 ---
 
-**Última atualização**: Dezembro 2025  
-**Versão do Documento**: 2.0
+## 📞 Contato e Soluções Administrativas
+
+Para regularizar seu projeto, solicitar orçamentos, requisitar módulos sob medida ou adquirir a Licença PDL PRO com os suportes atrelados, use os canais oficiais abaixo:
+
+- 🌐 **Site Principal:** [https://pdl.denky.dev.br](https://pdl.denky.dev.br)
+- 📧 **E-mail:** [contato@denky.dev.br](mailto:contato@denky.dev.br)
+- 🐙 **GitHub Oficial:** [https://github.com/D3NKYT0/lineage](https://github.com/D3NKYT0/lineage)
+
+*(Isenção: Para suporte aos componentes MIT originais do layout base, contate a desenvolvedora AppSeed via support@appseed.us).*
+
+---
+
+## ⚠️ Isenção de Responsabilidade Legal (Disclaimer)
+
+ESTE SOFTWARE É FORNECIDO "COMO ESTÁ" (*AS IS*), SEM GARANTIAS DE QUALQUER TIPO, EXPRESSAS OU IMPLÍCITAS, INCLUINDO, MAS NÃO SE LIMITANDO A GARANTIAS DE COMERCIALIZAÇÃO, ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO E NÃO VIOLAÇÃO.
+
+EM NENHUMA CIRCUNSTÂNCIA OS AUTORES, DESENVOLVEDORES (EQUIPE PDL) OU DETENTORES DOS DIREITOS AUTORAIS SERÃO OU PODERÃO SER RESPONSABILIZADOS POR QUALQUER RECLAMAÇÃO, DANO (SEJA DIRETO, INDIRETO, INCIDENTAL, ESPECIAL OU CONSEQUENTE INDEPENDENTE DE SUA NATUREZA) OU PARCELA DE RESPONSABILIDADE, SEJA EM EVENTOS EXERCIDOS DE AÇÃO COMPROBATÓRIA, INVASÕES SISTÊMICAS, PROBLEMAS NA INFRAESTRUTURA DE BANCO DE DADOS ALHEIA (L2) OU FALHAS NO CÓDIGO FONTE AFETADO POR TERCEIROS NO MESMO SERVIDOR. O USO DESTE PAINEL DE CONTROLE DEVE SEMPRE SER ACOMPANHADO DE BOAS PRÁTICAS DE SEGURANÇA E GERENCIMENTO EXCLUSIVO DO PRÓPRIO ADMINISTRADOR LOCAL.
+
+---
+
+**Última Atualização:** 04 de Março de 2026  
+**Versão do Documento:** 2.1
