@@ -187,23 +187,27 @@ class UserLoginView(LoginView):
                     
                     if suspension_info:
                         # Cria uma mensagem detalhada sobre a suspensão
-                        if suspension_info['is_permanent']:
-                            message = f"🔴 {suspension_info['message']}\n\n"
-                            message += f"📋 Motivo: {suspension_info['public_reason']}\n"
-                            message += f"👤 Moderador: {suspension_info['moderator']}\n"
-                            message += f"📅 Data: {suspension_info['created_at']}\n\n"
+                        public_reason = suspension_info.get('public_reason') or suspension_info.get('reason') or _('Motivo não especificado')
+                        moderator = suspension_info.get('moderator') or _('Administrador')
+                        created_at = suspension_info.get('created_at') or _('N/A')
+                        
+                        if suspension_info.get('is_permanent'):
+                            message = f"🔴 {suspension_info.get('message')}\n\n"
+                            message += f"📋 Motivo: {public_reason}\n"
+                            message += f"👤 Moderador: {moderator}\n"
+                            message += f"📅 Data: {created_at}\n\n"
                             message += f"ℹ️ Esta ação é permanente. Entre em contato com o suporte se acredita que isso foi um erro."
                         else:
-                            message = f"🟡 {suspension_info['message']}\n\n"
-                            message += f"📋 Motivo: {suspension_info['public_reason']}\n"
-                            message += f"👤 Moderador: {suspension_info['moderator']}\n"
-                            message += f"📅 Suspenso em: {suspension_info['created_at']}\n"
+                            message = f"🟡 {suspension_info.get('message')}\n\n"
+                            message += f"📋 Motivo: {public_reason}\n"
+                            message += f"👤 Moderador: {moderator}\n"
+                            message += f"📅 Suspenso em: {created_at}\n"
                             
-                            if suspension_info['is_expired']:
+                            if suspension_info.get('is_expired'):
                                 message += f"✅ Status: Suspensão expirada\n\n"
                                 message += f"ℹ️ Sua suspensão já expirou, mas sua conta ainda não foi reativada automaticamente. Entre em contato com o suporte."
-                            elif suspension_info['end_date']:
-                                message += f"⏰ Válida até: {suspension_info['end_date']}\n\n"
+                            elif suspension_info.get('end_date'):
+                                message += f"⏰ Válida até: {suspension_info.get('end_date')}\n\n"
                                 message += f"ℹ️ Sua conta será reativada automaticamente após esta data."
                             else:
                                 message += f"ℹ️ Entre em contato com o suporte para mais informações."
@@ -234,23 +238,27 @@ class UserLoginView(LoginView):
             
             if suspension_info:
                 # Cria uma mensagem detalhada sobre a suspensão
-                if suspension_info['is_permanent']:
-                    message = f"🔴 {suspension_info['message']}\n\n"
-                    message += f"📋 **Motivo:** {suspension_info['public_reason']}\n"
-                    message += f"👤 **Moderador:** {suspension_info['moderator']}\n"
-                    message += f"📅 **Data:** {suspension_info['created_at']}\n\n"
+                public_reason = suspension_info.get('public_reason') or suspension_info.get('reason') or _('Motivo não especificado')
+                moderator = suspension_info.get('moderator') or _('Administrador')
+                created_at = suspension_info.get('created_at') or _('N/A')
+                
+                if suspension_info.get('is_permanent'):
+                    message = f"🔴 {suspension_info.get('message')}\n\n"
+                    message += f"📋 **Motivo:** {public_reason}\n"
+                    message += f"👤 **Moderador:** {moderator}\n"
+                    message += f"📅 **Data:** {created_at}\n\n"
                     message += f"ℹ️ Esta ação é permanente. Entre em contato com o suporte se acredita que isso foi um erro."
                 else:
-                    message = f"🟡 {suspension_info['message']}\n\n"
-                    message += f"📋 **Motivo:** {suspension_info['public_reason']}\n"
-                    message += f"👤 **Moderador:** {suspension_info['moderator']}\n"
-                    message += f"📅 **Suspenso em:** {suspension_info['created_at']}\n"
+                    message = f"🟡 {suspension_info.get('message')}\n\n"
+                    message += f"📋 **Motivo:** {public_reason}\n"
+                    message += f"👤 **Moderador:** {moderator}\n"
+                    message += f"📅 **Suspenso em:** {created_at}\n"
                     
-                    if suspension_info['is_expired']:
+                    if suspension_info.get('is_expired'):
                         message += f"✅ **Status:** Suspensão expirada\n\n"
                         message += f"ℹ️ Sua suspensão já expirou, mas sua conta ainda não foi reativada automaticamente. Entre em contato com o suporte."
-                    elif suspension_info['end_date']:
-                        message += f"⏰ **Válida até:** {suspension_info['end_date']}\n\n"
+                    elif suspension_info.get('end_date'):
+                        message += f"⏰ **Válida até:** {suspension_info.get('end_date')}\n\n"
                         message += f"ℹ️ Sua conta será reativada automaticamente após esta data."
                     else:
                         message += f"ℹ️ Entre em contato com o suporte para mais informações."
@@ -412,10 +420,13 @@ def get_user_suspension_info(user):
                 'type': 'unknown',
                 'message': _('Sua conta foi desativada por um administrador.'),
                 'reason': _('Motivo não especificado'),
-                'moderator': None,
-                'created_at': None,
+                'public_reason': _('Motivo não especificado'),
+                'moderator': _('Administrador'),
+                'created_at': _('N/A'),
                 'end_date': None,
-                'is_permanent': True
+                'is_permanent': True,
+                'is_expired': False,
+                'action': None
             }
         
         # Determina o tipo de suspensão
@@ -456,10 +467,13 @@ def get_user_suspension_info(user):
             'type': 'error',
             'message': _('Erro ao verificar status da conta.'),
             'reason': _('Entre em contato com o suporte.'),
-            'moderator': None,
-            'created_at': None,
+            'public_reason': _('Entre em contato com o suporte.'),
+            'moderator': _('Sistema'),
+            'created_at': _('N/A'),
             'end_date': None,
-            'is_permanent': True
+            'is_permanent': True,
+            'is_expired': False,
+            'action': None
         }
 
 
