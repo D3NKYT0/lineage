@@ -2971,4 +2971,5 @@ class NewsListView(generics.ListAPIView):
     queryset = News.objects.all().order_by('-created_at')[:5]
     serializer_class = NewsSerializer
     permission_classes = [permissions.AllowAny]
+    pagination_class = None
 
