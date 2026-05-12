@@ -298,6 +298,29 @@ class ServerInfoSerializer(serializers.Serializer):
 
 class NewsSerializer(serializers.ModelSerializer):
     """Serializer para notícias do servidor"""
+    title = serializers.SerializerMethodField()
+    summary = serializers.SerializerMethodField()
+    content = serializers.SerializerMethodField()
+    image_url = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField(source='pub_date', format="%Y-%m-%dT%H:%M:%SZ")
+
     class Meta:
         model = News
         fields = ['id', 'title', 'summary', 'content', 'image_url', 'created_at']
+
+    def get_title(self, obj):
+        trans = obj.translations.filter(language='pt').first() or obj.translations.first()
+        return trans.title if trans else ""
+
+    def get_summary(self, obj):
+        trans = obj.translations.filter(language='pt').first() or obj.translations.first()
+        return trans.summary if trans else ""
+
+    def get_content(self, obj):
+        trans = obj.translations.filter(language='pt').first() or obj.translations.first()
+        return trans.content if trans else ""
+
+    def get_image_url(self, obj):
+        if obj.image:
+            return obj.image.url
+        return None
