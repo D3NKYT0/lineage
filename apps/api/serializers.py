@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.urls import reverse
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
@@ -302,11 +303,19 @@ class NewsSerializer(serializers.ModelSerializer):
     summary = serializers.SerializerMethodField()
     content = serializers.SerializerMethodField()
     image_url = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(source='pub_date', format="%Y-%m-%dT%H:%M:%SZ")
 
     class Meta:
         model = News
-        fields = ['id', 'title', 'summary', 'content', 'image_url', 'created_at']
+        fields = ['id', 'title', 'summary', 'url', 'content', 'image_url', 'created_at']
+
+    def get_url(self, obj):
+        request = self.context.get('request')
+        url = reverse('news:detail', kwargs={'slug': obj.slug})
+        if request:
+            return request.build_absolute_uri(url)
+        return f"https://l2iron.com{url}"
 
     def get_title(self, obj):
         trans = obj.translations.filter(language='pt').first() or obj.translations.first()
