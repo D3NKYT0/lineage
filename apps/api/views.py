@@ -25,8 +25,10 @@ from .serializers import (
     UserProfileSerializer, ChangePasswordSerializer, CharacterSerializer,
     ItemSerializer, ClanDetailSerializer, AuctionItemSerializer,
     APIResponseSerializer, ServerStatusSerializer, DiscordServerSerializer,
-    UserGameDataSerializer, ServerInfoSerializer
+    UserGameDataSerializer, ServerInfoSerializer, NewsSerializer
 )
+from apps.main.news.models import News
+from rest_framework import generics, permissions
 from .forms import ApiEndpointToggleForm
 from .permissions import IsSuperUser, IsAPIAdmin, IsMonitoringAdmin
 
@@ -2962,4 +2964,11 @@ class AdminDashboardView(APIView):
         result = {'success': True, 'data': data, 'timestamp': timezone.now().isoformat()}
         cache.set(cache_key, result, 60)  # 1 minuto
         return Response(result)
+
+
+class NewsListView(generics.ListAPIView):
+    """View para listar as notícias mais recentes do servidor"""
+    queryset = News.objects.all().order_by('-created_at')[:5]
+    serializer_class = NewsSerializer
+    permission_classes = [permissions.AllowAny]
 

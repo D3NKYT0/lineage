@@ -4,6 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from apps.main.home.models import User as CustomUser
+from apps.main.news.models import News
 
 
 class PlayerOnlineSerializer(serializers.Serializer):
@@ -292,3 +293,11 @@ class ServerInfoSerializer(serializers.Serializer):
     rates = serializers.DictField(required=False)
     features = serializers.DictField(required=False)
     theme_color = serializers.CharField(required=False, allow_blank=True)
+
+# =========================== NEWS SERIALIZER ===========================
+
+class NewsSerializer(serializers.ModelSerializer):
+    """Serializer para notícias do servidor"""
+    class Meta:
+        model = News
+        fields = ['id', 'title', 'summary', 'content', 'image_url', 'created_at']

@@ -38,6 +38,7 @@ v1_patterns = [
     path('server/olympiad-heroes/', views.OlympiadAllHeroesView.as_view(), name='olympiad_all_heroes'),
     path('server/olympiad-current-heroes/', views.OlympiadCurrentHeroesView.as_view(), name='olympiad_current_heroes'),
     path('server/grandboss-status/', views.GrandBossStatusView.as_view(), name='grandboss_status'),
+    path('server/news/', views.NewsListView.as_view(), name='server_news'),
     path('server/siege/', views.SiegeView.as_view(), name='siege'),
     path('server/siege-participants/<int:castle_id>/', views.SiegeParticipantsView.as_view(), name='siege_participants'),
     path('server/boss-jewel-locations/', views.BossJewelLocationsView.as_view(), name='boss_jewel_locations'),
