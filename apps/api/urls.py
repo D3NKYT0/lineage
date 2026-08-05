@@ -24,6 +24,7 @@ v1_patterns = [
     path('user/change-password/', views.ChangePasswordView.as_view(), name='change_password'),
     path('user/dashboard/', views.UserDashboardView.as_view(), name='user_dashboard'),
     path('user/stats/', views.UserStatsView.as_view(), name='user_stats'),
+    path('user/characters/', views.UserCharactersView.as_view(), name='user_characters'),
     
     # =========================== SERVER STATUS ===========================
     path('server/status/', views.ServerStatusView.as_view(), name='server_status'),

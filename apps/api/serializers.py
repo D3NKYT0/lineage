@@ -87,6 +87,18 @@ class BossJewelLocationSerializer(serializers.Serializer):
     location = serializers.CharField()
     coordinates = serializers.CharField(required=False, allow_blank=True)
     respawn_time = serializers.DateTimeField(required=False, allow_null=True)
+    
+    
+class CharacterSerializer(serializers.Serializer):
+    """Serializer para dados de personagem do usuário"""
+    char_id = serializers.IntegerField(source='obj_Id', required=False)
+    char_name = serializers.CharField()
+    level = serializers.IntegerField(source='base_level', required=False)
+    class_id = serializers.IntegerField(source='base_class', required=False)
+    class_name = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    clan_name = serializers.CharField(allow_blank=True, allow_null=True, required=False)
+    online = serializers.BooleanField(required=False)
+    last_access = serializers.DateTimeField(source='lastAccess', required=False, allow_null=True)
 
 
 # =========================== AUTHENTICATION SERIALIZERS ===========================

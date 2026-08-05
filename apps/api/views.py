@@ -1606,6 +1606,41 @@ class UserStatsView(APIView):
             )
 
 
+@endpoint_enabled('user_characters')
+class UserCharactersView(APIView):
+    """View para listar personagens do usuário"""
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            user = request.user
+            from apps.lineage.server.querys import LineageServices
+            
+            characters = LineageServices.find_chars(user.username)
+            if characters is None:
+                characters = []
+            
+            # Adiciona nome da classe se possível
+            from apps.lineage.server.models import CLASS_LIST
+            for char in characters:
+                class_id = char.get('base_class')
+                if class_id is not None:
+                    char['class_name'] = CLASS_LIST.get(int(class_id), "Unknown")
+            
+            from .serializers import CharacterSerializer
+            serializer = CharacterSerializer(characters, many=True)
+            
+            return Response(serializer.data)
+        except Exception as e:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Erro ao buscar personagens do usuário: {e}", exc_info=True)
+            return Response(
+                {'error': 'Erro ao buscar personagens'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
 # =========================== SERVER STATUS VIEWS ===========================
 
 @endpoint_enabled('server_status')
