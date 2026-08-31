@@ -123,9 +123,12 @@ case $UBUNTU_VERSION in
   "noble")
     DOCKER_REPO="jammy"  # Ubuntu 24.04 uses jammy repository for now
     ;;
+  "resolute")
+    DOCKER_REPO="resolute"  # Ubuntu 26.04 LTS (Resolute Raccoon)
+    ;;
   *)
     echo "❌ Versão do Ubuntu não suportada: $UBUNTU_VERSION"
-    echo "Por favor, use Ubuntu 20.04 (Focal), 22.04 (Jammy) ou 24.04 (Noble)"
+    echo "Por favor, use Ubuntu 20.04 (Focal), 22.04 (Jammy), 24.04 (Noble) ou 26.04 (Resolute)"
     exit 1
     ;;
 esac
@@ -169,9 +172,7 @@ if [ ! -f "$INSTALL_DIR/system_ready" ]; then
   echo
   echo "🔄 Atualizando pacotes e instalando dependências..."
   sudo apt update && sudo apt upgrade -y
-  sudo apt install -y software-properties-common
-  sudo add-apt-repository -y ppa:deadsnakes/ppa
-  sudo apt update
+  sudo apt install -y software-properties-common python3 python3-venv python3-dev
   
   # Verificar versão atual do Python
   SYSTEM_PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}' 2>/dev/null || echo "0.0.0")
@@ -180,16 +181,23 @@ if [ ! -f "$INSTALL_DIR/system_ready" ]; then
   
   echo "Python atual detectado: $SYSTEM_PYTHON_VERSION"
   
-  # Verificar se Python é menor que 3.11 ou instalar Python 3.13 de qualquer forma para garantir
-  INSTALL_PYTHON313=true
-  if [ "$PYTHON_MAJOR" -lt 3 ] || ([ "$PYTHON_MAJOR" -eq 3 ] && [ "$PYTHON_MINOR" -lt 11 ]); then
-    echo "Python $SYSTEM_PYTHON_VERSION é menor que 3.11 (requerido para autobahn==25.11.1)"
-    echo "Instalando Python 3.13..."
+  # Ubuntu 26.04 (resolute) já vem com Python >= 3.14; deadsnakes/python3.13 não é necessário
+  if [ "$UBUNTU_VERSION" = "resolute" ]; then
+    echo "Ubuntu 26.04: usando Python do sistema ($SYSTEM_PYTHON_VERSION)."
   else
-    echo "Python $SYSTEM_PYTHON_VERSION atende aos requisitos, mas instalando Python 3.13 para garantir compatibilidade..."
+    sudo add-apt-repository -y ppa:deadsnakes/ppa
+    sudo apt update
+    
+    # Verificar se Python é menor que 3.11 ou instalar Python 3.13 de qualquer forma para garantir
+    if [ "$PYTHON_MAJOR" -lt 3 ] || ([ "$PYTHON_MAJOR" -eq 3 ] && [ "$PYTHON_MINOR" -lt 11 ]); then
+      echo "Python $SYSTEM_PYTHON_VERSION é menor que 3.11 (requerido para autobahn==25.11.1)"
+      echo "Instalando Python 3.13..."
+    else
+      echo "Python $SYSTEM_PYTHON_VERSION atende aos requisitos, mas instalando Python 3.13 para garantir compatibilidade..."
+    fi
+    
+    sudo apt install -y python3.13 python3.13-venv python3.13-dev
   fi
-  
-  sudo apt install -y python3.13 python3.13-venv python3.13-dev
   sudo apt install -y apt-transport-https ca-certificates curl gettext
   
   # Instalar bcrypt e passlib no Python do sistema para uso em scripts
@@ -243,7 +251,11 @@ if [ ! -f "$INSTALL_DIR/system_ready" ]; then
   # Verificar versão final do Python padrão
   FINAL_PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}' 2>/dev/null || echo "desconhecida")
   echo "ℹ️  Python padrão do sistema: $FINAL_PYTHON_VERSION (para ferramentas do sistema)"
-  echo "ℹ️  Python 3.13 instalado e disponível via 'python3.13' (será usado no virtual environment do projeto)"
+  if command -v python3.13 &> /dev/null; then
+    echo "ℹ️  Python 3.13 instalado e disponível via 'python3.13' (será usado no virtual environment do projeto)"
+  else
+    echo "ℹ️  Virtual environment do projeto usará o Python do sistema ($FINAL_PYTHON_VERSION)"
+  fi
   
   touch "$INSTALL_DIR/system_ready"
 fi
@@ -304,7 +316,7 @@ if [ ! -f "$INSTALL_DIR/docker_ready" ]; then
       sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
       $DOCKER_COMPOSE --version
     else
-      echo "📦 Instalando Docker Compose plugin para Ubuntu 22.04/24.04..."
+      echo "📦 Instalando Docker Compose plugin para Ubuntu 22.04/24.04/26.04..."
       sudo apt-get update
       sudo apt-get install -y docker-compose-plugin
       $DOCKER_COMPOSE version

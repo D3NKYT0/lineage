@@ -33,7 +33,7 @@ O `install.sh` é o script principal de instalação e gerenciamento do **Painel
 
 Antes de usar o `install.sh`, certifique-se de ter:
 
-1. **Sistema Operacional**: Ubuntu 20.04 (Focal), 22.04 (Jammy) ou 24.04 (Noble)
+1. **Sistema Operacional**: Ubuntu 20.04 (Focal), 22.04 (Jammy), 24.04 (Noble) ou 26.04 (Resolute)
 2. **Git**: Instalado e configurado
 3. **Acesso à Internet**: Para clonar o repositório e baixar dependências
 4. **Privilégios**: Acesso sudo para scripts que requerem root
